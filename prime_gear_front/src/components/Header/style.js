@@ -15,11 +15,11 @@ export const HeaderContainer = styled.header`
   height: 8vh;
 
 
-  background: ${({ isScrolled }) => (isScrolled ? "#f5f5f5" : "transparent")};
-  color: ${({ isScrolled }) => (isScrolled ? "#1c1c1c" : "#f5f5f5")};
+  background: ${({ isScrolled, isHome}) => (isScrolled || !isHome ? "#f5f5f5" : "transparent")};
+  color: ${({ isScrolled,isHome }) => (isScrolled || !isHome ? "#1c1c1c" : "#f5f5f5")};
 
-  box-shadow: ${({ isScrolled }) =>
-    isScrolled ? "0 2px 10px rgba(0,0,0,0.1)" : "none"};
+  box-shadow: ${({ isScrolled,isHome }) =>
+    isScrolled || !isHome ? "0 2px 10px rgba(0,0,0,0.1)" : "none"};
 `;
 
 export const LeftSection = styled.div`

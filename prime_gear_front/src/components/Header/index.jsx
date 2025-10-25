@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 import { FiMenu, FiSearch, FiShoppingCart, FiUser } from "react-icons/fi";
 import {
   HeaderContainer,
@@ -14,21 +16,36 @@ import LogoImage from "../../assets/images/logo (2).png";
 
 const Header = () => {
 
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-  function handleScroll() {
+    function handleScroll() {
       setIsScrolled(window.scrollY > 50);
     }
 
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
+  useEffect(() => {
+    if (!isHome) {
+      // reset scroll state for non-home pages
+      setIsScrolled(true);
+      return;
+    }
+
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isHome]);
   return (
     <>
-      <HeaderContainer isScrolled={isScrolled}>
+      <HeaderContainer isScrolled={isScrolled} isHome={isHome}>
         <LeftSection>
           <MenuButton onClick={() => setIsMenuOpen(true)}>
             <FiMenu size={22} />
@@ -44,7 +61,7 @@ const Header = () => {
 
         </LeftSection>
 
-         <RightSection>
+        <RightSection>
           <Icons>
             <FiSearch size={20} />
             <FiShoppingCart size={20} />
