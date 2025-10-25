@@ -15,8 +15,8 @@ export const HeaderContainer = styled.header`
   height: 8vh;
 
 
-  background: ${({ isScrolled }) => (isScrolled ? "#fff" : "transparent")};
-  color: ${({ isScrolled }) => (isScrolled ? "#000" : "#fff")};
+  background: ${({ isScrolled }) => (isScrolled ? "#f5f5f5" : "transparent")};
+  color: ${({ isScrolled }) => (isScrolled ? "#1c1c1c" : "#f5f5f5")};
 
   box-shadow: ${({ isScrolled }) =>
     isScrolled ? "0 2px 10px rgba(0,0,0,0.1)" : "none"};
@@ -34,7 +34,7 @@ export const MenuButton = styled.button`
   gap: 6px;
   background: transparent;
   border: none;
-  color: inherit; /* muda junto com o header */
+  color: inherit; 
   cursor: pointer;
 
   span {
@@ -48,8 +48,9 @@ export const NavLinks = styled.nav`
 
   a {
     text-decoration: none;
-    color: inherit; /* muda junto com o header */
+    color: inherit; 
     font-weight: 500;
+    transition: 0.3s;
 
     &:hover {
       opacity: 0.7;
@@ -69,6 +70,11 @@ export const Icons = styled.div`
 
   svg {
     cursor: pointer;
+    transition:0.3s;
+
+    &:hover{
+    opacity: 0.7;
+    }
   }
 `;
 

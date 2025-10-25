@@ -1,29 +1,36 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components'; 
+
 
 import HeroBanner from '../../components/HeroBanner';
+import CategoryCarousel from '../../components/CategoryCarousel';
+
+import ProductCarousel from '../../components/ProductCarousel';
 
 
-const FakeContent = styled.div`
-  height: 2000px; /* Bem alto, para forçar o scroll */
-  padding: 50px;
-  background-color: #f4f4f4;
-  text-align: center;
+
+const FakeFooter = styled.div`
+  height: 500px;
+  background: #222;
+  margin-top: 60px;
 `;
-// -------------------------
 
 const HomePage = () => {
   return (
-    // Usamos um Fragment (<>) para agrupar os elementos
     <>
-      {/* 2. Este é o seu carrossel! */}
       <HeroBanner />
+      <CategoryCarousel />
       
-      {/* 3. Este é o conteúdo "falso" para testar o scroll */}
-      <FakeContent>
-        <h2>Resto da Página (Destaques, Produtos, etc.)</h2>
-        <p>Role para baixo para testar o Header!</p>
-      </FakeContent>
+      {/* 2. CHAME O COMPONENTE AQUI */}
+      <ProductCarousel title="Destaques da Semana" />
+
+      {/* 3. A MÁGICA DA REUTILIZAÇÃO!
+         Usamos o mesmo componente de novo, com outro título.
+         (No futuro, você passaria uma lista de produtos diferente)
+      */}
+      <ProductCarousel title="Até 50% de desconto" />
+
+      <FakeFooter />
     </>
   );
 };

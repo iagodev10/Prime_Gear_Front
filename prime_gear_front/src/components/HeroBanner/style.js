@@ -2,9 +2,32 @@ import styled from 'styled-components';
 
 export const HeroContainer = styled.section`
   width: 100%;
-  height: 100vh;
   min-height: 600px;
   position: relative;
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #fff !important;
+  }
+
+   .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 28px;
+  }
+
+  .swiper-pagination-bullet {
+    background: #fff !important;
+    opacity: 0.6;
+    width: 10px;
+    height: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: #fff !important;
+    opacity: 1;
+    transform: scale(1.2);
+  }
 `;
 
 export const StyledSwiperSlide = styled.div`
