@@ -6,7 +6,7 @@ import HeroBanner from '../../components/HeroBanner';
 import CategoryCarousel from '../../components/CategoryCarousel';
 
 import ProductCarousel from '../../components/ProductCarousel';
-
+import BrandsCarousel from '../../components/BrandsCarousel';
 
 
 const FakeFooter = styled.div`
@@ -21,13 +21,11 @@ const HomePage = () => {
       <HeroBanner />
       <CategoryCarousel />
       
-      {/* 2. CHAME O COMPONENTE AQUI */}
+      
       <ProductCarousel title="Destaques da Semana" />
 
-      {/* 3. A MÁGICA DA REUTILIZAÇÃO!
-         Usamos o mesmo componente de novo, com outro título.
-         (No futuro, você passaria uma lista de produtos diferente)
-      */}
+      <BrandsCarousel />
+      
       <ProductCarousel title="Até 50% de desconto" />
 
       <FakeFooter />

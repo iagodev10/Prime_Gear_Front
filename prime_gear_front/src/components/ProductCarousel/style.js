@@ -11,9 +11,10 @@ export const CarouselContainer = styled.section`
 // Título da seção (ex: "Destaques da Semana")
 export const SectionTitle = styled.h2`
   font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 30px;
+  font-weight: 500;
+  text-align: left;
+  margin-bottom: 40px;
+  color: #1c1c1c;
 `;
 
 // Container para o Swiper (para posicionar as setas)

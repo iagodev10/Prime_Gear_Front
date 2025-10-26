@@ -4,6 +4,7 @@ export const CarouselContainer = styled.section`
   width: 100%;
   padding: 60px 40px;
   box-sizing: border-box;
+  margin-bottom: -40px;
 `;
 
 export const SwiperContainer = styled.div`
