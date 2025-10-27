@@ -7,7 +7,7 @@ import 'swiper/css/navigation';
 
 import DesktopImg from "../../assets/images/desktop.png";
 import LaptopImg from "../../assets/images/laptop.png";
-
+import Console from "../../assets/images/consoles.png";
 
 const categorias = [
     {
@@ -19,8 +19,8 @@ const categorias = [
         image: LaptopImg,
     },
     {
-        name: 'Desktops',
-        image: DesktopImg,
+        name: 'Consoles',
+        image: Console,
     },
     {
         name: 'Laptops',
@@ -28,7 +28,7 @@ const categorias = [
     },
     {
         name: 'Desktops',
-        image: DesktopImg,
+        image: Console,
     },
     {
         name: 'Laptops',

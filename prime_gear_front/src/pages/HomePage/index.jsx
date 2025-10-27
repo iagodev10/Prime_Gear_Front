@@ -6,6 +6,7 @@ import HeroBanner from '../../components/HeroBanner';
 import CategoryCarousel from '../../components/CategoryCarousel';
 import ProductCarousel from '../../components/ProductCarousel';
 import BrandsCarousel from '../../components/BrandsCarousel';
+import EmailSignUp from '../../components/EmailSignUp';
 
 import { BannerPromo, BannerImg, BannerBuy } from './style'
 import { IdeaButton, IdeaImg, IdeapadText, Ideapad, Descrip, Title, SubTitle,  } from './style'
@@ -15,11 +16,6 @@ import OutroNivelImersao from '../../assets/images/Outro-Nivel-Imersao.png';
 import Ideapad1 from '../../assets/images/Ideapad1.png';
 
 
-const FakeFooter = styled.div`
-  height: 500px;
-  background: #222;
-  margin-top: 60px;
-`;
 
 const HomePage = () => {
   return (
@@ -59,7 +55,7 @@ const HomePage = () => {
 
       </Ideapad>
 
-      <FakeFooter />
+      <EmailSignUp />
     </>
   );
 };

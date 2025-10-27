@@ -41,7 +41,7 @@ export const BannerBuy = styled.a`
 
 export const Ideapad = styled.section`
   width: 90%;
-  margin: 60px auto;
+  margin-top: -40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,7 +114,7 @@ export const IdeaButton = styled.a`
   padding: 24px 38px;
   text-decoration: none;
   background: transparent;
-  border-radius: 35px;
+  border-radius: 38px;
   transition: all 0.3s ease;
   font-size: 1rem;
   color: #1c1c1c;

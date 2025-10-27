@@ -26,7 +26,7 @@ export const SwiperContainer = styled.div`
 
 export const CategoryCard = styled.div`
   width: 100%;
-  aspect-ratio: 1.2 / 1; /* torna o card responsivo (altura proporcional à largura) */
+  aspect-ratio: 1.2 / 1; 
   background: linear-gradient(to right, #f5f5f5 10%, #ffffff 100%);
   border-radius: 16px;
 
@@ -43,9 +43,8 @@ export const CategoryCard = styled.div`
   }
 
   img {
-    width: 60%;
-    max-width: 120px;
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
   }
 
