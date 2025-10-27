@@ -22,8 +22,8 @@ const ProductCard = ({
     title = "Notebook Lenovo IdeaPad 1i, Intel Core i7-1255U, 12GB/512GB SSD...",
     price = "R$ 3.524,02",
     priceInfo = "no pix",
-    oldPrice = "R$ 3.800,00", // Adicionado para bater com o protótipo
-    image = laptopvendaImage, // Usa a imagem importada como padrão
+    oldPrice = "R$ 3.800,00",
+    image = laptopvendaImage, 
     onAddToCart,
     onBuy
 }) => {
