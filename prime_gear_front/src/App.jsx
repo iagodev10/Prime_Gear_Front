@@ -4,7 +4,7 @@ import './App.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
-import Store from './pages/Store'
+import Store from './pages/StorePage'
 import ProductPage from './pages/ProductPage'
 function App() {
   return (
