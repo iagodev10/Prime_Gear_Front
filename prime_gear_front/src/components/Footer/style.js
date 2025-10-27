@@ -68,7 +68,7 @@ export const SocialIcon = styled.a`
 
 export const Divider = styled.hr`
   border: none;
-  border-top: 1px solid #444;
+  border-top: 1px solid #fff;
   margin: 25px 0;
 `;
 

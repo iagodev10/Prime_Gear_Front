@@ -9,7 +9,7 @@ import Image4 from "../../assets/images/desktop-ilustration (4).png"
 import {
     PageContainer, ProductContainer, LeftColumn, MainImage, Miniaturas, Thumbnail,
     RightColumn, ProdName, PriceBlock, MainPrice, PixInfo, OtherPrice, QuantitySelector, QuantityLabel,
-    QuantityButton, QuantityValue, ButtonBlock, BuyNow, AddCart, CEP, CepLabel, InputCep, CepInput, CepButton,
+    QuantityButton, QuantityValue, Divider, ButtonBlock, BuyNow, AddCart, CEP, CepLabel, InputCep, CepInput, CepButton,
 } from './style'; 
 
 const produtos = {
@@ -84,11 +84,15 @@ const ProductPage = () => {
                 <RightColumn>
                     <ProdName>{produtos.name}</ProdName>
 
+                    <Divider />
+
                     <PriceBlock>
                         <MainPrice>{produtos.price}</MainPrice>
                         <PixInfo>{produtos.pixInfo}</PixInfo>
                         <OtherPrice>{produtos.otherPrice}</OtherPrice>
                     </PriceBlock>
+
+                    <Divider />
 
                     <QuantitySelector>
                         <QuantityLabel>Quantidade:</QuantityLabel>

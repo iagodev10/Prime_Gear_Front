@@ -217,3 +217,9 @@ export const CepButton = styled.button`
         background-color: #f0f0f0;
     }
 `;
+
+export const Divider = styled.hr`
+  border: none;
+  border-top: 1px solid #b3b3b3;
+  margin: 25px 0;
+`;
