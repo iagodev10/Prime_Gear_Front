@@ -12,7 +12,8 @@ import {
   Icons,
   Logo
 } from "./style";
-import LogoImage from "../../assets/images/logo (2).png";
+import LogoLigth from "../../assets/images/logoligth.png";
+import LogoDark from "../../assets/images/logodark.png";
 
 const Header = () => {
 
@@ -70,7 +71,7 @@ const Header = () => {
 
           <Logo isScrolled={isScrolled}>
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <img src={LogoImage} alt="PrimeGear Logo" />
+              <img src={LogoDark} alt="PrimeGear Logo" />
             </Link>
           </Logo>
         </RightSection>

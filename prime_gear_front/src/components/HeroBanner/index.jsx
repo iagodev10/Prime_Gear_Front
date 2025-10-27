@@ -6,6 +6,9 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 import HeadSet from '../../assets/images/headset.jpeg';
+import Macbook from '../../assets/images/Macbook.png';
+
+
 import { HeroContainer, StyledSwiperSlide, HeroButton, SlideContent } from './style';
 
 const HeroBanner = () => {
@@ -37,7 +40,7 @@ const HeroBanner = () => {
                 <SwiperSlide>
                     <StyledSwiperSlide
                         style={{
-                            backgroundImage: `url(${HeadSet})`,
+                            backgroundImage: `url(${Macbook})`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             backgroundRepeat: 'no-repeat'

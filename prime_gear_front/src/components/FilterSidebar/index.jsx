@@ -23,7 +23,7 @@ export default function FilterSidebar({ filters, setFilters }) {
     }));
   };
 
-  const brands = ["ACER", "ASUS", "DELL", "HP", "LENOVO", "SAMSUNG"];
+  const brands = ["ACER", "ASUS", "APPLE", "DELL", "HP", "LENOVO", "SAMSUNG"];
 
   const handleBrandToggle = (brand) => {
     setFilters(prev => ({
@@ -37,7 +37,7 @@ export default function FilterSidebar({ filters, setFilters }) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div className="p-4 border-b border-gray-200">
-        <h2 className="text-xl font-bold text-gray-900">Filtros</h2>
+        <h2 className="text-xl font-bold text-black-900">Filtros</h2>
       </div>
 
       <div className="divide-y divide-gray-200">

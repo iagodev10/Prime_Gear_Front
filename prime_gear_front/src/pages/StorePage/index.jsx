@@ -262,7 +262,7 @@ function Store() {
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontWeight: '500',
-                                        color: '#333'
+                                        color: 'black'
                                     }}
                                 >
                                     Categoria
@@ -285,7 +285,7 @@ function Store() {
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontWeight: '500',
-                                        color: '#333'
+                                        color: 'black'
                                     }}
                                 >
                                     Marca
@@ -303,7 +303,7 @@ function Store() {
                                                     padding: '8px 0',
                                                     cursor: 'pointer',
                                                     fontSize: '14px',
-                                                    color: '#555'
+                                                    color: 'black'
                                                 }}
                                             >
                                                 <input
@@ -339,7 +339,7 @@ function Store() {
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontWeight: '500',
-                                        color: '#333'
+                                        color: 'black'
                                     }}
                                 >
                                     Preço
@@ -362,7 +362,7 @@ function Store() {
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontWeight: '500',
-                                        color: '#333'
+                                        color: 'black'
                                     }}
                                 >
                                     Capacidade SSD
@@ -385,7 +385,7 @@ function Store() {
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontWeight: '500',
-                                        color: '#333'
+                                        color: 'black'
                                     }}
                                 >
                                     Avaliações
@@ -408,7 +408,7 @@ function Store() {
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontWeight: '500',
-                                        color: '#333'
+                                        color: 'black'
                                     }}
                                 >
                                     Memória RAM
@@ -431,7 +431,7 @@ function Store() {
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontWeight: '500',
-                                        color: '#333'
+                                        color: 'black'
                                     }}
                                 >
                                     Sistema Operacional
@@ -454,7 +454,7 @@ function Store() {
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontWeight: '500',
-                                        color: '#333'
+                                        color: 'black'
                                     }}
                                 >
                                     Tamanho da Tela
@@ -477,7 +477,7 @@ function Store() {
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontWeight: '500',
-                                        color: '#333'
+                                        color: 'black'
                                     }}
                                 >
                                     Processador
@@ -536,7 +536,7 @@ function Store() {
             }}>
                 <div style={{
                     width: "23%",
-                    background: "rgb(227 208 208)",
+                    background: "#e1e1e1",
                     height: "75%",
                     borderRadius: "20px",
                     display: "flex",
@@ -546,25 +546,30 @@ function Store() {
                     <img src={notebook} alt="" style={{ width: "30%" }} />
                     <div style={{
                         display: "flex",
-                        justifyContent: "space-around",
                         alignItems: "center",
                         flexDirection: "column",
+                        gap: "12px",              // 👈 espaçamento fixo entre texto e botão
                         height: "50%"
                     }}>
-                        <p style={{ fontSize: "1.3rem" }}>Laptops</p>
+                        <p style={{ fontSize: "1.3rem", textAlign: "center" }}>Laptops</p>
                         <button style={{
                             background: "black",
                             color: "white",
-                            padding: "10px",
+                            padding: "12px 20px", 
                             borderRadius: "60px",
-                            width: "100%"
-                        }}>Comprar Agora</button>
+                            textAlign: "center",
+                            cursor: "pointer",
+                            border: "none",
+                            transition: "0.3s",
+                        }}>
+                            Comprar Agora
+                        </button>
                     </div>
                 </div>
 
                 <div style={{
                     width: "23%",
-                    background: "rgb(227 208 208)",
+                    background: "#e1e1e1",
                     height: "75%",
                     borderRadius: "20px",
                     display: "flex",
@@ -574,25 +579,30 @@ function Store() {
                     <img src={fone} alt="" style={{ width: "30%" }} />
                     <div style={{
                         display: "flex",
-                        justifyContent: "space-around",
                         alignItems: "center",
                         flexDirection: "column",
+                        gap: "12px",              // 👈 espaçamento fixo entre texto e botão
                         height: "50%"
                     }}>
-                        <p style={{ fontSize: "1.3rem" }}>Fones de Ouvido</p>
+                        <p style={{ fontSize: "1.3rem", textAlign: "center" }}>Fones de Ouvido</p>
                         <button style={{
                             background: "black",
                             color: "white",
-                            padding: "10px",
+                            padding: "12px 20px", 
                             borderRadius: "60px",
-                            width: "100%"
-                        }}>Comprar Agora</button>
+                            textAlign: "center",
+                            cursor: "pointer",
+                            border: "none",
+                            transition: "0.3s",
+                        }}>
+                            Comprar Agora
+                        </button>
                     </div>
                 </div>
 
                 <div style={{
                     width: "23%",
-                    background: "rgb(227 208 208)",
+                    background: "#e1e1e1",
                     height: "75%",
                     borderRadius: "20px",
                     display: "flex",
@@ -602,19 +612,25 @@ function Store() {
                     <img src={desktop} alt="" style={{ width: "30%" }} />
                     <div style={{
                         display: "flex",
-                        justifyContent: "space-around",
                         alignItems: "center",
                         flexDirection: "column",
+                        gap: "12px",              // 👈 espaçamento fixo entre texto e botão
                         height: "50%"
                     }}>
-                        <p style={{ fontSize: "1.3rem" }}>Desktops</p>
+                        <p style={{ fontSize: "1.3rem", textAlign: "center" }}>Desktops</p>
                         <button style={{
                             background: "black",
                             color: "white",
-                            padding: "10px",
+                            padding: "12px 20px", 
                             borderRadius: "60px",
-                            width: "100%"
-                        }}>Comprar Agora</button>
+                            textAlign: "center",
+                            cursor: "pointer",
+                            border: "none",
+                            transition: "0.3s",
+                        }}>
+                            Comprar Agora
+                        </button>
+
                     </div>
                 </div>
             </div>
@@ -623,15 +639,15 @@ function Store() {
 
             <div style={{
                 width: '100%',
-                background: '#383333',
-                height: '17vh',
+                background: '#2f2f2f',
+                height: '12vh',
                 display: "flex",
                 justifyContent: "space-around",
                 alignItems: "center",
                 marginTop: "100px"
             }}>
                 <div style={{
-                    width: "60%",
+                    width: "70%",
                     height: "60%",
                     display: "flex",
                     justifyContent: "space-between",
@@ -643,17 +659,17 @@ function Store() {
                         justifyContent: "space-between",
                         width: "56%"
                     }}>
-                        <img src={Email} alt="" style={{ width: "14%" }} />
+                        <img src={Email} alt="" style={{ width: "10%" }} />
                         <div>
-                            <p style={{ color: "white", fontSize: "1.5rem" }}>Cadastra-se para receber descontos</p>
-                            <p style={{ color: "white", fontSize: "1.2rem" }}>Cadastra-se para receber descontos</p>
+                            <p style={{ color: "#f5f5f5", fontSize: "1.5rem", fontWeight: "600" }}>Cadastre-se para receber descontos</p>
+                            <p style={{ color: "#f5f5f5", fontSize: "1.2rem" }}>Cadastre-se para receber ofertas e atualizações da empresa.</p>
                         </div>
 
                     </div>
                     <div style={{
                         background: "#5c595933",
                         width: "40%",
-                        height: "65%",
+                        height: "85%",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -664,12 +680,13 @@ function Store() {
                             background: "transparent",
                             outline: "none",
                             height: "90%",
-                            paddingLeft: "5%",
+                            paddingLeft: "25px",
+                            fontSize: "16px",
                             color: "white"
                         }} />
                         <div>
                             <button style={{
-                                padding: "10px",
+                                padding: "12px",
                                 borderRadius: "60px",
                                 width: "140%"
                             }}>Increver-se</button>
