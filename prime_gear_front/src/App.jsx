@@ -8,6 +8,7 @@ import Store from './pages/StorePage'
 import ProductPage from './pages/ProductPage'
 import LoginPage from './pages/LoginPage'
 import Institutional from './pages/InstitutionalPage'
+import FaleConosco from './pages/FaleConosco'
 function App() {
   return (
     <>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/detalhe" element={<ProductPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/institucional" element={<Institutional />} />
+        <Route path="/fale-conosco" element={<FaleConosco />} />
       </Routes>
       <Footer />
     </>
