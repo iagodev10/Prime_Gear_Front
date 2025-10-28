@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage'
 import Store from './pages/StorePage'
 import ProductPage from './pages/ProductPage'
 import LoginPage from './pages/LoginPage'
+import Institutional from './pages/InstitutionalPage'
 function App() {
   return (
     <>
@@ -16,6 +17,7 @@ function App() {
         <Route path="/loja" element={<Store />} />
         <Route path="/detalhe" element={<ProductPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/institucional" element={<Institutional />} />
       </Routes>
       <Footer />
     </>

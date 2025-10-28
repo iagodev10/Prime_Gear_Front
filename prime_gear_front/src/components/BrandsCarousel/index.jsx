@@ -8,12 +8,13 @@ import {Container, Title, Card, SwiperContainer} from './style';
 
 import Asus from '../../assets/images/Asus.png';
 import Dell from '../../assets/images/Dell.png';
+import Samsung from '../../assets/images/samsung.png'
 
 
 const Marcas = [
     { id: 1, name: "Asus", image: Asus },
     { id: 1, name: "Asus", image: Dell },
-    { id: 1, name: "Asus", image: Asus },
+    { id: 1, name: "Samsung", image: Samsung },
     { id: 1, name: "Asus", image: Asus },
     { id: 1, name: "Asus", image: Asus },
     { id: 1, name: "Asus", image: Asus },
