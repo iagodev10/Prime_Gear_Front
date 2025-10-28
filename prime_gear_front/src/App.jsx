@@ -9,6 +9,7 @@ import ProductPage from './pages/ProductPage'
 import LoginPage from './pages/LoginPage'
 import Institutional from './pages/InstitutionalPage'
 import FaleConosco from './pages/FaleConosco'
+import PrimeiraCompra from './pages/PrimeiraCompra'
 function App() {
   return (
     <>
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/institucional" element={<Institutional />} />
         <Route path="/fale-conosco" element={<FaleConosco />} />
+        <Route path="/primeira-compra" element={<PrimeiraCompra />} />
       </Routes>
       <Footer />
     </>

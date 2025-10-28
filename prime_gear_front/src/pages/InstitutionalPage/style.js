@@ -30,7 +30,7 @@ export const Title = styled.h2`
 `;
 
 export const Paragrafh = styled.p`
-    font-size: 1.2rem;
+    font-size: 1rem;
     line-height: 1.2;
     color: black;
 `;
