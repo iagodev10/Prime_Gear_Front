@@ -1,75 +1,42 @@
 import React from 'react';
-import styled from 'styled-components';
-
 import { FiEdit, FiTrash, FiPlus, FiSearch } from 'react-icons/fi';
 import {
     Container, Header, Title, Button, Search,
-    Content, ProdutoCard, ProdImage, ProdName, ProdInfos, ProdCategoria, ProdQuantidade, ProdPrice, ProdActions, Edit, Delete
+    Content, ProdutoCard, ProdImage, ProdName,
+    ProdInfos, ProdCategoria, ProdQuantidade,
+    ProdPrice, ProdActions, ActionButton
 } from './style';
-
-import Desktop from '../../assets/images/desktopPC.png'
+import Desktop from '../../assets/images/desktopPC.png';
 
 const AdminProdutos = () => {
-
     const mockProdutos = [
-        {
-            id: 1,
-            name: 'Notebook Lenovo IdeaPad 1i',
-            categoria: 'Laptops',
-            quantidade: 10,
-            price: 3.524,
-            image: Desktop
-        },
-        {
-            id: 2,
-            name: 'Headset Gamer Sem Fio Logitech G535 LIGHTSPEED',
-            categoria: 'Headsets',
-            quantidade: 10,
-            price: 589.90,
-            image: Desktop
-        },
-        {
-            id: 3,
-            name: 'Monitor Gamer Samsung Odyssey G32 32" Full HD',
-            categoria: 'Monitors',
-            quantidade: 10,
-            price: 1.599,
-            image: Desktop
-        },
-        {
-            id: 4,
-            name: 'Monitor Gamer Samsung Odyssey G32 32" Full HD',
-            categoria: 'Monitors',
-            quantidade: 10,
-            price: 1.599,
-            image: Desktop
-        }
+        { id: 1, name: 'Notebook Lenovo IdeaPad 1i', categoria: 'Laptops', quantidade: 10, price: 3524, image: Desktop },
+        { id: 2, name: 'Headset Gamer Logitech G535 LIGHTSPEED', categoria: 'Headsets', quantidade: 10, price: 589.9, image: Desktop },
+        { id: 3, name: 'Monitor Samsung Odyssey G32 32" Full HD', categoria: 'Monitors', quantidade: 10, price: 1599, image: Desktop },
+        { id: 4, name: 'Monitor Samsung Odyssey G32 32" Full HD', categoria: 'Monitors', quantidade: 10, price: 1599, image: Desktop },
     ];
 
     return (
         <Container>
-
-
             <Header>
                 <Title>
                     <h1>Gerenciar Produtos</h1>
-                    <p></p>
+                    <p>Adicione, edite ou remova produtos do catálogo.</p>
                 </Title>
-                <Button className='add-product-button'>
-                    <FiPlus size={20} />
-                    <span>Adicionar Produto</span>
+                <Button>
+                    <FiPlus size={18} />
+                    Adicionar Produto
                 </Button>
             </Header>
 
             <Search>
-                <FiSearch size={20} />
-                <input type="text" placeholder="Buscar Produto" />
+                <FiSearch size={20} color="#666" />
+                <input type="text" placeholder="Buscar produto..." />
             </Search>
 
             <Content>
                 {mockProdutos.map((produto) => (
                     <ProdutoCard key={produto.id}>
-
                         <ProdImage>
                             <img src={produto.image} alt={produto.name} />
                         </ProdImage>
@@ -79,37 +46,21 @@ const AdminProdutos = () => {
                         </ProdName>
 
                         <ProdInfos>
-                            <ProdCategoria>
-                                <p>{produto.categoria}</p>
-                            </ProdCategoria>
-                            <ProdQuantidade>
-                                <p>{produto.quantidade} unid.</p>
-                            </ProdQuantidade>
+                            <ProdCategoria><p>{produto.categoria}</p></ProdCategoria>
+                            <ProdQuantidade><p>{produto.quantidade} unid.</p></ProdQuantidade>
                         </ProdInfos>
 
-                        <ProdPrice>
-                            <p>R$ {produto.price}</p>
-                        </ProdPrice>
+                        <ProdPrice><p>R$ {produto.price.toLocaleString('pt-BR')}</p></ProdPrice>
 
                         <ProdActions>
-                            <Edit>
-                                <Button>
-                                    <FiEdit size={20} />
-                                    <span>Editar</span>
-                                </Button>
-                                <Delete>
-                                    <Button>
-                                        <FiTrash size={20} style={{ backgroundColor: 'red' }} />
-                                    </Button>
-                                </Delete>
-                            </Edit>
+                            <ActionButton><FiEdit /> Editar</ActionButton>
+                            <ActionButton><FiTrash /> Excluir</ActionButton>
                         </ProdActions>
-
                     </ProdutoCard>
                 ))}
             </Content>
         </Container>
-    )
-}
+    );
+};
 
 export default AdminProdutos;
