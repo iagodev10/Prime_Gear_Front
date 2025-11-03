@@ -3,23 +3,26 @@ import styled from 'styled-components';
 // Container principal da página do dashboard
 export const PageContainer = styled.div`
   padding: 2rem;
-  background-color: #f4f7fa; // Um fundo leve, similar ao da imagem
+  background-color: #f5f5f5; 
   min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
-// Cabeçalho (Dashboard Administrativo)
 export const DashboardHeader = styled.div`
   margin-bottom: 2rem;
+  margin-left: 5%;
 
   h1 {
     font-size: 2rem;
-    color: #1a202c;
+    color: black;
     margin: 0;
   }
 
   p {
-    font-size: 1rem;
-    color: #718096;
+    font-size: 1.1rem;
+    color: blck;
     margin-top: 0.5rem;
   }
 `;
@@ -27,7 +30,7 @@ export const DashboardHeader = styled.div`
 // Grid para os cards de estatísticas
 export const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 `;
@@ -42,32 +45,40 @@ export const StatCard = styled.div`
   gap: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 
-  /* Faz os cards da segunda fileira ocuparem mais espaço */
   &:nth-child(5),
   &:nth-child(6) {
-    /* Assumindo que o grid tem 4 colunas em telas largas */
     @media (min-width: 1024px) {
       grid-column: span 2;
     }
   }
 `;
 
-// Wrapper para o ícone (o círculo colorido)
 export const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem;
+  padding: 0.85rem;
   border-radius: 50%;
-  font-size: 1.5rem; // Tamanho do ícone
+  font-size: 1.5rem; 
   color: ${(props) => props.color || '#000'};
   background-color: ${(props) => props.bgColor || '#eee'};
 `;
 
-// Div para as informações (título, valor, porcentagem)
 export const StatInfo = styled.div`
   display: flex;
+`;
+
+export const Status = styled.div`
+  display: flex;
   flex-direction: column;
+  align-items: flex-start;
+`;
+
+export const Percent = styled.div`
+  display: flex;
+  align-items: left;
+  justify-content: left;
+
 `;
 
 export const StatTitle = styled.span`
@@ -100,8 +111,9 @@ export const RecentOrdersWrapper = styled.div`
 
   h2 {
     font-size: 1.25rem;
-    color: #1a202c;
+    color: black;
     margin-top: 0;
+    font-weight: 500;
     margin-bottom: 1.5rem;
   }
 

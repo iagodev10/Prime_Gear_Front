@@ -4,8 +4,7 @@ export const Container = styled.div`
     width: 100%;
     height: 100vh;
     background-color: #f5f5f5;
-    padding: 20px;
-    margin: 20px;
+    margin-top: 40vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,9 +17,6 @@ export const Header = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin-bottom: 20px;
 `;
@@ -33,7 +29,7 @@ export const Title = styled.div`
     justify-content: space-between;
     align-items: flex-start;
     h1 {
-        font-size: 2rem;
+        font-size: 2.2rem;
         font-weight: 600;
         color: black;
     }
@@ -45,17 +41,19 @@ export const Title = styled.div`
 `;
 
 export const Button = styled.button`
-    width: 100%;
-    height: 40px;
+    padding: 14px 18px;
     background-color: #000;
     color: #fff;
-    border-radius: 5px;
+    border-radius: 99px;
     border: none;
     cursor: pointer;
     font-size: 1.2rem;
-    font-weight: 600;
-    padding: 10px;
+    font-weight: 500;
     margin-bottom: 20px;
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     &:hover {
         background-color: #333;
         color: #fff;
@@ -68,7 +66,6 @@ export const Button = styled.button`
 
 export const Search = styled.div`
     width: 90%;
-    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,7 +73,7 @@ export const Search = styled.div`
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     input {
         width: 100%;
         height: 100%;
@@ -85,6 +82,7 @@ export const Search = styled.div`
         font-size: 1.2rem;
         color: black;
         background: transparent;
+        padding-left: 20px ;
     }
     input::placeholder {
         color: #aaa;
@@ -99,11 +97,8 @@ export const Content = styled.div`
     width: 90%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns:  repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin-bottom: 20px;
 
@@ -117,31 +112,40 @@ export const ProdutoCard = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: white;
+    padding: 22px 2%;
 `;
 
 export const ProdImage = styled.div`
-    width: 100%;
-    height: 60%;
+    width: 150px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 20px;
+
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 `;
 
 export const ProdName = styled.div`
-    width: 80%;
+    width: 90%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 10px;
     p {
         font-size: 1.2rem;
-        font-weight: 600;
+        font-weight: 500;
         color: black;
     }
 `;
 
 export const ProdInfos = styled.div`
-    width: 80%;
+    width: 90%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -152,44 +156,44 @@ export const ProdCategoria = styled.div`
     width: 40%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     p {
         font-size: 1.2rem;
-        font-weight: 600;
-        color: black;
+        font-weight: 500;
+        color: #1e1e1e;
     }
 `;
 
 export const ProdQuantidade = styled.div`
-    width: 40%;
+    /* width: 20%; */
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #d6f8d7;
-    border-radius: 5px;
-    padding: 5px;
+    border-radius: 15px;
+    padding: 8px 14px;
     p {
-        font-size: 1.2rem;
-        font-weight: 600;
+        font-size: 1rem;
+        font-weight: 500;
         color: #009601;
     }
 `;
 
 export const ProdPrice = styled.div`
-    width: 80%;
+    width: 90%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     margin-top: 10px;
     p{
         color: #03b304;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: 600;
     }
 `;
 
 export const ProdActions = styled.div`
-    width: 80%;
+    width: 90%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -197,17 +201,15 @@ export const ProdActions = styled.div`
 `;
 
 export const Edit = styled.div`
-    width: 60%;
+    width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #d6f8d7;
     border-radius: 5px;
     padding: 5px;
     p {
         font-size: 1.2rem;
         font-weight: 600;
-        color: #009601;
     }
 `;
 
@@ -216,7 +218,6 @@ export const Delete = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f8d7d7;
     border-radius: 5px;
     padding: 5px;
     p {

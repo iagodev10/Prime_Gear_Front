@@ -21,6 +21,7 @@ import {
   StatValue,
   StatPercentage,
   RecentOrdersWrapper,
+  Status, Percent
 } from './style';
 
 const AdminDashboard = () => {
@@ -42,15 +43,18 @@ const AdminDashboard = () => {
       </DashboardHeader>
 
       <StatsGrid>
-        {/* Card 1: Total de Produtos */}
         <StatCard>
           <IconWrapper color="#5a67d8" bgColor="#e9d8fd">
             <FiPackage />
           </IconWrapper>
           <StatInfo>
-            <StatTitle>Total de Produtos</StatTitle>
-            <StatValue>{stats.totalProdutos}</StatValue>
-            <StatPercentage positive>+12%</StatPercentage>
+            <Status>
+              <StatTitle>Total de Produtos</StatTitle>
+              <StatValue>{stats.totalProdutos}</StatValue>
+            </Status>
+            <Percent>
+              <StatPercentage positive>+12%</StatPercentage>
+            </Percent>
           </StatInfo>
         </StatCard>
 
@@ -60,9 +64,13 @@ const AdminDashboard = () => {
             <FiShoppingCart />
           </IconWrapper>
           <StatInfo>
-            <StatTitle>Pedidos</StatTitle>
-            <StatValue>{stats.pedidos}</StatValue>
-            <StatPercentage positive>+8%</StatPercentage>
+            <Status>
+              <StatTitle>Pedidos</StatTitle>
+              <StatValue>{stats.pedidos}</StatValue>
+            </Status>
+            <Percent>
+              <StatPercentage positive>+8%</StatPercentage>
+            </Percent>
           </StatInfo>
         </StatCard>
 
@@ -72,9 +80,13 @@ const AdminDashboard = () => {
             <FiUsers />
           </IconWrapper>
           <StatInfo>
-            <StatTitle>Usuários</StatTitle>
-            <StatValue>{stats.usuarios}</StatValue>
-            <StatPercentage positive>+23%</StatPercentage>
+            <Status>
+              <StatTitle>Usuários</StatTitle>
+              <StatValue>{stats.usuarios}</StatValue>
+            </Status>
+            <Percent>
+              <StatPercentage positive>+23%</StatPercentage>
+            </Percent>
           </StatInfo>
         </StatCard>
 
@@ -84,9 +96,13 @@ const AdminDashboard = () => {
             <FiDollarSign />
           </IconWrapper>
           <StatInfo>
-            <StatTitle>Receita Total</StatTitle>
-            <StatValue>{stats.receitaTotal}</StatValue>
-            <StatPercentage positive>+15%</StatPercentage>
+            <Status>
+              <StatTitle>Receita Total</StatTitle>
+              <StatValue>{stats.receitaTotal}</StatValue>
+            </Status>
+            <Percent>
+              <StatPercentage positive>+15%</StatPercentage>
+            </Percent>
           </StatInfo>
         </StatCard>
 
@@ -96,8 +112,10 @@ const AdminDashboard = () => {
             <FiClock />
           </IconWrapper>
           <StatInfo>
-            <StatTitle>Pedidos Pendentes</StatTitle>
-            <StatValue>{stats.pedidosPendentes}</StatValue>
+            <Status>
+              <StatTitle>Pedidos Pendentes</StatTitle>
+              <StatValue>{stats.pedidosPendentes}</StatValue>
+            </Status>
           </StatInfo>
         </StatCard>
 
@@ -107,8 +125,10 @@ const AdminDashboard = () => {
             <FiAlertCircle />
           </IconWrapper>
           <StatInfo>
-            <StatTitle>Produtos Sem Estoque</StatTitle>
-            <StatValue>{stats.produtosSemEstoque}</StatValue>
+            <Status>
+              <StatTitle>Produtos Sem Estoque</StatTitle>
+              <StatValue>{stats.produtosSemEstoque}</StatValue>
+            </Status>
           </StatInfo>
         </StatCard>
       </StatsGrid>

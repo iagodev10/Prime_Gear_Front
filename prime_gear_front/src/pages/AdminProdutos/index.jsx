@@ -4,8 +4,10 @@ import styled from 'styled-components';
 import { FiEdit, FiTrash, FiPlus, FiSearch } from 'react-icons/fi';
 import {
     Container, Header, Title, Button, Search,
-    Content, ProdutoCard, ProdImage, ProdName, ProdInfos, ProdCategoria, ProdQuantidade, ProdPrice, ProdActions, Edit, Delete, Button
+    Content, ProdutoCard, ProdImage, ProdName, ProdInfos, ProdCategoria, ProdQuantidade, ProdPrice, ProdActions, Edit, Delete
 } from './style';
+
+import Desktop from '../../assets/images/desktopPC.png'
 
 const AdminProdutos = () => {
 
@@ -16,7 +18,7 @@ const AdminProdutos = () => {
             categoria: 'Laptops',
             quantidade: 10,
             price: 3.524,
-            image: 'https://via.placeholder.com/150'
+            image: Desktop
         },
         {
             id: 2,
@@ -24,7 +26,7 @@ const AdminProdutos = () => {
             categoria: 'Headsets',
             quantidade: 10,
             price: 589.90,
-            image: 'https://via.placeholder.com/150'
+            image: Desktop
         },
         {
             id: 3,
@@ -32,9 +34,17 @@ const AdminProdutos = () => {
             categoria: 'Monitors',
             quantidade: 10,
             price: 1.599,
-            image: 'https://via.placeholder.com/150'
+            image: Desktop
+        },
+        {
+            id: 4,
+            name: 'Monitor Gamer Samsung Odyssey G32 32" Full HD',
+            categoria: 'Monitors',
+            quantidade: 10,
+            price: 1.599,
+            image: Desktop
         }
-    ]
+    ];
 
     return (
         <Container>
@@ -73,12 +83,12 @@ const AdminProdutos = () => {
                                 <p>{produto.categoria}</p>
                             </ProdCategoria>
                             <ProdQuantidade>
-                                <p>{produto.quantidade}</p>
+                                <p>{produto.quantidade} unid.</p>
                             </ProdQuantidade>
                         </ProdInfos>
 
                         <ProdPrice>
-                            <p>{produto.price}</p>
+                            <p>R$ {produto.price}</p>
                         </ProdPrice>
 
                         <ProdActions>
