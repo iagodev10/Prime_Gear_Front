@@ -4,7 +4,7 @@ export const Container = styled.div`
     width: 100%;
     height: 100vh;
     background-color: #f5f5f5;
-    margin-top: 40vh;
+    margin-top: 5vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -99,7 +99,6 @@ export const Content = styled.div`
     display: grid;
     grid-template-columns:  repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    padding: 20px;
     margin-bottom: 20px;
 
 `;
