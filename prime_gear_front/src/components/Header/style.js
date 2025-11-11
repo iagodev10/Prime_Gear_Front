@@ -33,9 +33,17 @@ export const MenuButton = styled.button`
   align-items: center;
   gap: 6px;
   background: transparent;
-  border: none;
+  border: 2px solid white;
+  padding: 8px 14px;
+  border-radius: 99px;
   color: inherit; 
   cursor: pointer;
+  transition: 0.3s;
+
+  &:hover{
+    background-color: white;
+    color: black;
+  }
 
   span {
     font-size: 14px;

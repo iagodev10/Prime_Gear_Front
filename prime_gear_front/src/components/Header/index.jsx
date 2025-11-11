@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
+import SidebarMenu from "../SidebarMenu";
+
 import { FiMenu, FiSearch, FiShoppingCart, FiUser } from "react-icons/fi";
+import { RiApps2Line } from "react-icons/ri";
 import {
   HeaderContainer,
   LeftSection,
@@ -49,7 +52,7 @@ const Header = () => {
       <HeaderContainer isScrolled={isScrolled} isHome={isHome}>
         <LeftSection>
           <MenuButton onClick={() => setIsMenuOpen(true)}>
-            <FiMenu size={22} />
+            <RiApps2Line size={22} />
             <span>Menu</span>
           </MenuButton>
 
@@ -77,6 +80,8 @@ const Header = () => {
         </RightSection>
 
       </HeaderContainer>
+
+      <SidebarMenu isOpen={isMenuOpen} onCLose={() => setIsMenuOpen(false)} />
     </>
   );
 };
