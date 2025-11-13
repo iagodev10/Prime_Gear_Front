@@ -11,7 +11,7 @@ const SidebarMenu = ({ isOpen, onCLose }) => {
         <>
             <Backdrop isOpen={isOpen} onClick={onCLose} />
 
-            <Sidebar isOpen={isOpen}>
+            {/* <Sidebar isOpen={isOpen}>
                 <SibeHeader>
                     <Close onClick={onCLose}>
                         <FiX size={24}/>
@@ -20,7 +20,7 @@ const SidebarMenu = ({ isOpen, onCLose }) => {
 
                 <SideBody></SideBody>
 
-            </Sidebar>
+            </Sidebar> */}
         </>
     );
 }

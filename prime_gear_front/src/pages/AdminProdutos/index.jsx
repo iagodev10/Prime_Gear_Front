@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { FiEdit, FiTrash, FiPlus, FiSearch } from 'react-icons/fi';
 import {
     Container, Header, Title, Button, Search,
@@ -8,6 +9,9 @@ import {
 } from './style';
 import Desktop from '../../assets/images/desktopPC.png';
 
+import ModalAdicionarProduto from '../../components/ModalAdicionarProduto';
+
+
 const AdminProdutos = () => {
     const mockProdutos = [
         { id: 1, name: 'Notebook Lenovo IdeaPad 1i', categoria: 'Laptops', quantidade: 10, price: 3524, image: Desktop },
@@ -16,6 +20,8 @@ const AdminProdutos = () => {
         { id: 4, name: 'Monitor Samsung Odyssey G32 32" Full HD', categoria: 'Monitors', quantidade: 10, price: 1599, image: Desktop },
     ];
 
+    const [modalVisivel, setModalVisivel] = useState(false)
+
     return (
         <Container>
             <Header>
@@ -23,7 +29,7 @@ const AdminProdutos = () => {
                     <h1>Gerenciar Produtos</h1>
                     <p>Adicione, edite ou remova produtos do catálogo.</p>
                 </Title>
-                <Button>
+                <Button onClick={() => setModalVisivel(true)}>
                     <FiPlus size={18} />
                     Adicionar Produto
                 </Button>
@@ -59,6 +65,9 @@ const AdminProdutos = () => {
                     </ProdutoCard>
                 ))}
             </Content>
+
+            <ModalAdicionarProduto onClose = {() => setModalVisivel(false)}/>
+
         </Container>
     );
 };
