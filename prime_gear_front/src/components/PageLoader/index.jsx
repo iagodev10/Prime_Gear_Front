@@ -29,8 +29,8 @@ const PageLoader = () => {
                         <RingSvg width="180" height="180" viewBox="0 0 180 180">
                             <defs>
                                 <linearGradient id="ringGradient" x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0%" stopColor="black" />
-                                    <stop offset="100%" stopColor="3f3f3f" />
+                                    <stop offset="0%" stopColor="#0052CC" />
+                                    <stop offset="100%" stopColor="#66B2FF" />
                                 </linearGradient>
                             </defs>
                             <circle
