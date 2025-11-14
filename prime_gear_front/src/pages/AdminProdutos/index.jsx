@@ -66,7 +66,9 @@ const AdminProdutos = () => {
                 ))}
             </Content>
 
-            <ModalAdicionarProduto onClose = {() => setModalVisivel(false)}/>
+            {modalVisivel && (
+                <ModalAdicionarProduto onClose={() => setModalVisivel(false)} />
+            )}
 
         </Container>
     );
