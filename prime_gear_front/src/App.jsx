@@ -1,8 +1,10 @@
-import React from 'react'
-import { Routes, Route, BrowserRouter } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { LoaderProvider, useLoader } from './contexts/LoaderContext'
+import { AnimatePresence } from 'framer-motion'
+
 import './App.css'
-import Header from './components/Header'
-import Footer from './components/Footer'
+
 import HomePage from './pages/HomePage'
 import Store from './pages/StorePage'
 import ProductPage from './pages/ProductPage'
@@ -14,30 +16,77 @@ import PrimeiraCompra from './pages/PrimeiraCompra'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminProdutos from './pages/AdminProdutos'
 
+import PageLoader from './components/PageLoader'
 
 import AdminLayout from './components/AdminLayout'
 import PublicLayout from './components/PublicLayout'
 
-function App() {
+const AppContent = () => {
+  const { isLoading, startLoading } = useLoader();
+  const location = useLocation();
+  const prevPathname = React.useRef(null);
+  const isFirstRender = React.useRef(true);
+
+  // Efeito para mostrar o loader na troca de páginas
+  useEffect(() => {
+    // Ignora a primeira renderização (carregamento inicial já tem seu próprio loader)
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      prevPathname.current = location.pathname;
+      return;
+    }
+
+    // Só mostra o loader se a rota realmente mudou
+    if (prevPathname.current !== location.pathname) {
+      const cleanup = startLoading();
+      prevPathname.current = location.pathname;
+      return cleanup;
+    }
+  }, [location.pathname, startLoading]);
+
   return (
     <>
-      <Routes>
-        <Route path="/" element={<PublicLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="loja" element={<Store />} />
-          <Route path="detalhe" element={<ProductPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="institucional" element={<Institutional />} />
-          <Route path="fale-conosco" element={<FaleConosco />} />
-          <Route path="primeira-compra" element={<PrimeiraCompra />} />
-        </Route>
+      {/* O AnimatePresence gerencia a animação de SAÍDA.
+        Quando isLoading virar 'false', ele vai rodar a animação 'exit'
+        do PageLoader antes de removê-lo.
+        O mode="wait" garante que a animação de saída termine antes da entrada.
+      */}
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <PageLoader key="loader" />
+        )}
+      </AnimatePresence>
 
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="produtos" element={<AdminProdutos />} />
-        </Route>
-      </Routes>
+      {/* Seu app (só é visível quando o loader não está por cima) */}
+      {!isLoading && (
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PublicLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="loja" element={<Store />} />
+              <Route path="detalhe" element={<ProductPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="institucional" element={<Institutional />} />
+              <Route path="fale-conosco" element={<FaleConosco />} />
+              <Route path="primeira-compra" element={<PrimeiraCompra />} />
+            </Route>
+
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="produtos" element={<AdminProdutos />} />
+            </Route>
+          </Routes>
+        </AnimatePresence>
+      )}
     </>
+  );
+};
+
+function App() {
+  return (
+    <LoaderProvider>
+      <AppContent />
+    </LoaderProvider>
   )
 }
 
