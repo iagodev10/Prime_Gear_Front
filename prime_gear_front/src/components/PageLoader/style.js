@@ -13,7 +13,22 @@ export const LoaderContainer = styled.div`
   z-index: 9999; 
 `;
 
+export const RingWrapper = styled.div`
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const Logo = styled.img`
-  width: 150px; 
+  width: 90px;
   height: auto;
+  z-index: 1;
+`;
+
+export const RingSvg = styled.svg`
+  position: absolute;
+  inset: 0;
 `;

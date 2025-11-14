@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from 'framer-motion';
-import { LoaderContainer, Logo } from './style';
+import { LoaderContainer, Logo, RingWrapper, RingSvg } from './style';
 
 import PrimeGear from '../../assets/images/logodark.png';
 
@@ -10,32 +10,42 @@ const PageLoader = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 3 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
         >
             <LoaderContainer>
-                <motion.div
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.8, opacity: 0 }}
-                    transition={{
-                        duration: 0.3,
-                        ease: "easeOut"
-                    }}
-                >
+                <RingWrapper>
                     <motion.div
-                        animate={{ 
-                            scale: [1, 1.1, 1],
-                            opacity: [1, 0.8, 1]
-                        }}
-                        transition={{
-                            repeat: Infinity,
-                            duration: 1.5,
-                            ease: "easeInOut"
-                        }}
+                        initial={{ opacity: 1 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0 }}
                     >
                         <Logo src={PrimeGear} alt="PrimeGear Loading" />
                     </motion.div>
-                </motion.div>
+                    <motion.div
+                        style={{ position: 'absolute', inset: 0 }}
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 1.6, ease: 'linear' }}
+                    >
+                        <RingSvg width="180" height="180" viewBox="0 0 180 180">
+                            <defs>
+                                <linearGradient id="ringGradient" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor="black" />
+                                    <stop offset="100%" stopColor="3f3f3f" />
+                                </linearGradient>
+                            </defs>
+                            <circle
+                                cx="90"
+                                cy="90"
+                                r="80"
+                                fill="none"
+                                stroke="url(#ringGradient)"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeDasharray="460 60"
+                            />
+                        </RingSvg>
+                    </motion.div>
+                </RingWrapper>
             </LoaderContainer>
         </motion.div>
     )
