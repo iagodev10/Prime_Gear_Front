@@ -44,10 +44,22 @@ export const Button = styled.button`
     justify-content: center;
     gap: 8px;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
     &:hover {
-        background-color: #333;
-        transform: scale(1.05);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.15);
     }
+    &::after{
+        content: '';
+        position: absolute;
+        top: 0; left: -150%;
+        width: 50%; height: 100%;
+        background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.35), rgba(255,255,255,0));
+        transform: skewX(-20deg);
+    }
+    &:hover::after{animation: shine 0.8s ease;}
+    @keyframes shine {to{left:150%;}}
 `;
 
 export const Search = styled.div`
@@ -180,11 +192,13 @@ export const ActionButton = styled.button`
     cursor: pointer;
     transition: all 0.3s ease;
     &:first-child {
-        background-color: #007bff;
+        background-color: #000;
         margin-right: 10px;
-        &:hover {
-            background-color: #0056b3;
-        }
+        position: relative;
+        overflow: hidden;
+        &:hover { box-shadow: 0 8px 18px rgba(0,0,0,0.12); }
+        &::after{ content:''; position:absolute; top:0; left:-150%; width:50%; height:100%; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.3), rgba(255,255,255,0)); transform: skewX(-20deg); }
+        &:hover::after{ animation: shine 0.8s ease; }
     }
     &:last-child {
         background-color: #e63946;

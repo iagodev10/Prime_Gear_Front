@@ -1,15 +1,14 @@
-import styled from 'styled-components'	
+import styled from 'styled-components';
 
 export const Container = styled.div`
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding-top: 10vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background-color: #f5f5f5;
-    margin-bottom: 50px;
-`
+`;
 
 export const Header = styled.div`
     width: 90%;
@@ -17,8 +16,7 @@ export const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    margin-top: 8vh;
-`
+`;
 
 export const Title = styled.div`
     h1 {
@@ -90,57 +88,45 @@ export const Content = styled.div`
     gap: 25px;
 `;
 
-export const Categoria = styled.div`
+export const Transportadora = styled.div`
     background-color: #fff;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    // padding: 20px 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
+    gap: 4px;
+`;
+
+
+export const Name = styled.div`
+    display: flex;
     align-items: center;
-    transition: all 0.3s ease;
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    }
-`;
+    gap: 14px;
+    padding: 12px 20px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #161616, #2c2c2c);
+    border-radius: 12px 12px 0 0;
 
-export const CatImage = styled.div`
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    background-color: #f5f5f5;
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.4s ease;
+    div {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        background: linear-gradient(135deg, #000000, #6e6e6e);
     }
-    ${Categoria}:hover & img {
-        transform: scale(1.05);
-    }
-`;
 
-export const Infos = styled.div`
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 18px;
-    margin-bottom: 20px;
     h3 {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         font-weight: 500;
-        color: #111;
-    }
-    p {
-        font-size: 1rem;
-        color: #666;
+        color: white;
+        margin: 0;
     }
 `;
+
+
 
 export const Action = styled.div`
     width: 90%;
@@ -149,12 +135,14 @@ export const Action = styled.div`
     align-items: center;
     margin-bottom: 30px;
     gap: 14px;
+    margin-top: 20px;
+    margin-left: 5%;
 `;
 
 export const Edit = styled.div`
     padding: 10px 0;
     flex: 4;
-    background-color: #000;
+    background-color: black;
     color: #fff;
     border-radius: 8px;
     border: none;
@@ -168,9 +156,20 @@ export const Edit = styled.div`
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    &:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }
-    &::after{ content:''; position:absolute; top:0; left:-150%; width:50%; height:100%; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.3), rgba(255,255,255,0)); transform: skewX(-20deg); }
-    &:hover::after{ animation: shine 0.8s ease; }
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+    &::after{
+        content: '';
+        position: absolute;
+        top: 0; left: -150%;
+        width: 50%; height: 100%;
+        background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.3), rgba(255,255,255,0));
+        transform: skewX(-20deg);
+    }
+    &:hover::after{animation: shine 0.8s ease;}
+    @keyframes shine {to{left:150%;}}
 `;
 
 export const Excluir = styled.div`
@@ -191,5 +190,43 @@ export const Excluir = styled.div`
     &:hover {
         background-color: #c82333;
         transform: scale(1.05);
+    }
+`;
+
+export const TransPrice = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-left: 5%;
+    margin-bottom: 20px;
+    p {
+        font-size: 1.4rem;
+        color: #03b304;
+        font-weight: 600;
+    }
+    .label {
+        font-size: 0.9rem;
+        color: #666;
+        font-weight: 500;
+    }
+`;
+
+export const Info = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-left: 5%;
+    margin-bottom: 20px;
+    p {
+        font-size: 1.1rem;
+        color: #333;
+        font-weight: 500;
+        
+    }
+    .label {
+        font-size: 1rem;
+        color: #666;
+        font-weight: 500;
+        
     }
 `;
