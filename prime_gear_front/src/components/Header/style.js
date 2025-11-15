@@ -33,7 +33,7 @@ export const MenuButton = styled.button`
   align-items: center;
   gap: 6px;
   background: transparent;
-  border: 2px solid white;
+  border: 2px solid ${({ $isScrolled }) => ($isScrolled ? "black" : "white")};
   padding: 8px 14px;
   border-radius: 99px;
   color: inherit; 
@@ -41,8 +41,8 @@ export const MenuButton = styled.button`
   transition: 0.3s;
 
   &:hover{
-    background-color: white;
-    color: black;
+    background-color: ${({ $isScrolled }) => ($isScrolled ? "black" : "black")};
+    color: ${({ $isScrolled }) => ($isScrolled ? "white" : "black")};
   }
 
   span {
@@ -53,6 +53,8 @@ export const MenuButton = styled.button`
 export const NavLinks = styled.nav`
   display: flex;
   gap: 40px;
+  align-items: center;
+  justify-content: center;
 
   a {
     text-decoration: none;

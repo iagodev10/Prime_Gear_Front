@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { FaChevronDown, FaChevronUp  } from "react-icons/fa";
 
 import SidebarMenu from "../SidebarMenu";
 
@@ -51,16 +52,16 @@ const Header = () => {
     <>
       <HeaderContainer isScrolled={isScrolled} isHome={isHome}>
         <LeftSection>
-          <MenuButton onClick={() => setIsMenuOpen(true)}>
+          <MenuButton $isScrolled={isScrolled || !isHome} onClick={() => setIsMenuOpen(true)}>
             <RiApps2Line size={19} />
             <span>Menu</span>
           </MenuButton>
 
           <NavLinks>
-            <Link to="/laptops">Laptops</Link>
-            <Link to="/desktops">Desktops</Link>
-            <Link to="/consoles">Consoles</Link>
-            <Link to="/perifericos">Periféricos</Link>
+            <Link to="/laptops">Laptops <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
+            <Link to="/desktops">Desktops <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
+            <Link to="/consoles">Consoles <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
+            <Link to="/perifericos">Periféricos <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
           </NavLinks>
 
         </LeftSection>
@@ -72,7 +73,7 @@ const Header = () => {
             <FiUser size={20} />
           </Icons>
 
-          <Logo isScrolled={isScrolled}>
+          <Logo isScrolled={isScrolled || !isHome}>
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
               <img src={LogoDark} alt="PrimeGear Logo" />
             </Link>
@@ -81,7 +82,7 @@ const Header = () => {
 
       </HeaderContainer>
 
-      <SidebarMenu isOpen={isMenuOpen} onCLose={() => setIsMenuOpen(false)} />
+      <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </>
   );
 };
