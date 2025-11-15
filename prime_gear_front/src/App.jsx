@@ -15,6 +15,7 @@ import PrimeiraCompra from './pages/PrimeiraCompra'
 
 import AdminDashboard from './pages/AdminDashboard'
 import AdminProdutos from './pages/AdminProdutos'
+import AdminCategorias from './pages/AdminCategorias'
 
 import PageLoader from './components/PageLoader'
 
@@ -74,6 +75,7 @@ const AppContent = () => {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="produtos" element={<AdminProdutos />} />
+              <Route path="categorias" element={<AdminCategorias />} />
             </Route>
           </Routes>
         </AnimatePresence>

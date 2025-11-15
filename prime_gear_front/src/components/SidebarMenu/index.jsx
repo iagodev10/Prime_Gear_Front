@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -9,15 +9,50 @@ import { FiX, FiChevronRight } from "react-icons/fi";
 import BestSeller from '../../assets/images/bestseller.png';
 
 const SidebarMenu = ({ isOpen, onClose }) => {
+
+    const [activeMenu, setActiveMenu] = useState('main');
+
+    const handleClose = () =>{
+        onClose?.();
+        setTimeout(() => {
+            setActiveMenu('main');
+        }, 300);
+    };
+
     React.useEffect(() => {
         const handler = (e) => {
-            if (e.key === 'Escape') onClose?.();
+            if (e.key === 'Escape') handleClose();
         };
         if (isOpen) {
             window.addEventListener('keydown', handler);
         }
         return () => window.removeEventListener('keydown', handler);
     }, [isOpen, onClose]);
+
+    const renderSubMenu= (menuId) =>{
+        switch(menuId){
+            case 'institucional':
+                return (
+                    <>
+                    <NavList>
+                        <NavItem>
+                            <NavLink to="/institucional" onClick={onClose}>Sobre</NavLink>                         
+                        </NavItem>
+
+                        <NavItem>
+                            <NavLink to="/institucional" onClick={onClose}>Nossas Lojas</NavLink>
+                            <FiChevronRight size={20} />
+                        </NavItem>
+
+                        <NavItem>
+                            <NavLink to="/fale-conosco" onClick={onClose}>Fale Conosco</NavLink>
+                            <FiChevronRight size={20} />
+                        </NavItem>
+                        </NavList>
+                    </>
+                );
+        }
+    }
     return (
         <>
             <Backdrop isOpen={isOpen} onClick={onClose} />

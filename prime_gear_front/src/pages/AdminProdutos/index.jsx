@@ -14,7 +14,7 @@ import ModalAdicionarProduto from '../../components/ModalAdicionarProduto';
 
 const AdminProdutos = () => {
     const mockProdutos = [
-        { id: 1, name: 'Notebook Lenovo IdeaPad 1i', categoria: 'Laptops', quantidade: 10, price: 3524, image: Desktop },
+        { id: 1, name: 'Notebook Lenovo IdeaPad 1i hgg hgh ghgfdh', categoria: 'Laptops', quantidade: 10, price: 3524, image: Desktop },
         { id: 2, name: 'Headset Gamer Logitech G535 LIGHTSPEED', categoria: 'Headsets', quantidade: 10, price: 589.9, image: Desktop },
         { id: 3, name: 'Monitor Samsung Odyssey G32 32" Full HD', categoria: 'Monitors', quantidade: 10, price: 1599, image: Desktop },
         { id: 4, name: 'Monitor Samsung Odyssey G32 32" Full HD', categoria: 'Monitors', quantidade: 10, price: 1599, image: Desktop },
