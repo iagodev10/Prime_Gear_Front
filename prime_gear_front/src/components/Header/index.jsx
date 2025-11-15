@@ -52,7 +52,7 @@ const Header = () => {
       <HeaderContainer isScrolled={isScrolled} isHome={isHome}>
         <LeftSection>
           <MenuButton onClick={() => setIsMenuOpen(true)}>
-            <RiApps2Line size={22} />
+            <RiApps2Line size={19} />
             <span>Menu</span>
           </MenuButton>
 
