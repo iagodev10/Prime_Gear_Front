@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 import { BsBoxSeam } from 'react-icons/bs';
 import { BsArrowUpRight } from 'react-icons/bs';
@@ -10,7 +11,7 @@ import {
   Container, Canais, Card, Titulo, Info, Content, Email, EmailImage, EmailText, Duvidas, DTitulo,
   Title, SubTitle, Cards, Suport, Texto, Button, SuporteTecnico, FormGroup, AjudaComprar, DTexto, 
   FaqContainer, FaqItem, FaqQuestion, FaqAnswer, FormLabel, FormInput, FormTextArea, FormButton,
-  Comprar, Text, Title1, Buttond
+  Comprar, Text, Title1, Buttond, FeatureSection, FeatureGrid, FeatureCard
 } from "./style";
 
 
@@ -69,6 +70,9 @@ const FaleConosco = () => {
     }
   };
 
+  const containerVariants = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
+  const itemVariants = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } };
+
   return (
     <Container>
 
@@ -77,24 +81,32 @@ const FaleConosco = () => {
         <SubTitle>Qual tipo de suporte você precisa?</SubTitle>
       </Canais>
 
+      <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
       <Cards>
 
+        <motion.div variants={itemVariants}>
         <Comprar onClick={scrollToComprar}>
           <FiShoppingBag size={50} color="black" />
           <Text>Ajuda para comprar</Text>
         </Comprar>
+        </motion.div>
 
+        <motion.div variants={itemVariants}>
         <Comprar onClick={scrollToSuporte}>
           <BsBoxSeam size={50} color="black" />
           <Text>Ajuda com meu Pedido</Text>
         </Comprar>
+        </motion.div>
 
+        <motion.div variants={itemVariants}>
         <Comprar onClick={scrollToTecnico}>
           <FiSettings size={50} color="black" />
           <Text>Suporte Técnico</Text>
         </Comprar>
+        </motion.div>
 
       </Cards>
+      </motion.div>
 
       <Title1>Estamos aqui para você</Title1>
 
@@ -106,7 +118,8 @@ const FaleConosco = () => {
           {faqData.map((item, index) => {
             const isOpen = openFaq === index;
             return (
-              <FaqItem key={index}>
+              <motion.div key={index} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <FaqItem>
                 <FaqQuestion onClick={() => toggleFaq(index)}>
                   <span>{item.q}</span>
                   {isOpen ? <FiMinus size={20} /> : <FiPlus size={20} />}
@@ -115,6 +128,7 @@ const FaleConosco = () => {
                   {item.a}
                 </FaqAnswer>
               </FaqItem>
+              </motion.div>
             );
           })}
         </FaqContainer>
@@ -123,6 +137,7 @@ const FaleConosco = () => {
       <Suport ref={suporteRef}>
         <Title>Contato da Loja Online</Title>
 
+        <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
         <Content>
           <Card>
             <Titulo>WhatsApp Loja Online</Titulo>
@@ -170,6 +185,7 @@ const FaleConosco = () => {
             </Button>
           </Card>
         </Content>
+        </motion.div>
       </Suport>
 
       <SuporteTecnico ref={tecnicoRef}>
@@ -219,6 +235,34 @@ const FaleConosco = () => {
             </Buttond>
         </Duvidas>
       </Email>
+
+      <FeatureSection>
+        <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <Title>Por que falar conosco?</Title>
+        </motion.div>
+        <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+          <FeatureGrid>
+            <motion.div variants={itemVariants}>
+              <FeatureCard>
+                <h4>Tempo médio de resposta</h4>
+                <p>Até 2 horas úteis pelo WhatsApp e 24–48h por e-mail.</p>
+              </FeatureCard>
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <FeatureCard>
+                <h4>Atendimento humano</h4>
+                <p>Equipe especializada para resolver dúvidas com rapidez.</p>
+              </FeatureCard>
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <FeatureCard>
+                <h4>Garantia e troca fácil</h4>
+                <p>Suporte completo para acionamento de garantia e trocas.</p>
+              </FeatureCard>
+            </motion.div>
+          </FeatureGrid>
+        </motion.div>
+      </FeatureSection>
 
     </Container >
   );

@@ -116,6 +116,10 @@ export const Card = styled.div`
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 20px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transition: transform .25s ease, box-shadow .25s ease;
+  &:hover{ transform: translateY(-4px); box-shadow: 0 8px 22px rgba(0,0,0,0.12); }
 `;
 export const Titulo = styled.h3`
   text-align: left;
@@ -307,6 +311,8 @@ export const EmailImage = styled.div`
   background-position: center;
   background-size: cover;
   position: relative;
+  border-radius: 16px;
+  overflow: hidden;
 `;
 
 export const EmailText = styled.div`
@@ -335,6 +341,8 @@ export const Duvidas = styled.div`
   padding: 30px 20px;
   gap: 40px;
   margin-bottom: 50px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 `;
 
 export const DTitulo = styled.h1`
@@ -380,4 +388,32 @@ export const Buttond = styled.a`
     &:hover svg {
         transform: translateX(3px) translateY(-3px); 
     }
+`;
+
+export const FeatureSection = styled.section`
+  width: 80%;
+  margin: 40px auto 80px auto;
+`;
+
+export const FeatureGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+`;
+
+export const FeatureCard = styled.div`
+  background: #fff;
+  border: 2px solid black;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  transition: transform .25s ease, box-shadow .25s ease;
+  &:hover{ transform: translateY(-4px); box-shadow: 0 8px 22px rgba(0,0,0,0.12); }
+  h4{ font-size: 1.2rem; color: black; margin:0; }
+  p{ color: #333; margin:0; }
 `;
