@@ -17,6 +17,7 @@ import Ideapad1 from '../../assets/images/Ideapad1.png';
 
 
 
+
 const HomePage = () => {
   return (
     <>

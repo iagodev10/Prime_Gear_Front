@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { FaChevronDown, FaChevronUp  } from "react-icons/fa";
 
 import SidebarMenu from "../SidebarMenu";
+import SidebarLaptop from "../SidebarLaptop";
 
 import { FiMenu, FiSearch, FiShoppingCart, FiUser } from "react-icons/fi";
 import { RiApps2Line } from "react-icons/ri";
@@ -27,6 +28,7 @@ const Header = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [openCategory, setOpenCategory] = useState(null);
 
   useEffect(() => {
     function handleScroll() {
@@ -58,10 +60,10 @@ const Header = () => {
           </MenuButton>
 
           <NavLinks>
-            <Link to="/laptops">Laptops <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
-            <Link to="/desktops">Desktops <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
-            <Link to="/consoles">Consoles <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
-            <Link to="/perifericos">Periféricos <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
+            <Link to="/laptops" onMouseEnter={() => setOpenCategory('laptops')}>Laptops <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
+            <Link to="/desktops" onMouseEnter={() => setOpenCategory('desktops')}>Desktops <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
+            <Link to="/consoles" onMouseEnter={() => setOpenCategory('consoles')}>Consoles <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
+            <Link to="/perifericos" onMouseEnter={() => setOpenCategory('perifericos')}>Periféricos <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
           </NavLinks>
 
         </LeftSection>
@@ -83,6 +85,8 @@ const Header = () => {
       </HeaderContainer>
 
       <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+
+      <SidebarLaptop isOpen={!!openCategory} category={openCategory} onClose={() => setOpenCategory(null)} />
     </>
   );
 };

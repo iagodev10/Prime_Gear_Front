@@ -18,6 +18,7 @@ import AdminProdutos from './pages/AdminProdutos'
 import AdminCategorias from './pages/AdminCategorias'
 import AdminFornecedor from './pages/AdminFornecedor'
 import AdminTransportadora from './pages/AdminTransportadora'
+import AdminUsers from './pages/AdminUsers'
 
 
 import PageLoader from './components/PageLoader'
@@ -81,6 +82,7 @@ const AppContent = () => {
               <Route path="categorias" element={<AdminCategorias />} />
               <Route path="fornecedores" element={<AdminFornecedor />} />
               <Route path="transportadoras" element={<AdminTransportadora />} />
+              <Route path="usuarios" element={<AdminUsers />} />
             </Route>
           </Routes>
         </AnimatePresence>

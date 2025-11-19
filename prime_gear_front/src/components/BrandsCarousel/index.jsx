@@ -9,14 +9,16 @@ import {Container, Title, Card, SwiperContainer} from './style';
 import Asus from '../../assets/images/Asus.png';
 import Dell from '../../assets/images/Dell.png';
 import Samsung from '../../assets/images/samsung.png'
+import Apple from '../../assets/images/apple-logo.svg'
+import Lenovo from '../../assets/images/lenovo.png'
 
 
 const Marcas = [
     { id: 1, name: "Asus", image: Asus },
     { id: 1, name: "Asus", image: Dell },
     { id: 1, name: "Samsung", image: Samsung },
-    { id: 1, name: "Asus", image: Asus },
-    { id: 1, name: "Asus", image: Asus },
+    { id: 1, name: "Apple", image: Apple },
+    { id: 1, name: "Lenovo", image: Lenovo },
     { id: 1, name: "Asus", image: Asus },
     { id: 1, name: "Asus", image: Asus },
     { id: 1, name: "Asus", image: Asus },
