@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Container, Header, Title, Button, Search, Content, Categoria, Infos, Action, Edit, Excluir, Badge } from './style'
 import { FiPlus, FiSearch, FiEdit, FiTrash } from 'react-icons/fi'
 
-import ModalAdicionarCategoria from '../../components/ModalAdicionarCategoria';
-import ModalEditarCategoria from '../../components/ModalEditarCategoria';
-import ModalExcluirCategoria from '../../components/ModalExcluirCategoria';
+import ModalAdicionarCategoria from '../../components/Categoria/ModalAdicionarCategoria';
+import ModalEditarCategoria from '../../components/Categoria/ModalEditarCategoria';
+import ModalExcluirCategoria from '../../components/Categoria/ModalExcluirCategoria';
 
 const AdminCategorias = () => {
 

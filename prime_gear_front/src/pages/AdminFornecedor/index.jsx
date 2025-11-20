@@ -14,9 +14,9 @@ import {
 } from "./style";
 import { FiPlus, FiSearch, FiEdit, FiTrash } from "react-icons/fi";
 
-import ModalAdicionarFornecedor from "../../components/ModalAdicionarFornecedor";
-import ModalEditarFornecedor from "../../components/ModalEditarFornecedor";
-import ModalExcluirFornecedor from "../../components/ModalExcluirFornecedor";
+import ModalAdicionarFornecedor from "../../components/Fornecedor/ModalAdicionarFornecedor";
+import ModalEditarFornecedor from "../../components/Fornecedor/ModalEditarFornecedor";
+import ModalExcluirFornecedor from "../../components/Fornecedor/ModalExcluirFornecedor";
 
 const AdminFornecedor = () => {
   const [fornecedor, setFornecedor] = useState([
