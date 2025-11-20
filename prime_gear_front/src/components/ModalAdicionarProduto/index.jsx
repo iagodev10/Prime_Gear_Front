@@ -19,6 +19,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
   const [alturaProd, setAlturaProd]=useState()
   const [larguraProd, setLarguraProd]=useState()
   const [comprimentoProd, seComprimentoProd]=useState()
+  const [imagemProd, setImagemProd]=useState(null)
 
   function setarNomeProd(e){
     setNomeProd(e.target.value)
@@ -47,6 +48,9 @@ const ModalAdicionarProduto = ({ onClose }) => {
   function setarComprimentoProd(e){
     seComprimentoProd(e.target.value)
   }
+  function setarImagemProd(e){
+    setImagemProd(e.target.files[0])
+  }
 
 
   const handleOverlayClick = (e) => {
@@ -57,29 +61,23 @@ const ModalAdicionarProduto = ({ onClose }) => {
   
   async function adicionarProduto(e){
     e.preventDefault();
-    const objProd={
-        nome_prod:nomeProd,
-        preco_prod:precoProd,
-        descricao_prod:descricaoProd,
-        qtde_estoque_prod:qtdEstoqueProd,
-        peso_prod:pesoProd,
-        altura_prod:alturaProd,
-        largura_prod:larguraProd,
-        comprimento_prod:comprimentoProd,
-        cod_categoria:categoriaProd
-    }
+    
 
     const formData=new FormData()
 
     formData.append('nome_prod',nomeProd)
     formData.append('preco_prod',precoProd)
     formData.append('descricao_prod',descricaoProd)
-    formData.append('qtde_estoque_prod',qtdEstoqueProd)
+    formData.append('qtd_estoque_prod',qtdEstoqueProd)
     formData.append('altura_prod',alturaProd)
     formData.append('largura_prod',larguraProd)
     formData.append('comprimento_prod',comprimentoProd)
     formData.append('cod_categoria',categoriaProd)
     formData.append('peso_prod',pesoProd)
+    
+    if(imagemProd){
+      formData.append('imagem1',imagemProd)
+    }
 
     try {
       const response=await axios.post('http://localhost:8080/adicionar-produto', formData)
@@ -135,6 +133,11 @@ const ModalAdicionarProduto = ({ onClose }) => {
             </div>
 
             <div>
+              <label htmlFor="imagem">Imagem do Produto</label>
+              <input type="file" id="imagem" accept="image/*" onChange={setarImagemProd}/>
+            </div>
+
+            <div>
               <label htmlFor="descricao">Descrição</label>
               <textarea id="descricao" rows={4} placeholder="Descrição detalhada do Produto." onChange={setarDescricaoProd}></textarea>
             </div>
@@ -168,26 +171,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
               </Divide>
             </div>
 
-            <ProdDestaque>
-              <div className="destaque">
-                <p>Produto em Destaque</p>
-                <p className="p-destaque">Exibir na página inicial</p>
-              </div>
-              <SwitchContainer>
-                <SwitchCheckbox
-                  type="checkbox"
-                  id="produtoDestaque"
-                  checked={produtoDestaque}
-                  onChange={(e) => setProdutoDestaque(e.target.checked)}
-                />
-                <SwitchLabel 
-                  htmlFor="produtoDestaque" 
-                  checked={produtoDestaque}
-                >
-                  <SwitchSlider checked={produtoDestaque} />
-                </SwitchLabel>
-              </SwitchContainer>
-            </ProdDestaque>
+           
 
             <SubmitButton onClick={adicionarProduto}>
               Cadastrar Produto
