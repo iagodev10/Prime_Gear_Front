@@ -94,7 +94,7 @@ export const Categoria = styled.div`
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    // padding: 20px 0;
+    padding: 18px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -129,30 +129,30 @@ export const Infos = styled.div`
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 18px;
+    gap: 10px;
     margin-bottom: 20px;
     h3 {
-        font-size: 1.4rem;
+        font-size: 1.25rem;
         font-weight: 500;
         color: #111;
     }
     p {
-        font-size: 1rem;
-        color: #666;
+        font-size: 0.98rem;
+        color: #444;
     }
 `;
 
 export const Action = styled.div`
     width: 90%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     margin-bottom: 30px;
-    gap: 14px;
+    gap: 10px;
 `;
 
 export const Edit = styled.div`
-    padding: 10px 0;
+    padding: 10px 14px;
     flex: 4;
     background-color: #000;
     color: #fff;
@@ -174,7 +174,7 @@ export const Edit = styled.div`
 `;
 
 export const Excluir = styled.div`
-    padding: 10px 0;
+    padding: 10px 14px;
     flex: 1;
     background-color: #dc3545;
     color: #fff;
@@ -188,8 +188,26 @@ export const Excluir = styled.div`
     justify-content: center;
     gap: 6px;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    svg { transition: transform .2s ease, opacity .2s ease; }
     &:hover {
         background-color: #c82333;
         transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.18);
     }
+    &:hover svg {
+        transform: scale(1.1);
+        opacity: 0.9;
+    }
+`;
+
+export const Badge = styled.span`
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    border-radius: 999px;
+    background: #e6f7e6;
+    color: #03b304;
+    border: 1px solid #bfe8bf;
 `;

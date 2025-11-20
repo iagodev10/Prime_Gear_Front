@@ -1,21 +1,26 @@
-import React from 'react';
-import styled from 'styled-components';
-
-import { Container, Header, Title, Button, Search, Content, Categoria, CatImage, Infos, Action, Edit, Excluir } from './style'
+import React, { useState } from 'react';
+import { Container, Header, Title, Button, Search, Content, Categoria, Infos, Action, Edit, Excluir, Badge } from './style'
 import { FiPlus, FiSearch, FiEdit, FiTrash } from 'react-icons/fi'
 
-import Notebook from '../../assets/images/cat-notebook.png'
+import ModalAdicionarCategoria from '../../components/ModalAdicionarCategoria';
+import ModalEditarCategoria from '../../components/ModalEditarCategoria';
+import ModalExcluirCategoria from '../../components/ModalExcluirCategoria';
 
 const AdminCategorias = () => {
 
-    const mockCategorias = [
-        { id: 1, image: Notebook, name: 'Laptops', descricao: 'Laptops para trabalho e entretenimento' },
-        { id: 2, image: Notebook, name: 'Headsets', descricao: 'Headsets para jogos' },
-        { id: 3, image: Notebook, name: 'Mouse', descricao: 'Mouses para jogos' },
-        { id: 4, image: Notebook, name: 'Teclados', descricao: 'Teclados para jogos' },
-        { id: 5, image: Notebook, name: 'Monitor', descricao: 'Monitores para jogos' },
-        { id: 6, image: Notebook, name: 'Webcams', descricao: 'Webcams para jogos' },
-    ]
+    const [categorias, setCategorias] = useState([
+        { id: 1, name: 'Laptops', descricao: 'Laptops para trabalho e entretenimento' },
+        { id: 2, name: 'Headsets', descricao: 'Headsets para jogos' },
+        { id: 3, name: 'Mouse', descricao: 'Mouses para jogos' },
+        { id: 4, name: 'Teclados', descricao: 'Teclados para jogos' },
+        { id: 5, name: 'Monitor', descricao: 'Monitores para jogos' },
+        { id: 6, name: 'Webcams', descricao: 'Webcams para jogos' },
+    ])
+
+    const [modalVisivel, setModalVisivel] = useState(false);
+    const [modalEditarVisivel, setModalEditarVisivel] = useState(false);
+    const [modalExcluirVisivel, setModalExcluirVisivel] = useState(false);
+    const [categoriaAtual, setCategoriaAtual] = useState(null);
 
     return (
         <>
@@ -23,10 +28,10 @@ const AdminCategorias = () => {
                 <Header>
                     <Title>
                         <h1>Gerenciar Categorias</h1>
-                        <p>{mockCategorias.length} categorias cadastradas</p>
+                        <p>{categorias.length} categorias cadastradas</p>
                     </Title>
                     <Button onClick={() => setModalVisivel(true)}>
-                        <FiPlus size={18} />
+                        <FiPlus size={18}/>
                         Adicionar Categoria
                     </Button>
                 </Header>
@@ -37,32 +42,53 @@ const AdminCategorias = () => {
                 </Search>
 
                 <Content>
-                    {mockCategorias.map((categoria) => {
-                        return(
+                    {categorias.map((categoria) => (
                         <Categoria key={categoria.id}>
-                            <CatImage>
-                                <img src={categoria.image} alt={categoria.name} />
-                            </CatImage>
                             <Infos>
-                                <h3>{categoria.name}</h3>
+                                <div style={{display:'flex',alignItems:'center',gap:10}}>
+                                    <h3>{categoria.name}</h3>
+                                    <Badge>#{categoria.id}</Badge>
+                                </div>
                                 <p>{categoria.descricao}</p>
                             </Infos>
-
                             <Action>
-                                <Edit>
+                                <Edit onClick={() => { setCategoriaAtual(categoria); setModalEditarVisivel(true); }}>
                                     <FiEdit size={20} color="white" />
                                     Editar
                                 </Edit>
-                                <Excluir>
+                                <Excluir onClick={() => { setCategoriaAtual(categoria); setModalExcluirVisivel(true); }}>
                                     <FiTrash size={20} color="white" />
                                 </Excluir>
                             </Action>
                         </Categoria>
-                    
-                        )
-                    })}
+                    ))}
                 </Content>
 
+                <ModalAdicionarCategoria
+                    isVisivel={modalVisivel}
+                    onClose={() => setModalVisivel(false)}
+                />
+
+                {modalEditarVisivel && (
+                    <ModalEditarCategoria
+                        categoriaAtual={categoriaAtual}
+                        onClose={() => setModalEditarVisivel(false)}
+                        onSave={(c) => {
+                            setCategorias(prev => prev.map(item => item.id === c.id ? c : item))
+                        }}
+                    />
+                )}
+
+                <ModalExcluirCategoria
+                    isVisivel={modalExcluirVisivel}
+                    categoria={categoriaAtual}
+                    onClose={() => setModalExcluirVisivel(false)}
+                    onConfirm={() => {
+                        setCategorias(prev => prev.filter(item => item.id !== categoriaAtual?.id))
+                        setModalExcluirVisivel(false)
+                        setCategoriaAtual(null)
+                    }}
+                />
             </Container>
         </>
     )
