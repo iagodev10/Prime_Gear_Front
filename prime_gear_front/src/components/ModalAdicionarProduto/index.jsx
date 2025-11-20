@@ -81,6 +81,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
 
     try {
       const response=await axios.post('http://localhost:8080/adicionar-produto', formData)
+      onClose()
     } catch (error) {
       console.log(error);
     }
