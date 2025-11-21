@@ -39,7 +39,7 @@ const AdminCategorias = () => {
     const [modalEditarVisivel, setModalEditarVisivel] = useState(false);
     const [modalExcluirVisivel, setModalExcluirVisivel] = useState(false);
     const [categoriaAtual, setCategoriaAtual] = useState(null);
-    const [idParaExcluir,setIdParaExcluir]=useState()
+    const [idParaExcluirEEditar,setidParaExcluirEEditar]=useState()
     return (
         <>
             <Container>
@@ -70,11 +70,11 @@ const AdminCategorias = () => {
                                 <p>{categoria.descricao_cat}</p>
                             </Infos>
                             <Action>
-                                <Edit onClick={() => { setCategoriaAtual(categoria); setModalEditarVisivel(true); }}>
+                                <Edit onClick={() => { setCategoriaAtual(categoria); setModalEditarVisivel(true); setidParaExcluirEEditar(categoria.cod_categoria)}}>
                                     <FiEdit size={20} color="white" />
                                     Editar
                                 </Edit>
-                                <Excluir onClick={() => { setCategoriaAtual(categoria); setModalExcluirVisivel(true); setIdParaExcluir(categoria.cod_categoria)}}>
+                                <Excluir onClick={() => { setCategoriaAtual(categoria); setModalExcluirVisivel(true); setidParaExcluirEEditar(categoria.cod_categoria)}}>
                                     <FiTrash size={20} color="white" />
                                 </Excluir>
                             </Action>
@@ -97,6 +97,7 @@ const AdminCategorias = () => {
                         onSave={(c) => {
                             setCategorias(prev => prev.map(item => item.id === c.id ? c : item))
                         }}
+                        id={idParaExcluirEEditar}
                     />
                 )}
 
@@ -104,8 +105,8 @@ const AdminCategorias = () => {
                     isVisivel={modalExcluirVisivel}
                     categoria={categoriaAtual}
                     onClose={() => setModalExcluirVisivel(false)}
-                    onConfirm={() => deletarCategoria(idParaExcluir)}
-                    id={idParaExcluir}
+                    onConfirm={() => deletarCategoria(idParaExcluirEEditar)}
+                    id={idParaExcluirEEditar}
                 />
             </Container>
         </>
