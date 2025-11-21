@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
 import { FiX } from "react-icons/fi";
 import {
   ModalOverlay,
@@ -9,9 +9,27 @@ import {
   SubmitButton,
 } from "./style";
 
-const ModalEditarCategoria = ({ onClose, onSave, categoriaAtual }) => {
+const ModalEditarCategoria = ({ onClose, onSave, categoriaAtual,id }) => {
+
   const [name, setName] = useState("");
   const [descricao, setDescricao] = useState("");
+
+  async function obterInfosCat(idCat){
+    try {
+       const response = await axios.get('http://localhost:8080/get-cat/'+idCat)
+       setName(response.data.nome_cat)
+       setDescricao(response.data.descricao_cat)
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+ 
+
+  useEffect(()=>{
+    obterInfosCat(id)
+  },[])
 
   useEffect(() => {
     if (categoriaAtual) {
@@ -20,16 +38,23 @@ const ModalEditarCategoria = ({ onClose, onSave, categoriaAtual }) => {
     }
   }, [categoriaAtual]);
 
-  const handleSalvar = (e) => {
+  const handleSalvar = async (e) => {
     e.preventDefault();
 
-    const atualizado = {
-      id: categoriaAtual.id,
-      name,
-      descricao,
-    };
-    onSave(atualizado);
-    onClose();
+    const objCat={
+      nome_cat:name,
+      descricao_cat:descricao
+    }
+
+    try {
+        const response = await axios.put('http://localhost:8080/editar-cat/'+id, objCat)
+        console.log('deu certo');
+        onClose();
+    } catch (error) {
+      console.log(error);
+    }
+    
+  
   };
 
   const handleOverlayClick = (e) => {
