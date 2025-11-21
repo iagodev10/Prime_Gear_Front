@@ -7,7 +7,7 @@ export const Container = styled.div`
     position: fixed;
     top: 8vh;
     left: 0;
-    background: #f5f5f5;
+    background: #fff;
     z-index: 1002;
 `;
 
