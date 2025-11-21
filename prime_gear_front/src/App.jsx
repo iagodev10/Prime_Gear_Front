@@ -19,6 +19,7 @@ import AdminCategorias from './pages/AdminCategorias'
 import AdminFornecedor from './pages/AdminFornecedor'
 import AdminTransportadora from './pages/AdminTransportadora'
 import AdminUsers from './pages/AdminUsers'
+import AdminPedidos from './pages/AdminPedidos'
 
 
 import PageLoader from './components/PageLoader'
@@ -81,6 +82,7 @@ const AppContent = () => {
               <Route path="produtos" element={<AdminProdutos />} />
               <Route path="categorias" element={<AdminCategorias />} />
               <Route path="fornecedores" element={<AdminFornecedor />} />
+              <Route path="pedidos" element={<AdminPedidos />} />
               <Route path="transportadoras" element={<AdminTransportadora />} />
               <Route path="usuarios" element={<AdminUsers />} />
             </Route>
