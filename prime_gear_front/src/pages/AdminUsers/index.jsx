@@ -1,7 +1,7 @@
 import React from "react";
 
 import { FiPlus, FiSearch, FiUsers, FiShield } from "react-icons/fi";
-import { LuMail } from "react-icons/lu";    
+import { LuMail } from "react-icons/lu";
 import {
   Container,
   Header,
@@ -20,6 +20,9 @@ import {
   SNome,
   SRol,
   SMail,
+  Data,
+  Conteudo,
+  Conteudo2,
 } from "./style";
 
 const AdminUsers = () => {
@@ -51,10 +54,10 @@ const AdminUsers = () => {
             <h1>Gerenciar Usuários</h1>
             <p> {mockUsuarios.length} usuários cadastrados</p>
           </Title>
-          <Button>
+          {/* <Button>
             <FiPlus size={18} />
             Adicionar Usuário
-          </Button>
+          </Button> */}
         </Header>
 
         <CardGeral>
@@ -107,30 +110,33 @@ const AdminUsers = () => {
         <Content>
           {mockUsuarios.map((usuario) => (
             <UserCard key={usuario.email}>
-              <Icone color={usuario.role === "admin" ? "#E8E2FF" : "#DFFFEA"}>
-                {usuario.name.charAt(0).toUpperCase()}
-              </Icone>
+              <Conteudo>
+                <Icone color={usuario.role === "admin" ? "#E8E2FF" : "#DFFFEA"}>
+                  {usuario.name.charAt(0).toUpperCase()}
+                </Icone>
 
-              <Informacoes>
-                <Status>
-                  <SNome>{usuario.name}</SNome>
-                  <SRol style={{
-                    padding: "4px 8px",
-                    borderRadius: "4px",
-                    fontSize: "1.1rem",
-                  }}
-                    backgroundColor={
-                      usuario.role === "admin" ? "#E8E2FF" : "#DFFFEA"
-                    }
-                  >
-                    {usuario.role === "admin" ? "Administrador" : "Cliente"}
-                  </SRol>
-                  
-                </Status>
-                <SMail><LuMail/> {usuario.email}</SMail>
-              </Informacoes>
+                <Informacoes>
+                  <Status>
+                    <SNome>{usuario.name}</SNome>
+                    <SRol
+                    role={usuario.role}
+                    >
+                      {usuario.role === "admin" ? "Administrador" : "Cliente"}
+                    </SRol>
+                  </Status>
 
-              <Date>Cadastro em <br />{usuario.dataCadastro}</Date>
+                  <SMail>
+                    <LuMail /> {usuario.email}
+                  </SMail>
+                </Informacoes>
+              </Conteudo>
+
+              <Conteudo2>
+                <Data>
+                  Cadastro em <br />
+                  {usuario.dataCadastro}
+                </Data>
+              </Conteudo2>
             </UserCard>
           ))}
         </Content>

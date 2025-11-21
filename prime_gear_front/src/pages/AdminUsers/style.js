@@ -145,7 +145,7 @@ export const Content = styled.div`
 
 export const UserCard = styled.div`
     width: 100%;
-    background-color: #000;
+    background-color: white;
     color: #fff;
     border-radius: 12px;
     padding: 24px;
@@ -189,18 +189,48 @@ export const Status = styled.div`
 export const SNome = styled.p`
     font-size: 1.4rem;
     font-weight: 600;
-    color: #fff;
+    color: black;
     margin: 0;
 `;
 
-export const SRol = styled.p`
-    font-size: 1.1rem;
-    color: #ccc;
-    margin: 0;
+export const SRol = styled.span`
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.80rem;
+  font-weight: 500;
+
+  background: ${(props) =>
+    props.role === "admin"
+      ? "rgba(186, 142, 255, 0.35)"
+      : "rgba(128, 185, 255, 0.35)"};
+
+  color: ${(props) =>
+    props.role === "admin" ? "#7A30D6" : "#2B7BE4"};
 `;
+
+
 
 export const SMail = styled.p`
     font-size: 1.1rem;
-    color: #ccc;
+    color: #666;
     margin: 0;
+`;
+
+export const Data = styled.p`
+    font-size: 1.1rem;
+    color: black;
+    margin: 0;
+`;
+
+export const Conteudo = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+`;
+
+
+export const Conteudo2 = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 12px;
 `;
