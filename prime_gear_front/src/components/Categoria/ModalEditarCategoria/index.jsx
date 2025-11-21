@@ -39,7 +39,6 @@ const ModalEditarCategoria = ({ onClose, onSave, categoriaAtual,id }) => {
   }, [categoriaAtual]);
 
   const handleSalvar = async (e) => {
-    e.preventDefault();
 
     const objCat={
       nome_cat:name,
@@ -97,7 +96,7 @@ const ModalEditarCategoria = ({ onClose, onSave, categoriaAtual,id }) => {
               ></textarea>
             </div>
 
-            <SubmitButton type="submit" onClick={handleSalvar}>
+            <SubmitButton type="submit" onSubmit={handleSalvar}>
               Salvar Categoria
             </SubmitButton>
           </Form>
