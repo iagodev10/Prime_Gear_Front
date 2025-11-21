@@ -1,6 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-
 
 import HeroBanner from '../../components/HeroBanner';
 import CategoryCarousel from '../../components/CategoryCarousel';

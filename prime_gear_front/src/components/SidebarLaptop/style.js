@@ -1,30 +1,14 @@
 import styled from "styled-components";
 
-export const Backdrop = styled.div`
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1001;
-
-    opacity: ${({ isOpen }) => (isOpen ? "1" : "0")};
-    visibility: ${({ isOpen }) => (isOpen ? "visible" : "hidden")};
-    pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-`;
 
 export const Container = styled.div`
     width: 100%;
-    min-height: 300px;
+    min-height: 400px;
     position: fixed;
     top: 8vh;
     left: 0;
-    background: #fff;
+    background: #f5f5f5;
     z-index: 1002;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    border-radius: 20px;
 `;
 
 export const Panel = styled.div`

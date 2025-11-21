@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 
 import { Container, Header, Title, Button, Search,Name, Info, 
     Transportadora, Content, Action, Edit, Excluir, TransPrice } from './style';
 import { FiPlus, FiSearch, FiEdit, FiTrash, FiTruck } from 'react-icons/fi';
 
+import ModalAdicionarTransportadora from '../../components/Transportadora/ModalAdicionarTransportadora';
+
 const AdminTransportadora = () => {
 
-    const mockTransportadora = [
+    const [transportadoras, setTransportadoras] = useState([
         {
             id: 1,
             nome: 'Azul Cargo Express',
             preco_frete: 30.00,
             email: 'vendas@eletromaster.com.br',
-            telefone: '(21) 2345-6789',
+            telefone: '(21) 2345-6789', 
             endereco: 'Rua A, 123',
             cnpj: '09.296.295/0001-60',
             regioes: 'Todo Brasil - Entrega Aérea',
@@ -68,16 +69,18 @@ const AdminTransportadora = () => {
             cnpj: '55.555.555/0001-55',
             regioes: 'Todo Brasil - Entrega Aérea',
         },
-    ];
+    ]);
+
+    const [modalVisivel, setModalVisivel] = useState(false);
 
     return (
         <Container>
             <Header>
                 <Title>
                     <h1>Gerenciar Transportadoras</h1>
-                    <p>{mockTransportadora.length} transportadoras cadastradas</p>
+                    <p>{transportadoras.length} transportadoras cadastradas</p>
                 </Title>
-                <Button>
+                <Button onClick={() => setModalVisivel(true)}>
                     <FiPlus size={18} />
                     Adicionar Transportadora
                 </Button>
@@ -89,7 +92,7 @@ const AdminTransportadora = () => {
             </Search>
 
             <Content>
-                {mockTransportadora.map((transportadora) => (
+                {transportadoras.map((transportadora) => (
                     <Transportadora key={transportadora.id}>
                         <Name>
                             <div>
@@ -124,6 +127,11 @@ const AdminTransportadora = () => {
                     </Transportadora>
                 ))}
             </Content>
+
+            <ModalAdicionarTransportadora
+                isVisivel={modalVisivel}
+                onClose={() => setModalVisivel(false)}
+            />
 
         </Container>
     );

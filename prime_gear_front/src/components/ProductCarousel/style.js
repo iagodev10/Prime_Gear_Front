@@ -3,7 +3,7 @@ import styled from 'styled-components';
 // O container de toda a seção do carrossel
 export const CarouselContainer = styled.section`
   width: 100%;
-  margin: 60px auto; /* Espaço em cima e embaixo (igual ao CategoryCarousel) */
+  margin: 1px auto; 
   padding: 5%;
   position: relative;
 `;

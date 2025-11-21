@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { FaChevronDown, FaChevronUp  } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 import SidebarMenu from "../SidebarMenu";
 import SidebarLaptop from "../SidebarLaptop";
@@ -15,20 +15,19 @@ import {
   NavLinks,
   RightSection,
   Icons,
-  Logo
+  Logo,
 } from "./style";
 import LogoLigth from "../../assets/images/logoligth.png";
 import LogoDark from "../../assets/images/logodark.png";
 
 const Header = () => {
-
   const location = useLocation();
   const isHome = location.pathname === "/";
-
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
@@ -50,22 +49,63 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
+
   return (
     <>
-      <HeaderContainer isScrolled={isScrolled} isHome={isHome}>
+      <HeaderContainer
+        isScrolled={isScrolled || isHovered}
+        isHome={isHome}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <LeftSection>
-          <MenuButton $isScrolled={isScrolled || !isHome} onClick={() => setIsMenuOpen(true)}>
+          <MenuButton
+            $isScrolled={isScrolled || !isHome || isHovered}
+            onClick={() => setIsMenuOpen(true)}
+          >
             <RiApps2Line size={19} />
             <span>Menu</span>
           </MenuButton>
 
           <NavLinks>
-            <Link to="/laptops" onMouseEnter={() => setOpenCategory('laptops')}>Laptops <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
-            <Link to="/desktops" onMouseEnter={() => setOpenCategory('desktops')}>Desktops <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
-            <Link to="/consoles" onMouseEnter={() => setOpenCategory('consoles')}>Consoles <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
-            <Link to="/perifericos" onMouseEnter={() => setOpenCategory('perifericos')}>Periféricos <FaChevronDown size={14} style={{marginLeft: 6, alignSelf: 'center'}}/></Link>
+            <Link to="/laptops" onMouseEnter={() => setOpenCategory("laptops")}>
+              Laptops{" "}
+              <FaChevronDown
+                size={14}
+                style={{ marginLeft: 6, alignSelf: "center" }}
+              />
+            </Link>
+            <Link
+              to="/desktops"
+              onMouseEnter={() => setOpenCategory("desktops")}
+            >
+              Desktops{" "}
+              <FaChevronDown
+                size={14}
+                style={{ marginLeft: 6, alignSelf: "center" }}
+              />
+            </Link>
+            <Link
+              to="/consoles"
+              onMouseEnter={() => setOpenCategory("consoles")}
+            >
+              Consoles{" "}
+              <FaChevronDown
+                size={14}
+                style={{ marginLeft: 6, alignSelf: "center" }}
+              />
+            </Link>
+            <Link
+              to="/perifericos"
+              onMouseEnter={() => setOpenCategory("perifericos")}
+            >
+              Periféricos{" "}
+              <FaChevronDown
+                size={14}
+                style={{ marginLeft: 6, alignSelf: "center" }}
+              />
+            </Link>
           </NavLinks>
-
         </LeftSection>
 
         <RightSection>
@@ -75,18 +115,21 @@ const Header = () => {
             <FiUser size={20} />
           </Icons>
 
-          <Logo isScrolled={isScrolled || !isHome}>
-            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Logo isScrolled={isScrolled || !isHome || isHovered}>
+            <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
               <img src={LogoDark} alt="PrimeGear Logo" />
             </Link>
           </Logo>
         </RightSection>
-
       </HeaderContainer>
 
       <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <SidebarLaptop isOpen={!!openCategory} category={openCategory} onClose={() => setOpenCategory(null)} />
+      <SidebarLaptop
+        isOpen={!!openCategory}
+        category={openCategory}
+        onClose={() => setOpenCategory(null)}
+      />
     </>
   );
 };

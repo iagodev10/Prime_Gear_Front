@@ -28,23 +28,46 @@ export const BannerBuy = styled.a`
   text-decoration: none;
   background: linear-gradient(135deg, #000000, #737373);
   border-radius: 999px;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
   font-size: 1.1rem;
   color: #f5f5f5;
+  display: inline-block;
+  transform-style: preserve-3d;
+
+  animation: float3d 3s ease-in-out infinite;
 
   &:hover {
-    background: linear-gradient(135deg, #737373, #000000);
+    transform: translateZ(15px) rotateX(6deg) rotateY(6deg) scale(1.06);
+    background: linear-gradient(135deg, #5a5a5a, #000000);
     color: #ffffff;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.45);
+  }
+
+  @keyframes float3d {
+    0% {
+      transform: translateZ(0px) rotateX(0deg) rotateY(0deg);
+      background: linear-gradient(135deg, #000000, #737373);
+    }
+    50% {
+      transform: translateZ(10px) rotateX(4deg) rotateY(-4deg);
+      background: linear-gradient(135deg, #1a1a1a, #8a8a8a);
+    }
+    100% {
+      transform: translateZ(0px) rotateX(0deg) rotateY(0deg);
+      background: linear-gradient(135deg, #000000, #737373);
+    }
   }
 `;
 
 
+
 export const Ideapad = styled.section`
-  width: 90%;
+  width: 80%;
   margin-top: -40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 5%;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -57,6 +80,7 @@ export const IdeaImg = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden; /* importante p/ efeitos */
 
   @media (max-width: 768px) {
     width: 100%;
@@ -67,8 +91,15 @@ export const IdeaImg = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s ease, filter 0.6s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.02) rotateX(2deg) rotateY(2deg);
+    filter: brightness(1.1);
   }
 `;
+
 
 export const IdeapadText = styled.div`
   width: 50%;
@@ -121,9 +152,34 @@ export const IdeaButton = styled.a`
   font-weight: 600;
   cursor: pointer;
   border: 2px solid #4d7294;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    /* bolha perfeitamente circular */
+    width: 70px;
+    height: 70px;
+    background: #3a5b7b;
+    border-radius: 50%;
+
+    /* nasce bem pequena e “fora” do canto */
+    transform: translate(-45%, 45%) scale(0);
+    transition: transform 0.65s ease;
+    z-index: -1;
+  }
+
+  &:hover::before {
+    /* cresce MUITO para preencher tudo */
+    transform: translate(0, 0) scale(8);
+  }
 
   &:hover {
-    background: #3a5b7b;
     color: #ffffff;
   }
 `;
+
