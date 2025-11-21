@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { Backdrop, Container, Panel, List, Item, Right, ProductCard } from "./style";
+import { Container, Panel, List, Item, Right, ProductCard } from "./style";
 import { FiChevronRight } from "react-icons/fi";
 import LaptopImg from "../../assets/images/laptop.png";
 import UltrabookImg from "../../assets/images/Macbook.png";
@@ -56,7 +55,7 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
 
     return (
         <>
-            <Backdrop isOpen={isOpen} onClick={onClose} />
+            
             {isOpen && (
                 <Container onMouseLeave={onClose}>
                     <Panel>
