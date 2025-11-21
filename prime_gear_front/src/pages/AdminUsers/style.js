@@ -135,3 +135,72 @@ export const Info = styled.div`
         margin: 0;
     }
 `;
+
+export const Content = styled.div`
+    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(1fr, 1fr));
+    gap: 25px;
+`;
+
+export const UserCard = styled.div`
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+    }
+`;
+
+export const Icone = styled.div`
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: ${props => props.color || "#f0f0f0"};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const Informacoes = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    margin-left: 16px;
+`;
+
+export const Status = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    align-items: center;
+`;
+
+export const SNome = styled.p`
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+`;
+
+export const SRol = styled.p`
+    font-size: 1.1rem;
+    color: #ccc;
+    margin: 0;
+`;
+
+export const SMail = styled.p`
+    font-size: 1.1rem;
+    color: #ccc;
+    margin: 0;
+`;
