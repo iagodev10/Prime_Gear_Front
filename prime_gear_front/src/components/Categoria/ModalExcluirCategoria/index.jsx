@@ -1,8 +1,10 @@
 import React from "react";
 import { FiX } from "react-icons/fi";
 import { ModalOverlay, ModalContent, ModalHeader, Content, Actions, CancelButton, ConfirmButton } from "./style";
+import axios from "axios";
 
-const ModalExcluirCategoria = ({ isVisivel, categoria, onConfirm, onClose }) => {
+
+const ModalExcluirCategoria = ({ isVisivel, categoria, onConfirm, onClose,id }) => {
   if (!isVisivel) return null;
 
   const handleOverlayClick = (e) => {
@@ -10,6 +12,8 @@ const ModalExcluirCategoria = ({ isVisivel, categoria, onConfirm, onClose }) => 
       onClose();
     }
   };
+
+
 
   return (
     <>

@@ -1,27 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Container, Header, Title, Button, Search, Content, Categoria, Infos, Action, Edit, Excluir, Badge } from './style'
-import { FiPlus, FiSearch, FiEdit, FiTrash } from 'react-icons/fi'
-
+import { FiPlus, FiSearch, FiEdit, FiTrash, FiRewind } from 'react-icons/fi'
+import axios from 'axios';
 import ModalAdicionarCategoria from '../../components/Categoria/ModalAdicionarCategoria';
 import ModalEditarCategoria from '../../components/Categoria/ModalEditarCategoria';
 import ModalExcluirCategoria from '../../components/Categoria/ModalExcluirCategoria';
 
 const AdminCategorias = () => {
 
-    const [categorias, setCategorias] = useState([
-        { id: 1, name: 'Laptops', descricao: 'Laptops para trabalho e entretenimento' },
-        { id: 2, name: 'Headsets', descricao: 'Headsets para jogos' },
-        { id: 3, name: 'Mouse', descricao: 'Mouses para jogos' },
-        { id: 4, name: 'Teclados', descricao: 'Teclados para jogos' },
-        { id: 5, name: 'Monitor', descricao: 'Monitores para jogos' },
-        { id: 6, name: 'Webcams', descricao: 'Webcams para jogos' },
-    ])
+    const [categorias, setCategorias] = useState([])
+
+    async function obterCategorias(){
+        try {
+            const response= await axios.get('http://localhost:8080/get-categorias')
+            setCategorias(response.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function deletarCategoria(idCat){
+        console.log("chamou");
+        try {
+            const response = await axios.delete('http://localhost:8080/delete-categoria/'+idCat)
+            console.log("DELETOU");
+            obterCategorias()
+            setModalExcluirVisivel(false)
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+    useEffect(()=>{
+        obterCategorias()
+    },[])
 
     const [modalVisivel, setModalVisivel] = useState(false);
     const [modalEditarVisivel, setModalEditarVisivel] = useState(false);
     const [modalExcluirVisivel, setModalExcluirVisivel] = useState(false);
     const [categoriaAtual, setCategoriaAtual] = useState(null);
-
+    const [idParaExcluir,setIdParaExcluir]=useState()
     return (
         <>
             <Container>
@@ -43,20 +61,20 @@ const AdminCategorias = () => {
 
                 <Content>
                     {categorias.map((categoria) => (
-                        <Categoria key={categoria.id}>
+                        <Categoria key={categoria.cod_categoria}>
                             <Infos>
                                 <div style={{display:'flex',alignItems:'center',gap:10}}>
-                                    <h3>{categoria.name}</h3>
-                                    <Badge>#{categoria.id}</Badge>
+                                    <h3>{categoria.nome_cat}</h3>
+                                    <Badge>#{categoria.cod_categoria}</Badge>
                                 </div>
-                                <p>{categoria.descricao}</p>
+                                <p>{categoria.descricao_cat}</p>
                             </Infos>
                             <Action>
                                 <Edit onClick={() => { setCategoriaAtual(categoria); setModalEditarVisivel(true); }}>
                                     <FiEdit size={20} color="white" />
                                     Editar
                                 </Edit>
-                                <Excluir onClick={() => { setCategoriaAtual(categoria); setModalExcluirVisivel(true); }}>
+                                <Excluir onClick={() => { setCategoriaAtual(categoria); setModalExcluirVisivel(true); setIdParaExcluir(categoria.cod_categoria)}}>
                                     <FiTrash size={20} color="white" />
                                 </Excluir>
                             </Action>
@@ -65,8 +83,11 @@ const AdminCategorias = () => {
                 </Content>
 
                 <ModalAdicionarCategoria
-                    isVisivel={modalVisivel}
-                    onClose={() => setModalVisivel(false)}
+                     isVisivel={modalVisivel}
+                     onClose={() => {
+                       setModalVisivel(false);
+                       obterCategorias();
+                     }}
                 />
 
                 {modalEditarVisivel && (
@@ -83,11 +104,8 @@ const AdminCategorias = () => {
                     isVisivel={modalExcluirVisivel}
                     categoria={categoriaAtual}
                     onClose={() => setModalExcluirVisivel(false)}
-                    onConfirm={() => {
-                        setCategorias(prev => prev.filter(item => item.id !== categoriaAtual?.id))
-                        setModalExcluirVisivel(false)
-                        setCategoriaAtual(null)
-                    }}
+                    onConfirm={() => deletarCategoria(idParaExcluir)}
+                    id={idParaExcluir}
                 />
             </Container>
         </>
