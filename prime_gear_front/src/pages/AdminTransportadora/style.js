@@ -6,6 +6,7 @@ export const Container = styled.div`
     min-height: 100vh;
     background-color: #f5f5f5;
     padding-top: 10vh;
+    padding-bottom: 4vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,7 +14,11 @@ export const Container = styled.div`
     overflow-x: hidden;
 
     @media (max-width: 768px) {
-        padding-top: 5vh;
+        padding-top: 6vh;
+        padding-bottom: 6vh;
+    }
+    @media (max-width: 480px) {
+        padding-top: 7vh;
     }
 `;
 
@@ -29,16 +34,19 @@ export const Header = styled.div`
         align-items: flex-start;
         gap: 15px;
     }
+    @media (max-width: 480px) {
+        margin-bottom: 16px;
+    }
 `;
 
 export const Title = styled.div`
     h1 {
-        font-size: 2.2rem;
+        font-size: 2.1rem;
         font-weight: 600;
         color: #111;
     }
     p {
-        font-size: 1.1rem;
+        font-size: 1rem;
         color: #666;
     }
 
@@ -49,6 +57,10 @@ export const Title = styled.div`
         p {
             font-size: 1rem;
         }
+    }
+    @media (max-width: 480px) {
+        h1 { font-size: 1.6rem; }
+        p { font-size: 0.95rem; }
     }
 `;
 
@@ -86,6 +98,10 @@ export const Button = styled.button`
     @media (max-width: 768px) {
         width: 100%;
     }
+    @media (max-width: 480px) {
+        padding: 10px 14px;
+        font-size: 0.95rem;
+    }
 `;
 
 export const Search = styled.div`
@@ -105,16 +121,23 @@ export const Search = styled.div`
         padding-left: 10px;
         color: #333;
     }
+    @media (max-width: 480px) {
+        margin-bottom: 20px;
+        padding: 10px 12px;
+    }
 `;
 
 export const Content = styled.div`
     width: 90%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
 
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
+    }
+    @media (max-width: 480px) {
+        gap: 18px;
     }
 `;
 
@@ -125,6 +148,7 @@ export const Transportadora = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
+    overflow: hidden;
 `;
 
 export const Name = styled.div`
@@ -153,6 +177,11 @@ export const Name = styled.div`
         color: white;
         margin: 0;
     }
+    @media (max-width: 480px) {
+        padding: 10px 16px;
+        div { width: 42px; height: 42px; }
+        h3 { font-size: 1.1rem; }
+    }
 `;
 
 export const Action = styled.div`
@@ -171,6 +200,11 @@ export const Action = styled.div`
         div {
             width: 100%;
         }
+    }
+    @media (max-width: 480px) {
+        gap: 10px;
+        margin-bottom: 20px;
+        margin-top: 16px;
     }
 `;
 
@@ -226,6 +260,10 @@ export const Excluir = styled.div`
         background-color: #c82333;
         transform: scale(1.05);
     }
+    @media (max-width: 480px) {
+        font-size: 0.9rem;
+        padding: 10px 0;
+    }
 `;
 
 export const TransPrice = styled.div`
@@ -235,7 +273,7 @@ export const TransPrice = styled.div`
     margin-left: 5%;
     margin-bottom: 20px;
     p {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         color: #03b304;
         font-weight: 600;
     }
@@ -253,15 +291,16 @@ export const Info = styled.div`
     margin-left: 5%;
     margin-bottom: 20px;
     p {
-        font-size: 1.1rem;
+        font-size: 1rem;
         color: #333;
         font-weight: 500;
-        
     }
     .label {
-        font-size: 1rem;
+        font-size: 0.95rem;
         color: #666;
         font-weight: 500;
-        
+    }
+    @media (max-width: 480px) {
+        margin-left: 4%;
     }
 `;

@@ -7,6 +7,7 @@ import {
   ModalHeader,
   Form,
   SubmitButton,
+  ErrorText,
 } from "./style";
 
 const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora }) => {
@@ -17,6 +18,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
   const [cnpj, setCnpj] = useState("");
   const [regioes, setRegioes] = useState("");
   const [preco_frete, setPrecoFrete] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (transportadora) {
@@ -33,6 +35,17 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
   const handleSalvar = (t) => {
     t.preventDefault();
 
+    const e = {};
+    if (!nome.trim()) e.nome = "Informe o nome";
+    if (!cnpj.match(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)) e.cnpj = "CNPJ inválido";
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "Email inválido";
+    if (!telefone.match(/^\(?\d{2}\)?\s?\d{4,5}-\d{4}$/)) e.telefone = "Telefone inválido";
+    if (!endereco.trim()) e.endereco = "Informe o endereço";
+    if (!regioes.trim()) e.regioes = "Informe as regiões";
+    if (!preco_frete || isNaN(parseFloat(preco_frete))) e.preco_frete = "Preço inválido";
+    setErrors(e);
+    if (Object.keys(e).length) return;
+
     const atualizado = {
       id: transportadora.id,
       nome,
@@ -41,7 +54,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
       endereco,
       cnpj,
       regioes,
-      preco_frete,
+      preco_frete: parseFloat(preco_frete),
     };
     if (onSave) {
       onSave(atualizado);
@@ -79,6 +92,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
               />
+              {errors.nome && <ErrorText>{errors.nome}</ErrorText>}
             </div>
 
             <div>
@@ -91,6 +105,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
                 value={cnpj}
                 onChange={(e) => setCnpj(e.target.value)}
               />
+              {errors.cnpj && <ErrorText>{errors.cnpj}</ErrorText>}
             </div>
 
             <div>
@@ -103,6 +118,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
                 value={regioes}
                 onChange={(e) => setRegioes(e.target.value)}
               />
+              {errors.regioes && <ErrorText>{errors.regioes}</ErrorText>}
             </div>
 
             <div>
@@ -115,6 +131,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              {errors.email && <ErrorText>{errors.email}</ErrorText>}
             </div>
 
             <div>
@@ -127,6 +144,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
                 value={telefone}
                 onChange={(e) => setTelefone(e.target.value)}
               />
+              {errors.telefone && <ErrorText>{errors.telefone}</ErrorText>}
             </div>
 
             <div>
@@ -139,6 +157,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
                 value={endereco}
                 onChange={(e) => setEndereco(e.target.value)}
               />
+              {errors.endereco && <ErrorText>{errors.endereco}</ErrorText>}
             </div>
 
             <div>
@@ -151,6 +170,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
                 value={preco_frete}
                 onChange={(e) => setPrecoFrete(e.target.value)}
               />
+              {errors.preco_frete && <ErrorText>{errors.preco_frete}</ErrorText>}
             </div>
 
             <SubmitButton type="submit" onClick={handleSalvar}>

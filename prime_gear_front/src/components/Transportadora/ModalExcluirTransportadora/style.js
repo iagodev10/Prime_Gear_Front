@@ -21,6 +21,8 @@ export const ModalContent = styled.div`
   width: 90%;
   max-width: 520px;
   overflow: hidden;
+  max-height: 85vh;
+  overflow-y: auto;
 
   @media (max-width: 768px) {
     width: 95%;

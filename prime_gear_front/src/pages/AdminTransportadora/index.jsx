@@ -90,6 +90,13 @@ const AdminTransportadora = () => {
   const [modalEditarVisivel, setModalEditarVisivel] = useState(false);
   const [modalExcluirVisivel, setModalExcluirVisivel] = useState(false);
 
+  const handleAddTransportadora = (nova) => {
+    const nextId = transportadoras.length ? Math.max(...transportadoras.map(t => t.id)) + 1 : 1;
+    const novaTrans = { ...nova, id: nextId };
+    setTransportadoras([...transportadoras, novaTrans]);
+    setModalVisivel(false);
+  };
+
   return (
     <Container>
       <Header>
@@ -156,6 +163,7 @@ const AdminTransportadora = () => {
       <ModalAdicionarTransportadora
         isVisivel={modalVisivel}
         onClose={() => setModalVisivel(false)}
+        onAdd={handleAddTransportadora}
       />
 
       <ModalEditarTransportadora
@@ -177,9 +185,11 @@ const AdminTransportadora = () => {
         isVisivel={modalExcluirVisivel}
         onClose={() => setModalExcluirVisivel(false)}
         onConfirm={() => {
-          setTransportadoras(
-            transportadoras.filter((t) => t.id !== transportadoraSelecionada.id)
-          );
+          if (transportadoraSelecionada) {
+            setTransportadoras(
+              transportadoras.filter((t) => t.id !== transportadoraSelecionada.id)
+            );
+          }
           setTransportadoraSelecionada(null);
           setModalExcluirVisivel(false);
         }}

@@ -21,7 +21,8 @@ export const ModalContent = styled.div`
     width: 90%;
     max-width: 700px;
     overflow: hidden;
-
+    max-height: 90vh;
+    overflow-y: auto;
     @media (max-width: 768px) {
         width: 95%;
         margin: 10px;
@@ -106,6 +107,11 @@ export const Form = styled.form`
     padding: 16px;
     gap: 12px;
   }
+`;
+
+export const ErrorText = styled.span`
+  color: #dc3545;
+  font-size: 0.9rem;
 `;
 
 
