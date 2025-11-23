@@ -21,6 +21,10 @@ export const ModalContent = styled.div`
   width: 90%;
   max-width: 520px;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 95%;
+  }
 `;
 
 export const ModalHeader = styled.div`
@@ -41,6 +45,10 @@ export const Content = styled.div`
   gap: 14px;
   p { color: black; font-size: 1rem; margin: 0 }
   .name { font-weight: 600 }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
 `;
 
 export const Actions = styled.div`
@@ -48,6 +56,15 @@ export const Actions = styled.div`
   justify-content: flex-end;
   gap: 10px;
   padding: 0 24px 24px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 0 16px 16px;
+    
+    button {
+        width: 100%;
+    }
+  }
 `;
 
 export const CancelButton = styled.button`

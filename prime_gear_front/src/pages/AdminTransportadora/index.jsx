@@ -124,10 +124,10 @@ const AdminTransportadora = () => {
 
             <Info>
               <p className="label">CNPJ</p>
-              <p style={{ "margin-bottom": "20px" }}>{transportadora.cnpj}</p>
+              <p style={{ marginBottom: "20px" }}>{transportadora.cnpj}</p>
               <p className="label">Contato</p>
               <p>{transportadora.telefone}</p>
-              <p style={{ "margin-bottom": "20px" }}>{transportadora.email}</p>
+              <p style={{ marginBottom: "20px" }}>{transportadora.email}</p>
               <p className="label">Regiões de Entrega</p>
               <p>{transportadora.regioes}</p>
             </Info>

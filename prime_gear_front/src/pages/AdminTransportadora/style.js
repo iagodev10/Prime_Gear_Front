@@ -2,12 +2,19 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
     width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     background-color: #f5f5f5;
     padding-top: 10vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+    @media (max-width: 768px) {
+        padding-top: 5vh;
+    }
 `;
 
 export const Header = styled.div`
@@ -16,6 +23,12 @@ export const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
 `;
 
 export const Title = styled.div`
@@ -27,6 +40,15 @@ export const Title = styled.div`
     p {
         font-size: 1.1rem;
         color: #666;
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+        p {
+            font-size: 1rem;
+        }
     }
 `;
 
@@ -60,6 +82,10 @@ export const Button = styled.button`
     }
     &:hover::after{animation: shine 0.8s ease;}
     @keyframes shine {to{left:150%;}}
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 `;
 
 export const Search = styled.div`
@@ -84,8 +110,12 @@ export const Search = styled.div`
 export const Content = styled.div`
     width: 90%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
 `;
 
 export const Transportadora = styled.div`
@@ -96,7 +126,6 @@ export const Transportadora = styled.div`
     flex-direction: column;
     gap: 4px;
 `;
-
 
 export const Name = styled.div`
     display: flex;
@@ -126,8 +155,6 @@ export const Name = styled.div`
     }
 `;
 
-
-
 export const Action = styled.div`
     width: 90%;
     display: flex;
@@ -137,6 +164,14 @@ export const Action = styled.div`
     gap: 14px;
     margin-top: 20px;
     margin-left: 5%;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        
+        div {
+            width: 100%;
+        }
+    }
 `;
 
 export const Edit = styled.div`

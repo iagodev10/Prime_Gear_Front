@@ -16,6 +16,12 @@ export const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
 `;
 
 export const Title = styled.div`
@@ -27,6 +33,15 @@ export const Title = styled.div`
     p {
         font-size: 1.1rem;
         color: #666;
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+        p {
+            font-size: 1rem;
+        }
     }
 `;
 
@@ -60,6 +75,10 @@ export const Button = styled.button`
     }
     &:hover::after{animation: shine 0.8s ease;}
     @keyframes shine {to{left:150%;}}
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 `;
 
 export const Search = styled.div`
@@ -86,6 +105,10 @@ export const Content = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
     gap: 25px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
 `;
 
 export const Fornecedor = styled.div`
@@ -127,6 +150,14 @@ export const Action = styled.div`
     margin-bottom: 30px;
     gap: 14px;
     margin-top: 20px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        
+        div {
+            width: 100%;
+        }
+    }
 `;
 
 export const Edit = styled.div`
