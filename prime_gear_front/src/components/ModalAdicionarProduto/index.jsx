@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FiX } from 'react-icons/fi'
 import axios from 'axios'
@@ -7,8 +7,12 @@ import { ModalOverlay, ModalContent, ModalHeader, Form, Divide, ProdDestaque, Sw
 
 
 const ModalAdicionarProduto = ({ onClose }) => {
+
+ 
   
   const [produtoDestaque, setProdutoDestaque] = useState(false);
+  const [categorias,setCategorias]=useState([])
+
 
   const [nomeProd, setNomeProd]=useState()
   const [precoProd, setPrecoProd]=useState()
@@ -52,6 +56,17 @@ const ModalAdicionarProduto = ({ onClose }) => {
     setImagemProd(e.target.files[0])
   }
 
+  async function obterCategorias(){
+    try {
+        const response=await axios.get('http://localhost:8080/get-categorias')
+        setCategorias(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(()=>{
+    obterCategorias()
+  },[])
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -86,9 +101,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
       console.log(error);
     }
     
-   
-
-    
+  
   }
 
   return (
@@ -124,12 +137,15 @@ const ModalAdicionarProduto = ({ onClose }) => {
             <div>
               <label htmlFor="categoria">Categoria</label>
               <select id="categoria" onChange={setarCategoriaProd}>
-                <option value="1" >Laptops</option>
-                <option value="2" >Laptops</option>
-                <option value="3" >Laptops</option>
-                <option value="4" >Laptops</option>
-                <option value="5" >Laptops</option>
-                <option value="6" >Laptops</option>
+                {
+                  categorias.map((cat)=>(
+                    <>
+                      <option value="1" >{cat.nome_cat}</option>
+                    </>
+                  ))
+                }
+                
+            
               </select>
             </div>
 
