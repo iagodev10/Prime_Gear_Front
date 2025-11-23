@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import { FiX } from "react-icons/fi";
 import {
@@ -10,7 +11,7 @@ import {
   ErrorText,
 } from "./style";
 
-const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora }) => {
+const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora,id }) => {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
@@ -22,43 +23,46 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
 
   useEffect(() => {
     if (transportadora) {
-      setNome(transportadora.nome); 
-      setEmail(transportadora.email);
-      setTelefone(transportadora.telefone);
-      setEndereco(transportadora.endereco);
-      setCnpj(transportadora.cnpj);
-      setRegioes(transportadora.regioes);
-      setPrecoFrete(transportadora.preco_frete);
+      setNome(transportadora.nome_transp);
+      setEmail(transportadora.email_transp);
+      setTelefone(transportadora.telefone_transp);
+      setEndereco(transportadora.endereco_sede_transp);
+      setCnpj(transportadora.cnpj_transp);
+      setRegioes(transportadora.regioes_atendidas_transp);
+      setPrecoFrete(transportadora.preco_base_frete_transp);
     }
   }, [transportadora]);
 
-  const handleSalvar = (t) => {
-    t.preventDefault();
+  const handleSalvar = async (t) => {
 
-    const e = {};
-    if (!nome.trim()) e.nome = "Informe o nome";
-    if (!cnpj.match(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)) e.cnpj = "CNPJ inválido";
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "Email inválido";
-    if (!telefone.match(/^\(?\d{2}\)?\s?\d{4,5}-\d{4}$/)) e.telefone = "Telefone inválido";
-    if (!endereco.trim()) e.endereco = "Informe o endereço";
-    if (!regioes.trim()) e.regioes = "Informe as regiões";
-    if (!preco_frete || isNaN(parseFloat(preco_frete))) e.preco_frete = "Preço inválido";
-    setErrors(e);
-    if (Object.keys(e).length) return;
 
+    console.log(id);
     const atualizado = {
-      id: transportadora.id,
       nome,
       email,
       telefone,
       endereco,
       cnpj,
       regioes,
-      preco_frete: parseFloat(preco_frete),
+      preco_frete: parseFloat(preco_frete)
     };
-    if (onSave) {
-      onSave(atualizado);
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/update-transportadora/${id}`,
+        atualizado
+      );
+
+      
+   
+    } catch (error) {
+      console.error("Erro ao atualizar transportadora:", error);
+      throw error;
     }
+
+
+
+
     onClose();
   };
 

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import axios from "axios";
 
 import {
   Container,
@@ -22,79 +23,45 @@ import ModalEditarTransportadora from "../../components/Transportadora/ModalEdit
 import ModalExcluirTransportadora from "../../components/Transportadora/ModalExcluirTransportadora";
 
 const AdminTransportadora = () => {
-  const [transportadoras, setTransportadoras] = useState([
-    {
-      id: 1,
-      nome: "Azul Cargo Express",
-      preco_frete: 30.0,
-      email: "vendas@eletromaster.com.br",
-      telefone: "(21) 2345-6789",
-      endereco: "Rua A, 123",
-      cnpj: "09.296.295/0001-60",
-      regioes: "Todo Brasil - Entrega Aérea",
-    },
-    {
-      id: 2,
-      nome: "Transportadora 2",
-      preco_frete: 30.0,
-      email: "transportadora2@example.com",
-      telefone: "(11) 4567-8901",
-      endereco: "Rua B, 456",
-      cnpj: "98.765.432/0001-87",
-      regioes: "Todo Brasil - Entrega Aérea",
-    },
-    {
-      id: 3,
-      nome: "Transportadora 3",
-      preco_frete: 30.0,
-      email: "transportadora3@example.com",
-      telefone: "(41) 3456-7890",
-      endereco: "Rua C, 789",
-      cnpj: "55.555.555/0001-55",
-      regioes: "Todo Brasil - Entrega Aérea",
-    },
-    {
-      id: 4,
-      nome: "Transportadora 4",
-      preco_frete: 30.0,
-      email: "transportadora4@example.com",
-      telefone: "(41) 3456-7890",
-      endereco: "Rua C, 789",
-      cnpj: "55.555.555/0001-55",
-      regioes: "Todo Brasil - Entrega Aérea",
-    },
-    {
-      id: 5,
-      nome: "Transportadora 5",
-      preco_frete: 30.0,
-      email: "transportadora5@example.com",
-      telefone: "(41) 3456-7890",
-      endereco: "Rua C, 789",
-      cnpj: "55.555.555/0001-55",
-      regioes: "Todo Brasil - Entrega Aérea",
-    },
-    {
-      id: 6,
-      nome: "Transportadora 6",
-      preco_frete: 30.0,
-      email: "transportadora6@example.com",
-      telefone: "(41) 3456-7890",
-      endereco: "Rua C, 789",
-      cnpj: "55.555.555/0001-55",
-      regioes: "Todo Brasil - Entrega Aérea",
-    },
-  ]);
+
+  
+
+  const [transportadoras, setTransportadoras] = useState([]);
+
+  async function getTransportadoras(){
+   
+    try {
+        const response = await axios.get('http://localhost:8080/get-transportadoras')
+        setTransportadoras(response.data)
+        console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(()=>{
+    getTransportadoras()
+  },[])
 
   const [modalVisivel, setModalVisivel] = useState(false);
   const [transportadoraSelecionada, setTransportadoraSelecionada] = useState(null);
   const [modalEditarVisivel, setModalEditarVisivel] = useState(false);
   const [modalExcluirVisivel, setModalExcluirVisivel] = useState(false);
+  const [idParaLidar,setIdParaLidar]=useState()
+
+  async function excluirTransportadora(id) {
+    try {
+      const response = await axios.delete(`http://localhost:8080/delete-transportadora/${id}`);
+      console.log(response.data);
+      window.location.reload()
+    } catch (error) {
+      console.error("Erro ao excluir transportadora:", error);
+    }
+  }
+  
 
   const handleAddTransportadora = (nova) => {
-    const nextId = transportadoras.length ? Math.max(...transportadoras.map(t => t.id)) + 1 : 1;
-    const novaTrans = { ...nova, id: nextId };
-    setTransportadoras([...transportadoras, novaTrans]);
-    setModalVisivel(false);
+    
   };
 
   return (
@@ -117,26 +84,26 @@ const AdminTransportadora = () => {
 
       <Content>
         {transportadoras.map((transportadora) => (
-          <Transportadora key={transportadora.id}>
+          <Transportadora key={transportadora.cod_transportadora}>
             <Name>
               <div>
                 <FiTruck size={28} color="#fff" />
               </div>
-              <h3>{transportadora.nome}</h3>
+              <h3>{transportadora.nome_transp}</h3>
             </Name>
             <TransPrice>
               <p className="label">Preço Base do Frete</p>
-              <p>R$ {transportadora.preco_frete.toFixed(2)}</p>
+              <p>R$ {transportadora.preco_base_frete_transp.toFixed(2)}</p>
             </TransPrice>
 
             <Info>
               <p className="label">CNPJ</p>
-              <p style={{ marginBottom: "20px" }}>{transportadora.cnpj}</p>
+              <p style={{ marginBottom: "20px" }}>{transportadora.cnpj_transp}</p>
               <p className="label">Contato</p>
-              <p>{transportadora.telefone}</p>
-              <p style={{ marginBottom: "20px" }}>{transportadora.email}</p>
+              <p>{transportadora.telefone_transp}</p>
+              <p style={{ marginBottom: "20px" }}>{transportadora.email_transp}</p>
               <p className="label">Regiões de Entrega</p>
-              <p>{transportadora.regioes}</p>
+              <p>{transportadora.regioes_atendidas_transp}</p>
             </Info>
 
             <Action>
@@ -144,6 +111,7 @@ const AdminTransportadora = () => {
                 onClick={() => {
                   setTransportadoraSelecionada(transportadora);
                   setModalEditarVisivel(true);
+                  setIdParaLidar(transportadora.cod_transportadora)
                 }}
               >
                 <FiEdit size={20} color="white" />
@@ -152,6 +120,7 @@ const AdminTransportadora = () => {
               <Excluir onClick={() => {
                 setTransportadoraSelecionada(transportadora);
                 setModalExcluirVisivel(true);
+                setIdParaLidar(transportadora.cod_transportadora)
               }}>
                 <FiTrash size={20} color="white" />
               </Excluir>
@@ -179,21 +148,20 @@ const AdminTransportadora = () => {
           setModalEditarVisivel(false);
         }}
         transportadora={transportadoraSelecionada}
+        id={idParaLidar}
       />
 
       <ModalExcluirTransportadora
         isVisivel={modalExcluirVisivel}
         onClose={() => setModalExcluirVisivel(false)}
         onConfirm={() => {
-          if (transportadoraSelecionada) {
-            setTransportadoras(
-              transportadoras.filter((t) => t.id !== transportadoraSelecionada.id)
-            );
-          }
-          setTransportadoraSelecionada(null);
+
+          excluirTransportadora(idParaLidar)
           setModalExcluirVisivel(false);
+          getTransportadoras()
         }}
         transportadora={transportadoraSelecionada}
+        id={idParaLidar}
       />
       
     </Container>

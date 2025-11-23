@@ -2,7 +2,7 @@ import React from "react";
 import { FiX } from "react-icons/fi";
 import { ModalOverlay, ModalContent, ModalHeader, Content, Actions, CancelButton, ConfirmButton } from "./style";
 
-const ModalExcluirTransportadora = ({ isVisivel, transportadora, onConfirm, onClose }) => {
+const ModalExcluirTransportadora = ({ isVisivel, transportadora, onConfirm, onClose,id }) => {
   if (!isVisivel) return null;
 
   const handleOverlayClick = (e) => {
@@ -10,6 +10,8 @@ const ModalExcluirTransportadora = ({ isVisivel, transportadora, onConfirm, onCl
       onClose();
     }
   };
+
+  
 
   return (
     <>
