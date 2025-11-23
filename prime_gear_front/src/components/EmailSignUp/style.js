@@ -13,6 +13,13 @@ export const Container = styled.section`
     align-items: center;
     padding-left: 5%;
     background-repeat:no-repeat;
+
+    @media (max-width: 768px) {
+        height: auto;
+        padding: 4rem 1rem;
+        justify-content: center;
+        text-align: center;
+    }
 `;
 
 export const Content = styled.div`
@@ -32,6 +39,19 @@ export const Content = styled.div`
     p{
         font-size: 1.2rem;
         margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        padding: 2rem 1.5rem;
+        width: 100%;
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        p {
+            font-size: 1rem;
+        }
     }
 `;
 
@@ -59,6 +79,15 @@ export const Form = styled.div`
 
     &:hover {
       background: #ddd;
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+
+    input, button {
+        width: 100%;
     }
   }
 `;

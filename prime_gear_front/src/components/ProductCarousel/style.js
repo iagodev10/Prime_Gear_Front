@@ -6,6 +6,12 @@ export const CarouselContainer = styled.section`
   margin: 1px auto; 
   padding: 5%;
   position: relative;
+  margin-bottom: 50px; /* Garante espaço para a seção debaixo */
+
+  @media (max-width: 768px) {
+    padding: 10% 5%;
+    margin-bottom: 30px;
+  }
 `;
 
 // Título da seção (ex: "Destaques da Semana")
@@ -15,6 +21,12 @@ export const SectionTitle = styled.h2`
   text-align: left;
   margin-bottom: 40px;
   color: #1c1c1c;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 `;
 
 // Container para o Swiper (para posicionar as setas)

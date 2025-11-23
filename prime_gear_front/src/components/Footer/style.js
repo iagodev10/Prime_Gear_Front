@@ -18,12 +18,23 @@ export const Top = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 30px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 `;
 
 export const Group = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 150px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    align-items: center;
+  }
 `;
 
 export const Title = styled.h4`
@@ -48,6 +59,10 @@ export const Social = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
+  @media (max-width: 768px) {
+    align-items: center;
+  }
 `;
 
 export const Icons = styled.div`
@@ -109,4 +124,9 @@ export const LeftGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 25px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    align-items: center;
+  }
 `;

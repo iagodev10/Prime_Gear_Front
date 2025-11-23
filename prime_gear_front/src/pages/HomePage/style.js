@@ -71,6 +71,9 @@ export const Ideapad = styled.section`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    width: 90%;
+    margin: 40px auto 0 auto;
+    gap: 30px;
   }
 `;
 
@@ -84,7 +87,8 @@ export const IdeaImg = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
-    height: 300px;
+    height: auto;
+    max-height: 300px;
   }
 
   img {
@@ -121,6 +125,10 @@ export const Title = styled.h2`
   font-size: 2rem;
   font-weight: 700;
   text-align: left;
+
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 export const SubTitle = styled.h3`
