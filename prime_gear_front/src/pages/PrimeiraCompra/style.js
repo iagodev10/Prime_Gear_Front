@@ -9,7 +9,8 @@ export const PageContainer = styled.div`
     font-family: Arial, sans-serif;
     color: #0f0f12;
     padding-top: 8vh; 
-    
+    @media (max-width: 1024px){ padding-top: 7vh; }
+    @media (max-width: 768px){ padding-top: 6vh; }
 `;
 
 export const PageHeader = styled.div`
@@ -44,6 +45,9 @@ export const Banner = styled.section`
         inset: 0;
         background: radial-gradient(60% 60% at 50% 50%, rgba(196,181,253,0.35) 0%, rgba(255,255,255,0) 60%);
     }
+    @media (max-width: 1024px){ height: 320px; }
+    @media (max-width: 768px){ height: 260px; }
+    @media (max-width: 480px){ height: 220px; }
 `;
 
 export const Title = styled.h1`
@@ -52,6 +56,9 @@ export const Title = styled.h1`
     color: #fff; 
     margin: 0 0 10px 0;
     z-index: 2; 
+    @media (max-width: 1024px){ font-size: 2.2rem; }
+    @media (max-width: 768px){ font-size: 2rem; }
+    @media (max-width: 480px){ font-size: 1.8rem; }
 `;
 
 export const Title1 = styled.h1`
@@ -60,6 +67,9 @@ export const Title1 = styled.h1`
     color: #0f0f12; 
     margin: 0 0 10px 0;
     z-index: 2; 
+    @media (max-width: 1024px){ font-size: 2.2rem; }
+    @media (max-width: 768px){ font-size: 2rem; }
+    @media (max-width: 480px){ font-size: 1.8rem; }
 `;
 
 export const SubTitle = styled.p`
@@ -67,6 +77,8 @@ export const SubTitle = styled.p`
     color: #f0f0f0; 
     margin: 0;
     z-index: 2;
+    @media (max-width: 768px){ font-size: 1.05rem; }
+    @media (max-width: 480px){ font-size: 0.95rem; }
 `;
 
 export const SubTitle1 = styled.p`
@@ -74,6 +86,8 @@ export const SubTitle1 = styled.p`
     color: #3b3b40; 
     margin: 0;
     z-index: 2;
+    @media (max-width: 768px){ font-size: 1.05rem; }
+    @media (max-width: 480px){ font-size: 0.95rem; }
 `;
 
 export const StepsGrid = styled.div`
@@ -157,6 +171,10 @@ export const CtaButton = styled(Link)`
     &:hover {
         filter: brightness(1.08);
         transform: translateY(-3px);
+    }
+    @media (max-width: 768px){
+        width: 100%;
+        max-width: 480px;
     }
 `;
 
