@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Container,
   Header,
@@ -19,62 +19,64 @@ import ModalEditarFornecedor from "../../components/Fornecedor/ModalEditarFornec
 import ModalExcluirFornecedor from "../../components/Fornecedor/ModalExcluirFornecedor";
 
 const AdminFornecedor = () => {
-  const [fornecedor, setFornecedor] = useState([
-    {
-      id: 1,
-      nome: "Eletrônicos Master",
-      email: "vendas@eletromaster.com.br",
-      telefone: "(21) 2345-6789",
-      endereco: "Rua A, 123",
-      cnpj: "12.345.678/0001-95",
-      responsavel: "Ana Santos",
-    },
-    {
-      id: 2,
-      nome: "Fornecedor 2",
-      email: "fornecedor2@example.com",
-      telefone: "(11) 4567-8901",
-      endereco: "Rua B, 456",
-      cnpj: "98.765.432/0001-87",
-      responsavel: "João Silva",
-    },
-    {
-      id: 3,
-      nome: "Fornecedor 3",
-      email: "fornecedor3@example.com",
-      telefone: "(41) 3456-7890",
-      endereco: "Rua C, 789",
-      cnpj: "55.555.555/0001-55",
-      responsavel: "Mariana Oliveira",
-    },
-    {
-      id: 4,
-      nome: "Fornecedor 3",
-      email: "fornecedor3@example.com",
-      telefone: "(41) 3456-7890",
-      endereco: "Rua C, 789",
-      cnpj: "55.555.555/0001-55",
-      responsavel: "Mariana Oliveira",
-    },
-    {
-      id: 5,
-      nome: "Fornecedor 3",
-      email: "fornecedor3@example.com",
-      telefone: "(41) 3456-7890",
-      endereco: "Rua C, 789",
-      cnpj: "55.555.555/0001-55",
-      responsavel: "Mariana Oliveira",
-    },
-    {
-      id: 6,
-      nome: "Fornecedor 3",
-      email: "fornecedor3@example.com",
-      telefone: "(41) 3456-7890",
-      endereco: "Rua C, 789",
-      cnpj: "55.555.555/0001-55",
-      responsavel: "Mariana Oliveira",
-    },
-  ]);
+
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [cnpj, setCnpj] = useState("");
+  const [responsavel, setResponsavel] = useState("");
+
+  const [fornecedor, setFornecedor] = useState([]);
+  const [idParaLidar, setIdParaLidar] = useState()
+
+  async function getFornecedores() {
+    try {
+      const response = await axios.get('http://localhost:8080/fornecedores-adm')
+      setFornecedor(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
+  async function deletarFornecedor(idForn) {
+    console.log("chamou");
+    try {
+      const response = await axios.delete('http://localhost:8080/delete-fornecedor/' + idForn)
+      console.log("DELETOU");
+      getFornecedores()
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  async function obterInfosForn(id) {
+    console.log('chamou');
+    console.log("ID: "+id);
+    try {
+      const response = await axios.get('http://localhost:8080/get-fornecedor/' + id)
+      console.log(response.data);
+      setNome(response.data.nome_responsavel_forn)
+      setEmail(response.data.email_forn)
+      setTelefone(response.data.telefone_forn)
+      
+      setEndereco(response.data.endereco_forn)
+      setCnpj(response.data.cnpj_forn)
+      setResponsavel(response.data.nome_responsavel_forn)
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getFornecedores()
+  }, [])
+
 
   const [modalVisivel, setModalVisivel] = useState(false);
   const [modalEditarVisivel, setModalEditarVisivel] = useState(false);
@@ -101,22 +103,23 @@ const AdminFornecedor = () => {
 
       <Content>
         {fornecedor.map((fornecedor) => (
-          <Fornecedor key={fornecedor.id}>
-            <h3>{fornecedor.nome}</h3>
+          <Fornecedor key={fornecedor.cod_forn}>
+            <h3>{fornecedor.nome_responsavel_forn}</h3>
             <p className="label">CNPJ</p>
-            <p>{fornecedor.cnpj}</p>
+            <p>{fornecedor.cnpj_forn}</p>
             <p className="label">Responsável</p>
-            <p>{fornecedor.responsavel}</p>
+            <p>{fornecedor.nome_responsavel_forn}</p>
             <p className="label">Email</p>
-            <p>{fornecedor.email}</p>
+            <p>{fornecedor.email_forn}</p>
             <p className="label">Telefone</p>
-            <p>{fornecedor.telefone}</p>
+            <p>{fornecedor.telefone_forn}</p>
             <p className="label">Endereço</p>
-            <p>{fornecedor.endereco}</p>
+            <p>{fornecedor.endereco_forn}</p>
 
             <Action>
-              <Edit onClick={() => {
-                setFornecedorSelecionado(fornecedor);
+              <Edit onClick={async () => {
+                setIdParaLidar(fornecedor.cod_fornecedor);
+                await obterInfosForn(fornecedor.cod_fornecedor);
                 setModalEditarVisivel(true);
               }}>
                 <FiEdit size={20} color="white" />
@@ -125,7 +128,8 @@ const AdminFornecedor = () => {
               <Excluir onClick={() => {
                 setFornecedorSelecionado(fornecedor);
                 setModalExcluirVisivel(true);
-              }}>   
+                setIdParaLidar(fornecedor.cod_fornecedor)
+              }}>
                 <FiTrash size={20} color="white" />
               </Excluir>
             </Action>
@@ -133,27 +137,40 @@ const AdminFornecedor = () => {
         ))}
       </Content>
 
-        <ModalAdicionarFornecedor
-          isVisivel={modalVisivel}
-          onClose={() => setModalVisivel(false)}
-        />
-        <ModalEditarFornecedor
-          isVisivel={modalEditarVisivel}
-          onClose={() => setModalEditarVisivel(false)}
-          fornecedor={fornecedorSelecionado}
-          onSave={(f) => {
-            setFornecedor(prev => prev.map(item => item.id === f.id ? f : item))
-          }}
-        />
-        <ModalExcluirFornecedor
-          isVisivel={modalExcluirVisivel}
-          onClose={() => setModalExcluirVisivel(false)}
-          fornecedor={fornecedorSelecionado}
-          onConfirm={() => {
-            setFornecedor(prev => prev.filter(item => item.id !== fornecedorSelecionado.id))
-            setModalExcluirVisivel(false)
-          }}
-        />
+      <ModalAdicionarFornecedor
+        isVisivel={modalVisivel}
+        onClose={() => setModalVisivel(false)}
+      />
+      <ModalEditarFornecedor
+        isVisivel={modalEditarVisivel}
+        onClose={() => setModalEditarVisivel(false)}
+        fornecedor={fornecedorSelecionado}
+        id={idParaLidar}
+
+        nome={nome}
+        setNome={setNome}
+        email={email}
+        setEmail={setEmail}
+        telefone={telefone}
+        setTelefone={setTelefone}
+        endereco={endereco}
+        setEndereco={setEndereco}
+        cnpj={cnpj}
+        setCnpj={setCnpj}
+        responsavel={responsavel}
+        setResponsavel={setResponsavel}
+      />
+      <ModalExcluirFornecedor
+        isVisivel={modalExcluirVisivel}
+        onClose={() => {setModalExcluirVisivel(false),getFornecedores()}}
+        fornecedor={fornecedorSelecionado}
+        onConfirm={() => {
+          deletarFornecedor(idParaLidar)
+          setModalExcluirVisivel(false)
+        }}
+        id={idParaLidar}
+        reload={getFornecedores}
+      />
 
 
     </Container>

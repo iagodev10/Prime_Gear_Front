@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
 import { FiX } from "react-icons/fi";
 import {
   ModalOverlay,
@@ -9,40 +9,14 @@ import {
   SubmitButton,
 } from "./style";
 
-const ModalEditarFornecedor = ({ isVisivel, onClose, onSave, fornecedor }) => {
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [endereco, setEndereco] = useState("");
-  const [cnpj, setCnpj] = useState("");
-  const [responsavel, setResponsavel] = useState("");
+const ModalEditarFornecedor = ({ isVisivel, onClose, onSave,onLoad, nome, setNome, email, setEmail, telefone, setTelefone, endereco, setEndereco, cnpj, setCnpj, responsavel, setResponsavel,id,reload}) => {
 
-  useEffect(() => {
-    if (fornecedor) {
-      setNome(fornecedor.nome);
-      setEmail(fornecedor.email);
-      setTelefone(fornecedor.telefone);
-      setEndereco(fornecedor.endereco);
-      setCnpj(fornecedor.cnpj);
-      setResponsavel(fornecedor.responsavel);
-    }
-  }, [fornecedor]);
 
+
+  
   const handleSalvar = (e) => {
-    e.preventDefault();
 
-    const atualizado = {
-      id: fornecedor.id,
-      nome,
-      email,
-      telefone,
-      endereco,
-      cnpj,
-      responsavel,
-    };
-    if (onSave) {
-      onSave(atualizado);
-    }
+   
     onClose();
   };
 
@@ -53,6 +27,28 @@ const ModalEditarFornecedor = ({ isVisivel, onClose, onSave, fornecedor }) => {
   };
 
   if (!isVisivel) return null;
+
+
+  async function handleSalavarAlteracoes(){
+    console.log("oiiiiiii");
+    const objNovasInfos={
+      cnpj_forn: cnpj,
+      telefone_forn: telefone,
+      email_forn:email, 
+      endereco_forn: endereco,
+      nome_responsavel_forn: responsavel
+    }
+
+
+    try {
+        const response = await axios.put('http://localhost:8080/editar-fornecedor/'+id, objNovasInfos)
+        console.log("Forncedor editado com sucesso");
+      
+    } catch (error) {
+      alert("Erro ao editar")
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -65,7 +61,7 @@ const ModalEditarFornecedor = ({ isVisivel, onClose, onSave, fornecedor }) => {
             </button>
           </ModalHeader>
 
-          <Form onSubmit={handleSalvar}>
+          <Form onSubmit={handleSalavarAlteracoes}>
             <div>
               <label htmlFor="nome">Nome do Fornecedor</label>
               <input
@@ -138,7 +134,7 @@ const ModalEditarFornecedor = ({ isVisivel, onClose, onSave, fornecedor }) => {
               />
             </div>
 
-            <SubmitButton type="submit" onClick={handleSalvar}>
+            <SubmitButton type="submit">
               Salvar Fornecedor
             </SubmitButton>
           </Form>
