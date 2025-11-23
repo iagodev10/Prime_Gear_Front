@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios'
 import { FiX } from "react-icons/fi";
 import {
   ModalOverlay,
@@ -44,7 +45,6 @@ const ModalAdicionarTransportadora = ({ isVisivel, onClose, onAdd }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validar()) return;
-
     const novo = {
       nome,
       email,
@@ -55,124 +55,138 @@ const ModalAdicionarTransportadora = ({ isVisivel, onClose, onAdd }) => {
       preco_frete: parseFloat(precoFrete),
       avaliacao: avaliacao ? parseFloat(avaliacao) : 0,
     };
-    
     if (onAdd) onAdd(novo);
-    
-    // Limpar form (opcional)
-    setNome(""); setCnpj(""); setEmail(""); setTelefone("");
-    setEndereco(""); setRegioes(""); setPrecoFrete(""); setAvaliacao("");
-    setErrors({});
   };
 
   return (
-    <ModalOverlay onClick={handleOverlayClick}>
-      <ModalContent>
-        <ModalHeader>
-          <h2>Nova Transportadora</h2>
-          <button onClick={onClose} type="button">
-            <FiX size={24} />
-          </button>
-        </ModalHeader>
+    <>
+      <ModalOverlay onClick={handleOverlayClick}>
+        <ModalContent>
+          <ModalHeader>
+            <h2>Novo Transportadora</h2>
+            <button onClick={onClose}>
+              <FiX size={24} />
+            </button>
+          </ModalHeader>
 
-        <Form onSubmit={handleSubmit}>
-          <Div className="grid-item">
-            <div>
-              <label htmlFor="nome">Nome</label>
-              <input
-                id="nome"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="Ex: Azul Cargo"
-              />
-              {errors.nome && <ErrorText>{errors.nome}</ErrorText>}
-            </div>
-            <div>
-              <label htmlFor="cnpj">CNPJ</label>
-              <input
-                id="cnpj"
-                value={cnpj}
-                onChange={(e) => setCnpj(e.target.value)}
-                placeholder="00.000.000/0001-00"
-              />
-              {errors.cnpj && <ErrorText>{errors.cnpj}</ErrorText>}
-            </div>
-          </Div>
+          <Form onSubmit={handleSubmit}>
+            <Div className="grid-item">
+              <div>
+                <label htmlFor="nome">Nome do Transportadora</label>
+                <input
+                  type="text"
+                  id="nome"
+                  required
+                  placeholder="Digite o nome do transportadora"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                />
+                {errors.nome && <ErrorText>{errors.nome}</ErrorText>}
+              </div>
 
-          <Div className="grid-item">
-            <div>
-              <label htmlFor="telefone">Telefone</label>
-              <input
-                id="telefone"
-                value={telefone}
-                onChange={(e) => setTelefone(e.target.value)}
-                placeholder="(00) 0000-0000"
-              />
-              {errors.telefone && <ErrorText>{errors.telefone}</ErrorText>}
-            </div>
-            <div>
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="contato@exemplo.com"
-              />
-              {errors.email && <ErrorText>{errors.email}</ErrorText>}
-            </div>
-          </Div>
+              <div>
+                <label htmlFor="cnpj">CNPJ</label>
+                <input
+                  type="text"
+                  id="cnpj"
+                  required
+                  placeholder="00.000.000/0000-00"
+                  value={cnpj}
+                  onChange={(e) => setCnpj(e.target.value)}
+                />
+                {errors.cnpj && <ErrorText>{errors.cnpj}</ErrorText>}
+              </div>
+            </Div>
 
-          <div>
-            <label htmlFor="endereco">Endereço</label>
-            <input
-              id="endereco"
-              value={endereco}
-              onChange={(e) => setEndereco(e.target.value)}
-              placeholder="Rua, Número, Cidade"
-            />
-            {errors.endereco && <ErrorText>{errors.endereco}</ErrorText>}
-          </div>
+            <Div className="grid-item">
+              <div>
+                <label htmlFor="telefone">Telefone</label>
+                <input
+                  type="tel"
+                  id="telefone"
+                  required
+                  placeholder="(00) 00000-0000"
+                  value={telefone}
+                  onChange={(e) => setTelefone(e.target.value)}
+                />
+                {errors.telefone && <ErrorText>{errors.telefone}</ErrorText>}
+              </div>
 
-          <div>
-            <label htmlFor="regioes">Regiões Atendidas</label>
-            <input
-              id="regioes"
-              value={regioes}
-              onChange={(e) => setRegioes(e.target.value)}
-              placeholder="Ex: Sul e Sudeste"
-            />
-            {errors.regioes && <ErrorText>{errors.regioes}</ErrorText>}
-          </div>
+              <div>
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  required
+                  placeholder="email@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                {errors.email && <ErrorText>{errors.email}</ErrorText>}
+              </div>
+            </Div>
 
-          <Div className="grid-item">
             <div>
-              <label htmlFor="preco_frete">Preço Base (R$)</label>
+              <label htmlFor="endereco">Endereço da Sede</label>
               <input
-                id="preco_frete"
-                type="number"
-                value={precoFrete}
-                onChange={(e) => setPrecoFrete(e.target.value)}
-                placeholder="0.00"
+                type="text"
+                id="endereco"
+                required
+                placeholder="Digite o endereço da sede"
+                value={endereco}
+                onChange={(e) => setEndereco(e.target.value)}
               />
-              {errors.precoFrete && <ErrorText>{errors.precoFrete}</ErrorText>}
+              {errors.endereco && <ErrorText>{errors.endereco}</ErrorText>}
             </div>
-            <div>
-              <label htmlFor="avaliacao">Avaliação (0-5)</label>
-              <input
-                id="avaliacao"
-                type="number"
-                min="0"
-                max="5"
-                value={avaliacao}
-                onChange={(e) => setAvaliacao(e.target.value)}
-              />
-            </div>
-          </Div>
 
-          <SubmitButton type="submit">Cadastrar</SubmitButton>
-        </Form>
-      </ModalContent>
-    </ModalOverlay>
+
+            <div>
+              <label htmlFor="regioes">Regiões Atendidas</label>
+              <input
+                type="text"
+                id="regioes"
+                required
+                placeholder="Digite as regiões atendidas"
+                value={regioes}
+                onChange={(e) => setRegioes(e.target.value)}
+              />
+              {errors.regioes && <ErrorText>{errors.regioes}</ErrorText>}
+            </div>
+
+            <Div className="grid-item">
+              <div>
+                <label htmlFor="preco_frete">Preço Base do Frete</label>
+                <input
+                  type="number"
+                  id="preco_frete"
+                  required
+                  placeholder="0"
+                  value={precoFrete}
+                  onChange={(e) => setPrecoFrete(e.target.value)}
+                />
+                {errors.precoFrete && <ErrorText>{errors.precoFrete}</ErrorText>}
+              </div>
+
+              <div>
+                <label htmlFor="avaliacao">Avaliação Média (0-5)</label>
+                <input
+                  type="number"
+                  id="avaliacao"
+                  placeholder="0"
+                  value={avaliacao}
+                  onChange={(e) => setAvaliacao(e.target.value)}
+                  min="0"
+                  max="5"
+                />
+                {errors.avaliacao && <ErrorText>{errors.avaliacao}</ErrorText>}
+              </div>
+            </Div>
+
+            <SubmitButton type="submit">Cadastrar Transportadora</SubmitButton>
+          </Form>
+        </ModalContent>
+      </ModalOverlay>
+    </>
   );
 };
 

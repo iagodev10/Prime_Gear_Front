@@ -1,12 +1,24 @@
 import React, { useState } from "react";
-import { Container, Header, Title, Button, Search, Fornecedor, Content, Action, Edit, Excluir } from "./style";
+
+import {
+  Container,
+  Header,
+  Title,
+  Button,
+  Search,
+  Fornecedor,
+  Content,
+  Action,
+  Edit,
+  Excluir,
+} from "./style";
 import { FiPlus, FiSearch, FiEdit, FiTrash } from "react-icons/fi";
 import ModalAdicionarFornecedor from "../../components/Fornecedor/ModalAdicionarFornecedor";
 import ModalEditarFornecedor from "../../components/Fornecedor/ModalEditarFornecedor";
 import ModalExcluirFornecedor from "../../components/Fornecedor/ModalExcluirFornecedor";
 
 const AdminFornecedor = () => {
-  const [fornecedores, setFornecedores] = useState([
+  const [fornecedor, setFornecedor] = useState([
     {
       id: 1,
       nome: "Eletrônicos Master",
@@ -18,12 +30,48 @@ const AdminFornecedor = () => {
     },
     {
       id: 2,
-      nome: "Tech Solutions",
-      email: "contato@techsolutions.com",
+      nome: "Fornecedor 2",
+      email: "fornecedor2@example.com",
       telefone: "(11) 4567-8901",
       endereco: "Rua B, 456",
       cnpj: "98.765.432/0001-87",
       responsavel: "João Silva",
+    },
+    {
+      id: 3,
+      nome: "Fornecedor 3",
+      email: "fornecedor3@example.com",
+      telefone: "(41) 3456-7890",
+      endereco: "Rua C, 789",
+      cnpj: "55.555.555/0001-55",
+      responsavel: "Mariana Oliveira",
+    },
+    {
+      id: 4,
+      nome: "Fornecedor 3",
+      email: "fornecedor3@example.com",
+      telefone: "(41) 3456-7890",
+      endereco: "Rua C, 789",
+      cnpj: "55.555.555/0001-55",
+      responsavel: "Mariana Oliveira",
+    },
+    {
+      id: 5,
+      nome: "Fornecedor 3",
+      email: "fornecedor3@example.com",
+      telefone: "(41) 3456-7890",
+      endereco: "Rua C, 789",
+      cnpj: "55.555.555/0001-55",
+      responsavel: "Mariana Oliveira",
+    },
+    {
+      id: 6,
+      nome: "Fornecedor 3",
+      email: "fornecedor3@example.com",
+      telefone: "(41) 3456-7890",
+      endereco: "Rua C, 789",
+      cnpj: "55.555.555/0001-55",
+      responsavel: "Mariana Oliveira",
     },
   ]);
 
@@ -51,23 +99,23 @@ const AdminFornecedor = () => {
       </Search>
 
       <Content>
-        {fornecedores.map((item) => (
-          <Fornecedor key={item.id}>
-            <h3>{item.nome}</h3>
+        {fornecedor.map((fornecedor) => (
+          <Fornecedor key={fornecedor.id}>
+            <h3>{fornecedor.nome}</h3>
             <p className="label">CNPJ</p>
-            <p>{item.cnpj}</p>
+            <p>{fornecedor.cnpj}</p>
             <p className="label">Responsável</p>
-            <p>{item.responsavel}</p>
+            <p>{fornecedor.responsavel}</p>
             <p className="label">Email</p>
-            <p>{item.email}</p>
+            <p>{fornecedor.email}</p>
             <p className="label">Telefone</p>
-            <p>{item.telefone}</p>
+            <p>{fornecedor.telefone}</p>
             <p className="label">Endereço</p>
-            <p>{item.endereco}</p>
+            <p>{fornecedor.endereco}</p>
 
             <Action>
               <Edit onClick={() => {
-                setFornecedorSelecionado(item);
+                setFornecedorSelecionado(fornecedor);
                 setModalEditarVisivel(true);
               }}>
                 <FiEdit size={20} color="white" />
@@ -76,7 +124,8 @@ const AdminFornecedor = () => {
               <Excluir onClick={() => {
                 setFornecedorSelecionado(item);
                 setModalExcluirVisivel(true);
-              }}>   
+                setIdParaLidar(fornecedor.cod_fornecedor)
+              }}>
                 <FiTrash size={20} color="white" />
               </Excluir>
             </Action>
@@ -93,8 +142,7 @@ const AdminFornecedor = () => {
           onClose={() => setModalEditarVisivel(false)}
           fornecedor={fornecedorSelecionado}
           onSave={(f) => {
-            setFornecedores(prev => prev.map(item => item.id === f.id ? f : item));
-            setModalEditarVisivel(false);
+            setFornecedor(prev => prev.map(item => item.id === f.id ? f : item))
           }}
         />
         <ModalExcluirFornecedor
@@ -102,10 +150,12 @@ const AdminFornecedor = () => {
           onClose={() => setModalExcluirVisivel(false)}
           fornecedor={fornecedorSelecionado}
           onConfirm={() => {
-            setFornecedores(prev => prev.filter(item => item.id !== fornecedorSelecionado.id));
-            setModalExcluirVisivel(false);
+            setFornecedor(prev => prev.filter(item => item.id !== fornecedorSelecionado.id))
+            setModalExcluirVisivel(false)
           }}
         />
+
+
     </Container>
   );
 };

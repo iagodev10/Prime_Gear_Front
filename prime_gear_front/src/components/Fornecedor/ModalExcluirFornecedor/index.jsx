@@ -2,9 +2,19 @@ import React from "react";
 import { FiX } from "react-icons/fi";
 import { ModalOverlay, ModalContent, ModalHeader, Content, Actions, CancelButton, ConfirmButton } from "./style";
 
-const ModalExcluirFornecedor = ({ isVisivel, fornecedor, onConfirm, onClose }) => {
+const ModalExcluirFornecedor = ({ isVisivel, fornecedor, onConfirm, onClose,id }) => {
   if (!isVisivel) return null;
 
+<<<<<<< HEAD
+=======
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+ 
+>>>>>>> 183931083c4b94e023892f03823efb6aaf531314
   return (
     <ModalOverlay onClick={(e) => e.target === e.currentTarget && onClose()}>
       <ModalContent>

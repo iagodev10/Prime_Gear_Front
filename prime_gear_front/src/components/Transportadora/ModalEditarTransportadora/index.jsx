@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import { FiX } from "react-icons/fi";
 import {
   ModalOverlay,
@@ -9,7 +10,7 @@ import {
   ErrorText,
 } from "./style";
 
-const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora }) => {
+const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora,id }) => {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
@@ -21,30 +22,32 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
 
   useEffect(() => {
     if (transportadora) {
-      setNome(transportadora.nome || ""); 
-      setEmail(transportadora.email || "");
-      setTelefone(transportadora.telefone || "");
-      setEndereco(transportadora.endereco || "");
-      setCnpj(transportadora.cnpj || "");
-      setRegioes(transportadora.regioes || "");
-      setPrecoFrete(transportadora.preco_frete || "");
+      setNome(transportadora.nome); 
+      setEmail(transportadora.email);
+      setTelefone(transportadora.telefone);
+      setEndereco(transportadora.endereco);
+      setCnpj(transportadora.cnpj);
+      setRegioes(transportadora.regioes);
+      setPrecoFrete(transportadora.preco_frete);
     }
   }, [transportadora]);
 
-  if (!isVisivel) return null;
+  const handleSalvar = (t) => {
+    t.preventDefault();
 
-  const handleSalvar = (e) => {
-    e.preventDefault();
-    const err = {};
-    if (!nome.trim()) err.nome = "Informe o nome";
-    if (!email) err.email = "Informe o email";
-    if (!preco_frete) err.preco_frete = "Informe o preço";
-
-    setErrors(err);
-    if (Object.keys(err).length > 0) return;
+    const e = {};
+    if (!nome.trim()) e.nome = "Informe o nome";
+    if (!cnpj.match(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)) e.cnpj = "CNPJ inválido";
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "Email inválido";
+    if (!telefone.match(/^\(?\d{2}\)?\s?\d{4,5}-\d{4}$/)) e.telefone = "Telefone inválido";
+    if (!endereco.trim()) e.endereco = "Informe o endereço";
+    if (!regioes.trim()) e.regioes = "Informe as regiões";
+    if (!preco_frete || isNaN(parseFloat(preco_frete))) e.preco_frete = "Preço inválido";
+    setErrors(e);
+    if (Object.keys(e).length) return;
 
     const atualizado = {
-      ...transportadora,
+      id: transportadora.id,
       nome,
       email,
       telefone,
@@ -53,8 +56,16 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora 
       regioes,
       preco_frete: parseFloat(preco_frete),
     };
-    
-    if (onSave) onSave(atualizado);
+    if (onSave) {
+      onSave(atualizado);
+    }
+    onClose();
+  };
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
   };
 
   return (
