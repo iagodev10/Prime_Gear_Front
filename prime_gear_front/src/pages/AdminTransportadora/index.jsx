@@ -90,6 +90,13 @@ const AdminTransportadora = () => {
   const [modalEditarVisivel, setModalEditarVisivel] = useState(false);
   const [modalExcluirVisivel, setModalExcluirVisivel] = useState(false);
 
+  const handleAddTransportadora = (nova) => {
+    const nextId = transportadoras.length ? Math.max(...transportadoras.map(t => t.id)) + 1 : 1;
+    const novaTrans = { ...nova, id: nextId };
+    setTransportadoras([...transportadoras, novaTrans]);
+    setModalVisivel(false);
+  };
+
   return (
     <Container>
       <Header>
@@ -124,10 +131,10 @@ const AdminTransportadora = () => {
 
             <Info>
               <p className="label">CNPJ</p>
-              <p style={{ "margin-bottom": "20px" }}>{transportadora.cnpj}</p>
+              <p style={{ marginBottom: "20px" }}>{transportadora.cnpj}</p>
               <p className="label">Contato</p>
               <p>{transportadora.telefone}</p>
-              <p style={{ "margin-bottom": "20px" }}>{transportadora.email}</p>
+              <p style={{ marginBottom: "20px" }}>{transportadora.email}</p>
               <p className="label">Regiões de Entrega</p>
               <p>{transportadora.regioes}</p>
             </Info>
@@ -156,6 +163,7 @@ const AdminTransportadora = () => {
       <ModalAdicionarTransportadora
         isVisivel={modalVisivel}
         onClose={() => setModalVisivel(false)}
+        onAdd={handleAddTransportadora}
       />
 
       <ModalEditarTransportadora
@@ -177,9 +185,11 @@ const AdminTransportadora = () => {
         isVisivel={modalExcluirVisivel}
         onClose={() => setModalExcluirVisivel(false)}
         onConfirm={() => {
-          setTransportadoras(
-            transportadoras.filter((t) => t.id !== transportadoraSelecionada.id)
-          );
+          if (transportadoraSelecionada) {
+            setTransportadoras(
+              transportadoras.filter((t) => t.id !== transportadoraSelecionada.id)
+            );
+          }
           setTransportadoraSelecionada(null);
           setModalExcluirVisivel(false);
         }}

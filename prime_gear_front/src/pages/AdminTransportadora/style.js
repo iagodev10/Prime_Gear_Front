@@ -2,12 +2,24 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
     width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     background-color: #f5f5f5;
     padding-top: 10vh;
+    padding-bottom: 4vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+    @media (max-width: 768px) {
+        padding-top: 6vh;
+        padding-bottom: 6vh;
+    }
+    @media (max-width: 480px) {
+        padding-top: 7vh;
+    }
 `;
 
 export const Header = styled.div`
@@ -16,17 +28,39 @@ export const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    @media (max-width: 480px) {
+        margin-bottom: 16px;
+    }
 `;
 
 export const Title = styled.div`
     h1 {
-        font-size: 2.2rem;
+        font-size: 2.1rem;
         font-weight: 600;
         color: #111;
     }
     p {
-        font-size: 1.1rem;
+        font-size: 1rem;
         color: #666;
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+        p {
+            font-size: 1rem;
+        }
+    }
+    @media (max-width: 480px) {
+        h1 { font-size: 1.6rem; }
+        p { font-size: 0.95rem; }
     }
 `;
 
@@ -60,6 +94,14 @@ export const Button = styled.button`
     }
     &:hover::after{animation: shine 0.8s ease;}
     @keyframes shine {to{left:150%;}}
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+    @media (max-width: 480px) {
+        padding: 10px 14px;
+        font-size: 0.95rem;
+    }
 `;
 
 export const Search = styled.div`
@@ -79,13 +121,24 @@ export const Search = styled.div`
         padding-left: 10px;
         color: #333;
     }
+    @media (max-width: 480px) {
+        margin-bottom: 20px;
+        padding: 10px 12px;
+    }
 `;
 
 export const Content = styled.div`
     width: 90%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+    @media (max-width: 480px) {
+        gap: 18px;
+    }
 `;
 
 export const Transportadora = styled.div`
@@ -95,8 +148,8 @@ export const Transportadora = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
+    overflow: hidden;
 `;
-
 
 export const Name = styled.div`
     display: flex;
@@ -124,9 +177,12 @@ export const Name = styled.div`
         color: white;
         margin: 0;
     }
+    @media (max-width: 480px) {
+        padding: 10px 16px;
+        div { width: 42px; height: 42px; }
+        h3 { font-size: 1.1rem; }
+    }
 `;
-
-
 
 export const Action = styled.div`
     width: 90%;
@@ -137,6 +193,19 @@ export const Action = styled.div`
     gap: 14px;
     margin-top: 20px;
     margin-left: 5%;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        
+        div {
+            width: 100%;
+        }
+    }
+    @media (max-width: 480px) {
+        gap: 10px;
+        margin-bottom: 20px;
+        margin-top: 16px;
+    }
 `;
 
 export const Edit = styled.div`
@@ -191,6 +260,10 @@ export const Excluir = styled.div`
         background-color: #c82333;
         transform: scale(1.05);
     }
+    @media (max-width: 480px) {
+        font-size: 0.9rem;
+        padding: 10px 0;
+    }
 `;
 
 export const TransPrice = styled.div`
@@ -200,7 +273,7 @@ export const TransPrice = styled.div`
     margin-left: 5%;
     margin-bottom: 20px;
     p {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         color: #03b304;
         font-weight: 600;
     }
@@ -218,15 +291,16 @@ export const Info = styled.div`
     margin-left: 5%;
     margin-bottom: 20px;
     p {
-        font-size: 1.1rem;
+        font-size: 1rem;
         color: #333;
         font-weight: 500;
-        
     }
     .label {
-        font-size: 1rem;
+        font-size: 0.95rem;
         color: #666;
         font-weight: 500;
-        
+    }
+    @media (max-width: 480px) {
+        margin-left: 4%;
     }
 `;

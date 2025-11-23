@@ -21,6 +21,13 @@ export const ModalContent = styled.div`
     width: 90%;
     max-width: 700px;
     overflow: hidden;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    @media (max-width: 768px) {
+        width: 95%;
+        margin: 10px;
+    }
 `;
 
 export const ModalHeader = styled.div`
@@ -96,6 +103,11 @@ export const Form = styled.form`
   select:invalid {
     color: #777;
   }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    gap: 12px;
+  }
 `;
 
 
@@ -164,6 +176,11 @@ export const SubmitButton = styled.button`
     }
     
     ${shimmer}
+`;
+
+export const ErrorText = styled.span`
+  color: #dc3545;
+  font-size: 0.9rem;
 `;
 
 export const Div = styled.div`
