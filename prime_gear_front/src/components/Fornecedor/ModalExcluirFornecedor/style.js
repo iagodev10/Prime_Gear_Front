@@ -1,105 +1,82 @@
 import styled from "styled-components";
 
 export const ModalOverlay = styled.div`
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1001;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    backdrop-filter: blur(2px);
 `;
 
 export const ModalContent = styled.div`
-  background: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 520px;
-  overflow: hidden;
-
-  @media (max-width: 768px) {
-    width: 95%;
-  }
+    background: #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 `;
 
 export const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  h2 { margin: 0; font-size: 1.4rem; font-weight: 500 }
-  button { background: transparent; border: none; font-size: 1.5rem; color: #888; cursor: pointer; line-height: 1; transition: 0.3s ease-in-out }
-  button:hover { color: black }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
 
-  @media (max-width: 768px) {
-    padding: 12px 16px;
-    h2 { font-size: 1.2rem; }
-  }
+    h2 { margin: 0; font-size: 1.3rem; font-weight: 600; color: #dc3545; }
+    button { 
+        background: transparent; border: none; font-size: 1.5rem; color: #666; 
+        cursor: pointer; display: flex; 
+        &:hover { color: #000; }
+    }
 `;
 
 export const Content = styled.div`
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  p { color: black; font-size: 1rem; margin: 0 }
-  .name { font-weight: 600 }
-
-  @media (max-width: 768px) {
-    padding: 16px;
-  }
+    padding: 24px;
+    p { color: #333; font-size: 1rem; margin: 0; line-height: 1.5; }
+    .name { font-weight: 700; color: #000; }
 `;
 
 export const Actions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 0 24px 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 0 24px 24px;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 0 16px 16px;
-    
-    button {
-        width: 100%;
+    @media (max-width: 500px) {
+        flex-direction: column;
+        button { width: 100%; }
     }
-  }
 `;
 
 export const CancelButton = styled.button`
-  padding: 10px 16px;
-  background: #e1e1e1;
-  color: #111;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: all .2s ease;
-  &:hover { background: #d6d6d6; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.18) }
-  &:active { transform: translateY(0) }
+    padding: 12px 20px;
+    background: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover { background: #d0d0d0; }
 `;
 
 export const ConfirmButton = styled.button`
-  padding: 10px 16px;
-  background: #dc3545;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: all .2s ease;
-  cursor: pointer;
-  svg { transition: transform .2s ease, opacity .2s ease }
-  &:hover { background: #c82333; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.2) }
-  &:hover svg { transform: scale(1.1); opacity: 0.9 }
-  &:active { transform: translateY(0) }
+    padding: 12px 20px;
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover { background: #c82333; }
 `;
