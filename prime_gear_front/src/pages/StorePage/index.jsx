@@ -11,6 +11,11 @@ import axios from 'axios'
 function Store() {
 
     const [produtos, setProdutos] = useState([])
+    const [categorias, setCategorias]=useState([])
+
+    
+
+    console.log(categorias);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [expandedFilters, setExpandedFilters] = useState({
@@ -36,11 +41,28 @@ function Store() {
     const itemsPerPage = 6;
 
     const marcas = ['ACER', 'ASUS', 'DELL', 'HP', 'LENOVO', 'SAMSUNG'];
+    
+    
+    
+    
 
     const totalPages = Math.ceil(produtos.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentProducts = produtos.slice(startIndex, endIndex);
+
+    async function getCats(){
+        try {
+            const response= await axios.get('http://localhost:8080/get-categorias')
+            setCategorias(response.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(()=>{
+        getCats()
+    },[])
 
     const toggleFilter = (filterName) => {
         setExpandedFilters(prev => ({
@@ -271,6 +293,36 @@ function Store() {
                                     Categoria
                                     {expandedFilters.categoria ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                                 </button>
+                                {expandedFilters.categoria && (
+                                    <div style={{ paddingTop: '12px' }}>
+                                        {categorias.map(cat => (
+                                            <label
+                                                key={cat.nome_cat}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    padding: '8px 0',
+                                                    cursor: 'pointer',
+                                                    fontSize: '14px',
+                                                    color: 'black'
+                                                }}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedBrands.includes(cat.nome_cat)}
+                                                    onChange={() => toggleBrand(cat.nome_cat)}
+                                                    style={{
+                                                        width: '16px',
+                                                        height: '16px',
+                                                        marginRight: '10px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                />
+                                                {cat.nome_cat}
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Marca */}
