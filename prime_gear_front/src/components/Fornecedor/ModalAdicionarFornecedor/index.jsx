@@ -4,7 +4,11 @@ import axios from 'axios'
 
 import { FiX } from "react-icons/fi";
 import {
-  ModalOverlay, ModalContent, ModalHeader, Form, SubmitButton, Div
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  Form,
+  SubmitButton, Div
 } from "./style";
 
 const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
@@ -38,18 +42,24 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
   }
 
   if (!isVisivel) return null;
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
   return (
-    <ModalOverlay onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <ModalContent>
-        <ModalHeader>
-          <h2>Novo Fornecedor</h2>
-          <button onClick={onClose} type="button">
-            <FiX size={24} />
-          </button>
-        </ModalHeader>
+    <>
+      <ModalOverlay onClick={handleOverlayClick}>
+        <ModalContent>
+          <ModalHeader>
+            <h2>Novo Fornecedor</h2>
+            <button onClick={onClose}>
+              <FiX size={24} />
+            </button>
+          </ModalHeader>
 
-          <Form onSubmit={(e) => e.preventDefault()}>
+          <Form onSubmit={handleAddFornecedor}>
             <Div className="grid-item">
               <div>
                 <label htmlFor="nome">Nome do Fornecedor</label>
@@ -58,6 +68,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
                   id="nome"
                   required
                   placeholder="Digite o nome do fornecedor"
+                  onChange={(e)=>setNome(e.target.value)}
                 />
               </div>
 
@@ -68,6 +79,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
                   id="cnpj"
                   required
                   placeholder="00.000.000/0000-00"
+                  onChange={(e)=>setCnpj(e.target.value)}
                 />
               </div>
             </Div>
@@ -80,6 +92,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
                   id="telefone"
                   required
                   placeholder="(00) 00000-0000"
+                  onChange={(e)=>setTelefone(e.target.value)}
                 />
               </div>
 
@@ -90,6 +103,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
                   id="email"
                   required
                   placeholder="email@example.com"
+                  onChange={(e)=>setEmail(e.target.value)}
                 />
               </div>
             </Div>
@@ -101,6 +115,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
                 id="endereco"
                 required
                 placeholder="Digite o endereço do fornecedor"
+                onChange={(e)=>setEndereco(e.target.value)}
               />
             </div>
 
@@ -112,6 +127,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
                   id="responsavel"
                   required
                   placeholder="Digite o nome do responsável"
+                  onChange={(e)=>setResponsavel(e.target.value)}
                 />
               </div>
 
@@ -122,14 +138,16 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
                   id="prazoEntrega"
                   required
                   placeholder="Digite o prazo de entrega em dias"
+                  onChange={(e)=>setPrazoEntrega(e.target.value)}
                 />
               </div>
             </Div>
 
-          <SubmitButton type="submit">Cadastrar Fornecedor</SubmitButton>
-        </Form>
-      </ModalContent>
-    </ModalOverlay>
+            <SubmitButton type="submit">Cadastrar Fornecedor</SubmitButton>
+          </Form>
+        </ModalContent>
+      </ModalOverlay>
+    </>
   );
 };
 
