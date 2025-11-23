@@ -18,7 +18,6 @@ import {
 } from "./style";
 
 const ProductCard = ({
-    // Valores Padrão (para o card funcionar sozinho)
     title = "Notebook Lenovo IdeaPad 1i, Intel Core i7-1255U, 12GB/512GB SSD...",
     price = "R$ 3.524,02",
     priceInfo = "no pix",

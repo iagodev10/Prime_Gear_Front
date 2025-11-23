@@ -6,9 +6,11 @@ import Email from '../../assets/images/e-mail.svg'
 import notebook from '../../assets/images/laptop-comprar.png'
 import desktop from '../../assets/images/desktopPC.png'
 import fone from '../../assets/images/foneJBL.png'
-
+import axios from 'axios'
 
 function Store() {
+
+    const [produtos, setProdutos] = useState([])
 
     const [currentPage, setCurrentPage] = useState(1);
     const [expandedFilters, setExpandedFilters] = useState({
@@ -32,15 +34,6 @@ function Store() {
     const containerRef = useRef(null);
 
     const itemsPerPage = 6;
-
-    // Mock data - 18 produtos para demonstrar paginação
-    const produtos = Array.from({ length: 18 }, (_, i) => ({
-        id: i + 1,
-        nome: `Notebook Lenovo ideaPad 1i, Intel Core i7-1255U, 12GB/512GB SSD...`,
-        preco: 3524.02,
-        precoVista: 3524.02,
-        imagem: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop'
-    }));
 
     const marcas = ['ACER', 'ASUS', 'DELL', 'HP', 'LENOVO', 'SAMSUNG'];
 
@@ -72,7 +65,17 @@ function Store() {
         );
     };
 
+    async function obterProdutos() {
+        try {
+            const response = await axios.get('http://localhost:8080/produtos-adm')
+            setProdutos(response.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
+        obterProdutos()
         const handleScroll = () => {
             if (!sidebarRef.current || !paginationRef.current || !containerRef.current) return;
 
@@ -496,7 +499,20 @@ function Store() {
                             gap: '24px',
                             marginBottom: '60px'
                         }}>
-                            <ProductCard></ProductCard>
+                            {
+                                produtos.map((prod) => (
+                                    <>
+                                        <ProductCard title={prod.nome_prod} price={prod.preco_prod.toLocaleString("pt-BR", {
+                                            style: "currency",
+                                            currency: "BRL",
+                                        })} oldPrice={prod.preco_prod.toLocaleString("pt-BR", {
+                                            style: "currency",
+                                            currency: "BRL",
+                                        })} image={prod.url_img_prod}></ProductCard>
+                                    </>
+                                ))
+                            }
+
                             <ProductCard></ProductCard>
                             <ProductCard></ProductCard>
                             <ProductCard></ProductCard>
@@ -555,7 +571,7 @@ function Store() {
                         <button style={{
                             background: "black",
                             color: "white",
-                            padding: "12px 20px", 
+                            padding: "12px 20px",
                             borderRadius: "60px",
                             textAlign: "center",
                             cursor: "pointer",
@@ -588,7 +604,7 @@ function Store() {
                         <button style={{
                             background: "black",
                             color: "white",
-                            padding: "12px 20px", 
+                            padding: "12px 20px",
                             borderRadius: "60px",
                             textAlign: "center",
                             cursor: "pointer",
@@ -621,7 +637,7 @@ function Store() {
                         <button style={{
                             background: "black",
                             color: "white",
-                            padding: "12px 20px", 
+                            padding: "12px 20px",
                             borderRadius: "60px",
                             textAlign: "center",
                             cursor: "pointer",
