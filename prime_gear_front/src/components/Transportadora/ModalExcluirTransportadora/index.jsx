@@ -4,14 +4,8 @@ import {
     ModalOverlay, ModalContent, ModalHeader, Content, Actions, CancelButton, ConfirmButton 
 } from "./style";
 
-const ModalExcluirTransportadora = ({ isVisivel, transportadora, onConfirm, onClose,id }) => {
+const ModalExcluirTransportadora = ({ isVisivel, transportadora, onConfirm, onClose, id }) => {
   if (!isVisivel) return null;
-
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
 
   return (
     <ModalOverlay onClick={(e) => e.target === e.currentTarget && onClose()}>

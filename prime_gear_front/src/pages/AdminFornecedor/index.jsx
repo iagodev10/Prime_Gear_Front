@@ -79,13 +79,14 @@ const AdminFornecedor = () => {
   const [modalEditarVisivel, setModalEditarVisivel] = useState(false);
   const [modalExcluirVisivel, setModalExcluirVisivel] = useState(false);
   const [fornecedorSelecionado, setFornecedorSelecionado] = useState(null);
+  const [idParaLidar, setIdParaLidar] = useState();
 
   return (
     <Container>
       <Header>
         <Title>
           <h1>Gerenciar Fornecedores</h1>
-          <p>{fornecedores.length} fornecedores cadastrados</p>
+          <p>{fornecedor.length} fornecedores cadastrados</p>
         </Title>
         <Button onClick={() => setModalVisivel(true)}>
           <FiPlus size={18} />
@@ -117,14 +118,15 @@ const AdminFornecedor = () => {
               <Edit onClick={() => {
                 setFornecedorSelecionado(fornecedor);
                 setModalEditarVisivel(true);
+                setIdParaLidar(fornecedor.cod_fornecedor || fornecedor.id);
               }}>
                 <FiEdit size={20} color="white" />
                 Editar
               </Edit>
               <Excluir onClick={() => {
-                setFornecedorSelecionado(item);
+                setFornecedorSelecionado(fornecedor);
                 setModalExcluirVisivel(true);
-                setIdParaLidar(fornecedor.cod_fornecedor)
+                setIdParaLidar(fornecedor.cod_fornecedor || fornecedor.id);
               }}>
                 <FiTrash size={20} color="white" />
               </Excluir>
@@ -141,6 +143,7 @@ const AdminFornecedor = () => {
           isVisivel={modalEditarVisivel}
           onClose={() => setModalEditarVisivel(false)}
           fornecedor={fornecedorSelecionado}
+          id={idParaLidar}
           onSave={(f) => {
             setFornecedor(prev => prev.map(item => item.id === f.id ? f : item))
           }}
@@ -149,6 +152,7 @@ const AdminFornecedor = () => {
           isVisivel={modalExcluirVisivel}
           onClose={() => setModalExcluirVisivel(false)}
           fornecedor={fornecedorSelecionado}
+          id={idParaLidar}
           onConfirm={() => {
             setFornecedor(prev => prev.filter(item => item.id !== fornecedorSelecionado.id))
             setModalExcluirVisivel(false)
