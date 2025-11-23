@@ -1,15 +1,16 @@
 import React from 'react';
-// Importamos os ícones que vamos usar
 import {
   FiPackage,
   FiShoppingCart,
   FiUsers,
   FiDollarSign,
   FiClock,
-  FiAlertCircle,
+  FiAlertTriangle,
+  FiPlus,
+  FiList,
+  FiTrendingUp
 } from 'react-icons/fi';
 
-// Importa os componentes de estilo que acabamos de criar
 import {
   PageContainer,
   DashboardHeader,
@@ -20,123 +21,175 @@ import {
   StatTitle,
   StatValue,
   StatPercentage,
-  RecentOrdersWrapper,
-  Status, Percent
+  SectionTitle,
+  QuickActionsGrid,
+  ActionButton,
+  RecentOrdersContainer,
+  Table,
+  TableHeader,
+  TableRow,
+  TableCell,
+  StatusBadge
 } from './style';
 
 const AdminDashboard = () => {
-  // Dados fictícios (mockados) para preencher a página
+  // Mock de dados para os cards
   const stats = {
-    totalProdutos: 8,
-    pedidos: 0,
-    usuarios: 2,
-    receitaTotal: 'R$ 0,00',
-    pedidosPendentes: 0,
-    produtosSemEstoque: 0,
+    totalProdutos: 124,
+    pedidos: 45,
+    usuarios: 89,
+    receitaTotal: 'R$ 12.450,00',
+    pedidosPendentes: 3,
+    produtosSemEstoque: 2,
   };
+
+  // Mock de dados para a tabela de pedidos recentes
+  const recentOrders = [
+    { id: '#1023', cliente: 'Ana Silva', data: '23/11/2025', valor: 'R$ 450,00', status: 'Pendente' },
+    { id: '#1022', cliente: 'Carlos Souza', data: '22/11/2025', valor: 'R$ 1.200,00', status: 'Enviado' },
+    { id: '#1021', cliente: 'Mariana Oliveira', data: '21/11/2025', valor: 'R$ 89,90', status: 'Concluído' },
+    { id: '#1020', cliente: 'João Pedro', data: '21/11/2025', valor: 'R$ 2.300,00', status: 'Cancelado' },
+  ];
 
   return (
     <PageContainer>
       <DashboardHeader>
-        <h1>Dashboard Administrativo</h1>
-        <p>Visão geral do sistema PrimeGear</p>
+        <div>
+          <h1>Dashboard Administrativo</h1>
+          <p>Bem-vindo de volta! Aqui está o resumo da sua loja hoje.</p>
+        </div>
+        {/* Data ou Botão de filtro poderia entrar aqui */}
       </DashboardHeader>
 
+      {/* Seção de Cards Principais */}
       <StatsGrid>
         <StatCard>
-          <IconWrapper color="#5a67d8" bgColor="#e9d8fd">
-            <FiPackage />
-          </IconWrapper>
+          <div className="card-header">
+            <IconWrapper>
+              <FiDollarSign />
+            </IconWrapper>
+            <StatPercentage positive>+15%</StatPercentage>
+          </div>
           <StatInfo>
-            <Status>
-              <StatTitle>Total de Produtos</StatTitle>
-              <StatValue>{stats.totalProdutos}</StatValue>
-            </Status>
-            <Percent>
-              <StatPercentage positive>+12%</StatPercentage>
-            </Percent>
+            <StatTitle>Receita Total</StatTitle>
+            <StatValue>{stats.receitaTotal}</StatValue>
           </StatInfo>
         </StatCard>
 
-        {/* Card 2: Pedidos */}
         <StatCard>
-          <IconWrapper color="#d53f8c" bgColor="#fbebed">
-            <FiShoppingCart />
-          </IconWrapper>
+          <div className="card-header">
+            <IconWrapper>
+              <FiShoppingCart />
+            </IconWrapper>
+            <StatPercentage positive>+8%</StatPercentage>
+          </div>
           <StatInfo>
-            <Status>
-              <StatTitle>Pedidos</StatTitle>
-              <StatValue>{stats.pedidos}</StatValue>
-            </Status>
-            <Percent>
-              <StatPercentage positive>+8%</StatPercentage>
-            </Percent>
+            <StatTitle>Novos Pedidos</StatTitle>
+            <StatValue>{stats.pedidos}</StatValue>
           </StatInfo>
         </StatCard>
 
-        {/* Card 3: Usuários */}
         <StatCard>
-          <IconWrapper color="#38a169" bgColor="#e6fffa">
-            <FiUsers />
-          </IconWrapper>
+          <div className="card-header">
+            <IconWrapper>
+              <FiUsers />
+            </IconWrapper>
+            <StatPercentage positive>+23%</StatPercentage>
+          </div>
           <StatInfo>
-            <Status>
-              <StatTitle>Usuários</StatTitle>
-              <StatValue>{stats.usuarios}</StatValue>
-            </Status>
-            <Percent>
-              <StatPercentage positive>+23%</StatPercentage>
-            </Percent>
+            <StatTitle>Novos Clientes</StatTitle>
+            <StatValue>{stats.usuarios}</StatValue>
           </StatInfo>
         </StatCard>
 
-        {/* Card 4: Receita Total */}
         <StatCard>
-          <IconWrapper color="#d69e2e" bgColor="#fefcbf">
-            <FiDollarSign />
-          </IconWrapper>
+          <div className="card-header">
+            <IconWrapper>
+              <FiPackage />
+            </IconWrapper>
+            <StatPercentage positive>+12%</StatPercentage>
+          </div>
           <StatInfo>
-            <Status>
-              <StatTitle>Receita Total</StatTitle>
-              <StatValue>{stats.receitaTotal}</StatValue>
-            </Status>
-            <Percent>
-              <StatPercentage positive>+15%</StatPercentage>
-            </Percent>
-          </StatInfo>
-        </StatCard>
-
-        {/* Card 5: Pedidos Pendentes */}
-        <StatCard>
-          <IconWrapper color="#dd6b20" bgColor="#fefcbf">
-            <FiClock />
-          </IconWrapper>
-          <StatInfo>
-            <Status>
-              <StatTitle>Pedidos Pendentes</StatTitle>
-              <StatValue>{stats.pedidosPendentes}</StatValue>
-            </Status>
-          </StatInfo>
-        </StatCard>
-
-        {/* Card 6: Produtos Sem Estoque */}
-        <StatCard>
-          <IconWrapper color="#c53030" bgColor="#fed7d7">
-            <FiAlertCircle />
-          </IconWrapper>
-          <StatInfo>
-            <Status>
-              <StatTitle>Produtos Sem Estoque</StatTitle>
-              <StatValue>{stats.produtosSemEstoque}</StatValue>
-            </Status>
+            <StatTitle>Total Produtos</StatTitle>
+            <StatValue>{stats.totalProdutos}</StatValue>
           </StatInfo>
         </StatCard>
       </StatsGrid>
 
-      <RecentOrdersWrapper>
-        <h2>Pedidos Recentes</h2>
-        <p>Nenhum pedido encontrado</p>
-      </RecentOrdersWrapper>
+      {/* Seção de Alertas e Pendências (Layout menor) */}
+      <SectionTitle>Atenção Necessária</SectionTitle>
+      <StatsGrid className="small-grid">
+        <StatCard className="alert-card">
+          <IconWrapper className="alert">
+            <FiClock />
+          </IconWrapper>
+          <StatInfo>
+            <StatTitle>Pedidos Pendentes</StatTitle>
+            <StatValue>{stats.pedidosPendentes}</StatValue>
+          </StatInfo>
+        </StatCard>
+
+        <StatCard className="alert-card">
+          <IconWrapper className="danger">
+            <FiAlertTriangle />
+          </IconWrapper>
+          <StatInfo>
+            <StatTitle>Estoque Baixo/Zerado</StatTitle>
+            <StatValue>{stats.produtosSemEstoque}</StatValue>
+          </StatInfo>
+        </StatCard>
+      </StatsGrid>
+
+      {/* Ações Rápidas - Intuitividade para o ADM */}
+      <SectionTitle>Ações Rápidas</SectionTitle>
+      <QuickActionsGrid>
+        <ActionButton>
+          <FiPlus size={24} />
+          <span>Novo Produto</span>
+        </ActionButton>
+        <ActionButton>
+          <FiList size={24} />
+          <span>Gerenciar Pedidos</span>
+        </ActionButton>
+        <ActionButton>
+          <FiUsers size={24} />
+          <span>Ver Clientes</span>
+        </ActionButton>
+        <ActionButton>
+          <FiTrendingUp size={24} />
+          <span>Relatórios</span>
+        </ActionButton>
+      </QuickActionsGrid>
+
+      {/* Tabela de Pedidos Recentes */}
+      <SectionTitle>Pedidos Recentes</SectionTitle>
+      <RecentOrdersContainer>
+        <Table>
+          <thead>
+            <TableHeader>
+              <th>ID</th>
+              <th>Cliente</th>
+              <th>Data</th>
+              <th>Valor</th>
+              <th>Status</th>
+            </TableHeader>
+          </thead>
+          <tbody>
+            {recentOrders.map((order) => (
+              <TableRow key={order.id}>
+                <TableCell><strong>{order.id}</strong></TableCell>
+                <TableCell>{order.cliente}</TableCell>
+                <TableCell>{order.data}</TableCell>
+                <TableCell>{order.valor}</TableCell>
+                <TableCell>
+                  <StatusBadge status={order.status}>{order.status}</StatusBadge>
+                </TableCell>
+              </TableRow>
+            ))}
+          </tbody>
+        </Table>
+      </RecentOrdersContainer>
+
     </PageContainer>
   );
 };
