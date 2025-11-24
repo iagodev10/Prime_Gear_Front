@@ -12,6 +12,7 @@ function Store() {
 
     const [produtos, setProdutos] = useState([])
     const [categorias, setCategorias]=useState([])
+    const [marcas, setMarcas]=useState([])
 
     
 
@@ -41,8 +42,6 @@ function Store() {
     const containerRef = useRef(null);
 
     const itemsPerPage = 6;
-
-    const marcas = ['ACER', 'ASUS', 'DELL', 'HP', 'LENOVO', 'SAMSUNG'];
     
     
     
@@ -57,6 +56,15 @@ function Store() {
         try {
             const response= await axios.get('http://localhost:8080/get-categorias')
             setCategorias(response.data)
+       
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async function getMarcas(){
+        try {
+            const response= await axios.get('http://localhost:8080/get-marcas')
+            setMarcas(response.data)
         } catch (error) {
             console.log(error);
         }
@@ -64,6 +72,7 @@ function Store() {
 
     useEffect(()=>{
         getCats()
+        getMarcas()
     },[])
 
     const toggleFilter = (filterName) => {
@@ -360,7 +369,7 @@ function Store() {
                                     <div style={{ paddingTop: '12px' }}>
                                         {marcas.map(marca => (
                                             <label
-                                                key={marca}
+                                                key={marca.nome_marca}
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -372,8 +381,8 @@ function Store() {
                                             >
                                                 <input
                                                     type="checkbox"
-                                                    checked={selectedBrands.includes(marca)}
-                                                    onChange={() => toggleBrand(marca)}
+                                                    checked={selectedBrands.includes(marca.nome_marca)}
+                                                    onChange={() => toggleBrand(marca.nome_marca)}
                                                     style={{
                                                         width: '16px',
                                                         height: '16px',
@@ -381,7 +390,7 @@ function Store() {
                                                         cursor: 'pointer'
                                                     }}
                                                 />
-                                                {marca}
+                                                {marca.nome_marca}
                                             </label>
                                         ))}
                                     </div>
