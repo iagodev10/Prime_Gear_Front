@@ -6,25 +6,29 @@ const LoaderContext = createContext();
 export const LoaderProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const isInitialMount = useRef(true);
+  const timeoutRef = useRef(null);
 
-  // Loader inicial (splash screen)
+  // Loader inicial (splash screen mais curto)
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
       isInitialMount.current = false;
-    }, 1500);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Loader rápido para troca de páginas
+  // Loader rápido para troca de páginas (mínimo visível de 300ms)
   const startLoading = () => {
     setIsLoading(true);
 
-    // remove atrasos fixos → loader sincronizado com o render
-    requestAnimationFrame(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
       setIsLoading(false);
-    });
+      timeoutRef.current = null;
+    }, 300);
   };
 
   return (
