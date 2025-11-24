@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage'
 import Institutional from './pages/InstitutionalPage'
 import FaleConosco from './pages/FaleConosco'
 import PrimeiraCompra from './pages/PrimeiraCompra'
+import CheckoutPage from './pages/CheckoutPage'
 
 import AdminDashboard from './pages/AdminDashboard'
 import AdminProdutos from './pages/AdminProdutos'
@@ -63,6 +64,7 @@ const AppContent = () => {
             <Route path="institucional" element={<Institutional />} />
             <Route path="fale-conosco" element={<FaleConosco />} />
             <Route path="primeira-compra" element={<PrimeiraCompra />} />
+            <Route path="checkout" element={<CheckoutPage />} />
           </Route>
 
           <Route path="/admin" element={<AdminLayout />}>

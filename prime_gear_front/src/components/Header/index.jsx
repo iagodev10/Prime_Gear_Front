@@ -5,6 +5,8 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 import SidebarMenu from "../SidebarMenu";
 import SidebarLaptop from "../SidebarLaptop";
+import SearchModal from "../SearchModal";
+
 
 import { FiMenu, FiSearch, FiShoppingCart, FiUser } from "react-icons/fi";
 import { RiApps2Line } from "react-icons/ri";
@@ -28,6 +30,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
@@ -112,7 +115,10 @@ const Header = () => {
 
         <RightSection>
           <Icons>
-            <FiSearch size={20} />
+            <FiSearch
+              size={20}
+              onClick={() => setIsSearchModalOpen(true)}
+            />
             <FiShoppingCart size={20} />
             <FiUser size={20} />
           </Icons>
@@ -135,6 +141,11 @@ const Header = () => {
         isOpen={!!openCategory}
         category={openCategory}
         onClose={() => setOpenCategory(null)}
+      />
+
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
       />
     </>
   );
