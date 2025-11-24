@@ -44,7 +44,7 @@ export const Title = styled.h4`
   color: #f5f5f5;
 `;
 
-export const Link = styled.a`
+export const FooterNavLink = styled.a` 
   color: #ccc;
   text-decoration: none;
   margin-bottom: 6px;
@@ -71,7 +71,7 @@ export const Icons = styled.div`
   margin-top: 8px;
 `;
 
-export const SocialIcon = styled.a`
+export const SocialLink = styled.a` 
   color: #f5f5f5;
   font-size: 20px;
   transition: color 0.3s ease;

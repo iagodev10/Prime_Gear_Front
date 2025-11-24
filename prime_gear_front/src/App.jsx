@@ -27,71 +27,57 @@ import PageLoader from './components/PageLoader'
 import AdminLayout from './components/AdminLayout'
 import PublicLayout from './components/PublicLayout'
 
+// App.jsx (somente AppContent ATUALIZADO)
 const AppContent = () => {
   const { isLoading, startLoading } = useLoader();
   const location = useLocation();
   const prevPathname = React.useRef(null);
   const isFirstRender = React.useRef(true);
 
-  // Efeito para mostrar o loader na troca de páginas
   useEffect(() => {
-    // Ignora a primeira renderização (carregamento inicial já tem seu próprio loader)
     if (isFirstRender.current) {
       isFirstRender.current = false;
       prevPathname.current = location.pathname;
       return;
     }
 
-    // Só mostra o loader se a rota realmente mudou
     if (prevPathname.current !== location.pathname) {
-      const cleanup = startLoading();
+      startLoading();
       prevPathname.current = location.pathname;
-      return cleanup;
     }
-  }, [location.pathname, startLoading]);
+  }, [location.pathname]);
 
   return (
-    <>
-      {/* O AnimatePresence gerencia a animação de SAÍDA.
-        Quando isLoading virar 'false', ele vai rodar a animação 'exit'
-        do PageLoader antes de removê-lo.
-        O mode="wait" garante que a animação de saída termine antes da entrada.
-      */}
-      <AnimatePresence mode="wait">
-        {isLoading && (
-          <PageLoader key="loader" />
-        )}
-      </AnimatePresence>
+    <AnimatePresence mode="wait">
+      {isLoading ? (
+        <PageLoader key="loader" />
+      ) : (
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<PublicLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="loja" element={<Store />} />
+            <Route path="detalhe" element={<ProductPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="institucional" element={<Institutional />} />
+            <Route path="fale-conosco" element={<FaleConosco />} />
+            <Route path="primeira-compra" element={<PrimeiraCompra />} />
+          </Route>
 
-      {/* Seu app (só é visível quando o loader não está por cima) */}
-      {!isLoading && (
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<PublicLayout />}>
-              <Route index element={<HomePage />} />
-              <Route path="loja" element={<Store />} />
-              <Route path="detalhe" element={<ProductPage />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="institucional" element={<Institutional />} />
-              <Route path="fale-conosco" element={<FaleConosco />} />
-              <Route path="primeira-compra" element={<PrimeiraCompra />} />
-            </Route>
-
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="produtos" element={<AdminProdutos />} />
-              <Route path="categorias" element={<AdminCategorias />} />
-              <Route path="fornecedores" element={<AdminFornecedor />} />
-              <Route path="pedidos" element={<AdminPedidos />} />
-              <Route path="transportadoras" element={<AdminTransportadora />} />
-              <Route path="usuarios" element={<AdminUsers />} />
-            </Route>
-          </Routes>
-        </AnimatePresence>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="produtos" element={<AdminProdutos />} />
+            <Route path="categorias" element={<AdminCategorias />} />
+            <Route path="fornecedores" element={<AdminFornecedor />} />
+            <Route path="pedidos" element={<AdminPedidos />} />
+            <Route path="transportadoras" element={<AdminTransportadora />} />
+            <Route path="usuarios" element={<AdminUsers />} />
+          </Route>
+        </Routes>
       )}
-    </>
+    </AnimatePresence>
   );
 };
+
 
 function App() {
   return (

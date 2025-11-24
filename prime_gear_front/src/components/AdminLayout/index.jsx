@@ -1,85 +1,45 @@
 import React from 'react';
-// Importa o Outlet (espaço reservado)
 import { Outlet } from 'react-router-dom';
-// Importa os ícones que vamos usar na navegação
-import {
-  FiLogOut,
-  FiShoppingCart,
-  FiPackage,
-  FiGrid,
-  FiUsers,
-  FiTruck,
-  FiDatabase, // Ícone diferente para Transportadoras
-  FiHome, // Ícone para "Ver Loja"
-  FiLayout, // Ícone para Dashboard
-} from 'react-icons/fi';
 
-// Importa os componentes de estilo
 import {
   LayoutContainer,
+  Top,
   TopNav,
-  ContentArea,
-  NavSection,
-  LogoLink,
-  NavLink,
+  NavCenter,
+  NavItem,
+  RightSection,
+  RightImage
 } from './style';
+
+import logo from '../../assets/images/logodark.png';
+import { RxExit } from 'react-icons/rx';
 
 const AdminLayout = () => {
   return (
     <LayoutContainer>
+
+    <Top  style={{position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000}}>
       <TopNav>
-        {/* Seção da Esquerda: Logo e Dashboard */}
-        <NavSection>
-          <LogoLink to="/admin">
-            PrimeGear <span>Admin</span>
-          </LogoLink>
-          <NavLink to="/admin/dashboard">
-            <FiLayout /> Dashboard
-          </NavLink>
-        </NavSection>
+        <NavCenter>
+          <NavItem to="/admin/">Dashboard</NavItem>
+          <NavItem to="/admin/produtos">Produtos</NavItem>
+          <NavItem to="/admin/categorias">Categorias</NavItem>
+          <NavItem to="/admin/pedidos">Pedidos</NavItem>
+          <NavItem to="/admin/usuarios">Usuários</NavItem>
+          <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
+          <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
+          <NavItem to="/logout" style={{gap: '10px', display: 'flex', alignItems: 'center' }}>Sair <RxExit size={20}/></NavItem>
+        </NavCenter>
 
-        {/* Seção Central: Links Principais */}
-        <NavSection>
-          <NavLink to="/admin/produtos">
-            <FiPackage /> Produtos
-          </NavLink>
-          <NavLink to="/admin/categorias">
-            <FiGrid /> Categorias
-          </NavLink>
-          <NavLink to="/admin/pedidos">
-            <FiShoppingCart /> Pedidos
-          </NavLink>
-          <NavLink to="/admin/usuarios">
-            <FiUsers /> Usuários
-          </NavLink>
-          <NavLink to="/admin/fornecedores">
-            <FiTruck /> Fornecedores
-          </NavLink>
-          <NavLink to="/admin/transportadoras">
-            <FiDatabase /> Transportadoras
-          </NavLink>
-        </NavSection>
-
-        {/* Seção da Direita: Loja e Sair */}
-        <NavSection>
-          <NavLink to="/">
-            <FiHome /> Ver Loja
-          </NavLink>
-          {/* Você pode trocar este Link por um botão com a lógica de logout */}
-          <NavLink to="/logout">
-            <FiLogOut /> Sair
-          </NavLink>
-        </NavSection>
+        <RightSection>
+          <RightImage
+            src={logo}
+            alt="Logo"
+          />
+        </RightSection>
       </TopNav>
-
-      <ContentArea>
-        {/*
-          É AQUI QUE O CONTEÚDO VAI APARECER!
-          O React Router vai injetar o AdminDashboard (ou AdminProdutos, etc.)
-          exatamente aqui, dependendo da URL.
-        */}
-        <Outlet />
-      </ContentArea>
+    </Top>
+      <Outlet />
     </LayoutContainer>
   );
 };

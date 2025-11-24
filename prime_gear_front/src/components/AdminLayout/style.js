@@ -1,86 +1,68 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom'; // Importamos o Link para estiliza-lo
+import { Link } from 'react-router-dom';
 
 export const LayoutContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  width: 100%;
+  height: 100vh;
+  background: #fff;
+  position: relative;
 `;
 
+export const Top = styled.div`
+  width: 100%;
+  height: 8vh;
+  background: #fafafa;
+  padding: 0 20px;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+`;
+
+/* BARRA SUPERIOR */
 export const TopNav = styled.nav`
+  width: 90%;
+  height: 8vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  box-sizing: border-box; // Garante que o padding não estoure a largura
-`;
+  background: #fafafa;
+  padding: 0 20px;
+  box-sizing: border-box;
+  `;
 
-// Divs para organizar os links em 3 seções
-export const NavSection = styled.div`
+/* LINKS CENTRALIZADOS */
+export const NavCenter = styled.div`
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  
-  /* Seção centralizada (nav-center) */
-  &:nth-child(2) {
-    flex: 1;
-    justify-content: center;
-  }
-
-  /* Seção da direita (nav-right) */
-  &:nth-child(3) {
-    justify-content: flex-end;
-  }
+  gap: 45px;
+  margin: auto;
+  font-size: 0.9rem;
+  justify-content: space-between;
 `;
 
-// Estilo para o Logo
-export const LogoLink = styled(Link)`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #2d3748; // Cor mais escura para o logo
+/* LINKS */
+export const NavItem = styled(Link)`
   text-decoration: none;
-  margin-right: 1.5rem;
-
-  span {
-    color: #5a67d8; // Cor roxa para "Admin"
-    font-size: 0.8em;
-    font-weight: 500;
-  }
-`;
-
-// Estilo para os links de navegação
-export const NavLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem; // Espaço entre o ícone e o texto
-  text-decoration: none;
-  color: #4a5568;
-  font-weight: 500;
-  font-size: 0.9rem; // Tamanho de fonte menor para os links
-  transition: color 0.2s ease-in-out;
+  color: #333;
+  font-weight: 400;
+  transition: 0.2s;
 
   &:hover {
-    color: #5a67d8;
-  }
-
-  /* Estilo para o ícone */
-  svg {
-    font-size: 1.1rem;
-    stroke-width: 2;
+    color: #03b304;
   }
 `;
 
-// Área de Conteúdo Principal
-export const ContentArea = styled.main`
-  flex: 1; // Faz o conteúdo ocupar todo o espaço restante
-  background-color: #f4f7fa; // Cor de fundo do conteúdo
-  width: 100%;
-  
-  /* O padding será aplicado pelo PageContainer de cada página filha,
-    como o que fizemos no AdminDashboard.
-  */
+/* SEÇÃO DIREITA COM A IMAGEM */
+export const RightSection = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+/* A IMAGEM DO LADO DIREITO */
+export const RightImage = styled.img`
+  height: 50px;
+  width: 50px;
+  object-fit: contain;
 `;

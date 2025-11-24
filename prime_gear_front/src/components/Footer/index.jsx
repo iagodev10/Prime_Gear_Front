@@ -17,17 +17,18 @@ import {
     Top,
     Group,
     LeftGroup,
-    Link,
     Social,
     Title,
     Icons,
-    SocialIcon,
     Divider,
     Payment,
     PayIcons,
     PayIcon,
-    Copyright
+    Copyright,
+    FooterNavLink,
+    SocialLink
 } from "./style";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
@@ -38,39 +39,39 @@ const Footer = () => {
                     <LeftGroup>
                         <Group>
                             <Title>Sobre a PrimeGear</Title>
-                            <Link href="#">Nossas Lojas</Link>
-                            <Link href="#">Institucional</Link>
+                            <FooterNavLink as={Link} to="/loja">Nossas Lojas</FooterNavLink>
+                            <FooterNavLink as={Link} to="/institucional">Institucional</FooterNavLink>
                         </Group>
 
                         <Group>
                             <Title>Atendimento PrimeGear</Title>
-                            <Link href="#">Fale Conosco</Link>
-                            <Link href="#">Primeira Compra</Link>
+                            <FooterNavLink as={Link} to="/fale-conosco">Fale Conosco</FooterNavLink>
+                            <FooterNavLink as={Link} to="/primeira-compra">Primeira Compra</FooterNavLink>
                         </Group>
                     </LeftGroup>
 
                     {/* Colunas da direita */}
                     <Group>
                         <Title>Compre Agora</Title>
-                        <Link href="#">Notebooks</Link>
-                        <Link href="#">Desktops</Link>
-                        <Link href="#">Monitores</Link>
-                        <Link href="#">Consoles</Link>
-                        <Link href="#">Teclados</Link>
-                        <Link href="#">Todos</Link>
+                        <FooterNavLink as={Link} to="/loja">Notebooks</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja">Desktops</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja">Monitores</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja">Consoles</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja">Teclados</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja">Todos</FooterNavLink>
                     </Group>
 
                     <Group>
                         <Title>Conta PrimeGear</Title>
-                        <Link href="#">Gerencie sua conta PrimeGear</Link>
+                        <FooterNavLink as={Link} to="/login">Gerencie sua conta PrimeGear</FooterNavLink>
                     </Group>
 
                     <Social>
                         <Title>PrimeGear nas Redes Sociais</Title>
                         <Icons>
-                            <SocialIcon href="#" target="_blank"><FaInstagram /></SocialIcon>
-                            <SocialIcon href="#" target="_blank"><FaTwitter /></SocialIcon>
-                            <SocialIcon href="#" target="_blank"><FaFacebook /></SocialIcon>
+                            <SocialLink href="/" target="_blank"><FaInstagram /></SocialLink>
+                            <SocialLink href="/" target="_blank"><FaTwitter /></SocialLink>
+                            <SocialLink href="/" target="_blank"><FaFacebook /></SocialLink>
                         </Icons>
                     </Social>
                 </Top>
