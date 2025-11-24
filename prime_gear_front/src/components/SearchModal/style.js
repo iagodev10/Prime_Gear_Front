@@ -25,29 +25,44 @@ export const SearchBar = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 8px 6px;
+  padding: 12px 0; /* Aumentado o padding vertical e removido lateral */
 `;
 
 export const Input = styled.input`
   flex: 1;
-  height: 40px;
-  border: 1px solid #e3e4ea;
-  border-radius: 999px;
-  padding: 0 16px 0 36px;
-  background: #f7f7fa;
+  width: 100%;
+  height: 50px; /* Altura maior */
+  border: none; /* Remove a borda */
+  border-radius: 0; /* Remove o arredondamento */
+  padding: 0 0 0 48px; /* Espaço apenas na esquerda para o ícone */
+  background: transparent; /* Fundo transparente */
+  font-size: 24px; /* Fonte maior como na imagem */
+  color: #1b1b1f;
+  outline: none; /* Remove a linha azul de foco */
+  font-weight: 400;
+
+  &::placeholder {
+    color: #6b6b71;
+  }
 `;
 
 export const SearchIconWrap = styled.div`
   position: absolute;
-  left: 18px;
+  left: 0; /* Encostado na esquerda */
   top: 50%;
   transform: translateY(-50%);
-  color: #666;
+  color: #1b1b1f; /* Ícone mais escuro (preto/cinza escuro) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* Permite clicar através do ícone */
 `;
 
 export const TopLeft = styled.div`
   flex: 1;
   position: relative;
+  display: flex;
+  align-items: center;
 `;
 
 export const TopRight = styled.div`
@@ -64,15 +79,21 @@ export const ClearBtn = styled.button`
 `;
 
 export const CloseCircle = styled.button`
-  width: 32px;
-  height: 32px;
+  width: 40px; /* Levemente maior */
+  height: 40px;
   border-radius: 50%;
-  border: 1px solid #dcdde3;
+  border: 1px solid #e3e4ea; /* Borda sutil */
   display: flex;
   align-items: center;
   justify-content: center;
   background: #fff;
   cursor: pointer;
+  color: #1b1b1f;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #f7f7fa;
+  }
 `;
 
 export const Divider = styled.hr`

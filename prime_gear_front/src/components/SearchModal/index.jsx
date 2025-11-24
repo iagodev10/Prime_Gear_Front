@@ -68,9 +68,10 @@ const SearchModal = ({ isOpen, onClose }) => {
           <SearchBar>
             <TopLeft>
               <SearchIconWrap>
-                <FiSearch size={18} />
+                {/* Aumentei o size de 18 para 26 para igualar a imagem */}
+                <FiSearch size={26} />
               </SearchIconWrap>
-              <Input type="text" placeholder="Pesquisar" />
+              <Input type="text" placeholder="Pesquisar" autoFocus />
             </TopLeft>
 
             <TopRight>
@@ -106,7 +107,6 @@ const SearchModal = ({ isOpen, onClose }) => {
             </MaisPesquisados>
 
             <Content>
-
               <Mock>
                 {mockData.map((item) => (
                   <Card key={item.id}>
