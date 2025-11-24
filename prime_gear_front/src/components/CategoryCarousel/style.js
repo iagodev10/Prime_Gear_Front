@@ -5,6 +5,10 @@ export const CarouselContainer = styled.section`
   padding: 60px 40px;
   box-sizing: border-box;
   margin-bottom: -40px;
+  @media (max-width: 768px) {
+    padding: 30px 16px;
+    margin-bottom: -20px;
+  }
 `;
 
 export const SwiperContainer = styled.div`
@@ -21,6 +25,8 @@ export const SwiperContainer = styled.div`
     font-size: 1rem;
     color: #333;
     font-weight: 400;
+    @media (max-width: 768px) { font-size: 0.95rem; }
+    @media (max-width: 480px) { font-size: 0.9rem; }
   }
 `;
 
@@ -63,5 +69,9 @@ export const CategoryCard = styled.div`
     img {
       width: 70%;
     }
+  }
+  @media (max-width: 480px) {
+    aspect-ratio: 1 / 1;
+    img { width: 80%; }
   }
 `;
