@@ -11,10 +11,10 @@ import axios from 'axios'
 function Store() {
 
     const [produtos, setProdutos] = useState([])
-    const [categorias, setCategorias]=useState([])
-    const [marcas, setMarcas]=useState([])
+    const [categorias, setCategorias] = useState([])
+    const [marcas, setMarcas] = useState([])
 
-    
+
 
     console.log(categorias);
 
@@ -42,38 +42,53 @@ function Store() {
     const containerRef = useRef(null);
 
     const itemsPerPage = 6;
-    
-    
-    
-    
+
+
+    const labelStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        padding: '8px 0',
+        cursor: 'pointer',
+        fontSize: '14px',
+        color: 'black',
+    };
+
+    const inputStyle = {
+        width: '16px',
+        height: '16px',
+        marginRight: '10px',
+        cursor: 'pointer',
+    };
+
+
 
     const totalPages = Math.ceil(produtos.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentProducts = produtos.slice(startIndex, endIndex);
 
-    async function getCats(){
+    async function getCats() {
         try {
-            const response= await axios.get('http://localhost:8080/get-categorias')
+            const response = await axios.get('http://localhost:8080/get-categorias')
             setCategorias(response.data)
-       
+
         } catch (error) {
             console.log(error);
         }
     }
-    async function getMarcas(){
+    async function getMarcas() {
         try {
-            const response= await axios.get('http://localhost:8080/get-marcas')
+            const response = await axios.get('http://localhost:8080/get-marcas')
             setMarcas(response.data)
         } catch (error) {
             console.log(error);
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getCats()
         getMarcas()
-    },[])
+    }, [])
 
     const toggleFilter = (filterName) => {
         setExpandedFilters(prev => ({
@@ -275,290 +290,660 @@ function Store() {
 
                     {/* Sidebar de Filtros (desktop) */}
                     {!isMobile && (
-                    <div
-                        ref={sidebarRef}
-                        style={{
-                            width: '280px',
-                            flexShrink: 0,
-                            position: 'sticky',
-                            top: '20px',
-                            alignSelf: 'flex-start',
-                            maxHeight: sidebarHeight,
-                            overflowY: 'auto'
-                        }}
-                    >
-                        <div style={{ backgroundColor: 'white', borderRadius: '8px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                            <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '24px', color: '#333' }}>Filtros</h2>
+                        <div
+                            ref={sidebarRef}
+                            style={{
+                                width: '280px',
+                                flexShrink: 0,
+                                position: 'sticky',
+                                top: '20px',
+                                alignSelf: 'flex-start',
+                                maxHeight: sidebarHeight,
+                                overflowY: 'auto'
+                            }}
+                        >
+                            <div style={{ backgroundColor: 'white', borderRadius: '8px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                                <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '24px', color: '#333' }}>Filtros</h2>
 
-                            {/* Categoria */}
-                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-                                <button
-                                    onClick={() => toggleFilter('categoria')}
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 0',
-                                        border: 'none',
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                        fontSize: '15px',
-                                        fontWeight: '500',
-                                        color: 'black'
-                                    }}
-                                >
-                                    Categoria
-                                    {expandedFilters.categoria ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </button>
-                                {expandedFilters.categoria && (
-                                    <div style={{ paddingTop: '12px' }}>
-                                        {categorias.map(cat => (
-                                            <label
-                                                key={cat.nome_cat}
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    padding: '8px 0',
-                                                    cursor: 'pointer',
-                                                    fontSize: '14px',
-                                                    color: 'black'
-                                                }}
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedBrands.includes(cat.nome_cat)}
-                                                    onChange={() => toggleBrand(cat.nome_cat)}
+                                {/* Categoria */}
+                                <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                    <button
+                                        onClick={() => toggleFilter('categoria')}
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 0',
+                                            border: 'none',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            fontWeight: '500',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        Categoria
+                                        {expandedFilters.categoria ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {expandedFilters.categoria && (
+                                        <div style={{ paddingTop: '12px' }}>
+                                            {categorias.map(cat => (
+                                                <label
+                                                    key={cat.nome_cat}
                                                     style={{
-                                                        width: '16px',
-                                                        height: '16px',
-                                                        marginRight: '10px',
-                                                        cursor: 'pointer'
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        padding: '8px 0',
+                                                        cursor: 'pointer',
+                                                        fontSize: '14px',
+                                                        color: 'black'
                                                     }}
-                                                />
-                                                {cat.nome_cat}
-                                            </label>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedBrands.includes(cat.nome_cat)}
+                                                        onChange={() => toggleBrand(cat.nome_cat)}
+                                                        style={{
+                                                            width: '16px',
+                                                            height: '16px',
+                                                            marginRight: '10px',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    />
+                                                    {cat.nome_cat}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
 
-                            {/* Marca */}
-                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-                                <button
-                                    onClick={() => toggleFilter('marca')}
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 0',
-                                        border: 'none',
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                        fontSize: '15px',
-                                        fontWeight: '500',
-                                        color: 'black'
-                                    }}
-                                >
-                                    Marca
-                                    {expandedFilters.marca ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </button>
+                                {/* Marca */}
+                                <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                    <button
+                                        onClick={() => toggleFilter('marca')}
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 0',
+                                            border: 'none',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            fontWeight: '500',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        Marca
+                                        {expandedFilters.marca ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
 
-                                {expandedFilters.marca && (
-                                    <div style={{ paddingTop: '12px' }}>
-                                        {marcas.map(marca => (
-                                            <label
-                                                key={marca.nome_marca}
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    padding: '8px 0',
-                                                    cursor: 'pointer',
-                                                    fontSize: '14px',
-                                                    color: 'black'
-                                                }}
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedBrands.includes(marca.nome_marca)}
-                                                    onChange={() => toggleBrand(marca.nome_marca)}
+                                    {expandedFilters.marca && (
+                                        <div style={{ paddingTop: '12px' }}>
+                                            {marcas.map(marca => (
+                                                <label
+                                                    key={marca.nome_marca}
                                                     style={{
-                                                        width: '16px',
-                                                        height: '16px',
-                                                        marginRight: '10px',
-                                                        cursor: 'pointer'
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        padding: '8px 0',
+                                                        cursor: 'pointer',
+                                                        fontSize: '14px',
+                                                        color: 'black'
                                                     }}
-                                                />
-                                                {marca.nome_marca}
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedBrands.includes(marca.nome_marca)}
+                                                        onChange={() => toggleBrand(marca.nome_marca)}
+                                                        style={{
+                                                            width: '16px',
+                                                            height: '16px',
+                                                            marginRight: '10px',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    />
+                                                    {marca.nome_marca}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Preço */}
+                                <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                    <button
+                                        onClick={() => toggleFilter('preco')}
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 0',
+                                            border: 'none',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            fontWeight: '500',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        Preço
+                                        {expandedFilters.preco ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {expandedFilters.preco && (
+                                        <div style={{ paddingTop: '12px' }}>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Até R$ 1.000 
                                             </label>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
 
-                            {/* Preço */}
-                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-                                <button
-                                    onClick={() => toggleFilter('preco')}
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 0',
-                                        border: 'none',
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                        fontSize: '15px',
-                                        fontWeight: '500',
-                                        color: 'black'
-                                    }}
-                                >
-                                    Preço
-                                    {expandedFilters.preco ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </button>
-                            </div>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                R$ 1.000 a R$ 2.500 
+                                            </label>
 
-                            {/* Capacidade SSD */}
-                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-                                <button
-                                    onClick={() => toggleFilter('capacidadeSSD')}
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 0',
-                                        border: 'none',
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                        fontSize: '15px',
-                                        fontWeight: '500',
-                                        color: 'black'
-                                    }}
-                                >
-                                    Capacidade SSD
-                                    {expandedFilters.capacidadeSSD ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </button>
-                            </div>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                R$ 2.500 a R$ 4.000 
+                                            </label>
 
-                            {/* Avaliações */}
-                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-                                <button
-                                    onClick={() => toggleFilter('avaliacoes')}
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 0',
-                                        border: 'none',
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                        fontSize: '15px',
-                                        fontWeight: '500',
-                                        color: 'black'
-                                    }}
-                                >
-                                    Avaliações
-                                    {expandedFilters.avaliacoes ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </button>
-                            </div>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                R$ 4.000 a R$ 6.000 
+                                            </label>
 
-                            {/* Memória RAM */}
-                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-                                <button
-                                    onClick={() => toggleFilter('memoriaRAM')}
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 0',
-                                        border: 'none',
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                        fontSize: '15px',
-                                        fontWeight: '500',
-                                        color: 'black'
-                                    }}
-                                >
-                                    Memória RAM
-                                    {expandedFilters.memoriaRAM ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </button>
-                            </div>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                R$ 6.000 a R$ 8.000 
+                                            </label>
 
-                            {/* Sistema Operacional */}
-                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-                                <button
-                                    onClick={() => toggleFilter('sistemaOperacional')}
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 0',
-                                        border: 'none',
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                        fontSize: '15px',
-                                        fontWeight: '500',
-                                        color: 'black'
-                                    }}
-                                >
-                                    Sistema Operacional
-                                    {expandedFilters.sistemaOperacional ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </button>
-                            </div>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                R$ 8.000 a R$ 12.000 
+                                            </label>
 
-                            {/* Tamanho da Tela */}
-                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-                                <button
-                                    onClick={() => toggleFilter('tamanhoTela')}
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 0',
-                                        border: 'none',
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                        fontSize: '15px',
-                                        fontWeight: '500',
-                                        color: 'black'
-                                    }}
-                                >
-                                    Tamanho da Tela
-                                    {expandedFilters.tamanhoTela ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </button>
-                            </div>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Acima de R$ 12.000 
+                                            </label>
 
-                            {/* Processador */}
-                            <div style={{ marginBottom: '16px' }}>
-                                <button
-                                    onClick={() => toggleFilter('processador')}
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 0',
-                                        border: 'none',
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                        fontSize: '15px',
-                                        fontWeight: '500',
-                                        color: 'black'
-                                    }}
-                                >
-                                    Processador
-                                    {expandedFilters.processador ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </button>
+
+
+
+
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Capacidade SSD */}
+                                <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                    <button
+                                        onClick={() => toggleFilter('capacidadeSSD')}
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 0',
+                                            border: 'none',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            fontWeight: '500',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        Capacidade SSD
+                                        {expandedFilters.capacidadeSSD ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {expandedFilters.capacidadeSSD && (
+                                        <div style={{ paddingTop: '12px' }}>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                120 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                240 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                256 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                480 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                512 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                1 TB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                2 TB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                4 TB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                8 TB
+                                            </label>
+
+
+
+
+
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Avaliações */}
+                                <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                    <button
+                                        onClick={() => toggleFilter('avaliacoes')}
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 0',
+                                            border: 'none',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            fontWeight: '500',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        Avaliações
+                                        {expandedFilters.avaliacoes ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {expandedFilters.avaliacoes && (
+                                        <div style={{ paddingTop: '12px' }}>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                1 estrela
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                2 estrelas
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                3 estrelas
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                4 estrelas
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                5 estrelas
+                                            </label>
+
+
+
+
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Memória RAM */}
+                                <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                    <button
+                                        onClick={() => toggleFilter('memoriaRAM')}
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 0',
+                                            border: 'none',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            fontWeight: '500',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        Memória RAM
+                                        {expandedFilters.memoriaRAM ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {expandedFilters.memoriaRAM && (
+                                        <div style={{ paddingTop: '12px' }}>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                4 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                8 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                12 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                16 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                24 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                32 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                48 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                64 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                96 GB
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                128 GB
+                                            </label>
+
+
+
+
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Sistema Operacional */}
+                                <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                    <button
+                                        onClick={() => toggleFilter('sistemaOperacional')}
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 0',
+                                            border: 'none',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            fontWeight: '500',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        Sistema Operacional
+                                        {expandedFilters.sistemaOperacional ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {expandedFilters.sistemaOperacional && (
+                                        <div style={{ paddingTop: '12px' }}>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Windows 10
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Windows 11
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Windows 11 Pro
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Linux Ubuntu
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Linux Mint
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Linux Debian
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                ChromeOS
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                FreeDOS
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                macOS
+                                            </label>
+
+
+
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Tamanho da Tela */}
+                                <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                    <button
+                                        onClick={() => toggleFilter('tamanhoTela')}
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 0',
+                                            border: 'none',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            fontWeight: '500',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        Tamanho da Tela
+                                        {expandedFilters.tamanhoTela ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {expandedFilters.tamanhoTela && (
+                                        <div style={{ paddingTop: '12px' }}>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                11.6"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                12.5"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                13.3"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                14"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                15.6"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                16"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                17.3"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                18.4"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Ultrawide 29"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Ultrawide 34"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                24"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                27"
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                32"
+                                            </label>
+
+
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Processador */}
+                                <div style={{ marginBottom: '16px' }}>
+                                    <button
+                                        onClick={() => toggleFilter('processador')}
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 0',
+                                            border: 'none',
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            fontWeight: '500',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        Processador
+                                        {expandedFilters.processador ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {expandedFilters.processador && (
+                                        <div style={{ paddingTop: '12px' }}>
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Intel Core i3
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Intel Core i5
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Intel Core i7
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Intel Core i9
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Intel Core Ultra 5
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Intel Core Ultra 7
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                Intel Core Ultra 9
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                AMD Ryzen 3
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                AMD Ryzen 5
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                AMD Ryzen 7
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                AMD Ryzen 9
+                                            </label>
+
+                                            <label style={labelStyle}>
+                                                <input type="checkbox" style={inputStyle} />
+                                                AMD Ryzen Threadripper
+                                            </label>
+
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
                     )}
 
                     {/* Conteúdo Principal */}
@@ -566,7 +951,7 @@ function Store() {
                         {/* Barra de ações mobile */}
                         {isMobile && (
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                                <button onClick={()=>setIsFilterOpen(true)} style={{
+                                <button onClick={() => setIsFilterOpen(true)} style={{
                                     padding: '10px 16px',
                                     borderRadius: '999px',
                                     border: '1px solid #000',
@@ -648,12 +1033,12 @@ function Store() {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #eee' }}>
                             <strong style={{ fontSize: '18px' }}>Filtros</strong>
                             <span style={{ color: '#666' }}>{produtos.length} Resultados</span>
-                            <button onClick={()=>setIsFilterOpen(false)} style={{ border: 'none', background: 'transparent', fontSize: '18px' }}>×</button>
+                            <button onClick={() => setIsFilterOpen(false)} style={{ border: 'none', background: 'transparent', fontSize: '18px' }}>×</button>
                         </div>
                         {selectedBrands.length > 0 && (
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '12px 20px' }}>
-                                {selectedBrands.map((chip)=> (
-                                    <button key={chip} onClick={()=>toggleBrand(chip)} style={{
+                                {selectedBrands.map((chip) => (
+                                    <button key={chip} onClick={() => toggleBrand(chip)} style={{
                                         border: '1px solid #000', borderRadius: '999px', padding: '6px 12px', background: '#fff', cursor: 'pointer'
                                     }}>{chip} ×</button>
                                 ))}
@@ -705,8 +1090,8 @@ function Store() {
                             </div>
                         </div>
                         <div style={{ borderTop: '1px solid #eee', padding: '12px 20px', display: 'flex', gap: '12px' }}>
-                            <button onClick={()=>{ setSelectedBrands([]); }} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: '1px solid #ddd', background: '#fff', fontWeight: 600 }}>Remover todos</button>
-                            <button onClick={()=>setIsFilterOpen(false)} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: 'none', background: '#0b74ff', color: '#fff', fontWeight: 700 }}>Aplicar filtros</button>
+                            <button onClick={() => { setSelectedBrands([]); }} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: '1px solid #ddd', background: '#fff', fontWeight: 600 }}>Remover todos</button>
+                            <button onClick={() => setIsFilterOpen(false)} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: 'none', background: '#0b74ff', color: '#fff', fontWeight: 700 }}>Aplicar filtros</button>
                         </div>
                     </div>
                 </div>
