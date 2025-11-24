@@ -14,6 +14,8 @@ import {
   StyledSwiperSlide,
   HeroButton,
   SlideContent,
+  FixedButtons,
+  ButtonGroup
 } from "./style";
 
 const HeroBanner = () => {
@@ -52,12 +54,8 @@ const HeroBanner = () => {
             }}
           >
             <SlideContent style={{ alignItems: "center", margin: "auto" }}>
-              <div
-                style={{ display: "flex", gap: "45px", marginTop: "-130px" }}
-              >
-                <HeroButton href="#" style={{ padding: "25px 60px" }}>
-                  Saiba mais
-                </HeroButton>
+              <ButtonGroup>
+                <HeroButton href="#">Saiba mais</HeroButton>
                 <HeroButton
                   href="#"
                   style={{
@@ -65,12 +63,11 @@ const HeroBanner = () => {
                     color: "#FFFFFF",
                     border: "1px solid #FFFFFF",
                     boxShadow: "none",
-                    padding: "25px 60px",
                   }}
                 >
                   Ver preços
                 </HeroButton>
-              </div>
+              </ButtonGroup>
             </SlideContent>
           </StyledSwiperSlide>
         </SwiperSlide>
@@ -82,7 +79,7 @@ const HeroBanner = () => {
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-              position: "relative", // <-- necessário
+              position: "relative",
             }}
           >
             <SlideContent
@@ -99,18 +96,8 @@ const HeroBanner = () => {
             </SlideContent>
 
             {/* BOTÕES FIXOS, SEM DESCONFIGURAR */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "140px", // <-- MEXA AQUI (vertical)
-                right: "400px", // <-- MEXA AQUI (horizontal)
-                display: "flex",
-                gap: "45px",
-              }}
-            >
-              <HeroButton href="#" style={{ padding: "25px 60px" }}>
-                Confira já
-              </HeroButton>
+            <FixedButtons>
+              <HeroButton href="#">Confira já</HeroButton>
 
               <HeroButton
                 href="#"
@@ -119,12 +106,11 @@ const HeroBanner = () => {
                   color: "#FFFFFF",
                   border: "1px solid #e60000",
                   boxShadow: "none",
-                  padding: "25px 60px",
                 }}
               >
                 Lançamentos
               </HeroButton>
-            </div>
+            </FixedButtons>
           </StyledSwiperSlide>
         </SwiperSlide>
 

@@ -53,14 +53,16 @@ const Header = () => {
   return (
     <>
       <HeaderContainer
-        isScrolled={isScrolled || isHovered}
+        isScrolled={isScrolled || isHovered || isMenuOpen || !!openCategory}
         isHome={isHome}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <LeftSection>
           <MenuButton
-            $isScrolled={isScrolled || !isHome || isHovered}
+            $isScrolled={
+              isScrolled || !isHome || isHovered || isMenuOpen || !!openCategory
+            }
             onClick={() => setIsMenuOpen(true)}
           >
             <RiApps2Line size={19} />
@@ -115,7 +117,11 @@ const Header = () => {
             <FiUser size={20} />
           </Icons>
 
-          <Logo isScrolled={isScrolled || !isHome || isHovered}>
+          <Logo
+            isScrolled={
+              isScrolled || !isHome || isHovered || isMenuOpen || !!openCategory
+            }
+          >
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
               <img src={LogoDark} alt="PrimeGear Logo" />
             </Link>

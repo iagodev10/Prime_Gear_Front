@@ -33,6 +33,8 @@ function Store() {
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [sidebarHeight, setSidebarHeight] = useState('auto');
+    const [isMobile, setIsMobile] = useState(false);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const sidebarRef = useRef(null);
     const paginationRef = useRef(null);
@@ -98,6 +100,9 @@ function Store() {
 
     useEffect(() => {
         obterProdutos()
+        const onResize = () => setIsMobile(window.innerWidth <= 900);
+        onResize();
+        window.addEventListener('resize', onResize);
         const handleScroll = () => {
             if (!sidebarRef.current || !paginationRef.current || !containerRef.current) return;
 
@@ -120,7 +125,10 @@ function Store() {
         window.addEventListener('scroll', handleScroll);
         handleScroll();
 
-        return () => window.removeEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', onResize);
+        }
     }, []);
 
     const renderPagination = () => {
@@ -256,7 +264,8 @@ function Store() {
             <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '40px 20px' }}>
                 <div ref={containerRef} style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: '40px', position: 'relative' }}>
 
-                    {/* Sidebar de Filtros */}
+                    {/* Sidebar de Filtros (desktop) */}
+                    {!isMobile && (
                     <div
                         ref={sidebarRef}
                         style={{
@@ -541,9 +550,24 @@ function Store() {
                             </div>
                         </div>
                     </div>
+                    )}
 
                     {/* Conteúdo Principal */}
                     <div style={{ flex: 1 }}>
+                        {/* Barra de ações mobile */}
+                        {isMobile && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                <button onClick={()=>setIsFilterOpen(true)} style={{
+                                    padding: '10px 16px',
+                                    borderRadius: '999px',
+                                    border: '1px solid #000',
+                                    background: '#fff',
+                                    fontWeight: 600,
+                                    cursor: 'pointer'
+                                }}>Filtros</button>
+                                <span style={{ color: '#333' }}>{produtos.length} resultados</span>
+                            </div>
+                        )}
                         {/* Grid de Produtos */}
                         <div style={{
                             display: 'grid',
@@ -594,6 +618,90 @@ function Store() {
                 </div>
 
             </div>
+            {/* Drawer de filtros (mobile) */}
+            {isMobile && isFilterOpen && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }}>
+                    <div style={{
+                        position: 'absolute',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        bottom: 0,
+                        width: '100%',
+                        maxWidth: '520px',
+                        background: '#fff',
+                        borderTopLeftRadius: '20px',
+                        borderTopRightRadius: '20px',
+                        boxShadow: '0 -10px 24px rgba(0,0,0,0.2)',
+                        maxHeight: '85vh',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #eee' }}>
+                            <strong style={{ fontSize: '18px' }}>Filtros</strong>
+                            <span style={{ color: '#666' }}>{produtos.length} Resultados</span>
+                            <button onClick={()=>setIsFilterOpen(false)} style={{ border: 'none', background: 'transparent', fontSize: '18px' }}>×</button>
+                        </div>
+                        {selectedBrands.length > 0 && (
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '12px 20px' }}>
+                                {selectedBrands.map((chip)=> (
+                                    <button key={chip} onClick={()=>toggleBrand(chip)} style={{
+                                        border: '1px solid #000', borderRadius: '999px', padding: '6px 12px', background: '#fff', cursor: 'pointer'
+                                    }}>{chip} ×</button>
+                                ))}
+                            </div>
+                        )}
+                        <div style={{ flex: 1, overflowY: 'auto', padding: '8px 20px' }}>
+                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                <button
+                                    onClick={() => toggleFilter('categoria')}
+                                    style={{
+                                        width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: 'black'
+                                    }}
+                                >
+                                    Categoria
+                                    {expandedFilters.categoria ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                </button>
+                                {expandedFilters.categoria && (
+                                    <div style={{ paddingTop: '12px' }}>
+                                        {categorias.map(cat => (
+                                            <label key={cat.nome_cat} style={{ display: 'flex', alignItems: 'center', padding: '8px 0', cursor: 'pointer', fontSize: '14px', color: 'black' }}>
+                                                <input type="checkbox" checked={selectedBrands.includes(cat.nome_cat)} onChange={() => toggleBrand(cat.nome_cat)} style={{ width: '16px', height: '16px', marginRight: '10px', cursor: 'pointer' }} />
+                                                {cat.nome_cat}
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                <button onClick={() => toggleFilter('marca')} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: 'black' }}>
+                                    Marca
+                                    {expandedFilters.marca ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                </button>
+                                {expandedFilters.marca && (
+                                    <div style={{ paddingTop: '12px' }}>
+                                        {marcas.map(marca => (
+                                            <label key={marca} style={{ display: 'flex', alignItems: 'center', padding: '8px 0', cursor: 'pointer', fontSize: '14px', color: 'black' }}>
+                                                <input type="checkbox" checked={selectedBrands.includes(marca)} onChange={() => toggleBrand(marca)} style={{ width: '16px', height: '16px', marginRight: '10px', cursor: 'pointer' }} />
+                                                {marca}
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                <button onClick={() => toggleFilter('preco')} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: 'black' }}>
+                                    Faixa de preço
+                                    {expandedFilters.preco ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                </button>
+                            </div>
+                        </div>
+                        <div style={{ borderTop: '1px solid #eee', padding: '12px 20px', display: 'flex', gap: '12px' }}>
+                            <button onClick={()=>{ setSelectedBrands([]); }} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: '1px solid #ddd', background: '#fff', fontWeight: 600 }}>Remover todos</button>
+                            <button onClick={()=>setIsFilterOpen(false)} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: 'none', background: '#0b74ff', color: '#fff', fontWeight: 700 }}>Aplicar filtros</button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div style={{
                 width: '100%',
                 background: '',

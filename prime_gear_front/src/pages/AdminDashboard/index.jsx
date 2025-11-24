@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   FiPackage,
   FiShoppingCart,
@@ -33,6 +34,7 @@ import {
 } from './style';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   // Mock de dados para os cards
   const stats = {
     totalProdutos: 124,
@@ -143,19 +145,19 @@ const AdminDashboard = () => {
       {/* Ações Rápidas - Intuitividade para o ADM */}
       <SectionTitle>Ações Rápidas</SectionTitle>
       <QuickActionsGrid>
-        <ActionButton>
+        <ActionButton onClick={() => navigate('/admin/produtos', { state: { openAddModal: true } })}>
           <FiPlus size={24} />
           <span>Novo Produto</span>
         </ActionButton>
-        <ActionButton>
+        <ActionButton onClick={() => navigate('/admin/pedidos')}>
           <FiList size={24} />
           <span>Gerenciar Pedidos</span>
         </ActionButton>
-        <ActionButton>
+        <ActionButton onClick={() => navigate('/admin/usuarios')}>
           <FiUsers size={24} />
           <span>Ver Clientes</span>
         </ActionButton>
-        <ActionButton>
+        <ActionButton onClick={() => navigate('/admin/pedidos')}>
           <FiTrendingUp size={24} />
           <span>Relatórios</span>
         </ActionButton>

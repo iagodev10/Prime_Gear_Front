@@ -9,6 +9,7 @@ export const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  margin-top: 7vh;
 
   @media (max-width: 768px) {
     padding: 20px 5%;

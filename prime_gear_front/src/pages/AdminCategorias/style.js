@@ -9,6 +9,7 @@ export const Container = styled.div`
     justify-content: center;
     background-color: #f5f5f5;
     margin-bottom: 50px;
+    margin-top: -30vh;
 `
 
 export const Header = styled.div`
@@ -17,7 +18,6 @@ export const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    margin-top: 8vh;
 `
 
 export const Title = styled.div`
