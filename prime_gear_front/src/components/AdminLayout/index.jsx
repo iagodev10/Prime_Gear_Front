@@ -24,6 +24,7 @@ const AdminLayout = () => {
           <NavItem to="/admin/">Dashboard</NavItem>
           <NavItem to="/admin/produtos">Produtos</NavItem>
           <NavItem to="/admin/categorias">Categorias</NavItem>
+          <NavItem to="/admin/marcas">Marcas</NavItem>
           <NavItem to="/admin/pedidos">Pedidos</NavItem>
           <NavItem to="/admin/usuarios">Usuários</NavItem>
           <NavItem to="/admin/fornecedores">Fornecedores</NavItem>

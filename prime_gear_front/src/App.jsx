@@ -20,7 +20,7 @@ import AdminFornecedor from './pages/AdminFornecedor'
 import AdminTransportadora from './pages/AdminTransportadora'
 import AdminUsers from './pages/AdminUsers'
 import AdminPedidos from './pages/AdminPedidos'
-
+import AdminMarcas from './pages/AdminMarcas'
 
 import PageLoader from './components/PageLoader'
 
@@ -67,6 +67,7 @@ const AppContent = () => {
             <Route index element={<AdminDashboard />} />
             <Route path="produtos" element={<AdminProdutos />} />
             <Route path="categorias" element={<AdminCategorias />} />
+            <Route path="marcas" element={<AdminMarcas />} />
             <Route path="fornecedores" element={<AdminFornecedor />} />
             <Route path="pedidos" element={<AdminPedidos />} />
             <Route path="transportadoras" element={<AdminTransportadora />} />
