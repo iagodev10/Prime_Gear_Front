@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState,useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FiEdit, FiTrash, FiPlus, FiSearch } from 'react-icons/fi';
 import {
     Container, Header, Title, Button, Search,
@@ -14,6 +15,7 @@ import ModalAdicionarProduto from '../../components/ModalAdicionarProduto';
 
 
 const AdminProdutos = () => {
+    const location = useLocation();
 
     const [produtos,setProdutos]=useState([])
 
@@ -30,6 +32,12 @@ const AdminProdutos = () => {
     useEffect(()=>{
         obterProdutos()
     },[])
+
+    useEffect(() => {
+        if (location.state && location.state.openAddModal) {
+            setModalVisivel(true)
+        }
+    }, [location.state])
 
     async function deletarProd(id){
         try {

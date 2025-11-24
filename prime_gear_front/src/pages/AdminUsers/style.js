@@ -11,11 +11,16 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.div`
-    width: 90%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 `;
 
 export const Title = styled.div`
@@ -60,6 +65,7 @@ export const Button = styled.button`
     }
     &:hover::after{animation: shine 0.8s ease;}
     @keyframes shine {to{left:150%;}}
+    @media (max-width: 768px) { width: 100%; }
 `;
 
 export const Search = styled.div`
@@ -82,11 +88,17 @@ export const Search = styled.div`
 `;
 
 export const CardGeral = styled.div`
-    width: 90%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 30px;
+  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const Total = styled.div`
@@ -137,10 +149,10 @@ export const Info = styled.div`
 `;
 
 export const Content = styled.div`
-    width: 90%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(1fr, 1fr));
-    gap: 25px;
+  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
 `;
 
 export const UserCard = styled.div`
@@ -155,20 +167,26 @@ export const UserCard = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
-    }
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+  }
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 `;
 
 export const Icone = styled.div`
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background: ${props => props.color || "#f0f0f0"};
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: ${props => props.color || "#f0f0f0"};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media (max-width: 640px) { width: 48px; height: 48px; }
 `;
 
 export const Informacoes = styled.div`
@@ -211,26 +229,30 @@ export const SRol = styled.span`
 
 
 export const SMail = styled.p`
-    font-size: 1.1rem;
-    color: #666;
-    margin: 0;
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+  @media (max-width: 640px) { font-size: 1rem; }
 `;
 
 export const Data = styled.p`
-    font-size: 1.1rem;
-    color: black;
-    margin: 0;
+  font-size: 1.1rem;
+  color: black;
+  margin: 0;
+  @media (max-width: 640px) { font-size: 1rem; }
 `;
 
 export const Conteudo = styled.div`
-    display: flex;
-    justify-content: center;
-    gap: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  @media (max-width: 768px) { justify-content: flex-start; }
 `;
 
 
 export const Conteudo2 = styled.div`
-    display: flex;
-    justify-content: center;
-    gap: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  @media (max-width: 768px) { justify-content: space-between; width: 100%; }
 `;

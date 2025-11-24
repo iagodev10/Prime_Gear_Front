@@ -26,6 +26,7 @@ import PageLoader from './components/PageLoader'
 
 import AdminLayout from './components/AdminLayout'
 import PublicLayout from './components/PublicLayout'
+import AdminLogin from './pages/AdminLogin'
 
 // App.jsx (somente AppContent ATUALIZADO)
 const AppContent = () => {
@@ -58,6 +59,7 @@ const AppContent = () => {
             <Route path="loja" element={<Store />} />
             <Route path="detalhe" element={<ProductPage />} />
             <Route path="login" element={<LoginPage />} />
+            <Route path="admin/login" element={<AdminLogin />} />
             <Route path="institucional" element={<Institutional />} />
             <Route path="fale-conosco" element={<FaleConosco />} />
             <Route path="primeira-compra" element={<PrimeiraCompra />} />

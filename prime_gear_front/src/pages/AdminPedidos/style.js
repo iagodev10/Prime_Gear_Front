@@ -16,6 +16,11 @@ export const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 `;
 
 export const Title = styled.div`
@@ -73,6 +78,9 @@ export const Button = styled.button`
       left: 150%;
     }
   }
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const Search = styled.div`
@@ -84,6 +92,7 @@ export const Search = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   padding: 12px 16px;
   margin-bottom: 30px;
+  gap: 12px;
   input {
     flex: 1;
     border: none;
@@ -100,8 +109,17 @@ export const Search = styled.div`
     font-weight: 500;
     border-radius: 8px;
     padding: 10px 12px;
-    margin-left: 12px;
     cursor: pointer;
+  }
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    input {
+      min-width: 200px;
+    }
+    select {
+      width: 100%;
+    }
   }
 `;
 
@@ -111,6 +129,12 @@ export const CardGeral = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   margin-bottom: 30px;
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const Total = styled.div`
@@ -163,9 +187,12 @@ export const Info = styled.div`
 
 export const Content = styled.div`
   width: 90%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const UserCard = styled.div`
@@ -191,6 +218,11 @@ export const UserCard = styled.div`
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 28px rgba(20, 20, 30, 0.12);
+  }
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 `;
 
@@ -262,12 +294,19 @@ export const Conteudo = styled.div`
   justify-content: center;
   align-items: center;
   gap: 12px;
+  @media (max-width: 768px) {
+    justify-content: flex-start;
+  }
 `;
 
 export const Conteudo2 = styled.div`
   display: flex;
   justify-content: center;
   gap: 12px;
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+  }
 `;
 
 export const PriceValue = styled.p`
@@ -313,6 +352,9 @@ export const ModalContent = styled.div`
   border-radius: 14px;
   box-shadow: 0 12px 32px rgba(20, 20, 30, 0.25);
   padding: 20px 24px;
+  @media (max-width: 640px) {
+    padding: 16px;
+  }
 `;
 
 export const ModalHeader = styled.div`
@@ -341,10 +383,13 @@ export const ModalGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 16px;
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const ModalSection = styled.div`
-    margin-bottom: 18px;
+  margin-bottom: 18px;
   h4 {
     margin: 0 0 6px 0;
     font-size: 1rem;

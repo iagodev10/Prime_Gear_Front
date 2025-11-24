@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import {
@@ -8,18 +8,28 @@ import {
   NavCenter,
   NavItem,
   RightSection,
-  RightImage
+  RightImage,
+  MenuButton
 } from './style';
 
 import logo from '../../assets/images/logodark.png';
 import { RxExit } from 'react-icons/rx';
 
 const AdminLayout = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
   return (
     <LayoutContainer>
 
-    <Top  style={{position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000}}>
+    <Top $scrolled={isScrolled}>
       <TopNav>
+        <MenuButton onClick={() => setOpenMenu((v)=>!v)}>Menu</MenuButton>
         <NavCenter>
           <NavItem to="/admin/">Dashboard</NavItem>
           <NavItem to="/admin/produtos">Produtos</NavItem>
@@ -39,6 +49,16 @@ const AdminLayout = () => {
         </RightSection>
       </TopNav>
     </Top>
+      <NavCenter $open={openMenu}>
+          <NavItem to="/admin/">Dashboard</NavItem>
+          <NavItem to="/admin/produtos">Produtos</NavItem>
+          <NavItem to="/admin/categorias">Categorias</NavItem>
+          <NavItem to="/admin/pedidos">Pedidos</NavItem>
+          <NavItem to="/admin/usuarios">Usuários</NavItem>
+          <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
+          <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
+          <NavItem to="/logout" style={{gap: '10px', display: 'flex', alignItems: 'center' }}>Sair <RxExit size={20}/></NavItem>
+      </NavCenter>
       <Outlet />
     </LayoutContainer>
   );
