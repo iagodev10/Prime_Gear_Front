@@ -18,7 +18,30 @@ export const BannerImg = styled.div`
   img {
     width: 100%;
     height: 600px;
-    object-fit: contain;
+    object-fit: cover;
+  }
+
+  @media (max-width: 992px) {
+    img {
+      height: 480px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    img {
+      height: 380px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    img {
+      height: 300px;
+    }
+  }
+  @media (max-width: 420px) {
+    img {
+      height: 260px;
+    }
   }
 `;
 
@@ -57,9 +80,20 @@ export const BannerBuy = styled.a`
       background: linear-gradient(135deg, #000000, #737373);
     }
   }
+
+  @media (max-width: 768px) {
+    padding: 16px 24px;
+    font-size: 1rem;
+  }
+  @media (max-width: 576px) {
+    padding: 14px 20px;
+    font-size: 0.95rem;
+  }
+  @media (max-width: 420px) {
+    padding: 12px 18px;
+    font-size: 0.9rem;
+  }
 `;
-
-
 
 export const Ideapad = styled.section`
   width: 80%;
@@ -74,6 +108,10 @@ export const Ideapad = styled.section`
     width: 90%;
     margin: 40px auto 0 auto;
     gap: 30px;
+  }
+  @media (max-width: 480px) {
+    width: 94%;
+    gap: 22px;
   }
 `;
 
@@ -90,6 +128,12 @@ export const IdeaImg = styled.div`
     height: auto;
     max-height: 300px;
   }
+  @media (max-width: 576px) {
+    max-height: 240px;
+  }
+  @media (max-width: 420px) {
+    max-height: 200px;
+  }
 
   img {
     width: 100%;
@@ -103,7 +147,6 @@ export const IdeaImg = styled.div`
     filter: brightness(1.1);
   }
 `;
-
 
 export const IdeapadText = styled.div`
   width: 50%;
@@ -129,12 +172,24 @@ export const Title = styled.h2`
   @media (max-width: 768px) {
     text-align: center;
   }
+  @media (max-width: 576px) {
+    font-size: 1.7rem;
+  }
+  @media (max-width: 420px) {
+    font-size: 1.5rem;
+  }
 `;
 
 export const SubTitle = styled.h3`
   color: #1c1c1c;
   font-size: 1.8rem;
   font-weight: 600;
+  @media (max-width: 576px) {
+    font-size: 1.4rem;
+  }
+  @media (max-width: 420px) {
+    font-size: 1.2rem;
+  }
 `;
 
 export const Descrip = styled.p`
@@ -145,6 +200,13 @@ export const Descrip = styled.p`
 
   @media (max-width: 768px) {
     text-align: center;
+  }
+  @media (max-width: 576px) {
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+  @media (max-width: 420px) {
+    font-size: 0.95rem;
   }
 `;
 
@@ -189,5 +251,12 @@ export const IdeaButton = styled.a`
   &:hover {
     color: #ffffff;
   }
+  @media (max-width: 576px) {
+    padding: 16px 24px;
+    font-size: 0.95rem;
+  }
+  @media (max-width: 420px) {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+  }
 `;
-

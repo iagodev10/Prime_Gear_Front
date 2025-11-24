@@ -5,6 +5,7 @@ export const Container = styled.section`
     margin-top: -40px;
     padding: 10px 5%;
     position:relative;
+    @media (max-width: 768px) { padding: 20px 4%; }
 `;
 
 export const Title = styled.h2`
@@ -13,6 +14,8 @@ export const Title = styled.h2`
     text-align: left;
     margin-bottom: 40px;
     color: #1c1c1c;
+    @media (max-width: 768px) { font-size: 1.6rem; text-align: center; margin-bottom: 24px; }
+    @media (max-width: 480px) { font-size: 1.4rem; }
 `;
 
 export const Card = styled.div`
@@ -43,6 +46,8 @@ export const Card = styled.div`
         filter: grayscale(0%);
         opacity: 1;
     }
+    @media (max-width: 768px) { height: 100px; }
+    @media (max-width: 480px) { height: 90px; padding: 16px; }
 `;
 
 export const SwiperContainer = styled.div`

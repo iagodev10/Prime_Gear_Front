@@ -75,6 +75,8 @@ export const ProdTitle = styled.h4`
   overflow: hidden;
   text-overflow: ellipsis;
   min-height: 2.7rem; /* Garante altura de 2 linhas para todos os cards */
+  @media (max-width: 768px) { font-size: 1rem; min-height: 2.5rem; }
+  @media (max-width: 480px) { font-size: 0.95rem; min-height: 2.3rem; }
 `;
 
 // O preço principal
@@ -83,6 +85,8 @@ export const Price = styled.p`
   font-weight: 500;
   color: #03b304;
   margin: 0; 
+  @media (max-width: 768px) { font-size: 1.15rem; }
+  @media (max-width: 480px) { font-size: 1.05rem; }
 `;
 
 export const PriceInfo = styled.p`
@@ -90,6 +94,8 @@ export const PriceInfo = styled.p`
   color: #03b304;
   font-weight: 500;
   margin: 0;
+  @media (max-width: 768px) { font-size: 0.9rem; }
+  @media (max-width: 480px) { font-size: 0.85rem; }
 `;
 
 // O preço antigo (riscado)
@@ -97,6 +103,8 @@ export const OldPrice = styled.p`
   font-size: 1.05rem;
   color: #777;
   text-decoration: line-through;
+  @media (max-width: 768px) { font-size: 0.95rem; }
+  @media (max-width: 480px) { font-size: 0.9rem; }
 `;
 
 // Botão "Adicionar ao carrinho" (preto)
@@ -116,6 +124,8 @@ export const Cart = styled.button`
   transition: opacity 0.3s;
 
   &:hover { opacity: 0.9; }
+  @media (max-width: 768px) { padding: 9px; }
+  @media (max-width: 480px) { padding: 8px; }
 `;
 
 // Botão "Comprar agora" (branco)
@@ -134,4 +144,6 @@ export const Buy = styled.button`
   transition: background 0.3s;
 
   &:hover { background: #f0f0f0; }
+  @media (max-width: 768px) { padding: 9px; }
+  @media (max-width: 480px) { padding: 8px; }
 `;

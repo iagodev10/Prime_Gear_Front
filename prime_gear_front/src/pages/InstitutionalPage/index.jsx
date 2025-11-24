@@ -26,7 +26,7 @@ import {
   FutureGrid,
   FutureItem
 } from "./style";
-import DesktopIllustration from "../../assets/images/desktop-ilustration.png";
+// import DesktopIllustration from "../../assets/images/logoligth.png";
 import { FiTarget, FiEye, FiHeart, FiUsers, FiBox, FiTag, FiShoppingCart, FiStar, FiFileText, FiTruck } from "react-icons/fi";
 
 const Institutional = () => {
@@ -58,7 +58,7 @@ const Institutional = () => {
           {Array.from({ length: 18 }).map((_, i) => (
             <Particle key={i} style={{ left: `${(i * 11) % 100}%`, animationDelay: `${i * 0.15}s` }} />
           ))}
-          <motion.img src={DesktopIllustration} alt="Prime Gear" style={{ width: 520, filter: "drop-shadow(0 30px 50px rgba(0,0,0,0.35))" }} animate={{ rotate: [0, 2, -2, 0] }} transition={{ duration: 10, repeat: Infinity }} />
+          {/* <motion.img src={DesktopIllustration} alt="Prime Gear" style={{ width: 520, filter: "drop-shadow(0 30px 50px rgba(0,0,0,0.35))" }} animate={{ rotate: [0, 2, -2, 0] }} transition={{ duration: 10, repeat: Infinity }} /> */}
         </HeroBg>
         <HeroTitle>
           Prime Gear
