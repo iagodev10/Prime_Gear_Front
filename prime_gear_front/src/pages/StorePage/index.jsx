@@ -285,7 +285,7 @@ function Store() {
     return (
         <>
             <CategoryNav></CategoryNav>
-            <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '40px 20px' }}>
+            <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: isMobile ? '100px 20px 40px' : '40px 20px' }}>
                 <div ref={containerRef} style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: '40px', position: 'relative' }}>
 
                     {/* Sidebar de Filtros (desktop) */}
@@ -437,37 +437,37 @@ function Store() {
                                         <div style={{ paddingTop: '12px' }}>
                                             <label style={labelStyle}>
                                                 <input type="checkbox" style={inputStyle} />
-                                                Até R$ 1.000 
+                                                Até R$ 1.000
                                             </label>
 
                                             <label style={labelStyle}>
                                                 <input type="checkbox" style={inputStyle} />
-                                                R$ 1.000 a R$ 2.500 
+                                                R$ 1.000 a R$ 2.500
                                             </label>
 
                                             <label style={labelStyle}>
                                                 <input type="checkbox" style={inputStyle} />
-                                                R$ 2.500 a R$ 4.000 
+                                                R$ 2.500 a R$ 4.000
                                             </label>
 
                                             <label style={labelStyle}>
                                                 <input type="checkbox" style={inputStyle} />
-                                                R$ 4.000 a R$ 6.000 
+                                                R$ 4.000 a R$ 6.000
                                             </label>
 
                                             <label style={labelStyle}>
                                                 <input type="checkbox" style={inputStyle} />
-                                                R$ 6.000 a R$ 8.000 
+                                                R$ 6.000 a R$ 8.000
                                             </label>
 
                                             <label style={labelStyle}>
                                                 <input type="checkbox" style={inputStyle} />
-                                                R$ 8.000 a R$ 12.000 
+                                                R$ 8.000 a R$ 12.000
                                             </label>
 
                                             <label style={labelStyle}>
                                                 <input type="checkbox" style={inputStyle} />
-                                                Acima de R$ 12.000 
+                                                Acima de R$ 12.000
                                             </label>
 
 
@@ -950,22 +950,29 @@ function Store() {
                     <div style={{ flex: 1 }}>
                         {/* Barra de ações mobile */}
                         {isMobile && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                            <div style={{ position: 'fixed', bottom: '20px', left: '20px', zIndex: 100 }}>
                                 <button onClick={() => setIsFilterOpen(true)} style={{
-                                    padding: '10px 16px',
+                                    padding: '12px 24px',
                                     borderRadius: '999px',
-                                    border: '1px solid #000',
-                                    background: '#fff',
+                                    border: 'none',
+                                    background: '#000',
+                                    color: '#fff',
                                     fontWeight: 600,
-                                    cursor: 'pointer'
-                                }}>Filtros</button>
-                                <span style={{ color: '#333' }}>{produtos.length} resultados</span>
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}>
+                                    <ChevronUp size={16} />
+                                    Filtros
+                                </button>
                             </div>
                         )}
                         {/* Grid de Produtos */}
                         <div style={{
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(300px, 1fr))',
                             gap: '24px',
                             marginBottom: '60px'
                         }}>
@@ -1029,7 +1036,7 @@ function Store() {
                         maxHeight: '85vh',
                         display: 'flex',
                         flexDirection: 'column'
-                    }}>
+                    }} className="slide-up">
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #eee' }}>
                             <strong style={{ fontSize: '18px' }}>Filtros</strong>
                             <span style={{ color: '#666' }}>{produtos.length} Resultados</span>
