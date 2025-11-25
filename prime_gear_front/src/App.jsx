@@ -23,6 +23,8 @@ import AdminUsers from './pages/AdminUsers'
 import AdminPedidos from './pages/AdminPedidos'
 import AdminMarcas from './pages/AdminMarcas'
 
+import UserAccount from './pages/UserAccount'
+
 import PageLoader from './components/PageLoader'
 
 import AdminLayout from './components/AdminLayout'
@@ -65,6 +67,7 @@ const AppContent = () => {
             <Route path="fale-conosco" element={<FaleConosco />} />
             <Route path="primeira-compra" element={<PrimeiraCompra />} />
             <Route path="checkout" element={<CheckoutPage />} />
+            <Route path="user" element={<UserAccount />} />
           </Route>
 
           <Route path="/admin" element={<AdminLayout />}>
