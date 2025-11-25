@@ -17,31 +17,23 @@ export const BannerImg = styled.div`
 
   img {
     width: 100%;
-    height: 600px;
-    object-fit: cover;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
   }
 
   @media (max-width: 992px) {
-    img {
-      height: 480px;
-    }
+    img { height: auto; }
   }
-
   @media (max-width: 768px) {
-    img {
-      height: 380px;
-    }
+    img { height: auto; }
   }
-
   @media (max-width: 576px) {
-    img {
-      height: 300px;
-    }
+    img { height: auto; }
   }
   @media (max-width: 420px) {
-    img {
-      height: 260px;
-    }
+    img { height: auto; }
   }
 `;
 

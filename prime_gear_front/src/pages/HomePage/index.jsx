@@ -29,7 +29,7 @@ const HomePage = () => {
 
       <BannerPromo>
         <BannerImg>
-          <img src={OutroNivelImersao} alt="" />
+          <img src={OutroNivelImersao} alt="Outro Nível de Imersão" />
         </BannerImg>
 
         <BannerBuy href="#">Compre Agora</BannerBuy>
