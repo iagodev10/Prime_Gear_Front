@@ -1,111 +1,145 @@
-import React from 'react';
-import { useState,useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { FiEdit, FiTrash, FiPlus, FiSearch } from 'react-icons/fi';
+"use client"
+
+import { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
+import { FiEdit, FiTrash, FiPlus, FiSearch, FiPackage, FiStar } from "react-icons/fi"
 import {
-    Container, Header, Title, Button, Search,
-    Content, ProdutoCard, ProdImage, ProdName,
-    ProdInfos, ProdCategoria, ProdQuantidade,
-    ProdPrice, ProdActions, ActionButton
-} from './style';
-import Desktop from '../../assets/images/desktopPC.png';
-import axios from 'axios';
-
-import ModalAdicionarProduto from '../../components/ModalAdicionarProduto';
-
+  Container,
+  Header,
+  Title,
+  Button,
+  Search,
+  Content,
+  ProdutoCard,
+  ProdImage,
+  ProdName,
+  ProdInfos,
+  ProdCategoria,
+  ProdQuantidade,
+  ProdPrice,
+  ProdActions,
+  ActionButton,
+  MainWrapper,
+  Sidebar,
+  SidebarItem,
+  SidebarIcon,
+  MainContent,
+} from "./style"
+import ProdutosDestaque from "../../components/Admin/ProdutosDestaque"
+import axios from "axios"
 
 const AdminProdutos = () => {
-    const location = useLocation();
+  const location = useLocation()
+  const [produtos, setProdutos] = useState([])
+  const [activeSection, setActiveSection] = useState("produtos")
+  const [modalVisivel, setModalVisivel] = useState(false)
 
-    const [produtos,setProdutos]=useState([])
-
-    async function obterProdutos(){
-        try {
-            const response=await axios.get('http://localhost:8080/produtos-adm')
-            console.log(response.data);   
-            setProdutos(response.data)
-        } catch (error) {
-            console.log(error);
-        }
+  async function obterProdutos() {
+    try {
+      const response = await axios.get("http://localhost:8080/produtos-adm")
+      console.log(response.data)
+      setProdutos(response.data)
+    } catch (error) {
+      console.log(error)
     }
+  }
 
-    useEffect(()=>{
-        obterProdutos()
-    },[])
+  useEffect(() => {
+    obterProdutos()
+  }, [])
 
-    useEffect(() => {
-        if (location.state && location.state.openAddModal) {
-            setModalVisivel(true)
-        }
-    }, [location.state])
-
-    async function deletarProd(id){
-        try {
-            const response=await axios.delete('http://localhost:8080/delete-produto/'+id)
-            obterProdutos()
-        } catch (error) {
-            console.log(error);
-        }
+  useEffect(() => {
+    if (location.state && location.state.openAddModal) {
+      setModalVisivel(true)
     }
-    const mockProdutos = [
-        { id: 1, name: 'Notebook Lenovo IdeaPad 1i hgg hgh ghgfdh', categoria: 'Laptops', quantidade: 10, price: 3524, image: Desktop },
-        { id: 2, name: 'Headset Gamer Logitech G535 LIGHTSPEED', categoria: 'Headsets', quantidade: 10, price: 589.9, image: Desktop },
-        { id: 3, name: 'Monitor Samsung Odyssey G32 32" Full HD', categoria: 'Monitors', quantidade: 10, price: 1599, image: Desktop },
-        { id: 4, name: 'Monitor Samsung Odyssey G32 32" Full HD', categoria: 'Monitors', quantidade: 10, price: 1599, image: Desktop },
-    ];
+  }, [location.state])
 
-    const [modalVisivel, setModalVisivel] = useState(false)
+  async function deletarProd(id) {
+    try {
+      await axios.delete("http://localhost:8080/delete-produto/" + id)
+      obterProdutos()
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-    return (
-        <Container>
-            <Header>
+  const sidebarItems = [
+    { id: "produtos", label: "Gerenciar Produtos", icon: FiPackage },
+    { id: "destaques", label: "Produtos em Destaque", icon: FiStar },
+  ]
+
+  return (
+    <Container>
+      <MainWrapper>
+        <Sidebar>
+          {sidebarItems.map((item) => (
+            <SidebarItem key={item.id} $active={activeSection === item.id} onClick={() => setActiveSection(item.id)}>
+              <SidebarIcon>
+                <item.icon size={20} />
+              </SidebarIcon>
+              <span>{item.label}</span>
+            </SidebarItem>
+          ))}
+        </Sidebar>
+
+        <MainContent>
+          {activeSection === "produtos" && (
+            <>
+              <Header>
                 <Title>
-                    <h1>Gerenciar Produtos</h1>
-                    <p>Adicione, edite ou remova produtos do catálogo.</p>
+                  <h1>Gerenciar Produtos</h1>
+                  <p>Adicione, edite ou remova produtos do catálogo.</p>
                 </Title>
                 <Button onClick={() => setModalVisivel(true)}>
-                    <FiPlus size={18} />
-                    Adicionar Produto
+                  <FiPlus size={18} />
+                  Adicionar Produto
                 </Button>
-            </Header>
+              </Header>
 
-            <Search>
+              <Search>
                 <FiSearch size={20} color="#666" />
                 <input type="text" placeholder="Buscar produto..." />
-            </Search>
+              </Search>
 
-            <Content>
+              <Content>
                 {produtos.map((produto) => (
-                    <ProdutoCard key={produto.id_prod} >
-                        <ProdImage>
-                            <img src={produto.url_img_prod} alt={produto.nome_prod} />
-                        </ProdImage>
-
-                        <ProdName>
-                            <p>{produto.nome_prod}</p>
-                        </ProdName>
-
-                        <ProdInfos>
-                            <ProdCategoria><p>{produto.categoria}</p></ProdCategoria>
-                            <ProdQuantidade><p>{produto.qtd_estoque_prod} unid.</p></ProdQuantidade>
-                        </ProdInfos>
-
-                        <ProdPrice><p>R$ {produto.preco_prod.toLocaleString('pt-BR')}</p></ProdPrice>
-
-                        <ProdActions>
-                            <ActionButton><FiEdit /> Editar</ActionButton>
-                            <ActionButton onClick={()=> deletarProd(produto.cod_produto)}><FiTrash /> Excluir</ActionButton>
-                        </ProdActions>
-                    </ProdutoCard>
+                  <ProdutoCard key={produto.id_prod}>
+                    <ProdImage>
+                      <img src={produto.url_img_prod || "/placeholder.svg"} alt={produto.nome_prod} />
+                    </ProdImage>
+                    <ProdName>
+                      <p>{produto.nome_prod}</p>
+                    </ProdName>
+                    <ProdInfos>
+                      <ProdCategoria>
+                        <p>{produto.categoria}</p>
+                      </ProdCategoria>
+                      <ProdQuantidade>
+                        <p>{produto.qtd_estoque_prod} unid.</p>
+                      </ProdQuantidade>
+                    </ProdInfos>
+                    <ProdPrice>
+                      <p>R$ {produto.preco_prod.toLocaleString("pt-BR")}</p>
+                    </ProdPrice>
+                    <ProdActions>
+                      <ActionButton>
+                        <FiEdit /> Editar
+                      </ActionButton>
+                      <ActionButton onClick={() => deletarProd(produto.cod_produto)}>
+                        <FiTrash /> Excluir
+                      </ActionButton>
+                    </ProdActions>
+                  </ProdutoCard>
                 ))}
-            </Content>
+              </Content>
+            </>
+          )}
 
-            {modalVisivel && (
-                <ModalAdicionarProduto onClose={() => {setModalVisivel(false),obterProdutos()}} />
-            )}
+          {activeSection === "destaques" && <ProdutosDestaque produtos={produtos} />}
+        </MainContent>
+      </MainWrapper>
+    </Container>
+  )
+}
 
-        </Container>
-    );
-};
-
-export default AdminProdutos;
+export default AdminProdutos
