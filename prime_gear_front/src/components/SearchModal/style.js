@@ -20,6 +20,11 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   z-index: 1000;
   animation: ${fadeIn} 0.3s ease-out;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    padding: 10vh 12px 12px 12px;
+  }
 `;
 
 export const Container = styled.div`
@@ -30,6 +35,15 @@ export const Container = styled.div`
   padding: 16px 18px 22px 18px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   animation: ${slideDown} 0.4s ease-out;
+  max-height: 80vh;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 96%;
+    border-radius: 16px;
+    padding: 12px 14px 16px 14px;
+    max-height: 82vh;
+  }
 `;
 
 export const SearchBar = styled.div`
@@ -38,6 +52,10 @@ export const SearchBar = styled.div`
   justify-content: space-between;
   gap: 12px;
   padding: 12px 0; /* Aumentado o padding vertical e removido lateral */
+  animation: ${keyframes`
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+  `} 0.25s ease-out;
 `;
 
 export const Input = styled.input`
@@ -55,6 +73,12 @@ export const Input = styled.input`
 
   &::placeholder {
     color: #6b6b71;
+  }
+
+  @media (max-width: 768px) {
+    height: 44px;
+    font-size: 18px;
+    padding-left: 40px;
   }
 `;
 
@@ -81,6 +105,7 @@ export const TopRight = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+  @media (max-width: 480px) { gap: 10px; }
 `;
 
 export const ClearBtn = styled.button`
@@ -119,6 +144,14 @@ export const Results = styled.div`
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 24px;
+  height: calc(80vh - 90px);
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    height: auto;
+  }
 `;
 
 export const MaisPesquisados = styled.div`
@@ -153,6 +186,12 @@ export const StyledLink = styled(RouterLink)`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
+  overflow: auto;
+  padding-right: 6px;
+
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.1); border-radius: 3px; }
 `;
 
 export const Tabs = styled.div`
@@ -175,15 +214,30 @@ export const Mock = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
 `;
 
 export const Card = styled.div`
-  padding: 8px;
+  padding: 10px;
   border-radius: 12px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
+  background: #fff;
+  border: 1px solid #eef1f7;
+  box-shadow: 0 6px 18px rgba(20,20,30,0.06);
+  display: flex;
+  flex-direction: column;
   &:hover {
     transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(20,20,30,0.12);
   }
 `;
 
@@ -198,6 +252,12 @@ export const ImageWrap = styled.div`
     height: 200px;
     object-fit: cover;
     display: block;
+    transition: transform 0.3s ease;
+  }
+  ${Card}:hover & img { transform: scale(1.03); }
+
+  @media (max-width: 640px) {
+    img { height: 180px; }
   }
 `;
 
@@ -214,23 +274,29 @@ export const Badge = styled.span`
 `;
 
 export const CardTitle = styled.p`
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #1b1b1f;
+  font-weight: 600;
+  margin: 0;
 `;
 
 export const PriceBlock = styled.div`
   margin-top: 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 `;
 
 export const PriceMain = styled.div`
   color: #e4005c;
   font-weight: 700;
+  font-size: 0.95rem;
 `;
 
 export const PriceOld = styled.div`
   color: #6b6b71;
   text-decoration: line-through;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 `;
 
 export const ViewAll = styled.button`
@@ -242,4 +308,6 @@ export const ViewAll = styled.button`
   background: #fff;
   cursor: pointer;
   font-weight: 600;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  &:hover { box-shadow: 0 6px 18px rgba(20,20,30,0.08); transform: translateY(-1px); }
 `;
