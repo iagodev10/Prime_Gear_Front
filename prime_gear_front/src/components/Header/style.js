@@ -15,17 +15,26 @@ export const HeaderContainer = styled.header`
   height: 8vh;
 
 
-  background: ${({ isScrolled, isHome}) => (isScrolled || !isHome ? "#fff" : "transparent")};
-  color: ${({ isScrolled,isHome }) => (isScrolled || !isHome ? "#1c1c1c" : "#fff")};
+  background: ${({ isScrolled, isHome }) => (isScrolled || !isHome ? "#fff" : "transparent")};
+  color: ${({ isScrolled, isHome }) => (isScrolled || !isHome ? "#1c1c1c" : "#fff")};
 
-  box-shadow: ${({ isScrolled,isHome }) =>
+  box-shadow: ${({ isScrolled, isHome }) =>
     isScrolled || !isHome ? "0 2px 10px rgba(0,0,0,0.1)" : "none"};
+
+  @media (max-width: 768px) {
+    padding: 10px 20px;
+    height: 70px;
+  }
 `;
 
 export const LeftSection = styled.div`
   display: flex;
   align-items: center;
   gap: 50px;
+
+  @media (max-width: 768px) {
+    gap: 0;
+  }
 `;
 
 export const MenuButton = styled.button`
@@ -48,6 +57,18 @@ export const MenuButton = styled.button`
   span {
     font-size: 14px;
   }
+
+  @media (max-width: 768px) {
+    padding: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    
+    span {
+      display: none;
+    }
+  }
 `;
 
 export const NavLinks = styled.nav`
@@ -65,6 +86,10 @@ export const NavLinks = styled.nav`
     &:hover {
       opacity: 0.7;
     }
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -97,6 +122,16 @@ export const Logo = styled.div`
     
     &:hover {
       opacity: 0.8;
+    }
+  }
+
+  @media (max-width: 768px) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    img {
+      height: 35px;
     }
   }
 `;

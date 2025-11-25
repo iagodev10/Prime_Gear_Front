@@ -8,9 +8,9 @@ export const PageContainer = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
-  padding: 24px 20px 60px 20px;
+  padding-top: 24px;
 `;
 
 export const Steps = styled.div`
@@ -18,7 +18,8 @@ export const Steps = styled.div`
   align-items: center;
   justify-content: center;
   gap: 24px;
-  margin-bottom: 26px;
+  margin-bottom: 35px;
+  margin-top: 24px;
 `;
 
 export const StepItem = styled.div`
@@ -35,16 +36,15 @@ export const StepCircle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
   font-size: 0.95rem;
-  background: ${(p) => (p.active ? "#111" : "#e7e7ea")};
-  color: ${(p) => (p.active ? "#fff" : "#3b3b40")};
+  background: ${(p) => (p.active ? "#4d7294" : "#767676")};
+  color: #fff;
 `;
 
 export const Divider = styled.div`
   height: 2px;
   width: 80px;
-  background: #e7e7ea;
+  background: #b3b3b3;
 `;
 
 export const Grid = styled.div`
@@ -54,15 +54,16 @@ export const Grid = styled.div`
 `;
 
 export const Card = styled.div`
-  background: #fff;
-  border: 1px solid #e9e9ee;
-  border-radius: 12px;
+  background: #f5f5f5;
   padding: 22px;
+  padding-left: 10%;
+  padding-right: 5%;
+  border-left: 2px solid #b3b3b3;
 `;
 
 export const Title = styled.h2`
-  font-size: 1.6rem;
-  font-weight: 600;
+  font-size: 1.8rem;
+  font-weight: 500;
   margin-bottom: 18px;
 `;
 

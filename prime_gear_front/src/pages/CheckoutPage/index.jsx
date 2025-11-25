@@ -61,25 +61,22 @@ const CheckoutPage = () => {
 
               <Section>
                 <Field>
-                  <Label>Seu e-mail *</Label>
                   <Input type="email" placeholder="Seu e-mail" />
                 </Field>
                 <CheckRow>
-                  <input type="checkbox" id="news" />
+                  <input type="checkbox" id="news"/>
                   <label htmlFor="news">Envie e-mails sobre novidades e ofertas. (Opcional)</label>
-                  <Link to="/login" style={{ marginLeft: "auto", textDecoration: "none" }}>Entrar</Link>
+                  <Link to="/login" style={{ marginLeft: "auto", textDecoration: "underline", color:'#4d7294' }}>Entrar</Link>
                 </CheckRow>
               </Section>
 
               <Section>
                 <Row>
                   <Field>
-                    <Label>Primeiro nome *</Label>
-                    <Input type="text" placeholder="Primeiro nome" />
+                    <Input type="text" placeholder="Primeiro nome *" />
                   </Field>
                   <Field>
-                    <Label>Último nome *</Label>
-                    <Input type="text" placeholder="Último nome" />
+                    <Input type="text" placeholder="Último nome *" />
                   </Field>
                 </Row>
               </Section>
@@ -87,16 +84,13 @@ const CheckoutPage = () => {
               <Section>
                 <Row3>
                   <Field>
-                    <Label>CPF *</Label>
-                    <Input type="text" placeholder="000.000.000-00" />
+                    <Input type="text" placeholder="000.000.000-00 *" />
                   </Field>
                   <Field>
-                    <Label>Data de nascimento *</Label>
-                    <Input type="text" placeholder="dd/mm/aaaa" />
+                    <Input type="text" placeholder="dd/mm/aaaa *" />
                   </Field>
                   <Field>
-                    <Label>Telefone *</Label>
-                    <Input type="text" placeholder="(00) 00000-0000" />
+                    <Input type="text" placeholder="(00) 00000-0000 *" />
                   </Field>
                 </Row3>
               </Section>
@@ -112,13 +106,16 @@ const CheckoutPage = () => {
               <Section>
                 <Row>
                   <Field>
-                    <Label>País *</Label>
                     <Select>
                       <option>Brasil</option>
                     </Select>
                   </Field>
                   <Field>
-                    <Label>Estado *</Label>
+                    <Select>
+                      <option>Selecione</option>
+                    </Select>
+                  </Field>
+                  <Field>
                     <Select>
                       <option>Selecione</option>
                     </Select>
@@ -129,14 +126,12 @@ const CheckoutPage = () => {
               <Section>
                 <Row>
                   <Field>
-                    <Label>Cidade *</Label>
                     <Select>
                       <option>Selecione</option>
                     </Select>
                   </Field>
                   <Field>
-                    <Label>Rua, número *</Label>
-                    <Input type="text" placeholder="Rua, número" />
+                    <Input type="text" placeholder="Rua, número *" />
                   </Field>
                 </Row>
               </Section>
