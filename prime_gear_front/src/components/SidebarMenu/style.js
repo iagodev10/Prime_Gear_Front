@@ -16,7 +16,7 @@ export const Backdrop = styled.div`
 `;
 
 export const Sidebar = styled.div`
-    width: 450px;
+    width: 380px;
     height: 100%;
     position: fixed;
     top: 0;
@@ -37,7 +37,7 @@ export const Sidebar = styled.div`
 
 export const SideHeader = styled.div`
     width: 100%;
-    height: 80px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -46,8 +46,8 @@ export const SideHeader = styled.div`
 `;
 
 export const Close = styled.div`
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,11 +65,11 @@ export const Close = styled.div`
 
 export const SideBody = styled.div`
     width: 100%;
-    height: calc(100% - 80px);
-    padding: 24px;
+    height: calc(100% - 70px);
+    padding: 20px 24px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     overflow-y: auto;
 `;
 
@@ -87,21 +87,21 @@ export const NavList = styled.ul`
     hr{
         border: none;
         border-top: 1px solid #f0f0f0;
-        margin: 16px 0;
+        margin: 12px 0;
         width: 100%;
     }
 `;
 
 export const NavItem = styled.li`
     width: 100%;
-    height: 56px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 12px;
+    padding: 0 8px;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 8px;
+    border-radius: 6px;
 
     &:hover {
         background: #f9f9f9;
@@ -116,7 +116,7 @@ export const NavItem = styled.li`
         text-decoration: none;
         color: #1c1c1c;
         font-weight: 600;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     a:hover {
@@ -135,14 +135,28 @@ export const NavItem = styled.li`
 `;
 
 export const NavLink = styled.span`
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: #1c1c1c;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+`;
+
+export const Badge = styled.span`
+    background-color: #d00000;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    margin-left: 8px;
 `;
 
 export const BestSellers = styled.div`
     width: 100%;
-    height: 200px;
+    height: 180px;
     position: relative;
     overflow: hidden;
     margin-top: auto;
@@ -172,7 +186,7 @@ export const BestSellers = styled.div`
         left: 20px;
         color: #ffffff;
         margin: 0;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 700;
         z-index: 1;
     }

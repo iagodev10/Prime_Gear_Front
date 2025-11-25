@@ -1,22 +1,17 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { Backdrop, Sidebar, SideHeader, Close, SideBody, NavList, NavItem, NavLink, BestSellers } from './style';
+import { Backdrop, Sidebar, SideHeader, Close, SideBody, NavList, NavItem, NavLink, BestSellers, Badge } from './style';
 
-import { FiX, FiChevronRight } from "react-icons/fi";
+import { FiX, FiChevronRight, FiUser } from "react-icons/fi";
 
 import BestSeller from '../../assets/images/bestseller.png';
 
 const SidebarMenu = ({ isOpen, onClose }) => {
 
-    const [activeMenu, setActiveMenu] = useState('main');
-
-    const handleClose = () =>{
+    const handleClose = () => {
         onClose?.();
-        setTimeout(() => {
-            setActiveMenu('main');
-        }, 300);
     };
 
     React.useEffect(() => {
@@ -29,30 +24,6 @@ const SidebarMenu = ({ isOpen, onClose }) => {
         return () => window.removeEventListener('keydown', handler);
     }, [isOpen, onClose]);
 
-    const renderSubMenu= (menuId) =>{
-        switch(menuId){
-            case 'institucional':
-                return (
-                    <>
-                    <NavList>
-                        <NavItem>
-                            <NavLink to="/institucional" onClick={onClose}>Sobre</NavLink>                         
-                        </NavItem>
-
-                        <NavItem>
-                            <NavLink to="/institucional" onClick={onClose}>Nossas Lojas</NavLink>
-                            <FiChevronRight size={20} />
-                        </NavItem>
-
-                        <NavItem>
-                            <NavLink to="/fale-conosco" onClick={onClose}>Fale Conosco</NavLink>
-                            <FiChevronRight size={20} />
-                        </NavItem>
-                        </NavList>
-                    </>
-                );
-        }
-    }
     return (
         <>
             <Backdrop isOpen={isOpen} onClick={onClose} />
@@ -60,36 +31,66 @@ const SidebarMenu = ({ isOpen, onClose }) => {
             <Sidebar isOpen={isOpen}>
                 <SideHeader>
                     <Close onClick={onClose}>
-                        <FiX size={20}/>
+                        <FiX size={20} />
                     </Close>
                 </SideHeader>
 
                 <SideBody>
                     <NavList>
                         <NavItem>
-                            <NavLink to="/institucional" onClick={onClose}>Sobre</NavLink>
+                            <NavLink>About</NavLink>
                             <FiChevronRight size={20} />
                         </NavItem>
-
                         <NavItem>
-                            <NavLink to="/institucional" onClick={onClose}>Nossas Lojas</NavLink>
+                            <NavLink>Blog</NavLink>
                             <FiChevronRight size={20} />
                         </NavItem>
-
                         <NavItem>
-                            <NavLink to="/fale-conosco" onClick={onClose}>Fale Conosco</NavLink>
+                            <NavLink>Get In Touch</NavLink>
                             <FiChevronRight size={20} />
                         </NavItem>
 
                         <hr />
 
                         <NavItem>
-                            <NavLink to="/" onClick={onClose}>Categorias</NavLink>
+                            <NavLink>Category</NavLink>
+                            <FiChevronRight size={20} />
+                        </NavItem>
+                        <NavItem>
+                            <NavLink>On Sale</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink>New In</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink>FAQs</NavLink>
+                        </NavItem>
+
+                        <hr />
+
+                        <NavItem>
+                            <NavLink>TV</NavLink>
+                            <FiChevronRight size={20} />
+                        </NavItem>
+                        <NavItem>
+                            <NavLink>
+                                Mobile
+                                <Badge>Top</Badge>
+                            </NavLink>
+                            <FiChevronRight size={20} />
+                        </NavItem>
+                        <NavItem>
+                            <NavLink>Laptops</NavLink>
                             <FiChevronRight size={20} />
                         </NavItem>
 
+                        <hr />
+
                         <NavItem>
-                            <NavLink to="/" onClick={onClose}>FAQs</NavLink>
+                            <NavLink>
+                                <FiUser size={20} style={{ marginRight: 8 }} />
+                                Login
+                            </NavLink>
                         </NavItem>
 
                     </NavList>
