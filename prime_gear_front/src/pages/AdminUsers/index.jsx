@@ -23,6 +23,10 @@ import {
   Data,
   Conteudo,
   Conteudo2,
+  EmptyStateWrapper,
+  EmptyIcon,
+  EmptyTitle,
+  EmptyDescription,
 } from "./style";
 
 const AdminUsers = () => {
@@ -104,12 +108,12 @@ const AdminUsers = () => {
 
         <Search>
           <FiSearch size={20} color="#666" />
-          <input type="text" placeholder="Buscar usuário..." />
+          <input type="text" placeholder="Buscar usuário..." aria-label="Buscar usuário" />
         </Search>
 
         <Content>
           {mockUsuarios.map((usuario) => (
-            <UserCard key={usuario.email}>
+            <UserCard key={usuario.email} role={usuario.role}>
               <Conteudo>
                 <Icone color={usuario.role === "admin" ? "#E8E2FF" : "#DFFFEA"}>
                   {usuario.name.charAt(0).toUpperCase()}
@@ -128,18 +132,25 @@ const AdminUsers = () => {
                   <SMail>
                     <LuMail /> {usuario.email}
                   </SMail>
-                </Informacoes>
+              </Informacoes>
               </Conteudo>
 
               <Conteudo2>
-                <Data>
-                  Cadastro em <br />
-                  {usuario.dataCadastro}
-                </Data>
+                <Data>Cadastro em {usuario.dataCadastro}</Data>
               </Conteudo2>
             </UserCard>
           ))}
         </Content>
+
+        {mockUsuarios.length === 0 && (
+          <EmptyStateWrapper>
+            <EmptyIcon>
+              <FiSearch size={22} />
+            </EmptyIcon>
+            <EmptyTitle>Nenhum usuário encontrado</EmptyTitle>
+            <EmptyDescription>Ajuste a busca para localizar resultados</EmptyDescription>
+          </EmptyStateWrapper>
+        )}
       </Container>
     </>
   );
