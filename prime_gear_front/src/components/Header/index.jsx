@@ -56,8 +56,8 @@ const Header = () => {
   return (
     <>
       <HeaderContainer
-        isScrolled={isScrolled || isHovered || isMenuOpen || !!openCategory}
-        isHome={isHome}
+        $isScrolled={isScrolled || isHovered || isMenuOpen || !!openCategory}
+        $isHome={isHome}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -124,7 +124,7 @@ const Header = () => {
           </Icons>
 
           <Logo
-            isScrolled={
+            $isScrolled={
               isScrolled || !isHome || isHovered || isMenuOpen || !!openCategory
             }
           >

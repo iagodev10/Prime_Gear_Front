@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { Backdrop, Sidebar, SideHeader, Close, SideBody, NavList, NavItem, NavLink, BestSellers } from './style';
+import { Backdrop, Sidebar, SideHeader, Close, SideBody, NavList, NavItem, BestSellers } from './style';
 
 import { FiX, FiChevronRight } from "react-icons/fi";
 
@@ -10,13 +10,8 @@ import BestSeller from '../../assets/images/bestseller.png';
 
 const SidebarMenu = ({ isOpen, onClose }) => {
 
-    const [activeMenu, setActiveMenu] = useState('main');
-
-    const handleClose = () =>{
+    const handleClose = () => {
         onClose?.();
-        setTimeout(() => {
-            setActiveMenu('main');
-        }, 300);
     };
 
     React.useEffect(() => {
@@ -29,72 +24,47 @@ const SidebarMenu = ({ isOpen, onClose }) => {
         return () => window.removeEventListener('keydown', handler);
     }, [isOpen, onClose]);
 
-    const renderSubMenu= (menuId) =>{
-        switch(menuId){
-            case 'institucional':
-                return (
-                    <>
-                    <NavList>
-                        <NavItem>
-                            <NavLink to="/institucional" onClick={onClose}>Sobre</NavLink>                         
-                        </NavItem>
-
-                        <NavItem>
-                            <NavLink to="/institucional" onClick={onClose}>Nossas Lojas</NavLink>
-                            <FiChevronRight size={20} />
-                        </NavItem>
-
-                        <NavItem>
-                            <NavLink to="/fale-conosco" onClick={onClose}>Fale Conosco</NavLink>
-                            <FiChevronRight size={20} />
-                        </NavItem>
-                        </NavList>
-                    </>
-                );
-        }
-    }
     return (
         <>
-            <Backdrop isOpen={isOpen} onClick={onClose} />
+            <Backdrop $isOpen={isOpen} onClick={handleClose} />
 
-            <Sidebar isOpen={isOpen}>
+            <Sidebar $isOpen={isOpen}>
                 <SideHeader>
-                    <Close onClick={onClose}>
-                        <FiX size={20}/>
+                    <Close onClick={handleClose}>
+                        <FiX size={24} />
                     </Close>
                 </SideHeader>
 
                 <SideBody>
                     <NavList>
                         <NavItem>
-                            <NavLink to="/institucional" onClick={onClose}>Sobre</NavLink>
+                            <Link to="/institucional" onClick={handleClose}>Sobre</Link>
+                        </NavItem>
+
+                        <NavItem>
+                            <Link to="/loja" onClick={handleClose}>Nossas Lojas</Link>
                             <FiChevronRight size={20} />
                         </NavItem>
 
                         <NavItem>
-                            <NavLink to="/institucional" onClick={onClose}>Nossas Lojas</NavLink>
-                            <FiChevronRight size={20} />
-                        </NavItem>
-
-                        <NavItem>
-                            <NavLink to="/fale-conosco" onClick={onClose}>Fale Conosco</NavLink>
+                            <Link to="/fale-conosco" onClick={handleClose}>Fale Conosco</Link>
                             <FiChevronRight size={20} />
                         </NavItem>
 
                         <hr />
 
                         <NavItem>
-                            <NavLink to="/" onClick={onClose}>Categorias</NavLink>
+                            <Link to="/loja" onClick={handleClose}>Categorias</Link>
                             <FiChevronRight size={20} />
                         </NavItem>
 
                         <NavItem>
-                            <NavLink to="/" onClick={onClose}>FAQs</NavLink>
+                            <Link to="/" onClick={handleClose}>FAQs</Link>
                         </NavItem>
 
                     </NavList>
 
-                    <Link to="/loja" onClick={onClose} style={{ display: 'block' }}>
+                    <Link to="/loja" onClick={handleClose} style={{ display: 'block', textDecoration: 'none' }}>
                         <BestSellers>
                             <img src={BestSeller} alt="Bestsellers" />
                             <h3>Produtos em Destaque</h3>

@@ -1,15 +1,7 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react"
 
-import {
-  FiPlus,
-  FiSearch,
-  FiUsers,
-  FiShield,
-  FiPackage,
-  FiCalendar,
-  FiX,
-} from "react-icons/fi";
-import { LuMail } from "react-icons/lu";
+import { FiSearch, FiUsers, FiShield, FiPackage, FiCalendar, FiX } from "react-icons/fi"
+import { LuMail } from "react-icons/lu"
 import {
   Container,
   Header,
@@ -26,13 +18,13 @@ import {
   Informacoes,
   Status,
   SNome,
-  SRol,
   SMail,
-  Data,
+  MetaRow,
   Conteudo,
   Conteudo2,
   PriceValue,
   StatusPill,
+  FreteText,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -41,13 +33,19 @@ import {
   ModalDivider,
   ItemRow,
   TotalsRow,
-} from "./style";
+  ModalActions,
+  OrderSelect,
+  EmptyStateWrapper,
+  EmptyIcon,
+  EmptyTitle,
+  EmptyDescription,
+} from "./style"
 
 const AdminPedidos = () => {
-  const [search, setSearch] = useState("");
-  const [statusFiltro, setStatusFiltro] = useState("todos");
-  const [selected, setSelected] = useState(null);
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [search, setSearch] = useState("")
+  const [statusFiltro, setStatusFiltro] = useState("todos")
+  const [selected, setSelected] = useState(null)
+  const [isModalOpen, setModalOpen] = useState(false)
   const [pedidos, setPedidos] = useState([
     {
       id: "6918F27A",
@@ -93,39 +91,40 @@ const AdminPedidos = () => {
       status: "Enviado",
       items: [{ name: "Headset JBL Quantum", qty: 1, price: 1299.0 }],
     },
-  ]);
+  ])
 
   const pedidosFiltrados = useMemo(() => {
     return pedidos.filter((p) => {
       const matchSearch =
         !search ||
         p.id.toLowerCase().includes(search.toLowerCase()) ||
-        p.email.toLowerCase().includes(search.toLowerCase());
-      const matchStatus = statusFiltro === "todos" || p.status === statusFiltro;
-      return matchSearch && matchStatus;
-    });
-  }, [pedidos, search, statusFiltro]);
+        p.email.toLowerCase().includes(search.toLowerCase())
+      const matchStatus = statusFiltro === "todos" || p.status === statusFiltro
+      return matchSearch && matchStatus
+    })
+  }, [pedidos, search, statusFiltro])
 
   const alterarStatus = (id, novoStatus) => {
-    setPedidos((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, status: novoStatus } : p))
-    );
-  };
+    setPedidos((prev) => prev.map((p) => (p.id === id ? { ...p, status: novoStatus } : p)))
+  }
+
   const abrirModal = (pedido) => {
-    setSelected(pedido);
-    setModalOpen(true);
-  };
+    setSelected(pedido)
+    setModalOpen(true)
+  }
+
   const fecharModal = () => {
-    setModalOpen(false);
-    setSelected(null);
-  };
+    setModalOpen(false)
+    setSelected(null)
+  }
+
   return (
     <>
       <Container>
         <Header>
           <Title>
             <h1>Gerenciar Pedidos</h1>
-            <p> {pedidos.length} pedidos no sistema</p>
+            <p>{pedidos.length} pedidos no sistema</p>
           </Title>
           {/* <Button>
             <FiPlus size={18} />
@@ -182,11 +181,9 @@ const AdminPedidos = () => {
             placeholder="Buscar por cliente ou ID do pedido..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            aria-label="Buscar pedidos por cliente ou ID"
           />
-          <select
-            value={statusFiltro}
-            onChange={(e) => setStatusFiltro(e.target.value)}
-          >
+          <select value={statusFiltro} onChange={(e) => setStatusFiltro(e.target.value)} aria-label="Filtrar por status">
             <option value="todos">Todos os Status</option>
             <option value="Entregue">Entregue</option>
             <option value="Pendente">Pendente</option>
@@ -196,11 +193,7 @@ const AdminPedidos = () => {
 
         <Content>
           {pedidosFiltrados.map((p) => (
-            <UserCard
-              key={p.id}
-              status={p.status}
-              onClick={() => abrirModal(p)}
-            >
+            <UserCard key={p.id} status={p.status} onClick={() => abrirModal(p)}>
               <Conteudo>
                 <Icone status={p.status}>
                   <FiPackage size={22} color="black" />
@@ -213,70 +206,58 @@ const AdminPedidos = () => {
                   <SMail>
                     <LuMail /> {p.email}
                   </SMail>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: 18,
-                      color: "#666",
-                      fontSize: "0.95rem",
-                    }}
-                  >
-                    <span
-                      style={{ display: "flex", alignItems: "center", gap: 6 }}
-                    >
-                      <FiCalendar /> {p.data}
-                    </span>
-                  </div>
+                  <MetaRow>
+                    <FiCalendar /> {p.data}
+                  </MetaRow>
                 </Informacoes>
               </Conteudo>
 
               <Conteudo2>
-                <div style={{ textAlign: "right" }}>
+                <div style={{ textAlign: "right", width: "100%" }}>
                   <PriceValue>R$ {p.total.toFixed(2)}</PriceValue>
-                  <p
-                    style={{
-                      margin: "2px 0 10px 0",
-                      fontSize: "0.95rem",
-                      color: "#666",
-                    }}
-                  >
-                    + R$ {p.frete.toFixed(2)} frete
-                  </p>
+                  <FreteText>+ R$ {p.frete.toFixed(2)} frete</FreteText>
 
                   <StatusPill status={p.status}>{p.status}</StatusPill>
 
-                  <select
+                  <OrderSelect
                     value={p.status}
-                    onChange={(e) => alterarStatus(p.id, e.target.value)}
-                    style={{
-                      padding: "8px 12px",
-                      borderRadius: 8,
-                      border: "1px solid #e5e7eb",
-                      background: "#fff",
-                      color: "#111",
-                      fontWeight: 500,
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => {
+                      e.stopPropagation()
+                      alterarStatus(p.id, e.target.value)
                     }}
+                    aria-label="Alterar status do pedido"
                   >
                     <option value="Entregue">Entregue</option>
                     <option value="Pendente">Pendente</option>
                     <option value="Enviado">Enviado</option>
-                  </select>
+                  </OrderSelect>
                 </div>
               </Conteudo2>
             </UserCard>
           ))}
         </Content>
 
+        {pedidosFiltrados.length === 0 && (
+          <EmptyStateWrapper>
+            <EmptyIcon>
+              <FiSearch size={22} />
+            </EmptyIcon>
+            <EmptyTitle>Nenhum pedido encontrado</EmptyTitle>
+            <EmptyDescription>Ajuste a busca ou o filtro de status</EmptyDescription>
+          </EmptyStateWrapper>
+        )}
+
         {isModalOpen && selected && (
           <ModalOverlay
             onClick={(e) => {
-              if (e.target === e.currentTarget) fecharModal();
+              if (e.target === e.currentTarget) fecharModal()
             }}
           >
             <ModalContent>
               <ModalHeader>
                 <h2>Detalhes do Pedido #{selected.id}</h2>
-                <button onClick={fecharModal}>
+                <button onClick={fecharModal} aria-label="Fechar">
                   <FiX size={20} />
                 </button>
               </ModalHeader>
@@ -292,13 +273,11 @@ const AdminPedidos = () => {
                 </ModalSection>
                 <ModalSection>
                   <h4>Status</h4>
-                  <StatusPill status={selected.status}>
-                    {selected.status}
-                  </StatusPill>
+                  <StatusPill status={selected.status}>{selected.status}</StatusPill>
                 </ModalSection>
                 <ModalSection>
                   <h4>Total</h4>
-                  <PriceValue style={{color: "#2563eb"}}>R$ {selected.total.toFixed(2)}</PriceValue>
+                  <PriceValue style={{ color: "#2563eb" }}>R$ {selected.total.toFixed(2)}</PriceValue>
                 </ModalSection>
               </ModalGrid>
 
@@ -313,9 +292,7 @@ const AdminPedidos = () => {
                   <ItemRow key={i}>
                     <div>
                       <p style={{ margin: 0, fontWeight: 600 }}>{it.name}</p>
-                      <p style={{ margin: 0, color: "#6b7280" }}>
-                        Quantidade: {it.qty}
-                      </p>
+                      <p style={{ margin: 0, color: "#6b7280" }}>Quantidade: {it.qty}</p>
                     </div>
                     <PriceValue>R$ {it.price.toFixed(2)}</PriceValue>
                   </ItemRow>
@@ -328,16 +305,29 @@ const AdminPedidos = () => {
               </TotalsRow>
               <TotalsRow>
                 <span>Frete:</span>
-                <span style={{ color: "#374151" }}>
-                  R$ {selected.frete.toFixed(2)}
-                </span>
+                <span style={{ color: "#374151" }}>R$ {selected.frete.toFixed(2)}</span>
               </TotalsRow>
+
+              <ModalActions>
+                <OrderSelect
+                  value={selected.status}
+                  onChange={(e) => alterarStatus(selected.id, e.target.value)}
+                  aria-label="Alterar status do pedido"
+                >
+                  <option value="Entregue">Entregue</option>
+                  <option value="Pendente">Pendente</option>
+                  <option value="Enviado">Enviado</option>
+                </OrderSelect>
+                <Button onClick={fecharModal} style={{ flex: 1 }}>
+                  Fechar
+                </Button>
+              </ModalActions>
             </ModalContent>
           </ModalOverlay>
         )}
       </Container>
     </>
-  );
-};
+  )
+}
 
-export default AdminPedidos;
+export default AdminPedidos

@@ -15,11 +15,11 @@ export const HeaderContainer = styled.header`
   height: 8vh;
 
 
-  background: ${({ isScrolled, isHome }) => (isScrolled || !isHome ? "#fff" : "transparent")};
-  color: ${({ isScrolled, isHome }) => (isScrolled || !isHome ? "#1c1c1c" : "#fff")};
+  background: ${({ $isScrolled, $isHome }) => ($isScrolled || !$isHome ? "#fff" : "transparent")};
+  color: ${({ $isScrolled, $isHome }) => ($isScrolled || !$isHome ? "#1c1c1c" : "#fff")};
 
-  box-shadow: ${({ isScrolled, isHome }) =>
-    isScrolled || !isHome ? "0 2px 10px rgba(0,0,0,0.1)" : "none"};
+  box-shadow: ${({ $isScrolled, $isHome }) =>
+    $isScrolled || !$isHome ? "0 2px 10px rgba(0,0,0,0.1)" : "none"};
 
   @media (max-width: 768px) {
     padding: 10px 20px;
@@ -118,7 +118,7 @@ export const Logo = styled.div`
     height: 50px;
     width: auto;
     transition: 0.3s ease;
-    filter: ${({ isScrolled }) => isScrolled ? 'none' : 'brightness(0) invert(1)'};
+    filter: ${({ $isScrolled }) => $isScrolled ? 'none' : 'brightness(0) invert(1)'};
     
     &:hover {
       opacity: 0.8;

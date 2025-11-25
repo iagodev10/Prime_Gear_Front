@@ -6,46 +6,55 @@ export const Backdrop = styled.div`
     position: fixed;
     top: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     z-index: 1001;
 
-    opacity: ${({ isOpen }) => (isOpen ? "1" : "0")};
-    visibility: ${({ isOpen }) => (isOpen ? "visible" : "hidden")};
-    pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
+    opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
+    visibility: ${({ $isOpen }) => ($isOpen ? "visible" : "hidden")};
+    pointer-events: ${({ $isOpen }) => ($isOpen ? "auto" : "none")};
     transition: opacity 0.3s ease, visibility 0.3s ease;
+    backdrop-filter: blur(2px);
 `;
 
 export const Sidebar = styled.div`
-    width: 450px;
-    height: 100%;
+    width: 90%;
+    max-width: 450px;
+    height: calc(92vh - 20px); /* 100vh - 8vh (header) - 20px (bottom gap) */
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 8vh;
+    left: 5%;
     background: #fff;
     z-index: 1002;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    border-radius: 0 20px 20px 0;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    
+    /* Slide Animation */
+    transform: ${({ $isOpen }) => ($isOpen ? "translateX(0)" : "translateX(-110%)")};
+    opacity: 1;
+    visibility: ${({ $isOpen }) => ($isOpen ? "visible" : "hidden")};
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease;
 
-    transform: ${({ isOpen }) => (isOpen ? "translateX(0)" : "translateX(-100%)")};
-    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 
-    @media (max-width: 768px) {
-        width: 85%;
-        border-radius: 0;
+    @media (max-width: 480px) {
+        width: 90%;
+        left: 5%;
+        border-radius: 16px;
     }
 `;
 
 export const SideHeader = styled.div`
     width: 100%;
-    height: 80px;
+    padding: 20px 24px 10px 24px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 0 24px;
-    border-bottom: 1px solid #f0f0f0;
+    background: transparent;
 `;
 
-export const Close = styled.div`
+export const Close = styled.button`
     width: 40px;
     height: 40px;
     display: flex;
@@ -54,23 +63,38 @@ export const Close = styled.div`
     cursor: pointer;
     border-radius: 50%;
     border: 1px solid #e0e0e0;
-    transition: all 0.3s ease;
+    background: #fff;
+    transition: all 0.2s ease;
     color: #333;
+    padding: 0;
 
     &:hover {
         border-color: #000;
         background: #f5f5f5;
+        transform: scale(1.05);
     }
 `;
 
 export const SideBody = styled.div`
     width: 100%;
-    height: calc(100% - 80px);
-    padding: 24px;
+    padding: 10px 24px 24px 24px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     overflow-y: auto;
+    height: 100%;
+    
+    /* Custom Scrollbar */
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0,0,0,0.1);
+        border-radius: 3px;
+    }
 `;
 
 export const NavList = styled.ul`
@@ -78,80 +102,71 @@ export const NavList = styled.ul`
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
     padding: 0;
     margin: 0;
     list-style: none;
+    gap: 8px;
 
-    hr{
+    hr {
         border: none;
         border-top: 1px solid #f0f0f0;
-        margin: 16px 0;
+        margin: 12px 0;
         width: 100%;
     }
 `;
 
 export const NavItem = styled.li`
     width: 100%;
-    height: 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 12px;
+    padding: 12px 0;
     cursor: pointer;
     transition: all 0.2s ease;
     border-radius: 8px;
 
     &:hover {
-        background: #f9f9f9;
+        padding-left: 8px;
     }
 
-    a{
+    a, span {
         width: 100%;
-        height: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
         text-decoration: none;
-        color: #1c1c1c;
-        font-weight: 600;
-        font-size: 16px;
-    }
-
-    a:hover {
         color: #000;
+        font-weight: 400; /* Removed bold */
+        font-size: 18px;
+        /* Removed font-family to use original */
     }
 
-    svg{
-        color: #999;
+    svg {
+        color: #000;
         transition: transform 0.2s;
-    }
-
-    &:hover svg{
-        transform: translateX(4px);
-        color: #333;
     }
 `;
 
 export const NavLink = styled.span`
-    font-size: 16px;
-    font-weight: 600;
-    color: #1c1c1c;
+    font-size: 18px;
+    font-weight: 400; /* Removed bold */
+    color: #000;
 `;
 
 export const BestSellers = styled.div`
     width: 100%;
-    height: 200px;
+    height: 220px;
     position: relative;
     overflow: hidden;
-    margin-top: auto;
+    margin-top: 16px;
     border-radius: 12px;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 
-    img{
+    img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -159,11 +174,11 @@ export const BestSellers = styled.div`
         transition: transform 0.5s ease;
     }
 
-    &::after{
+    &::after {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.6) 100%);
+        background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%);
     }
 
     h3 {
@@ -172,14 +187,15 @@ export const BestSellers = styled.div`
         left: 20px;
         color: #ffffff;
         margin: 0;
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 700;
         z-index: 1;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         
         img {
             transform: scale(1.05);
