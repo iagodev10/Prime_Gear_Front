@@ -61,12 +61,12 @@ const CheckoutPage = () => {
 
               <Section>
                 <Field>
-                  <Input type="email" placeholder="Seu e-mail" />
+                  <Input type="email" placeholder="Seu e-mail *" />
                 </Field>
                 <CheckRow>
-                  <input type="checkbox" id="news"/>
-                  <label htmlFor="news">Envie e-mails sobre novidades e ofertas. (Opcional)</label>
-                  <Link to="/login" style={{ marginLeft: "auto", textDecoration: "underline", color:'#4d7294' }}>Entrar</Link>
+                  <input type="checkbox" id="news" />
+                  <label htmlFor="news">Envie-me e-mails sobre novidades e ofertas. (Opcional)</label>
+                  <Link to="/login" style={{ marginLeft: "auto", textDecoration: "underline", color: '#4d7294', fontSize: '0.9rem' }}>Entrar</Link>
                 </CheckRow>
               </Section>
 
@@ -84,67 +84,52 @@ const CheckoutPage = () => {
               <Section>
                 <Row3>
                   <Field>
-                    <Input type="text" placeholder="000.000.000-00 *" />
+                    <Input type="text" placeholder="CPF *" />
                   </Field>
                   <Field>
-                    <Input type="text" placeholder="dd/mm/aaaa *" />
+                    <Input type="text" placeholder="Data de nascimento *" />
                   </Field>
                   <Field>
-                    <Input type="text" placeholder="(00) 00000-0000 *" />
+                    <Input type="text" placeholder="Telefone *" />
                   </Field>
                 </Row3>
               </Section>
 
               <CheckRow>
                 <input type="checkbox" id="terms" />
-                <label htmlFor="terms">Aceito os termos e condições e política de privacidade.</label>
+                <label htmlFor="terms">Aceito os <span style={{ textDecoration: 'underline' }}>termos e condições</span> e <span style={{ textDecoration: 'underline' }}>política de privacidade</span>. *</label>
               </CheckRow>
             </Card>
 
             <Card style={{ marginTop: 18 }}>
               <Title>Entrega</Title>
               <Section>
-                <Row>
+                <Row3>
                   <Field>
                     <Select>
-                      <option>Brasil</option>
+                      <option>País *</option>
                     </Select>
                   </Field>
                   <Field>
                     <Select>
-                      <option>Selecione</option>
+                      <option>Estado *</option>
                     </Select>
                   </Field>
                   <Field>
                     <Select>
-                      <option>Selecione</option>
+                      <option>Cidade *</option>
                     </Select>
                   </Field>
-                </Row>
+                </Row3>
               </Section>
 
               <Section>
                 <Row>
-                  <Field>
-                    <Select>
-                      <option>Selecione</option>
-                    </Select>
-                  </Field>
                   <Field>
                     <Input type="text" placeholder="Rua, número *" />
                   </Field>
-                </Row>
-              </Section>
-
-              <Section>
-                <Row>
                   <Field>
-                    <Label>Bairro *</Label>
-                    <Input type="text" placeholder="Bairro" />
-                  </Field>
-                  <Field>
-                    <Label>Complemento (Opcional)</Label>
-                    <Input type="text" placeholder="Complemento" />
+                    <Input type="text" placeholder="Bairro *" />
                   </Field>
                 </Row>
               </Section>
@@ -152,12 +137,14 @@ const CheckoutPage = () => {
               <Section>
                 <Row>
                   <Field>
-                    <Label>CEP *</Label>
-                    <Input type="text" placeholder="00000-000" />
+                    <Input type="text" placeholder="Complemento (Opcional)" />
                   </Field>
-                  <div style={{ display: "flex", alignItems: "flex-end" }}>
-                    <PrimaryButton style={{ width: 140 }}>Buscar</PrimaryButton>
-                  </div>
+                  <Field>
+                    <Input type="text" placeholder="CEP *" />
+                    <div style={{ display: "flex", justifyContent: "flex-end", marginTop: '4px' }}>
+                      <a href="#" style={{ textDecoration: "underline", color: "#4d7294", fontSize: "0.85rem" }}>Buscar</a>
+                    </div>
+                  </Field>
                 </Row>
               </Section>
 
@@ -167,11 +154,13 @@ const CheckoutPage = () => {
             </Card>
           </div>
 
+          <Divider className="vertical-divider" />
+
           <div>
-            <Card style={{ backgroundColor: '#e8e8e8' }}>
+            <Card style={{ backgroundColor: '#e8e8e8', border: 'none' }}> {/* Background matches layout, maybe need adjustment in style.js */}
               <SummaryHeader>
                 <Title style={{ margin: 0, fontSize: "1.2rem" }}>Sua sacola</Title>
-                <Link to="/loja" style={{ textDecoration: "none" }}>Editar</Link>
+                <Link to="/loja" style={{ textDecoration: "underline", color: "#4d7294", fontSize: "0.9rem" }}>Editar</Link>
               </SummaryHeader>
 
               <BagItem>
@@ -181,32 +170,34 @@ const CheckoutPage = () => {
                 </div>
               </BagItem>
 
+              <div style={{ borderTop: '1px solid #e0e0e0', margin: '16px 0' }}></div>
+
               <RowPrice>
                 <PriceText>Subtotal</PriceText>
                 <PriceText>R$ 552,93</PriceText>
               </RowPrice>
               <RowPrice>
                 <PriceText>Descontos totais</PriceText>
-                <PriceValue>R$ 55,94</PriceValue>
+                <PriceValue style={{ color: '#0c8a1f' }}>-R$ 55,94</PriceValue>
               </RowPrice>
-              <DiscountNote>Oferta especial PrimeGear - R$ 55,94</DiscountNote>
+              <DiscountNote>Oferta especial PrimeGear <span style={{ float: 'right' }}>-R$ 55,94</span></DiscountNote>
               <RowPrice>
                 <PriceText>Frete</PriceText>
                 <ShippingFree>Grátis</ShippingFree>
               </RowPrice>
 
+              <div style={{ borderTop: '1px solid #e0e0e0', margin: '16px 0' }}></div>
+
               <TotalBlock>
                 <TotalLabel>
-                  <span>Total</span>
-                  <Installments>R$ 552,93 em até 4x de R$ 138,23 sem juros</Installments>
+                  <span style={{ fontSize: '1.5rem', fontWeight: '600' }}>Total</span>
+                  <Installments>R$ 552,93 em até <strong>4x de R$138,23</strong> sem juros</Installments>
                 </TotalLabel>
                 <Total>R$ 496,99</Total>
               </TotalBlock>
 
               <SignUpBox>
-                Cadastre-se na PrimeGear e ganhe 10% de desconto na primeira
-                compra, além de acesso antecipado às vendas, novidades, promoções
-                e muito mais.
+                Cadastre-se na PrimeGear e ganhe 10% de desconto na primeira compra, além de acesso antecipado às vendas, novidades, promoções e muito mais.
               </SignUpBox>
             </Card>
           </div>

@@ -20,6 +20,9 @@ export const Steps = styled.div`
   gap: 24px;
   margin-bottom: 35px;
   margin-top: 24px;
+  padding-bottom: 35px;
+  width: 100%;
+  border-bottom: 2px solid #b3b3b3;
 `;
 
 export const StepItem = styled.div`
@@ -45,6 +48,12 @@ export const Divider = styled.div`
   height: 2px;
   width: 80px;
   background: #b3b3b3;
+
+  &.vertical-divider {
+    border-left: 1px solid #e0e0e0;
+    height: 100%;
+    margin: 0 16px;
+  }
 `;
 
 export const Grid = styled.div`
@@ -54,11 +63,9 @@ export const Grid = styled.div`
 `;
 
 export const Card = styled.div`
-  background: #f5f5f5;
   padding: 22px;
-  padding-left: 10%;
-  padding-right: 5%;
-  border-left: 2px solid #b3b3b3;
+  padding-left: 15%;
+  padding-right: 15%;
 `;
 
 export const Title = styled.h2`

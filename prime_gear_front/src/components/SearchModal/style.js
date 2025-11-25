@@ -1,5 +1,15 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Link as RouterLink } from "react-router-dom";
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const slideDown = keyframes`
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+`;
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -9,6 +19,7 @@ export const ModalOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: ${fadeIn} 0.3s ease-out;
 `;
 
 export const Container = styled.div`
@@ -18,6 +29,7 @@ export const Container = styled.div`
   max-width: 1200px;
   padding: 16px 18px 22px 18px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  animation: ${slideDown} 0.4s ease-out;
 `;
 
 export const SearchBar = styled.div`
