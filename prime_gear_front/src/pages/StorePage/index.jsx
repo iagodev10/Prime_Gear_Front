@@ -1,6 +1,6 @@
 import CategoryNav from "../../components/CategoryNav"
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, ChevronDown, ChevronUp, ShoppingCart } from 'lucide-react';
+import { Heart, ChevronDown, ChevronUp, ShoppingCart, Filter } from 'lucide-react';
 import ProductCard from "../../components/ProductCard";
 import Email from '../../assets/images/e-mail.svg'
 import notebook from '../../assets/images/laptop-comprar.png'
@@ -948,33 +948,37 @@ function Store() {
 
                     {/* Conteúdo Principal */}
                     <div style={{ flex: 1 }}>
-                        {/* Barra de ações mobile */}
+                        {/* Botão flutuante de filtros (mobile) */}
                         {isMobile && (
-                            <div style={{ position: 'fixed', bottom: '20px', left: '20px', zIndex: 100 }}>
+                            <div style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 999 }}>
                                 <button onClick={() => setIsFilterOpen(true)} style={{
-                                    padding: '12px 24px',
-                                    borderRadius: '999px',
+                                    width: '60px',
+                                    height: '60px',
+                                    borderRadius: '50%',
                                     border: 'none',
                                     background: '#000',
                                     color: '#fff',
                                     fontWeight: 600,
                                     cursor: 'pointer',
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                                    boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: '8px'
-                                }}>
-                                    <ChevronUp size={16} />
-                                    Filtros
+                                    justifyContent: 'center',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                >
+                                    <Filter size={24} />
                                 </button>
                             </div>
                         )}
                         {/* Grid de Produtos */}
                         <div style={{
                             display: 'grid',
-                            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(300px, 1fr))',
-                            gap: '24px',
-                            marginBottom: '60px'
+                            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))',
+                            gap: isMobile ? '16px' : '24px',
+                            marginBottom: '80px'
                         }}>
                             {
                                 produtos.map((prod) => (

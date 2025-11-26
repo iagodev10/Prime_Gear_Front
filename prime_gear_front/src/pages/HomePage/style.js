@@ -8,6 +8,16 @@ export const BannerPromo = styled.section`
   align-items: center;
   justify-content: center;
   text-align: center;
+
+  @media (max-width: 768px) {
+    width: 92%;
+    margin: 60px auto 0 auto;
+  }
+
+  @media (max-width: 480px) {
+    width: 94%;
+    margin: 40px auto 0 auto;
+  }
 `;
 
 export const BannerImg = styled.div`
@@ -24,16 +34,24 @@ export const BannerImg = styled.div`
   }
 
   @media (max-width: 992px) {
-    img { height: auto; }
+    img {
+      height: auto;
+    }
   }
   @media (max-width: 768px) {
-    img { height: auto; }
+    img {
+      height: auto;
+    }
   }
   @media (max-width: 576px) {
-    img { height: auto; }
+    img {
+      height: auto;
+    }
   }
   @media (max-width: 420px) {
-    img { height: auto; }
+    img {
+      height: auto;
+    }
   }
 `;
 
@@ -94,16 +112,18 @@ export const Ideapad = styled.section`
   align-items: center;
   justify-content: center;
   margin-left: 5%;
+  gap: 24px;
+  max-width: 1400px;
 
   @media (max-width: 768px) {
     flex-direction: column;
     width: 90%;
     margin: 40px auto 0 auto;
-    gap: 30px;
+    gap: 22px;
   }
   @media (max-width: 480px) {
     width: 94%;
-    gap: 22px;
+    gap: 18px;
   }
 `;
 
@@ -113,7 +133,7 @@ export const IdeaImg = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* importante p/ efeitos */
+  overflow: hidden;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -130,7 +150,7 @@ export const IdeaImg = styled.div`
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.6s ease, filter 0.6s ease;
   }
 
@@ -157,48 +177,29 @@ export const IdeapadText = styled.div`
 
 export const Title = styled.h2`
   color: #4d7294;
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 2.8vw, 2rem);
   font-weight: 700;
   text-align: left;
 
   @media (max-width: 768px) {
     text-align: center;
   }
-  @media (max-width: 576px) {
-    font-size: 1.7rem;
-  }
-  @media (max-width: 420px) {
-    font-size: 1.5rem;
-  }
 `;
 
 export const SubTitle = styled.h3`
   color: #1c1c1c;
-  font-size: 1.8rem;
+  font-size: clamp(1.2rem, 2.4vw, 1.8rem);
   font-weight: 600;
-  @media (max-width: 576px) {
-    font-size: 1.4rem;
-  }
-  @media (max-width: 420px) {
-    font-size: 1.2rem;
-  }
 `;
 
 export const Descrip = styled.p`
-  font-size: 1.4rem;
+  font-size: clamp(0.95rem, 1.8vw, 1.2rem);
   line-height: 1.6;
   color: #2f2f2f;
   text-align: center;
 
   @media (max-width: 768px) {
     text-align: center;
-  }
-  @media (max-width: 576px) {
-    font-size: 1.05rem;
-    line-height: 1.5;
-  }
-  @media (max-width: 420px) {
-    font-size: 0.95rem;
   }
 `;
 
