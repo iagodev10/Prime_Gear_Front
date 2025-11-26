@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { FiSave, FiPlus, FiPackage, FiChevronDown, FiChevronUp, FiX } from "react-icons/fi"
 import ModalSelecionarProdutos from "../ModalSelecionarProdutos"
 import {
@@ -38,6 +38,37 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
   ])
   const [modalOpen, setModalOpen] = useState(false)
   const [activeSectionId, setActiveSectionId] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+
+  useEffect(() => {
+    const carregarProdutosVinculados = async () => {
+      try {
+        setLoading(true)
+        
+      
+        const response1 = await axios.get('http://localhost:8080/prods-vinculados/1')
+        const produtosSecao1 = response1.data.produtos || []
+        
+      
+        const response2 = await axios.get('http://localhost:8080/prods-vinculados/2')
+        const produtosSecao2 = response2.data.produtos || []
+        
+       
+        setSections([
+          { id: 1, title: nome1, products: produtosSecao1, expanded: true },
+          { id: 2, title: nome2, products: produtosSecao2, expanded: false },
+        ])
+        
+        setLoading(false)
+      } catch (error) {
+        console.error('Erro ao carregar produtos vinculados:', error)
+        setLoading(false)
+      }
+    }
+
+    carregarProdutosVinculados()
+  }, [nome1, nome2])
 
   const toggleSection = (id) => {
     setSections(sections.map((section) => (section.id === id ? { ...section, expanded: !section.expanded } : section)))
@@ -81,15 +112,28 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
     }
 
     try {
-      const response = await axios.put('http://localhost:8080/atualizar-nomes', novosNomes)
-      console.log("Resposta do servidor:", response.data)
+     
+      await axios.put('http://localhost:8080/atualizar-nomes', novosNomes)
+      
+     
+      const produtosIds1 = section1.products.map(p => p.id)
+      await axios.put(`http://localhost:8080/vincular-secao/${section1.id}`, {
+        produtos: produtosIds1
+      })
+      
+   
+      const produtosIds2 = section2.products.map(p => p.id)
+      await axios.put(`http://localhost:8080/vincular-secao/${section2.id}`, {
+        produtos: produtosIds2
+      })
+
+      console.log("Alterações salvas com sucesso!")
       window.location.reload()
+
     } catch (error) {
       console.log("Erro ao salvar:", error)
       alert("Erro ao salvar as alterações. Tente novamente.")
     }
-
-    console.log("Salvando alterações:", sections)
   }
 
   const sectionColors = [
