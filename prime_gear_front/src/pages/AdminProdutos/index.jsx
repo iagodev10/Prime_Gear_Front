@@ -27,12 +27,15 @@ import {
 } from "./style"
 import ProdutosDestaque from "../../components/Admin/ProdutosDestaque"
 import axios from "axios"
+import ModalAdicionarProduto from "../../components/ModalAdicionarProduto"
 
 const AdminProdutos = () => {
   const location = useLocation()
   const [produtos, setProdutos] = useState([])
   const [activeSection, setActiveSection] = useState("produtos")
   const [modalVisivel, setModalVisivel] = useState(false)
+  const [nomeSecao1,setNomeSecao1]=useState()
+  const [nomeSecao2,setNomeSecao2]=useState()
 
   async function obterProdutos() {
     try {
@@ -44,7 +47,21 @@ const AdminProdutos = () => {
     }
   }
 
+  async function obterNomesDasSecoes() {
+    try {
+      console.log("ESSE");
+      const response = await axios.get("http://localhost:8080/get-secoes")
+      console.log(response.data)
+      setNomeSecao1(response.data[0].nomeSecaoFlex)
+      setNomeSecao2(response.data[1].nomeSecaoFlex)
+    
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
+    obterNomesDasSecoes()
     obterProdutos()
   }, [])
 
@@ -102,6 +119,7 @@ const AdminProdutos = () => {
               </Search>
 
               <Content>
+
                 {produtos.map((produto) => (
                   <ProdutoCard key={produto.id_prod}>
                     <ProdImage>
@@ -131,11 +149,14 @@ const AdminProdutos = () => {
                     </ProdActions>
                   </ProdutoCard>
                 ))}
+
               </Content>
             </>
           )}
-
-          {activeSection === "destaques" && <ProdutosDestaque produtos={produtos} />}
+           {modalVisivel && (
+                <ModalAdicionarProduto onClose={() => {setModalVisivel(false),obterProdutos()}} />
+            )}
+          {activeSection === "destaques" && <ProdutosDestaque produtos={produtos} nome1={nomeSecao1} nome2={nomeSecao2}/>}
         </MainContent>
       </MainWrapper>
     </Container>

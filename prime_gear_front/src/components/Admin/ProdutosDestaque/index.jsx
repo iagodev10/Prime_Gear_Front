@@ -29,11 +29,12 @@ import {
   ProductPrice,
   RemoveButton,
 } from "./style"
+import axios from "axios"
 
-const ProdutosDestaque = ({ produtos = [] }) => {
+const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
   const [sections, setSections] = useState([
-    { id: 1, title: "Destaques de Hardware", products: [], expanded: true },
-    { id: 2, title: "Periféricos em Promoção", products: [], expanded: false },
+    { id: 1, title: nome1, products: [], expanded: true },
+    { id: 2, title: nome2, products: [], expanded: false },
   ])
   const [modalOpen, setModalOpen] = useState(false)
   const [activeSectionId, setActiveSectionId] = useState(null)
@@ -70,9 +71,25 @@ const ProdutosDestaque = ({ produtos = [] }) => {
     )
   }
 
-  const handleSaveAll = () => {
+  const handleSaveAll = async () => {
+    const section1 = sections.find(s => s.id === 1)
+    const section2 = sections.find(s => s.id === 2)
+    
+    const novosNomes = {
+      nome1: section1?.title || "",
+      nome2: section2?.title || ""
+    }
+
+    try {
+      const response = await axios.put('http://localhost:8080/atualizar-nomes', novosNomes)
+      console.log("Resposta do servidor:", response.data)
+      window.location.reload()
+    } catch (error) {
+      console.log("Erro ao salvar:", error)
+      alert("Erro ao salvar as alterações. Tente novamente.")
+    }
+
     console.log("Salvando alterações:", sections)
-    alert("Alterações salvas com sucesso!")
   }
 
   const sectionColors = [
