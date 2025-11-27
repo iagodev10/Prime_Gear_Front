@@ -31,7 +31,7 @@ const ProductCard = ({
         <Container>
             <ImageContainer>
                 <img src={image} alt={title} />
-                <FiHeart />
+       
             </ImageContainer>
 
             <Info>

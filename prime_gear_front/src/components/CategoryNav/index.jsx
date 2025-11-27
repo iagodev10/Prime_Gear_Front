@@ -30,8 +30,9 @@ const ScrollContainer = styled.div`
   }
 `;
 
-export default function CategoryNav() {
-    const categories=["Laptops","Gabinetes","Mouses","Consoles","Teclados","Desktops", "Headsets"] 
+export default function CategoryNav({categorias}) {
+    const categories=categorias
+    console.log(categories);
     const defaultCategory="PC"
   const [activeCategory, setActiveCategory] = useState(defaultCategory || categories[0]);
   const scrollContainerRef = useRef(null);
@@ -57,14 +58,14 @@ export default function CategoryNav() {
       <ScrollContainer ref={scrollContainerRef}>
         {categories.map((cat) => (
           <Button
-            key={cat}
+            key={cat.cod_categoria}
             onClick={() => handleCategoryClick(cat)}
             style={{
               background: activeCategory === cat ? "#000" : "#e5e5e5",
               color: activeCategory === cat ? "#fff" : "#333",
             }}
           >
-            {cat}
+            {cat.nome_cat}
           </Button>
         ))}
       </ScrollContainer>

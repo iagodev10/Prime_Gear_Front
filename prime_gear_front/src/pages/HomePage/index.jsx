@@ -6,6 +6,7 @@ import CategoryCarousel from '../../components/CategoryCarousel';
 import ProductCarousel from '../../components/ProductCarousel';
 import BrandsCarousel from '../../components/BrandsCarousel';
 import EmailSignUp from '../../components/EmailSignUp';
+import CategoryNav from '../../components/CategoryNav';
 
 import { BannerPromo, BannerImg, BannerBuy } from './style'
 import { IdeaButton, IdeaImg, IdeapadText, Ideapad, Descrip, Title, SubTitle } from './style'
@@ -16,14 +17,29 @@ import Ideapad1 from '../../assets/images/Ideapad1.png';
 const HomePage = () => {
   const [produtosSecao1, setProdutosSecao1] = useState([]);
   const [produtosSecao2, setProdutosSecao2] = useState([]);
+  const [categorias,setCategorias]=useState([])
+  const [marcas,setMarcas]=useState([])
   const [nomeSecao1, setNomeSecao1] = useState('Carregando...');
   const [nomeSecao2, setNomeSecao2] = useState('Carregando...');
   const [loading, setLoading] = useState(true);
+ 
 
   useEffect(() => {
     const carregarDadosSecoes = async () => {
       try {
         setLoading(true);
+
+        const responseMarcas = await axios.get('http://localhost:8080/get-marcas');
+       
+        setMarcas(responseMarcas.data);
+        console.log("MARCAS");
+        console.log(responseMarcas.data);
+     
+        
+       const responseCategorias = await axios.get('http://localhost:8080/get-categorias');
+       
+        setCategorias(responseCategorias.data);
+       console.log('ó');
 
         // Buscar produtos e nome da seção 1 (Destaques da Semana)
         const response1 = await axios.get('http://localhost:8080/get-prods-vinc/1');
@@ -57,7 +73,10 @@ const HomePage = () => {
   return (
     <>
       <HeroBanner />
-      <CategoryCarousel />
+      <CategoryNav
+                categorias={categorias}
+            
+            />
 
       {/* Seção 1 - Destaques da Semana (produtos vinculados da seção 1) */}
       {loading ? (
@@ -71,7 +90,7 @@ const HomePage = () => {
         />
       )}
 
-      <BrandsCarousel />
+      <BrandsCarousel marcas={marcas}/>
 
       <BannerPromo>
         <BannerImg>
