@@ -56,7 +56,7 @@ const mockProducts = [
 ];
 
 
-const ProductCarousel = ({ title }) => {
+const ProductCarousel = ({ title, produtos }) => {
   return (
     <CarouselContainer>
       <SectionTitle>{title}</SectionTitle>
@@ -90,15 +90,15 @@ const ProductCarousel = ({ title }) => {
             }
           }}
         >
-
-          {mockProducts.map((product) => (
-
-
+          
+          {produtos.map((product) => (
+            
+            
             <SwiperSlide key={product.id}>
-
-
-              <ProductCard
-                title={product.title}
+              
+              
+              <ProductCard 
+                title={product.name}
                 price={product.price}
                 oldPrice={product.oldPrice}
                 priceInfo={product.priceInfo}
