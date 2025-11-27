@@ -24,7 +24,7 @@ const Marcas = [
     { id: 8, name: "Samsung", image: Samsung },
 ]
 
-const BrandsCarousel = () => {
+const BrandsCarousel = ({marcas}) => {
     return (
         <Container>
             <Title>Nossas Marcas</Title>
@@ -42,10 +42,10 @@ const BrandsCarousel = () => {
                         1024: { slidesPerView: 5, spaceBetween: 25 }
                     }}
                 >
-                    {Marcas.map((brand) => (
-                        <SwiperSlide key={brand.id}>
+                    {marcas.map((brand) => (
+                        <SwiperSlide key={brand.cod_marca}>
                             <Card>
-                                <img src={brand.image} alt={brand.name} />
+                                <img src={brand.url_nome_img_marca} alt={brand.nome_marca} />
                             </Card>
                         </SwiperSlide>
                     ))}

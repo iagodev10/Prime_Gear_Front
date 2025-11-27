@@ -140,7 +140,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
                 {
                   categorias.map((cat)=>(
                     <>
-                      <option value="1" >{cat.nome_cat}</option>
+                      <option value={cat.cod_categoria} >{cat.nome_cat}</option>
                     </>
                   ))
                 }
