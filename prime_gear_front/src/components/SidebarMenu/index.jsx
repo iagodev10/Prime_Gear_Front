@@ -16,7 +16,7 @@ import { FiX, FiChevronRight } from "react-icons/fi";
 
 import BestSeller from "../../assets/images/bestseller.png";
 
-const SidebarMenu = ({ isOpen, onClose }) => {
+const SidebarMenu = ({ isOpen, onClose, onOpenCategory }) => {
   const handleClose = () => {
     onClose?.();
   };
@@ -90,25 +90,25 @@ const SidebarMenu = ({ isOpen, onClose }) => {
               <>
                 <hr />
                 <NavItem>
-                  <Link to="/laptops" onClick={handleClose}>
+                  <Link to="/laptops" onClick={(e) => { e.preventDefault(); onOpenCategory?.('laptops'); }}>
                     Laptops
                   </Link>
                   <FiChevronRight size={20} />
                 </NavItem>
                 <NavItem>
-                  <Link to="/desktops" onClick={handleClose}>
+                  <Link to="/desktops" onClick={(e) => { e.preventDefault(); onOpenCategory?.('desktops'); }}>
                     Desktops
                   </Link>
                   <FiChevronRight size={20} />
                 </NavItem>
                 <NavItem>
-                  <Link to="/consoles" onClick={handleClose}>
+                  <Link to="/consoles" onClick={(e) => { e.preventDefault(); onOpenCategory?.('consoles'); }}>
                     Consoles
                   </Link>
                   <FiChevronRight size={20} />
                 </NavItem>
                 <NavItem>
-                  <Link to="/perifericos" onClick={handleClose}>
+                  <Link to="/perifericos" onClick={(e) => { e.preventDefault(); onOpenCategory?.('perifericos'); }}>
                     Periféricos
                   </Link>
                   <FiChevronRight size={20} />

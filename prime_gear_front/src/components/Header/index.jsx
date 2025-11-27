@@ -57,7 +57,13 @@ const Header = () => {
   return (
     <>
       <HeaderContainer
-        $isScrolled={isScrolled || isHovered || isMenuOpen || !!openCategory || isCartModalOpen}
+        $isScrolled={
+          isScrolled ||
+          isHovered ||
+          isMenuOpen ||
+          !!openCategory ||
+          isCartModalOpen
+        }
         $isHome={isHome}
         $isCartModalOpen={isCartModalOpen}
         onMouseEnter={() => setIsHovered(true)}
@@ -76,7 +82,16 @@ const Header = () => {
           </MenuButton>
 
           <NavLinks>
-            <Link to="/laptops" onMouseEnter={() => setOpenCategory("laptops")}>
+            <Link
+              to="/laptops"
+              onMouseEnter={() => setOpenCategory("laptops")}
+              onClick={(e) => {
+                if (window.innerWidth <= 768) {
+                  e.preventDefault();
+                  setOpenCategory("laptops");
+                }
+              }}
+            >
               Laptops{" "}
               <FaChevronDown
                 size={14}
@@ -86,6 +101,12 @@ const Header = () => {
             <Link
               to="/desktops"
               onMouseEnter={() => setOpenCategory("desktops")}
+              onClick={(e) => {
+                if (window.innerWidth <= 768) {
+                  e.preventDefault();
+                  setOpenCategory("desktops");
+                }
+              }}
             >
               Desktops{" "}
               <FaChevronDown
@@ -96,6 +117,12 @@ const Header = () => {
             <Link
               to="/consoles"
               onMouseEnter={() => setOpenCategory("consoles")}
+              onClick={(e) => {
+                if (window.innerWidth <= 768) {
+                  e.preventDefault();
+                  setOpenCategory("consoles");
+                }
+              }}
             >
               Consoles{" "}
               <FaChevronDown
@@ -106,6 +133,12 @@ const Header = () => {
             <Link
               to="/perifericos"
               onMouseEnter={() => setOpenCategory("perifericos")}
+              onClick={(e) => {
+                if (window.innerWidth <= 768) {
+                  e.preventDefault();
+                  setOpenCategory("perifericos");
+                }
+              }}
             >
               Periféricos{" "}
               <FaChevronDown
@@ -119,7 +152,10 @@ const Header = () => {
         <RightSection>
           <Icons>
             <FiSearch size={20} onClick={() => setIsSearchModalOpen(true)} />
-            <FiShoppingCart size={20} onClick={() => setIsCartModalOpen(true)} />
+            <FiShoppingCart
+              size={20}
+              onClick={() => setIsCartModalOpen(true)}
+            />
             <Link to="/login" style={{ color: "inherit" }}>
               <FiUser size={20} />
             </Link>
@@ -138,7 +174,11 @@ const Header = () => {
         </RightSection>
       </HeaderContainer>
 
-      <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <SidebarMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        onOpenCategory={(cat) => setOpenCategory(cat)}
+      />
 
       <SidebarLaptop
         isOpen={!!openCategory}

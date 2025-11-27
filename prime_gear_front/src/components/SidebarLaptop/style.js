@@ -7,7 +7,9 @@ export const Container = styled.div`
   top: 8vh;
   left: 0;
   background: #fff;
-  z-index: 1002;
+  z-index: 1003;
+  max-height: calc(100vh - 8vh);
+  overflow-y: auto;
 `;
 
 export const Panel = styled.div`
@@ -35,9 +37,8 @@ export const RightGrid = styled.div`
 
 export const HeroCard = styled.div`
   position: relative;
-  border-radius: 0;
   overflow: hidden;
-  height: 200px;
+  height: 300px;
   background: #eee;
 
   img {
@@ -56,7 +57,7 @@ export const HeroLink = styled.a`
   padding: 10px 14px;
   border-radius: 12px;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 00;
 `;
 
 export const ProductsGrid = styled.div`
@@ -77,27 +78,19 @@ export const ProductsGrid = styled.div`
 
 export const ProductCard = styled.div`
   background: #fff;
-  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.2s ease;
-  border: none;
 
   &:hover {
     transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   img {
-    width: 100%;
+    width: 160px;
     height: 160px;
     object-fit: cover;
-  }
-
-  /* fallback para estrutura simples <div>titulo</div> */
-  div {
-    padding: 12px;
-    font-weight: 600;
-    color: #111;
   }
 
   .info {
