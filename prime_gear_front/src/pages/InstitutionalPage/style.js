@@ -1,260 +1,398 @@
-import styled, { keyframes } from "styled-components";
-import { motion } from "framer-motion";
+import styled from 'styled-components';
 
-const typing = keyframes`
-  from { width: 0 }
-  to { width: 100% }
-`;
-
-const blink = keyframes`
-  0%, 100% { opacity: 1 }
-  50% { opacity: 0 }
-`;
-
-const float = keyframes`
-  0% { transform: translateY(0) scale(1) }
-  50% { transform: translateY(-30px) scale(1.05) }
-  100% { transform: translateY(0) scale(1) }
-`;
-
-export const Page = styled.section`
+export const PageContainer = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin-top: 10vh;
+  overflow-x: hidden;
 `;
 
-export const Hero = styled.section`
+// Hero Section
+export const HeroSection = styled.section`
+  background: linear-gradient(135deg, #1e1e1e 0%, #2b2b2b 100%);
+  padding: 80px 40px;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 900px) {
+    padding: 60px 20px;
+  }
+`;
+
+export const HeroContainer = styled.div`
+  max-width: 1400px;
   width: 100%;
-  min-height: 60vh;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 40px 20px;
-  position: relative;
-  overflow: hidden;
+  gap: 40px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
 `;
 
-export const HeroBg = styled.div`
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
+
+export const HeroContent = styled.div`
+  color: white;
+  max-width: 550px;
+
+  @media (max-width: 900px) {
+    margin: 0 auto;
+  }
 `;
 
-export const Particle = styled.span`
-  position: absolute;
-  bottom: -20px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #03b304;
-  box-shadow: 0 0 10px rgba(3,179,4,0.6);
-  animation: ${float} 6s ease-in-out infinite;
+export const HeroImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+
+  img {
+    width: 430px;
+    height: auto;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 900px) {
+    img {
+      width: 250px;
+      margin-top: 30px;
+    }
+  }
+`;
+
+
+export const SectionLabel = styled.span`
+  color: #b3b3b3;
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+  font-weight: 500;
 `;
 
 export const HeroTitle = styled.h1`
-  font-size: clamp(2.2rem, 6vw, 4rem);
-  font-weight: 700;
-  color: black;
-  position: relative;
-  letter-spacing: 1px;
-  transform: perspective(700px) translateZ(20px);
-  white-space: nowrap;
-  overflow: hidden;
-  animation: ${typing} 2.8s steps(22, end) both;
-  &:after {
-    content: "";
-    display: inline-block;
-    width: 2px;
-    height: 1em;
-    background: black;
-    margin-left: 6px;
-    animation: ${blink} 1s step-end infinite;
-    vertical-align: baseline;
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 15px 0 25px;
+
+  @media (max-width: 900px) {
+    font-size: 2rem;
   }
 `;
 
 export const HeroSubtitle = styled.p`
-  font-size: clamp(1rem, 2.6vw, 1.4rem);
-  color: #333;
+  font-size: 1.4rem;
+  line-height: 1.5;
+
+  @media (max-width: 900px) {
+    font-size: 1.1rem;
+  }
 `;
 
-export const HeroCTA = styled(motion.button)`
-  background: black;
-  color: white;
+export const HeroButton = styled.button`
+  background: white;
+  color: #111;
+  padding: 14px 40px;
+  border-radius: 40px;
   border: none;
-  border-radius: 60px;
-  padding: 12px 22px;
   font-weight: 500;
   cursor: pointer;
-  transition: transform .25s ease, box-shadow .25s ease;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.15);
-  &:hover { box-shadow: 0 16px 36px rgba(0,0,0,0.22) }
+  margin-top: 35px;
+  font-size: 1rem;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+  }
 `;
 
-export const Section = styled.section`
-  width: 90%;
-  max-width: 1200px;
-  margin: 60px auto;
+
+// Objective Section
+export const ObjectiveSection = styled.section`
+  background: #f5f5f5;
+  padding: 80px 20px;
+  
+  @media (max-width: 768px) {
+    padding: 60px 20px;
+  }
 `;
 
-export const SectionTitle = styled.h2`
-  font-size: 2rem;
-  color: black;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 28px;
-`;
-
-export const Timeline = styled.div`
-  border-left: 2px solid #e5e5e5;
+export const ObjectiveContent = styled.div`
+  max-width: 80%;
   margin: 0 auto;
-  padding-left: 22px;
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
 `;
 
-export const TimelineItem = styled.div`
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  h4 { font-size: 1.1rem; font-weight: 600; color: black; margin: 0 }
-  p { color: #555; margin: 6px 0 0 }
+export const ObjectiveText = styled.div`
+  h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0 0 24px;
+    color: #1a1a1a;
+  }
+  
+  p {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: #333;
+    margin: 0;
+  }
+  
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 2rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
 `;
 
-export const TimelineDot = styled.span`
-  width: 12px;
-  height: 12px;
+export const ObjectiveCard = styled.div`
+  background: linear-gradient(90deg, rgb(0, 0, 0), rgb(75, 75, 75));
+  color: white;
+  padding: 40px;
+  border-radius: 50px;
+  
+  p {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 30px 24px;
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+`;
+
+// Cards Section (Mission, Vision, Values)
+export const CardsSection = styled.section`
+  background: #f5f5f5;
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    padding: 50px 15px;
+  }
+`;
+
+
+export const CardsContainer = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  background: #f5f5f5;
+  border: 2px solid #000;
+  border-radius: 55px;          /* igual ao da imagem */
+  
+  padding: 50px 80px;           /* espaço igual ao da imagem */
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+
+  @media (max-width: 968px) {
+    flex-direction: column;
+    gap: 30px;
+    padding: 40px 30px;
+    border-radius: 25px;
+  }
+`;
+
+
+
+
+export const Divider = styled.div`
+  width: 2px;
+  height: 80px;               /* altura exata igual à imagem */
+  background: #000;
+  margin: 0 20px;
+
+  @media (max-width: 968px) {
+    display: none;
+  }
+`;
+
+
+
+export const CardBlock = styled.div`
+  flex: 1;
+  text-align: left;
+
+  h3 {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+    color: #000;
+  }
+
+  p {
+    color: #313131;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 768px) {
+    text-align: center;
+
+    h3 {
+      font-size: 1.5rem;
+    }
+  }
+`;
+
+
+
+
+// Passion Section
+export const PassionSection = styled.section`
+  background: #f5f5f5;
+  padding: 80px 20px;
+  
+  @media (max-width: 768px) {
+    padding: 60px 20px;
+  }
+`;
+
+export const PassionContent = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+`;
+
+export const PassionText = styled.div`
+  background: #1a4d5e;
+  color: white;
+  padding: 50px 40px;
+  border-radius: 16px;
+  
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 24px;
+    line-height: 1.3;
+  }
+  
+  p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 40px 30px;
+    
+    h2 {
+      font-size: 1.6rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+`;
+
+export const PassionImage = styled.div`
+  width: 100%;
+  height: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  
+  @media (max-width: 968px) {
+    height: 400px;
+  }
+  
+  @media (max-width: 768px) {
+    height: 300px;
+  }
+`;
+
+// Team Section
+export const TeamSection = styled.section`
+  background: #f5f5f5;
+  padding: 60px 20px;
+  
+  @media (max-width: 768px) {
+    padding: 60px 20px;
+  }
+`;
+
+export const TeamTitle = styled.h2`
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: left;
+  margin: 0 0 10px 15%;
+  color: #1a1a1a;
+  margin-bottom: 40px;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    margin: 0 0 40px;
+  }
+`;
+
+export const TeamGrid = styled.div`
+  max-width: 70%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  
+  @media (max-width: 968px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+`;
+
+export const TeamMember = styled.div`
+  text-align: center;
+`;
+
+export const TeamPhoto = styled.div`
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  background: #03b304;
-  box-shadow: 0 0 10px rgba(3,179,4,0.5);
-  transform: translateX(-28px);
+  margin: 0 auto 16px;
+  overflow: hidden;
+  border: 3px solid #e0e0e0;
+  
+  @media (max-width: 768px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
-export const GlassGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  @media (max-width: 900px) { grid-template-columns: 1fr 1fr }
-  @media (max-width: 600px) { grid-template-columns: 1fr }
-`;
-
-export const GlassCard = styled(motion.div)`
-  background: rgba(255,255,255,0.6);
-  border: 1px solid rgba(0,0,0,0.08);
-  backdrop-filter: blur(6px);
-  border-radius: 16px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  transform-style: preserve-3d;
-  transition: transform .25s ease, box-shadow .25s ease;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
-  h4 { margin: 4px 0; color: black }
-  p { color: #555 }
-`;
-
-export const GlassIcon = styled.div`
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: #e1e1e1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const ModulesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  @media (max-width: 900px) { grid-template-columns: 1fr 1fr }
-  @media (max-width: 600px) { grid-template-columns: 1fr }
-`;
-
-export const ModuleCard = styled.div`
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
-  transition: transform .2s ease, box-shadow .25s ease;
-  transform-style: preserve-3d;
-  will-change: transform;
-  .icon { width: 40px; height: 40px; border-radius: 10px; background: #eaeaea; display: flex; align-items: center; justify-content: center; margin-bottom: 8px }
-  h5 { font-size: 1.05rem; color: black; margin: 2px 0 }
-  p { color: #555; margin: 0 }
-`;
-
-export const MembersSection = styled.section`
-  width: 90%;
-  max-width: 1100px;
-  margin: 60px auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 22px;
-`;
-
-export const MemberItem = styled.div`
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 18px;
-  align-items: center;
-  @media (max-width: 600px) { grid-template-columns: 1fr }
-`;
-
-export const MemberPhoto = styled.div`
-  width: 160px;
-  height: 160px;
-  border-radius: 18px;
-  background-size: cover;
-  background-position: center;
-  box-shadow: 0 16px 36px rgba(0,0,0,0.18);
-  transition: transform .25s ease;
-  &:hover { transform: perspective(700px) rotateX(6deg) rotateY(-6deg) }
-`;
-
-export const MemberInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  h4 { font-size: 1.2rem; color: black; margin: 0 0 6px }
-  p { color: #555; margin: 0 }
-`;
-
-export const FutureSection = styled.section`
-  width: 90%;
-  max-width: 1100px;
-  margin: 60px auto 80px;
-`;
-
-export const FutureGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  @media (max-width: 900px) { grid-template-columns: 1fr 1fr }
-  @media (max-width: 600px) { grid-template-columns: 1fr }
-`;
-
-export const FutureItem = styled.div`
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 16px;
-  padding: 18px;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  .icon { width: 38px; height: 38px; border-radius: 10px; background: #eaeaea; display: flex; align-items: center; justify-content: center }
-  h5 { font-size: 1.05rem; color: black; margin: 4px 0 }
-  p { color: #555; margin: 0 }
+export const TeamName = styled.p`
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin: 0;
+  
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
 `;
