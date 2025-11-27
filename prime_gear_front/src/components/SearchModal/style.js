@@ -57,7 +57,7 @@ export const SearchBar = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 0; /* Aumentado o padding vertical e removido lateral */
+  padding: 12px 0;
   animation: ${keyframes`
     from { opacity: 0; transform: scale(0.98); }
     to { opacity: 1; transform: scale(1); }
@@ -69,14 +69,14 @@ export const SearchBar = styled.div`
 export const Input = styled.input`
   flex: 1;
   width: 100%;
-  height: 50px; /* Altura maior */
-  border: none; /* Remove a borda */
-  border-radius: 0; /* Remove o arredondamento */
-  padding: 0 0 0 48px; /* Espaço apenas na esquerda para o ícone */
-  background: transparent; /* Fundo transparente */
-  font-size: 24px; /* Fonte maior como na imagem */
+  height: 50px;
+  border: none;
+  border-radius: 0;
+  padding: 0 0 0 48px;
+  background: transparent;
+  font-size: 24px;
   color: #1b1b1f;
-  outline: none; /* Remove a linha azul de foco */
+  outline: none;
   font-weight: 400;
 
   &::placeholder {
@@ -92,14 +92,14 @@ export const Input = styled.input`
 
 export const SearchIconWrap = styled.div`
   position: absolute;
-  left: 0; /* Encostado na esquerda */
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
-  color: #1b1b1f; /* Ícone mais escuro (preto/cinza escuro) */
+  color: #1b1b1f;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none; /* Permite clicar através do ícone */
+  pointer-events: none;
 `;
 
 export const TopLeft = styled.div`
@@ -124,13 +124,19 @@ export const ClearBtn = styled.button`
   border: none;
   color: #6b6b71;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  
+  &:hover {
+    color: #1b1b1f;
+  }
 `;
 
 export const CloseCircle = styled.button`
-  width: 38px; /* Levemente menor em mobile */
+  width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 1px solid #e3e4ea; /* Borda sutil */
+  border: 1px solid #e3e4ea;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,21 +163,30 @@ export const Divider = styled.hr`
 
 export const Results = styled.div`
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
   height: calc(80vh - 90px);
   overflow: hidden;
   min-height: 0;
 
+  @media (max-width: 900px) {
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+  }
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 16px;
     height: auto;
+    max-height: calc(82vh - 90px);
   }
 `;
 
 export const MaisPesquisados = styled.div`
   padding: 6px 0;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const SectionTitle = styled.h3`
@@ -184,6 +199,7 @@ export const SectionTitle = styled.h3`
 export const List = styled.ul`
   list-style-type: none;
   padding: 0;
+  margin: 0;
 `;
 
 export const Item = styled.li`
@@ -194,6 +210,8 @@ export const StyledLink = styled(RouterLink)`
   color: #6b6b71;
   text-decoration: none;
   transition: color 0.2s ease;
+  font-size: 15px;
+  
   &:hover {
     color: #111;
   }
@@ -231,34 +249,42 @@ export const TabItem = styled.button`
 export const Mock = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 28px;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1100px) {
     grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
+    gap: 24px;
   }
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 540px) {
     grid-template-columns: 1fr;
-    gap: 14px;
-  }
-  @media (max-width: 360px) {
-    gap: 12px;
+    gap: 16px;
   }
 `;
 
 export const Card = styled.div`
-  padding: 10px;
-  border-radius: 12px;
+  padding: 14px;
+  border-radius: 16px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
   background: #fff;
   border: 1px solid #eef1f7;
-  box-shadow: 0 6px 18px rgba(20,20,30,0.06);
+  box-shadow: 0 6px 18px rgba(20, 20, 30, 0.06);
   display: flex;
   flex-direction: column;
+  
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(20,20,30,0.12);
+    box-shadow: 0 12px 28px rgba(20, 20, 30, 0.12);
+  }
+
+  @media (max-width: 540px) {
+    flex-direction: row;
+    padding: 12px;
+    gap: 16px;
   }
 `;
 
@@ -267,21 +293,33 @@ export const ImageWrap = styled.div`
   width: 100%;
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
+  background: #f8f9fa;
+  
   img {
     width: 100%;
-    height: 200px;
+    height: 220px;
     object-fit: cover;
     display: block;
     transition: transform 0.3s ease;
   }
-  ${Card}:hover & img { transform: scale(1.03); }
+  
+  ${Card}:hover & img { 
+    transform: scale(1.03); 
+  }
 
-  @media (max-width: 640px) {
+  @media (max-width: 1100px) {
+    img { height: 200px; }
+  }
+  @media (max-width: 768px) {
     img { height: 180px; }
   }
-  @media (max-width: 360px) {
-    img { height: 150px; }
+  @media (max-width: 540px) {
+    width: 120px;
+    min-width: 120px;
+    margin-bottom: 0;
+    border-radius: 10px;
+    img { height: 120px; }
   }
 `;
 
@@ -292,9 +330,23 @@ export const Badge = styled.span`
   background: ${(p) => (p.variant === "green" ? "#00a85a" : "#e4005c")};
   color: #fff;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 500;
   padding: 4px 10px;
-  margin-right: 6px;
+  
+  @media (max-width: 540px) {
+    font-size: 10px;
+    padding: 3px 8px;
+    top: 8px;
+    left: 8px;
+  }
+`;
+
+export const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
 `;
 
 export const CardTitle = styled.p`
@@ -302,10 +354,21 @@ export const CardTitle = styled.p`
   color: #1b1b1f;
   font-weight: 600;
   margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  @media (max-width: 540px) {
+    font-size: 0.95rem;
+    -webkit-line-clamp: 3;
+  }
 `;
 
 export const PriceBlock = styled.div`
-  margin-top: 6px;
+  margin-top: auto;
+  padding-top: 10px;
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -314,7 +377,11 @@ export const PriceBlock = styled.div`
 export const PriceMain = styled.div`
   color: #e4005c;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
+
+  @media (max-width: 540px) {
+    font-size: 1rem;
+  }
 `;
 
 export const PriceOld = styled.div`
@@ -324,14 +391,27 @@ export const PriceOld = styled.div`
 `;
 
 export const ViewAll = styled.button`
-  margin-top: 20px;
+  margin-top: 24px;
   width: 100%;
-  height: 44px;
+  height: 48px;
   border-radius: 999px;
   border: 1px solid #e3e4ea;
   background: #fff;
   cursor: pointer;
   font-weight: 600;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-  &:hover { box-shadow: 0 6px 18px rgba(20,20,30,0.08); transform: translateY(-1px); }
+  font-size: 15px;
+  color: #1b1b1f;
+  transition: all 0.2s ease;
+  
+  &:hover { 
+    background: #f7f7fa;
+    box-shadow: 0 6px 18px rgba(20, 20, 30, 0.08); 
+    transform: translateY(-1px); 
+  }
+  
+  @media (max-width: 540px) {
+    height: 44px;
+    font-size: 14px;
+    margin-top: 20px;
+  }
 `;
