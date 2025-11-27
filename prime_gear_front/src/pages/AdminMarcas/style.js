@@ -2,13 +2,18 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: #f5f5f5;
     margin-bottom: 50px;
+    padding-top: 8vh;
+
+    @media (max-width: 768px) {
+        padding-top: 70px;
+    }
 `
 
 export const Header = styled.div`
@@ -17,7 +22,12 @@ export const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    margin-top: 8vh;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
 `
 
 export const Title = styled.div`
