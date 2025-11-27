@@ -22,14 +22,14 @@ export const MenuItem = styled.button`
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   border: none;
-  background-color: ${({ $isActive }) => ($isActive ? "#1e293b" : "transparent")};
-  color: ${({ $isActive }) => ($isActive ? "#ffffff" : "#374151")};
+  background-color: ${({ $isActive }) => ($isActive ? "black" : "transparent")};
+  color: ${({ $isActive }) => ($isActive ? "white" : "#374151")};
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 0.25rem;
 
   &:hover {
-    background-color: ${({ $isActive }) => ($isActive ? "#1e293b" : "#f3f4f6")};
+    background-color: ${({ $isActive }) => ($isActive ? "black" : "#f3f4f6")};
   }
 
   &:last-child {
@@ -40,7 +40,7 @@ export const MenuItem = styled.button`
 export const MenuIcon = styled.div`
   display: flex;
   align-items: center;
-  color: ${({ $isActive }) => ($isActive ? "#ffffff" : "#374151")};
+  color: ${({ $isActive }) => ($isActive ? "white" : "black")};
 `
 
 export const MenuLabel = styled.span`
@@ -54,5 +54,5 @@ export const MenuLabel = styled.span`
 export const ChevronIcon = styled.div`
   display: flex;
   align-items: center;
-  color: ${({ $isActive }) => ($isActive ? "#ffffff" : "#9ca3af")};
+  color: ${({ $isActive }) => ($isActive ? "white" : "black")};
 `

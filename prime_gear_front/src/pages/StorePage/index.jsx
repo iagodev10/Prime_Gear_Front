@@ -1,11 +1,18 @@
 import CategoryNav from "../../components/CategoryNav"
 import React, { useState, useEffect, useRef } from 'react';
 import { Heart, ChevronDown, ChevronUp, ShoppingCart, Filter } from 'lucide-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+
 import ProductCard from "../../components/ProductCard";
 import Email from '../../assets/images/e-mail.svg'
+
 import notebook from '../../assets/images/laptop-comprar.png'
 import desktop from '../../assets/images/desktopPC.png'
 import fone from '../../assets/images/foneJBL.png'
+
 import axios from 'axios'
 
 function Store() {
@@ -284,9 +291,55 @@ function Store() {
     };
     return (
         <>
-            <CategoryNav></CategoryNav>
-            <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: isMobile ? '100px 20px 40px' : '40px 20px' }}>
-                <div ref={containerRef} style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: '40px', position: 'relative' }}>
+            <style>{`
+                @keyframes slideUpFromBottom {
+                    from {
+                        transform: translateY(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+                .filter-drawer-enter {
+                    animation: slideUpFromBottom 0.3s ease-out forwards;
+                }
+                .category-swiper .swiper-button-next,
+                .category-swiper .swiper-button-prev {
+                    color: #000;
+                    background: rgba(255, 255, 255, 0.9);
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                }
+                .category-swiper .swiper-button-next:after,
+                .category-swiper .swiper-button-prev:after {
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+                .category-swiper .swiper-button-next:hover,
+                .category-swiper .swiper-button-prev:hover {
+                    background: #fff;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                }
+            `}</style>
+            <CategoryNav
+                categories={categorias}
+                activeCategory={selectedBrands}
+                onSelectCategory={toggleBrand}
+            />
+            <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: isMobile ? '100px 10px 100px' : '40px 20px' }}>
+                <div ref={containerRef} style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: isMobile ? '20px' : '40px', position: 'relative', flexDirection: isMobile ? 'column' : 'row' }}>
 
                     {/* Sidebar de Filtros (desktop) */}
                     {!isMobile && (
@@ -478,7 +531,7 @@ function Store() {
                                     )}
                                 </div>
 
-                        
+
 
                                 {/* Avaliações */}
                                 <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
@@ -535,11 +588,11 @@ function Store() {
                                     )}
                                 </div>
 
-                                
 
-                               
 
-                                
+
+
+
                             </div>
                         </div>
                     )}
@@ -548,8 +601,12 @@ function Store() {
                     <div style={{ flex: 1 }}>
                         {/* Botão flutuante de filtros (mobile) */}
                         {isMobile && (
-                            <div style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 999 }}>
-                                <button onClick={() => setIsFilterOpen(true)} style={{
+                            <button
+                                onClick={() => setIsFilterOpen(true)}
+                                style={{
+                                    position: 'fixed',
+                                    bottom: '24px',
+                                    right: '24px',
                                     width: '60px',
                                     height: '60px',
                                     borderRadius: '50%',
@@ -562,21 +619,21 @@ function Store() {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    transition: 'all 0.3s ease'
+                                    transition: 'all 0.3s ease',
+                                    zIndex: 998
                                 }}
-                                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                                >
-                                    <Filter size={24} />
-                                </button>
-                            </div>
+                                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            >
+                                <Filter size={24} />
+                            </button>
                         )}
                         {/* Grid de Produtos */}
                         <div style={{
                             display: 'grid',
-                            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))',
-                            gap: isMobile ? '16px' : '24px',
-                            marginBottom: '80px'
+                            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+                            gap: isMobile ? '12px' : '24px',
+                            marginBottom: isMobile ? '40px' : '80px'
                         }}>
                             {
                                 produtos.map((prod) => (
@@ -608,8 +665,9 @@ function Store() {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 gap: '8px',
-                                paddingTop: '40px',
-                                paddingBottom: '40px'
+                                paddingTop: isMobile ? '20px' : '40px',
+                                paddingBottom: isMobile ? '20px' : '40px',
+                                flexWrap: 'wrap'
                             }}
                         >
                             {renderPagination()}
@@ -623,26 +681,62 @@ function Store() {
             </div>
             {/* Drawer de filtros (mobile) */}
             {isMobile && isFilterOpen && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }}>
+                <>
+                    <div
+                        onClick={() => setIsFilterOpen(false)}
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            background: 'rgba(0,0,0,0.5)',
+                            zIndex: 999,
+                            animation: 'fadeIn 0.3s ease-out'
+                        }}
+                    />
                     <div style={{
-                        position: 'absolute',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
+                        position: 'fixed',
+                        left: 0,
+                        right: 0,
                         bottom: 0,
                         width: '100%',
-                        maxWidth: '520px',
+                        maxWidth: '100%',
                         background: '#fff',
                         borderTopLeftRadius: '20px',
                         borderTopRightRadius: '20px',
                         boxShadow: '0 -10px 24px rgba(0,0,0,0.2)',
-                        maxHeight: '85vh',
+                        maxHeight: '90vh',
                         display: 'flex',
-                        flexDirection: 'column'
-                    }} className="slide-up">
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #eee' }}>
-                            <strong style={{ fontSize: '18px' }}>Filtros</strong>
-                            <span style={{ color: '#666' }}>{produtos.length} Resultados</span>
-                            <button onClick={() => setIsFilterOpen(false)} style={{ border: 'none', background: 'transparent', fontSize: '18px' }}>×</button>
+                        flexDirection: 'column',
+                        zIndex: 1000,
+                        animation: 'slideUpFromBottom 0.3s ease-out'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #eee', background: '#fff' }}>
+                            <strong style={{ fontSize: '18px', fontWeight: '700' }}>Filtros</strong>
+                            <span style={{ color: '#666', fontSize: '14px' }}>{produtos.length} Resultados</span>
+                            <button
+                                onClick={() => setIsFilterOpen(false)}
+                                style={{
+                                    border: 'none',
+                                    background: 'transparent',
+                                    fontSize: '24px',
+                                    cursor: 'pointer',
+                                    color: '#666',
+                                    width: '32px',
+                                    height: '32px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: '50%',
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = '#f5f5f5';
+                                    e.currentTarget.style.color = '#000';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'transparent';
+                                    e.currentTarget.style.color = '#666';
+                                }}
+                            >×</button>
                         </div>
                         {selectedBrands.length > 0 && (
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '12px 20px' }}>
@@ -683,9 +777,9 @@ function Store() {
                                 {expandedFilters.marca && (
                                     <div style={{ paddingTop: '12px' }}>
                                         {marcas.map(marca => (
-                                            <label key={marca} style={{ display: 'flex', alignItems: 'center', padding: '8px 0', cursor: 'pointer', fontSize: '14px', color: 'black' }}>
-                                                <input type="checkbox" checked={selectedBrands.includes(marca)} onChange={() => toggleBrand(marca)} style={{ width: '16px', height: '16px', marginRight: '10px', cursor: 'pointer' }} />
-                                                {marca}
+                                            <label key={marca.nome_marca || marca} style={{ display: 'flex', alignItems: 'center', padding: '8px 0', cursor: 'pointer', fontSize: '14px', color: 'black' }}>
+                                                <input type="checkbox" checked={selectedBrands.includes(marca.nome_marca || marca)} onChange={() => toggleBrand(marca.nome_marca || marca)} style={{ width: '16px', height: '16px', marginRight: '10px', cursor: 'pointer' }} />
+                                                {marca.nome_marca || marca}
                                             </label>
                                         ))}
                                     </div>
@@ -696,122 +790,200 @@ function Store() {
                                     Faixa de preço
                                     {expandedFilters.preco ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                                 </button>
+                                {expandedFilters.preco && (
+                                    <div style={{ paddingTop: '12px' }}>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            Até R$ 1.000
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            R$ 1.000 a R$ 2.500
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            R$ 2.500 a R$ 4.000
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            R$ 4.000 a R$ 6.000
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            R$ 6.000 a R$ 8.000
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            R$ 8.000 a R$ 12.000
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            Acima de R$ 12.000
+                                        </label>
+                                    </div>
+                                )}
+                            </div>
+                            <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
+                                <button onClick={() => toggleFilter('avaliacoes')} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: 'black' }}>
+                                    Avaliações
+                                    {expandedFilters.avaliacoes ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                </button>
+                                {expandedFilters.avaliacoes && (
+                                    <div style={{ paddingTop: '12px' }}>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            1 estrela
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            2 estrelas
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            3 estrelas
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            4 estrelas
+                                        </label>
+                                        <label style={labelStyle}>
+                                            <input type="checkbox" style={inputStyle} />
+                                            5 estrelas
+                                        </label>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                        <div style={{ borderTop: '1px solid #eee', padding: '12px 20px', display: 'flex', gap: '12px' }}>
-                            <button onClick={() => { setSelectedBrands([]); }} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: '1px solid #ddd', background: '#fff', fontWeight: 600 }}>Remover todos</button>
-                            <button onClick={() => setIsFilterOpen(false)} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: 'none', background: '#0b74ff', color: '#fff', fontWeight: 700 }}>Aplicar filtros</button>
+                        <div style={{ borderTop: '1px solid #eee', padding: '12px 20px', display: 'flex', gap: '12px', background: '#fff' }}>
+                            <button onClick={() => { setSelectedBrands([]); }} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: '1px solid #ddd', background: '#fff', fontWeight: 600, cursor: 'pointer' }}>Remover todos</button>
+                            <button onClick={() => setIsFilterOpen(false)} style={{ flex: 1, borderRadius: '12px', padding: '12px', border: 'none', background: '#000', color: '#fff', fontWeight: 700, cursor: 'pointer' }}>Aplicar filtros</button>
                         </div>
                     </div>
-                </div>
+                </>
             )}
+            {/* Cards de Categorias */}
             <div style={{
                 width: '100%',
                 background: '',
-                height: '25vh',
-                display: "flex",
-                justifyContent: "space-around",
-                alignItems: "center"
+                minHeight: isMobile ? 'auto' : '25vh',
+                padding: isMobile ? '40px 20px' : '40px 0',
+                maxWidth: '1400px',
+                margin: '0 auto'
             }}>
-                <div style={{
-                    width: "23%",
-                    background: "#e1e1e1",
-                    height: "75%",
-                    borderRadius: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-around"
-                }}>
-                    <img src={notebook} alt="" style={{ width: "30%" }} />
+                {isMobile ? (
+                    // Carousel para Mobile
+                    <Swiper
+                        modules={[Navigation]}
+                        navigation
+                        slidesPerView={1}
+                        spaceBetween={20}
+                        className="category-swiper"
+                        style={{ paddingBottom: '40px' }}
+                    >
+                        {[
+                            { id: 1, name: 'Laptops', image: notebook },
+                            { id: 2, name: 'Fones de Ouvido', image: fone },
+                            { id: 3, name: 'Desktops', image: desktop }
+                        ].map((category) => (
+                            <SwiperSlide key={category.id}>
+                                <div style={{
+                                    width: "100%",
+                                    background: "#e1e1e1",
+                                    height: "140px",
+                                    borderRadius: "20px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-around",
+                                    padding: "16px 20px",
+                                    flexDirection: "row",
+                                    gap: "16px"
+                                }}>
+                                    <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "110px", objectFit: "contain", flexShrink: 0 }} />
+                                    <div style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        flexDirection: "column",
+                                        gap: "12px",
+                                        flex: 1,
+                                        justifyContent: "center"
+                                    }}>
+                                        <p style={{ fontSize: "1.1rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
+                                        <button style={{
+                                            background: "black",
+                                            color: "white",
+                                            padding: "10px 20px",
+                                            borderRadius: "60px",
+                                            textAlign: "center",
+                                            cursor: "pointer",
+                                            border: "none",
+                                            transition: "0.3s",
+                                            fontSize: "0.9rem",
+                                            fontWeight: 500,
+                                            whiteSpace: "nowrap"
+                                        }}>
+                                            Comprar Agora
+                                        </button>
+                                    </div>
+                                </div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                ) : (
+                    // Grid para Desktop
                     <div style={{
                         display: "flex",
+                        justifyContent: "space-around",
                         alignItems: "center",
-                        flexDirection: "column",
-                        gap: "12px",              // 👈 espaçamento fixo entre texto e botão
-                        height: "50%"
+                        gap: "20px",
+                        padding: "0 20px"
                     }}>
-                        <p style={{ fontSize: "1.3rem", textAlign: "center" }}>Laptops</p>
-                        <button style={{
-                            background: "black",
-                            color: "white",
-                            padding: "12px 20px",
-                            borderRadius: "60px",
-                            textAlign: "center",
-                            cursor: "pointer",
-                            border: "none",
-                            transition: "0.3s",
-                        }}>
-                            Comprar Agora
-                        </button>
+                        {[
+                            { id: 1, name: 'Laptops', image: notebook },
+                            { id: 2, name: 'Fones de Ouvido', image: fone },
+                            { id: 3, name: 'Desktops', image: desktop }
+                        ].map((category) => (
+                            <div key={category.id} style={{
+                                width: "23%",
+                                background: "#e1e1e1",
+                                height: "160px",
+                                borderRadius: "20px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-around",
+                                padding: "20px",
+                                flexDirection: "row",
+                                gap: "16px"
+                            }}>
+                                <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "120px", objectFit: "contain", flexShrink: 0 }} />
+                                <div style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    flexDirection: "column",
+                                    gap: "12px",
+                                    flex: 1,
+                                    justifyContent: "center"
+                                }}>
+                                    <p style={{ fontSize: "1.3rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
+                                    <button style={{
+                                        background: "black",
+                                        color: "white",
+                                        padding: "10px 20px",
+                                        borderRadius: "60px",
+                                        textAlign: "center",
+                                        cursor: "pointer",
+                                        border: "none",
+                                        transition: "0.3s",
+                                        fontSize: "0.95rem",
+                                        fontWeight: 500,
+                                        whiteSpace: "nowrap"
+                                    }}>
+                                        Comprar Agora
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                </div>
-
-                <div style={{
-                    width: "23%",
-                    background: "#e1e1e1",
-                    height: "75%",
-                    borderRadius: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-around"
-                }}>
-                    <img src={fone} alt="" style={{ width: "30%" }} />
-                    <div style={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexDirection: "column",
-                        gap: "12px",              // 👈 espaçamento fixo entre texto e botão
-                        height: "50%"
-                    }}>
-                        <p style={{ fontSize: "1.3rem", textAlign: "center" }}>Fones de Ouvido</p>
-                        <button style={{
-                            background: "black",
-                            color: "white",
-                            padding: "12px 20px",
-                            borderRadius: "60px",
-                            textAlign: "center",
-                            cursor: "pointer",
-                            border: "none",
-                            transition: "0.3s",
-                        }}>
-                            Comprar Agora
-                        </button>
-                    </div>
-                </div>
-
-                <div style={{
-                    width: "23%",
-                    background: "#e1e1e1",
-                    height: "75%",
-                    borderRadius: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-around"
-                }}>
-                    <img src={desktop} alt="" style={{ width: "30%" }} />
-                    <div style={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexDirection: "column",
-                        gap: "12px",              // 👈 espaçamento fixo entre texto e botão
-                        height: "50%"
-                    }}>
-                        <p style={{ fontSize: "1.3rem", textAlign: "center" }}>Desktops</p>
-                        <button style={{
-                            background: "black",
-                            color: "white",
-                            padding: "12px 20px",
-                            borderRadius: "60px",
-                            textAlign: "center",
-                            cursor: "pointer",
-                            border: "none",
-                            transition: "0.3s",
-                        }}>
-                            Comprar Agora
-                        </button>
-
-                    </div>
-                </div>
+                )}
             </div>
 
 
@@ -819,55 +991,69 @@ function Store() {
             <div style={{
                 width: '100%',
                 background: '#2f2f2f',
-                height: '12vh',
+                minHeight: isMobile ? 'auto' : '12vh',
+                padding: isMobile ? '40px 20px' : '0',
                 display: "flex",
                 justifyContent: "space-around",
                 alignItems: "center",
-                marginTop: "100px"
+                marginTop: isMobile ? "40px" : "100px"
             }}>
                 <div style={{
-                    width: "70%",
-                    height: "60%",
+                    width: isMobile ? "100%" : "70%",
+                    height: isMobile ? "auto" : "60%",
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "center"
+                    alignItems: "center",
+                    flexDirection: isMobile ? "column" : "row",
+                    gap: isMobile ? "20px" : "0"
                 }}>
                     <div style={{
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "space-between",
-                        width: "56%"
+                        justifyContent: isMobile ? "center" : "space-between",
+                        width: isMobile ? "100%" : "56%",
+                        flexDirection: isMobile ? "column" : "row",
+                        gap: isMobile ? "15px" : "0",
+                        textAlign: isMobile ? "center" : "left"
                     }}>
-                        <img src={Email} alt="" style={{ width: "10%" }} />
+                        {!isMobile && <img src={Email} alt="" style={{ width: "10%" }} />}
                         <div>
-                            <p style={{ color: "#f5f5f5", fontSize: "1.5rem", fontWeight: "600" }}>Cadastre-se para receber descontos</p>
-                            <p style={{ color: "#f5f5f5", fontSize: "1.2rem" }}>Cadastre-se para receber ofertas e atualizações da empresa.</p>
+                            <p style={{ color: "#f5f5f5", fontSize: isMobile ? "1.2rem" : "1.5rem", fontWeight: "600", marginBottom: isMobile ? "8px" : "0" }}>Cadastre-se para receber descontos</p>
+                            <p style={{ color: "#f5f5f5", fontSize: isMobile ? "1rem" : "1.2rem" }}>Cadastre-se para receber ofertas e atualizações da empresa.</p>
                         </div>
-
                     </div>
                     <div style={{
                         background: "#5c595933",
-                        width: "40%",
-                        height: "85%",
+                        width: isMobile ? "100%" : "40%",
+                        height: isMobile ? "auto" : "85%",
+                        minHeight: isMobile ? "50px" : "auto",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
                         borderRadius: "40px",
-                        paddingRight: "5%"
+                        paddingRight: isMobile ? "15px" : "5%",
+                        paddingLeft: isMobile ? "15px" : "0"
                     }}>
                         <input placeholder="Seu e-mail" type="text" style={{
                             background: "transparent",
                             outline: "none",
-                            height: "90%",
-                            paddingLeft: "25px",
-                            fontSize: "16px",
-                            color: "white"
+                            height: isMobile ? "45px" : "90%",
+                            paddingLeft: isMobile ? "15px" : "25px",
+                            fontSize: isMobile ? "14px" : "16px",
+                            color: "white",
+                            width: isMobile ? "60%" : "auto",
+                            border: "none"
                         }} />
                         <div>
                             <button style={{
-                                padding: "12px",
+                                padding: isMobile ? "10px 20px" : "12px",
                                 borderRadius: "60px",
-                                width: "140%"
+                                width: isMobile ? "auto" : "140%",
+                                background: "#fff",
+                                color: "#000",
+                                border: "none",
+                                cursor: "pointer",
+                                fontWeight: "600"
                             }}>Increver-se</button>
                         </div>
                     </div>

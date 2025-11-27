@@ -32,7 +32,7 @@ const HeroBanner = () => {
         <SwiperSlide>
           <StyledSwiperSlide
             style={{
-              backgroundImage: `url(${HeadSet})`,
+              backgroundImage: `image-set(url(${HeadSet}) 1x, url(${HeadSet}) 2x)`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -47,7 +47,7 @@ const HeroBanner = () => {
         <SwiperSlide>
           <StyledSwiperSlide
             style={{
-              backgroundImage: `url(${Macbook})`,
+              backgroundImage: `image-set(url(${Macbook}) 1x, url(${Macbook}) 2x)`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -75,7 +75,7 @@ const HeroBanner = () => {
         <SwiperSlide>
           <StyledSwiperSlide
             style={{
-              backgroundImage: `url(${Omelhor})`,
+              backgroundImage: `image-set(url(${Omelhor}) 1x, url(${Omelhor}) 2x)`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",

@@ -11,15 +11,17 @@ export const HeaderContainer = styled.header`
   left: 0;
   width: 100%;
   transition: 0.3s ease;
-  z-index: 1000;
+  z-index: 1001;
   height: 8vh;
 
 
-  background: ${({ $isScrolled, $isHome }) => ($isScrolled || !$isHome ? "#fff" : "transparent")};
-  color: ${({ $isScrolled, $isHome }) => ($isScrolled || !$isHome ? "#1c1c1c" : "#fff")};
+  background: ${({ $isScrolled, $isHome, $isCartModalOpen }) => 
+    ($isCartModalOpen ? "#2f2f2f" : ($isScrolled || !$isHome ? "#fff" : "transparent"))};
+  color: ${({ $isScrolled, $isHome, $isCartModalOpen }) => 
+    ($isCartModalOpen ? "#fff" : ($isScrolled || !$isHome ? "#1c1c1c" : "#fff"))};
 
-  box-shadow: ${({ $isScrolled, $isHome }) =>
-    $isScrolled || !$isHome ? "0 2px 10px rgba(0,0,0,0.1)" : "none"};
+  box-shadow: ${({ $isScrolled, $isHome, $isCartModalOpen }) =>
+    ($isCartModalOpen || $isScrolled || !$isHome) ? "0 2px 10px rgba(0,0,0,0.1)" : "none"};
 
   @media (max-width: 768px) {
     padding: 10px 20px;
@@ -42,7 +44,8 @@ export const MenuButton = styled.button`
   align-items: center;
   gap: 6px;
   background: transparent;
-  border: 2px solid ${({ $isScrolled }) => ($isScrolled ? "black" : "white")};
+  border: 2px solid ${({ $isScrolled, $isCartModalOpen }) => 
+    ($isCartModalOpen ? "white" : ($isScrolled ? "black" : "white"))};
   padding: 8px 14px;
   border-radius: 99px;
   color: inherit; 
@@ -50,8 +53,10 @@ export const MenuButton = styled.button`
   transition: 0.3s;
 
   &:hover{
-    background-color: ${({ $isScrolled }) => ($isScrolled ? "black" : "black")};
-    color: ${({ $isScrolled }) => ($isScrolled ? "white" : "black")};
+    background-color: ${({ $isScrolled, $isCartModalOpen }) => 
+      ($isCartModalOpen ? "white" : ($isScrolled ? "black" : "black"))};
+    color: ${({ $isScrolled, $isCartModalOpen }) => 
+      ($isCartModalOpen ? "black" : ($isScrolled ? "white" : "black"))};
   }
 
   span {
@@ -118,7 +123,8 @@ export const Logo = styled.div`
     height: 50px;
     width: auto;
     transition: 0.3s ease;
-    filter: ${({ $isScrolled }) => $isScrolled ? 'none' : 'brightness(0) invert(1)'};
+    filter: ${({ $isScrolled, $isCartModalOpen }) => 
+      ($isCartModalOpen ? 'brightness(0) invert(1)' : ($isScrolled ? 'none' : 'brightness(0) invert(1)'))};
     
     &:hover {
       opacity: 0.8;

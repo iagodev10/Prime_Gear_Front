@@ -28,7 +28,7 @@ export const SectionIcon = styled.div`
 export const SectionTitle = styled.h2`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111827;
+  color: black;
   margin: 0;
 `
 
@@ -45,13 +45,13 @@ export const SubSectionHeader = styled.div`
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  color: #4b5563;
+  color: black;
 `
 
 export const SubSectionTitle = styled.h3`
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: black;
   margin: 0;
 `
 
@@ -66,7 +66,7 @@ export const FormGroup = styled.div`
 export const Label = styled.label`
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: black;
 `
 
 export const Input = styled.input`
@@ -75,7 +75,7 @@ export const Input = styled.input`
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  color: #111827;
+  color: black;
   transition: border-color 0.2s ease;
 
   &:focus {
@@ -84,14 +84,14 @@ export const Input = styled.input`
   }
 
   &::placeholder {
-    color: #9ca3af;
+    color: black;
   }
 `
 
 export const SaveButton = styled.button`
   padding: 0.75rem 1.5rem;
-  background-color: #1e293b;
-  color: #ffffff;
+  background-color: black;
+  color: white;
   border: none;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -100,7 +100,7 @@ export const SaveButton = styled.button`
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #334155;
+    background-color: black;
   }
 `
 
@@ -122,19 +122,19 @@ export const TwoFactorInfo = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  color: #4b5563;
+  color: black;
 `
 
 export const TwoFactorTitle = styled.h3`
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: black;
   margin: 0;
 `
 
 export const TwoFactorDescription = styled.p`
   font-size: 0.875rem;
-  color: #6b7280;
+  color: black;
   margin: 0.25rem 0 0 0;
 `
 
@@ -142,7 +142,7 @@ export const ToggleSwitch = styled.button`
   position: relative;
   width: 48px;
   height: 24px;
-  background-color: ${({ $isActive }) => ($isActive ? "#1e293b" : "#d1d5db")};
+  background-color: ${({ $isActive }) => ($isActive ? "black" : "#d1d5db")};
   border: none;
   border-radius: 9999px;
   cursor: pointer;
@@ -160,7 +160,7 @@ export const ToggleSlider = styled.span`
   left: ${({ $isActive }) => ($isActive ? "26px" : "2px")};
   width: 20px;
   height: 20px;
-  background-color: #ffffff;
+  background-color: ${({ $isActive }) => ($isActive ? "white" : "black")};
   border-radius: 50%;
   transition: left 0.2s ease;
 `

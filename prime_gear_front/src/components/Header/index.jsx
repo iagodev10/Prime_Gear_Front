@@ -6,7 +6,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import SidebarMenu from "../SidebarMenu";
 import SidebarLaptop from "../SidebarLaptop";
 import SearchModal from "../SearchModal";
-
+import CartModal from "../CartModal";
 
 import { FiMenu, FiSearch, FiShoppingCart, FiUser } from "react-icons/fi";
 import { RiApps2Line } from "react-icons/ri";
@@ -31,6 +31,7 @@ const Header = () => {
   const [openCategory, setOpenCategory] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
@@ -56,8 +57,9 @@ const Header = () => {
   return (
     <>
       <HeaderContainer
-        $isScrolled={isScrolled || isHovered || isMenuOpen || !!openCategory}
+        $isScrolled={isScrolled || isHovered || isMenuOpen || !!openCategory || isCartModalOpen}
         $isHome={isHome}
+        $isCartModalOpen={isCartModalOpen}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -66,6 +68,7 @@ const Header = () => {
             $isScrolled={
               isScrolled || !isHome || isHovered || isMenuOpen || !!openCategory
             }
+            $isCartModalOpen={isCartModalOpen}
             onClick={() => setIsMenuOpen(true)}
           >
             <RiApps2Line size={19} />
@@ -115,18 +118,18 @@ const Header = () => {
 
         <RightSection>
           <Icons>
-            <FiSearch
-              size={20}
-              onClick={() => setIsSearchModalOpen(true)}
-            />
-            <FiShoppingCart size={20} />
-            <FiUser size={20} />
+            <FiSearch size={20} onClick={() => setIsSearchModalOpen(true)} />
+            <FiShoppingCart size={20} onClick={() => setIsCartModalOpen(true)} />
+            <Link to="/login" style={{ color: "inherit" }}>
+              <FiUser size={20} />
+            </Link>
           </Icons>
 
           <Logo
             $isScrolled={
               isScrolled || !isHome || isHovered || isMenuOpen || !!openCategory
             }
+            $isCartModalOpen={isCartModalOpen}
           >
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
               <img src={LogoDark} alt="PrimeGear Logo" />
@@ -146,6 +149,11 @@ const Header = () => {
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={() => setIsSearchModalOpen(false)}
+      />
+
+      <CartModal
+        isOpen={isCartModalOpen}
+        onClose={() => setIsCartModalOpen(false)}
       />
     </>
   );
