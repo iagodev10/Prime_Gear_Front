@@ -1,249 +1,512 @@
-import React, { useState } from "react";
-import { FiShoppingCart, FiTruck, FiShield, FiCreditCard } from "react-icons/fi";
-
-import Image1 from "../../assets/images/desktop-ilustration.png"
-import Image2 from "../../assets/images/desktop-ilustration (2).png"
-import Image3 from "../../assets/images/desktop-ilustration (3).png"
-import Image4 from "../../assets/images/desktop-ilustration (4).png"
-
-import ProductCarousel from '../../components/ProductCarousel';
-import EmailSignUp from '../../components/EmailSignUp'
-
-// Imports dos seus Styled Components (note que NÃO importamos "styled-components" aqui)
-import {
-    PageContainer, ProductContainer, LeftColumn, MainImage, Miniaturas, Thumbnail,
-    RightColumn, ProdName, PriceBlock, MainPrice, PixInfo, OtherPrice, QuantitySelector, QuantityLabel,
-    QuantityButton, QuantityValue, Divider, ButtonBlock, BuyNow, AddCart, CEP, CepLabel, InputCep, CepInput, CepButton,
-    SelectorRow, QuantityPill, StockInfo, FeaturesContainer, FeatureItem, FeatureIconCircle, FeatureText,
-    TabSection, TabHeader, TabButton, TabContent,
-    SpecTable, SpecRow, SpecCell, ReviewList, ReviewItem, ReviewAuthor, ReviewComment, Texto
-} from './style';
-
-const produtos = {
-    name: "Gabinete Gamer Rise Mode Galaxy Glass, Mid Tower, ATX, Lateral e Frontal em Vidro Temperado, Preto - RM-GA-GG-FB",
-    price: "R$ 496,99",
-    pixInfo: "à vista no PIX (15% de desconto)",
-    otherPrice: "ou R$ 552,93 em 4x de R$ 138,23 sem juros",
-    images: [
-        Image1,
-        Image2,
-        Image3,
-        Image4
-    ],
-    stock: 50,
-    description: `
-      O Gabinete Gamer Rise Mode Galaxy Glass é a escolha ideal para quem busca estilo e desempenho.
-        Possui lateral e frontal em vidro temperado, design moderno com iluminação RGB e espaço para excelente ventilação.
-      
-        Projetado com material de altíssima qualidade e acabamento premium, este gabinete Mid Tower oferece um
-      layout de fácil instalação e amplo espaço interno, com suporte para placas-mãe ATX, M-ATX e ITX,
-      e placas de vídeo de até 400mm.
-      `,
-    especificacoes: {
-        "Marca": "Rise Mode",
-        "Modelo": "Galaxy Glass (RM-GA-GG-FB)",
-        "Cor": "Preto",
-        "Formato": "Mid Tower",
-        "Material": "Aço SPCC, Vidro Temperado",
-        "Placa-mãe Suportada": "ATX, M-ATX, ITX",
-        "Slots de Expansão": "7",
-        "Baias": "2x 3.5” HDD | 2x 2.5” SSD",
-        "Painel Frontal I/O": "1x USB 3.0, 1x USB 2.0, 1x USB-C 3.2, Áudio HD (Fone e Microfone)",
-        "Painel Lateral": "Vidro Temperado",
-        "Painel Frontal": "Vidro Temperado",
-        "Suporte para Placa de Vídeo (GPU)": "Até 400mm",
-        "Suporte para Air Cooler (CPU)": "Até 157mm",
-        "Suporte para Fans": "Suporta até 10 fans (Não inclusos) \n- Superior: 3x 120mm \n- Lateral: 3x 120mm \n- Inferior: 3x 120mm \n- Traseira: 1x 120mm",
-        "Suporte para Water Cooler": "- Superior: 360mm \n- Lateral: 360mm \n- Inferior: 360mm \n- Traseira: 120mm",
-        "Dimensões (C x L x A)": "440mm x 280mm x 427mm"
-    },
-    avaliacoes: [
-        { id: 1, author: "João Silva", rating: 5, comment: "Gabinete espetacular! Muito espaçoso, fácil de montar e o vidro dá um visual incrível. Recomendo!" },
-        { id: 2, author: "Maria Oliveira", rating: 4, comment: "Lindo e com bom fluxo de ar (depois que instalei os fans). O espaço para cable management na traseira é um pouco justo, mas dá conta." },
-        { id: 3, author: "Carlos Souza", rating: 5, comment: "Qualidade de construção top. Valeu cada centavo. Atenção que ele não vem com fans, tem que comprar à parte." }
-    ]
-};
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ShoppingCart, Heart, Share2, Truck, Shield, CreditCard } from 'lucide-react';
 
 const ProductPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [produto, setProduto] = useState(null);
+  const [categoria, setCategoria] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [quantidade, setQuantidade] = useState(1);
+  const [imagemPrincipal, setImagemPrincipal] = useState('');
 
-    const [activeImage, setActiveImage] = useState(produtos.images[0]);
-    const [quantity, setQuantity] = useState(1);
+  useEffect(() => {
+    buscarProduto();
+  }, [id]);
 
-    const [activeTab, setActiveTab] = useState('descricao');
+  const buscarProduto = async () => {
+    try {
+      setLoading(true);
+      
+      // Buscar produto
+      const responseProduto = await axios.get(`http://localhost:8080/produto/${id}`);
+      const produtoData = responseProduto.data;
+      setProduto(produtoData);
+      setImagemPrincipal(produtoData.url_img_prod);
 
-    const Diminuir = () => {
-        setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1));
-    };
-
-    const Aumentar = () => {
-        setQuantity(prevQuantity => prevQuantity + 1);
-    };
-
-    const renderTabContent = () => {
-        switch (activeTab) {
-            case 'especificacoes':
-                return <ProductSpecs specs={produtos.especificacoes} />;
-            case 'avaliacoes':
-                return <ProductReviews reviews={produtos.avaliacoes} />;
-            case 'descricao':
-            default:
-                // Usamos <div style> para preservar a quebra de linha do texto
-                return <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-                    {produtos.description}
-                </div>;
+      // Buscar categoria se existir
+      if (produtoData.cod_categoria) {
+        try {
+          const responseCategoria = await axios.get(`http://localhost:8080/categoria/${produtoData.cod_categoria}`);
+          setCategoria(responseCategoria.data);
+        } catch (error) {
+          console.log('Erro ao buscar categoria:', error);
         }
-    };
+      }
+    } catch (error) {
+      console.error('Erro ao buscar produto:', error);
+      // Redirecionar para loja se produto não existir
+      setTimeout(() => navigate('/loja'), 2000);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const ProductSpecs = ({ specs }) => {
-        return (
-            <SpecTable>
-                <tbody>
-                    {Object.entries(specs || {}).map(([key, value]) => (
-                        <SpecRow key={key}>
-                            <SpecCell as="th">{key}</SpecCell>
-                            <SpecCell>{value}</SpecCell>
-                        </SpecRow>
-                    ))}
-                </tbody>
-            </SpecTable>
-        );
-    };
+  const handleQuantidadeChange = (operacao) => {
+    if (operacao === 'incrementar' && quantidade < produto.qtd_estoque_prod) {
+      setQuantidade(quantidade + 1);
+    } else if (operacao === 'decrementar' && quantidade > 1) {
+      setQuantidade(quantidade - 1);
+    }
+  };
 
-    // Componente para renderizar as avaliações
-    const ProductReviews = ({ reviews }) => {
-        return (
-            <ReviewList>
-                {(reviews || []).map(review => (
-                    <ReviewItem key={review.id}>
-                        <ReviewAuthor>{review.author} - ⭐ {review.rating}/5</ReviewAuthor>
-                        <ReviewComment>{review.comment}</ReviewComment>
-                    </ReviewItem>
-                ))}
-            </ReviewList>
-        );
-    };
+  const adicionarAoCarrinho = () => {
+    // Implementar lógica de adicionar ao carrinho
+    console.log('Adicionar ao carrinho:', { produto, quantidade });
+    alert(`${quantidade}x ${produto.nome_prod} adicionado ao carrinho!`);
+  };
+
+  const formatarPreco = (valor) => {
+    return valor.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+  };
+
+  if (loading) {
     return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh',
+        backgroundColor: '#f5f5f5'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            width: '50px',
+            height: '50px',
+            border: '4px solid #f3f3f3',
+            borderTop: '4px solid #000',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 20px'
+          }} />
+          <p style={{ fontSize: '16px', color: '#666' }}>Carregando produto...</p>
+        </div>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
-        <PageContainer>
-            <ProductContainer>
-                <LeftColumn>
-                    <MainImage src={activeImage} alt={produtos.name} />
-                    <Miniaturas>
-                        {produtos.images.map((img, index) => (
-                            <Thumbnail
-                                key={index}
-                                src={img}
-                                isActive={img === activeImage}
-                                onClick={() => setActiveImage(img)}
-                            />
-                        ))}
-                    </Miniaturas>
-                </LeftColumn>
+  if (!produto) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh',
+        backgroundColor: '#f5f5f5',
+        padding: '20px'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{ fontSize: '24px', marginBottom: '16px', color: '#333' }}>
+            Produto não encontrado
+          </h2>
+          <p style={{ fontSize: '16px', color: '#666', marginBottom: '24px' }}>
+            Redirecionando para a loja...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-                <RightColumn>
-                    <ProdName>{produtos.name}</ProdName>
+  return (
+    <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '120px 20px 60px' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        
+        {/* Breadcrumb */}
+        <div style={{ marginBottom: '24px', fontSize: '14px', color: '#666' }}>
+          <span 
+            onClick={() => navigate('/')} 
+            style={{ cursor: 'pointer', textDecoration: 'none' }}
+          >
+            Home
+          </span>
+          <span style={{ margin: '0 8px' }}>/</span>
+          <span 
+            onClick={() => navigate('/loja')} 
+            style={{ cursor: 'pointer', textDecoration: 'none' }}
+          >
+            Loja
+          </span>
+          {categoria && (
+            <>
+              <span style={{ margin: '0 8px' }}>/</span>
+              <span>{categoria.nome_cat}</span>
+            </>
+          )}
+          <span style={{ margin: '0 8px' }}>/</span>
+          <span style={{ color: '#000', fontWeight: '500' }}>{produto.nome_prod}</span>
+        </div>
 
-                    <Divider />
+        {/* Container Principal */}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: '1fr 1fr', 
+          gap: '60px',
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '40px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          marginBottom: '40px'
+        }}>
+          
+          {/* Coluna Esquerda - Imagens */}
+          <div>
+            <div style={{
+              width: '100%',
+              height: '500px',
+              backgroundColor: '#f9f9f9',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '20px',
+              overflow: 'hidden'
+            }}>
+              <img 
+                src={imagemPrincipal || '/placeholder.png'}
+                alt={produto.nome_prod}
+                style={{ 
+                  maxWidth: '100%', 
+                  maxHeight: '100%', 
+                  objectFit: 'contain'
+                }}
+                onError={(e) => {
+                  e.target.src = '/placeholder.png';
+                }}
+              />
+            </div>
+          </div>
 
-                    <PriceBlock>
-                        <MainPrice>{produtos.price}</MainPrice>
-                        <PixInfo>{produtos.pixInfo}</PixInfo>
-                        <OtherPrice>{produtos.otherPrice}</OtherPrice>
-                    </PriceBlock>
+          {/* Coluna Direita - Informações */}
+          <div>
+            {/* Categoria */}
+            {categoria && (
+              <div style={{ 
+                display: 'inline-block',
+                padding: '6px 16px',
+                backgroundColor: '#f0f0f0',
+                borderRadius: '20px',
+                fontSize: '13px',
+                fontWeight: '500',
+                color: '#666',
+                marginBottom: '16px'
+              }}>
+                {categoria.nome_cat}
+              </div>
+            )}
 
-                    <Divider />
+            {/* Título */}
+            <h1 style={{ 
+              fontSize: '32px', 
+              fontWeight: '700', 
+              color: '#1b1b1f',
+              marginBottom: '16px',
+              lineHeight: '1.3'
+            }}>
+              {produto.nome_prod}
+            </h1>
 
-                    <QuantitySelector>
-                        <QuantityLabel>Quantidade:</QuantityLabel>
+            {/* Status de Estoque */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              marginBottom: '24px'
+            }}>
+              <div style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                backgroundColor: produto.qtd_estoque_prod > 0 ? '#00a85a' : '#e4005c'
+              }} />
+              <span style={{ 
+                fontSize: '14px', 
+                fontWeight: '500',
+                color: produto.qtd_estoque_prod > 0 ? '#00a85a' : '#e4005c'
+              }}>
+                {produto.qtd_estoque_prod > 0 
+                  ? `Em estoque (${produto.qtd_estoque_prod} disponíveis)` 
+                  : 'Esgotado'}
+              </span>
+            </div>
 
+            {/* Preço */}
+            <div style={{ 
+              padding: '24px 0',
+              borderTop: '1px solid #e5e5e5',
+              borderBottom: '1px solid #e5e5e5',
+              marginBottom: '32px'
+            }}>
+              <div style={{ 
+                fontSize: '40px', 
+                fontWeight: '700', 
+                color: '#e4005c',
+                marginBottom: '8px'
+              }}>
+                {formatarPreco(produto.preco_prod)}
+              </div>
+              <p style={{ fontSize: '14px', color: '#666' }}>
+                ou 10x de {formatarPreco(produto.preco_prod / 10)} sem juros
+              </p>
+            </div>
 
-                        <SelectorRow>
+            {/* Quantidade */}
+            {produto.qtd_estoque_prod > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{ 
+                  display: 'block', 
+                  fontSize: '14px', 
+                  fontWeight: '600',
+                  marginBottom: '12px',
+                  color: '#333'
+                }}>
+                  Quantidade:
+                </label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <button
+                    onClick={() => handleQuantidadeChange('decrementar')}
+                    disabled={quantidade <= 1}
+                    style={{
+                      width: '44px',
+                      height: '44px',
+                      border: '1px solid #ddd',
+                      borderRadius: '8px',
+                      backgroundColor: '#fff',
+                      fontSize: '20px',
+                      fontWeight: '600',
+                      cursor: quantidade <= 1 ? 'not-allowed' : 'pointer',
+                      opacity: quantidade <= 1 ? 0.5 : 1
+                    }}
+                  >
+                    −
+                  </button>
+                  <span style={{ 
+                    fontSize: '18px', 
+                    fontWeight: '600',
+                    minWidth: '40px',
+                    textAlign: 'center'
+                  }}>
+                    {quantidade}
+                  </span>
+                  <button
+                    onClick={() => handleQuantidadeChange('incrementar')}
+                    disabled={quantidade >= produto.qtd_estoque_prod}
+                    style={{
+                      width: '44px',
+                      height: '44px',
+                      border: '1px solid #ddd',
+                      borderRadius: '8px',
+                      backgroundColor: '#fff',
+                      fontSize: '20px',
+                      fontWeight: '600',
+                      cursor: quantidade >= produto.qtd_estoque_prod ? 'not-allowed' : 'pointer',
+                      opacity: quantidade >= produto.qtd_estoque_prod ? 0.5 : 1
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            )}
 
+            {/* Botões de Ação */}
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '32px' }}>
+              <button
+                onClick={adicionarAoCarrinho}
+                disabled={produto.qtd_estoque_prod === 0}
+                style={{
+                  flex: 1,
+                  height: '56px',
+                  backgroundColor: produto.qtd_estoque_prod === 0 ? '#ccc' : '#000',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: produto.qtd_estoque_prod === 0 ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  if (produto.qtd_estoque_prod > 0) {
+                    e.currentTarget.style.backgroundColor = '#333';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = produto.qtd_estoque_prod === 0 ? '#ccc' : '#000';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                <ShoppingCart size={20} />
+                {produto.qtd_estoque_prod === 0 ? 'Indisponível' : 'Adicionar ao Carrinho'}
+              </button>
+              
+              <button style={{
+                width: '56px',
+                height: '56px',
+                backgroundColor: '#fff',
+                border: '1px solid #ddd',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s'
+              }}>
+                <Heart size={20} />
+              </button>
+            </div>
 
-                            <QuantityPill>
-                                <QuantityButton onClick={Diminuir} disabled={quantity === 1}>-</QuantityButton>
-                                <QuantityValue>{quantity}</QuantityValue>
-                                <QuantityButton onClick={Aumentar}>+</QuantityButton>
-                            </QuantityPill>
+            {/* Benefícios */}
+            <div style={{ 
+              display: 'grid', 
+              gap: '16px',
+              padding: '24px',
+              backgroundColor: '#f9f9f9',
+              borderRadius: '12px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Truck size={24} color="#00a85a" />
+                <div>
+                  <div style={{ fontWeight: '600', fontSize: '14px' }}>Frete Grátis</div>
+                  <div style={{ fontSize: '13px', color: '#666' }}>Para compras acima de R$ 199</div>
+                </div>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Shield size={24} color="#00a85a" />
+                <div>
+                  <div style={{ fontWeight: '600', fontSize: '14px' }}>Garantia de 1 ano</div>
+                  <div style={{ fontSize: '13px', color: '#666' }}>Produto com garantia do fabricante</div>
+                </div>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <CreditCard size={24} color="#00a85a" />
+                <div>
+                  <div style={{ fontWeight: '600', fontSize: '14px' }}>Parcele em até 10x</div>
+                  <div style={{ fontSize: '13px', color: '#666' }}>Sem juros no cartão de crédito</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        {/* Descrição do Produto */}
+        {produto.descricao_prod && (
+          <div style={{
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            padding: '40px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            marginBottom: '40px'
+          }}>
+            <h2 style={{ 
+              fontSize: '24px', 
+              fontWeight: '700',
+              marginBottom: '20px',
+              color: '#1b1b1f'
+            }}>
+              Descrição do Produto
+            </h2>
+            <p style={{ 
+              fontSize: '15px', 
+              lineHeight: '1.8',
+              color: '#666',
+              whiteSpace: 'pre-line'
+            }}>
+              {produto.descricao_prod}
+            </p>
+          </div>
+        )}
 
-                            <StockInfo>{produtos.stock} unidades disponíveis</StockInfo>
-
-                        </SelectorRow>
-                    </QuantitySelector>
-
-                    <ButtonBlock>
-                        <AddCart><FiShoppingCart /> Adicionar ao carrinho</AddCart>
-                        <BuyNow>Comprar agora</BuyNow>
-                    </ButtonBlock>
-
-                    <CEP>
-                        <CepLabel>Calcular Frete:</CepLabel>
-                        <InputCep>
-                            <CepInput type="text" placeholder="00000-000" />
-                            <CepButton>Calcular</CepButton>
-                        </InputCep>
-                    </CEP>
-
-                    <FeaturesContainer>
-                        <FeatureItem>
-                            <FeatureIconCircle bgColor="#dfe8ff">
-                                <FiTruck size={24} color="#007bff" />
-                            </FeatureIconCircle>
-                            <FeatureText>Frete grátis</FeatureText>
-                        </FeatureItem>
-
-                        <FeatureItem>
-                            <FeatureIconCircle bgColor="#d6f8d7">
-                                <FiShield size={24} color="#28a745" />
-                            </FeatureIconCircle>
-                            <FeatureText>Compra segura</FeatureText>
-                        </FeatureItem>
-
-                        <FeatureItem>
-                            <FeatureIconCircle bgColor="#f7d9ff">
-                                <FiCreditCard size={24} color="#aa46c6" />
-                            </FeatureIconCircle>
-                            <FeatureText>Parcele sem juros</FeatureText>
-                        </FeatureItem>
-                    </FeaturesContainer>
-
-                </RightColumn>
-            </ProductContainer>
-
-            <TabSection>
-                <TabHeader>
-                    <TabButton
-                        isActive={activeTab === 'descricao'}
-                        onClick={() => setActiveTab('descricao')}
-                    >
-                        Descrição
-                    </TabButton>
-                    <TabButton
-                        isActive={activeTab === 'especificacoes'}
-                        onClick={() => setActiveTab('especificacoes')}
-                    >
-                        Especificações
-                    </TabButton>
-                    <TabButton
-                        isActive={activeTab === 'avaliacoes'}
-                        onClick={() => setActiveTab('avaliacoes')}
-                    >
-                        Avaliações
-                    </TabButton>
-                </TabHeader>
-                <TabContent>
-                    {renderTabContent()}
-                </TabContent>
-            </TabSection>
-
-            <Texto>Produtos correspondentes</Texto>
-
-            <ProductCarousel />
-            <EmailSignUp />
-
-        </PageContainer>
-    )
-}
+        {/* Especificações Técnicas */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '40px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h2 style={{ 
+            fontSize: '24px', 
+            fontWeight: '700',
+            marginBottom: '24px',
+            color: '#1b1b1f'
+          }}>
+            Especificações Técnicas
+          </h2>
+          
+          <div style={{ display: 'grid', gap: '16px' }}>
+            {produto.peso_prod && (
+              <div style={{ 
+                display: 'flex', 
+                padding: '16px 0',
+                borderBottom: '1px solid #f0f0f0'
+              }}>
+                <span style={{ fontWeight: '600', minWidth: '200px', color: '#333' }}>
+                  Peso
+                </span>
+                <span style={{ color: '#666' }}>{produto.peso_prod} kg</span>
+              </div>
+            )}
+            
+            {produto.altura_prod && (
+              <div style={{ 
+                display: 'flex', 
+                padding: '16px 0',
+                borderBottom: '1px solid #f0f0f0'
+              }}>
+                <span style={{ fontWeight: '600', minWidth: '200px', color: '#333' }}>
+                  Altura
+                </span>
+                <span style={{ color: '#666' }}>{produto.altura_prod} cm</span>
+              </div>
+            )}
+            
+            {produto.largura_prod && (
+              <div style={{ 
+                display: 'flex', 
+                padding: '16px 0',
+                borderBottom: '1px solid #f0f0f0'
+              }}>
+                <span style={{ fontWeight: '600', minWidth: '200px', color: '#333' }}>
+                  Largura
+                </span>
+                <span style={{ color: '#666' }}>{produto.largura_prod} cm</span>
+              </div>
+            )}
+            
+            {produto.comprimento_prod && (
+              <div style={{ 
+                display: 'flex', 
+                padding: '16px 0',
+                borderBottom: '1px solid #f0f0f0'
+              }}>
+                <span style={{ fontWeight: '600', minWidth: '200px', color: '#333' }}>
+                  Comprimento
+                </span>
+                <span style={{ color: '#666' }}>{produto.comprimento_prod} cm</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default ProductPage;

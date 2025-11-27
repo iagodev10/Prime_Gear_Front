@@ -12,15 +12,15 @@ function Store() {
     const [marcas, setMarcas] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     
-   
+  
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
-    const [categoryFromCarousel, setCategoryFromCarousel] = useState(null); 
+    const [categoryFromCarousel, setCategoryFromCarousel] = useState(null); // Nova state
     
     const [expandedFilters, setExpandedFilters] = useState({
-        categoria: false,
-        marca: false,
+        categoria: true,
+        marca: true,
         preco: false,
         avaliacoes: false
     });
@@ -86,10 +86,9 @@ function Store() {
         }
     }
 
-   
     async function obterProdutosFiltrados() {
         try {
-          
+           
             let precoMin = undefined;
             let precoMax = undefined;
             
@@ -101,7 +100,7 @@ function Store() {
                 precoMax = Math.max(...ranges.map(r => r.max));
             }
 
-          
+           
             let categoriasParaFiltrar = [...selectedCategories];
             if (categoryFromCarousel) {
                 if (!categoriasParaFiltrar.includes(categoryFromCarousel.nome_cat)) {
@@ -126,6 +125,7 @@ function Store() {
         }
     }
 
+   
     async function obterTodosProdutos() {
         try {
             const response = await axios.get('http://localhost:8080/produtos-adm');
@@ -135,7 +135,7 @@ function Store() {
         }
     }
 
- 
+  
     useEffect(() => {
         getCats();
         getMarcas();
@@ -151,6 +151,7 @@ function Store() {
         }
     }, [location.state, categorias]);
 
+   
     useEffect(() => {
         if (selectedCategories.length > 0 || selectedBrands.length > 0 || selectedPriceRanges.length > 0 || categoryFromCarousel) {
             obterProdutosFiltrados();
@@ -159,7 +160,7 @@ function Store() {
         }
     }, [selectedCategories, selectedBrands, selectedPriceRanges, categoryFromCarousel]);
 
-    
+   
     useEffect(() => {
         const onResize = () => setIsMobile(window.innerWidth <= 900);
         onResize();
@@ -190,17 +191,17 @@ function Store() {
         }
     }, []);
 
-   
+
     const handleCategoryFromCarousel = (category) => {
         setCategoryFromCarousel(category);
         
         if (category) {
-           
+          
             if (!selectedCategories.includes(category.nome_cat)) {
                 setSelectedCategories(prev => [...prev, category.nome_cat]);
             }
         } else {
-          
+           
             if (categoryFromCarousel) {
                 setSelectedCategories(prev => 
                     prev.filter(c => c !== categoryFromCarousel.nome_cat)
@@ -222,7 +223,7 @@ function Store() {
                 ? prev.filter(c => c !== categoryName)
                 : [...prev, categoryName];
             
-          
+           
             if (categoryFromCarousel && categoryFromCarousel.nome_cat === categoryName && !newCategories.includes(categoryName)) {
                 setCategoryFromCarousel(null);
             }
@@ -467,6 +468,7 @@ function Store() {
                                 currentProducts.map((prod) => (
                                     <ProductCard
                                         key={prod.cod_produto}
+                                        cod_produto={prod.cod_produto}
                                         title={prod.nome_prod}
                                         price={prod.preco_prod.toLocaleString("pt-BR", {
                                             style: "currency",
