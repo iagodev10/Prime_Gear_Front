@@ -41,7 +41,7 @@ const HomePage = () => {
         setCategorias(responseCategorias.data);
        console.log('ó');
 
-        // Buscar produtos e nome da seção 1 (Destaques da Semana)
+       
         const response1 = await axios.get('http://localhost:8080/get-prods-vinc/1');
         if (response1.data.success) {
           setProdutosSecao1(response1.data.produtos);
@@ -50,7 +50,6 @@ const HomePage = () => {
           setNomeSecao1(response1.data.nomeSecao || 'Destaques da Semana');
         }
 
-        // Buscar produtos e nome da seção 2 (Até 50% de desconto)
         const response2 = await axios.get('http://localhost:8080/get-prods-vinc/2');
         if (response2.data.success) {
           setProdutosSecao2(response2.data.produtos || []);
@@ -60,7 +59,7 @@ const HomePage = () => {
         setLoading(false);
       } catch (error) {
         console.error('Erro ao carregar dados das seções:', error);
-        // Define valores padrão em caso de erro
+      
         setNomeSecao1('Destaques da Semana');
         setNomeSecao2('Até 50% de desconto');
         setLoading(false);

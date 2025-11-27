@@ -1,10 +1,10 @@
 import React from "react";
 import { FiHeart } from "react-icons/fi";
 
-// 1. IMPORTA a imagem (ajuste o caminho se estiver errado)
+
 import laptopvendaImage from '../../assets/images/laptopvenda.png';
 
-// 2. IMPORTA todos os blocos de estilo, incluindo o novo OldPrice
+
 import {
     Container,
     ImageContainer,
@@ -12,7 +12,7 @@ import {
     ProdTitle,
     Price,
     PriceInfo,
-    OldPrice, // Adicionado
+    OldPrice, 
     Cart,
     Buy
 } from "./style";
