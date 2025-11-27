@@ -8,6 +8,7 @@ export const HeaderContainer = styled.header`
 export const HeaderContent = styled.div`
   max-width: 1280px;
   margin: 0 auto;
+  margin-top: 12vh;
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;

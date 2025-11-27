@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const BannerPromo = styled.section`
   width: 90%;
-  margin: 100px auto 0 auto;
+  max-width: 1200px;
+  margin: 50px auto 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,59 +11,73 @@ export const BannerPromo = styled.section`
   text-align: center;
 
   @media (max-width: 768px) {
-    width: 92%;
-    margin: 60px auto 0 auto;
+    width: 90%;
+    margin: 30px auto 0 auto;
   }
 
   @media (max-width: 480px) {
     width: 94%;
-    margin: 40px auto 0 auto;
+    margin: 20px auto 0 auto;
   }
 `;
 
 export const BannerImg = styled.div`
   width: 100%;
+  max-height: 500px;
   display: flex;
   justify-content: center;
+  overflow: hidden;
 
   img {
     width: 100%;
     max-width: 100%;
     height: auto;
+    max-height: 500px;
     object-fit: contain;
     display: block;
   }
 
   @media (max-width: 992px) {
+    max-height: 320px;
+    
     img {
-      height: auto;
+      max-height: 320px;
     }
   }
+  
   @media (max-width: 768px) {
+    max-height: 250px;
+    
     img {
-      height: auto;
+      max-height: 250px;
     }
   }
+  
   @media (max-width: 576px) {
+    max-height: 180px;
+    
     img {
-      height: auto;
+      max-height: 180px;
     }
   }
+  
   @media (max-width: 420px) {
+    max-height: 140px;
+    
     img {
-      height: auto;
+      max-height: 140px;
     }
   }
 `;
 
 export const BannerBuy = styled.a`
-  margin-top: 20px;
-  padding: 24px 36px;
+  margin-top: 16px;
+  padding: 18px 32px;
   text-decoration: none;
   background: linear-gradient(135deg, #000000, #737373);
   border-radius: 999px;
   transition: all 0.5s ease;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #f5f5f5;
   display: inline-block;
   transform-style: preserve-3d;
@@ -92,28 +107,33 @@ export const BannerBuy = styled.a`
   }
 
   @media (max-width: 768px) {
-    padding: 16px 24px;
-    font-size: 1rem;
-  }
-  @media (max-width: 576px) {
-    padding: 14px 20px;
+    margin-top: 12px;
+    padding: 14px 24px;
     font-size: 0.95rem;
   }
-  @media (max-width: 420px) {
-    padding: 12px 18px;
+  
+  @media (max-width: 576px) {
+    margin-top: 10px;
+    padding: 12px 20px;
     font-size: 0.9rem;
+  }
+  
+  @media (max-width: 420px) {
+    margin-top: 8px;
+    padding: 10px 18px;
+    font-size: 0.85rem;
   }
 `;
 
 export const Ideapad = styled.section`
-  width: 80%;
-  margin-top: -40px;
+  width: 90%;
+  margin: -40px auto 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 5%;
   gap: 24px;
   max-width: 1400px;
+  box-sizing: border-box;
 
   @media (max-width: 768px) {
     flex-direction: column;

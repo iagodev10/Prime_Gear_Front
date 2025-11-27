@@ -45,8 +45,8 @@ export const AddButton = styled.button`
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: #1e293b;
-  color: #ffffff;
+  background-color: black;
+  color: white;
   border: none;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -86,7 +86,7 @@ export const EmptyIcon = styled.div`
 export const EmptyTitle = styled.h3`
   font-size: 1.125rem;
   font-weight: 600;
-  color: #111827;
+  color: black;
   margin: 0 0 0.5rem 0;
   text-align: center;
 `
@@ -103,8 +103,8 @@ export const ActionButton = styled.button`
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background-color: #1e293b;
-  color: #ffffff;
+  background-color: black;
+  color: white;
   border: none;
   border-radius: 0.5rem;
   font-size: 0.875rem;

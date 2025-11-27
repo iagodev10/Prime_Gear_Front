@@ -23,26 +23,32 @@ export const ModalOverlay = styled.div`
 
   @media (max-width: 768px) {
     align-items: flex-start;
-    padding: 10vh 12px 12px 12px;
+    padding: clamp(60px, 10vh, 100px) 12px 12px 12px;
   }
 `;
 
 export const Container = styled.div`
   background: #fff;
   border-radius: 20px;
-  width: 92%;
-  max-width: 1200px;
+  width: min(92%, 1200px);
   padding: 16px 18px 22px 18px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   animation: ${slideDown} 0.4s ease-out;
   max-height: 80vh;
   overflow: hidden;
+  will-change: transform;
+  -webkit-overflow-scrolling: touch;
 
   @media (max-width: 768px) {
-    width: 96%;
+    width: 100%;
     border-radius: 16px;
     padding: 12px 14px 16px 14px;
     max-height: 82vh;
+  }
+  @media (max-width: 480px) {
+    border-radius: 14px;
+    padding: 10px 12px 14px 12px;
+    max-height: 85vh;
   }
 `;
 
@@ -56,6 +62,8 @@ export const SearchBar = styled.div`
     from { opacity: 0; transform: scale(0.98); }
     to { opacity: 1; transform: scale(1); }
   `} 0.25s ease-out;
+  flex-wrap: wrap;
+  row-gap: 8px;
 `;
 
 export const Input = styled.input`
@@ -106,6 +114,9 @@ export const TopRight = styled.div`
   align-items: center;
   gap: 16px;
   @media (max-width: 480px) { gap: 10px; }
+  @media (max-width: 360px) {
+    gap: 8px;
+  }
 `;
 
 export const ClearBtn = styled.button`
@@ -116,8 +127,8 @@ export const ClearBtn = styled.button`
 `;
 
 export const CloseCircle = styled.button`
-  width: 40px; /* Levemente maior */
-  height: 40px;
+  width: 38px; /* Levemente menor em mobile */
+  height: 38px;
   border-radius: 50%;
   border: 1px solid #e3e4ea; /* Borda sutil */
   display: flex;
@@ -130,6 +141,10 @@ export const CloseCircle = styled.button`
 
   &:hover {
     background: #f7f7fa;
+  }
+  @media (max-width: 480px) {
+    width: 34px;
+    height: 34px;
   }
 `;
 
@@ -146,6 +161,7 @@ export const Results = styled.div`
   gap: 24px;
   height: calc(80vh - 90px);
   overflow: hidden;
+  min-height: 0;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -188,6 +204,8 @@ export const Content = styled.div`
   flex-direction: column;
   overflow: auto;
   padding-right: 6px;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar { width: 6px; }
   &::-webkit-scrollbar-track { background: transparent; }
@@ -222,6 +240,9 @@ export const Mock = styled.div`
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
     gap: 14px;
+  }
+  @media (max-width: 360px) {
+    gap: 12px;
   }
 `;
 
@@ -258,6 +279,9 @@ export const ImageWrap = styled.div`
 
   @media (max-width: 640px) {
     img { height: 180px; }
+  }
+  @media (max-width: 360px) {
+    img { height: 150px; }
   }
 `;
 

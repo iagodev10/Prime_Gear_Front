@@ -28,7 +28,7 @@ export const SectionIcon = styled.div`
 export const SectionTitle = styled.h2`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111827;
+  color: black;
   margin: 0;
 `
 
@@ -57,13 +57,13 @@ export const PreferenceInfo = styled.div`
 export const PreferenceLabel = styled.h4`
   font-size: 1rem;
   font-weight: 500;
-  color: #111827;
+  color: black;
   margin: 0;
 `
 
 export const PreferenceDescription = styled.p`
   font-size: 0.875rem;
-  color: #6b7280;
+  color: black;
   margin: 0.25rem 0 0 0;
 `
 
@@ -71,7 +71,7 @@ export const ToggleSwitch = styled.button`
   position: relative;
   width: 48px;
   height: 24px;
-  background-color: ${({ $isActive }) => ($isActive ? "#1e293b" : "#d1d5db")};
+  background-color: ${({ $isActive }) => ($isActive ? "black" : "white")};
   border: none;
   border-radius: 9999px;
   cursor: pointer;
@@ -89,7 +89,7 @@ export const ToggleSlider = styled.span`
   left: ${({ $isActive }) => ($isActive ? "26px" : "2px")};
   width: 20px;
   height: 20px;
-  background-color: #ffffff;
+  background-color: ${({ $isActive }) => ($isActive ? "white" : "black")};
   border-radius: 50%;
   transition: left 0.2s ease;
 `

@@ -1,9 +1,12 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const HeroContainer = styled.section`
   width: 100%;
   min-height: 600px;
   position: relative;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 
   @media (max-width: 1400px) {
     min-height: 550px;
@@ -32,11 +35,11 @@ export const HeroContainer = styled.section`
   .swiper-button-next,
   .swiper-button-prev {
     color: #fff !important;
-    
+
     @media (max-width: 992px) {
       transform: scale(0.85);
     }
-    
+
     @media (max-width: 768px) {
       display: none;
     }
@@ -45,23 +48,23 @@ export const HeroContainer = styled.section`
   .swiper-button-next::after,
   .swiper-button-prev::after {
     font-size: 28px;
-    
+
     @media (max-width: 1200px) {
       font-size: 26px;
     }
-    
+
     @media (max-width: 992px) {
       font-size: 24px;
     }
-    
+
     @media (max-width: 768px) {
       font-size: 22px;
     }
-    
+
     @media (max-width: 576px) {
       font-size: 20px;
     }
-    
+
     @media (max-width: 480px) {
       font-size: 18px;
     }
@@ -71,7 +74,7 @@ export const HeroContainer = styled.section`
     @media (max-width: 768px) {
       bottom: 20px !important;
     }
-    
+
     @media (max-width: 576px) {
       bottom: 15px !important;
     }
@@ -83,12 +86,12 @@ export const HeroContainer = styled.section`
     width: 10px;
     height: 10px;
     transition: all 0.3s ease;
-    
+
     @media (max-width: 768px) {
       width: 8px;
       height: 8px;
     }
-    
+
     @media (max-width: 576px) {
       width: 6px;
       height: 6px;
@@ -108,8 +111,8 @@ export const StyledSwiperSlide = styled.div`
   min-height: 400px;
   position: relative;
   display: flex;
-  align-items: flex-end; 
-  justify-content: flex-start; 
+  align-items: flex-end;
+  justify-content: flex-start;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -203,16 +206,19 @@ export const HeroButton = styled.a`
   position: relative;
   z-index: 3;
   padding: 22px 37px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: #000000;
   text-decoration: none;
-  font-weight: 400;
+  font-weight: 500;
   border-radius: 50px;
   transition: all 0.3s ease;
   font-size: 1.1rem;
   display: inline-block;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
+  min-height: 44px;
+  min-width: 160px;
+  touch-action: manipulation;
 
   @media (max-width: 1400px) {
     padding: 20px 35px;
@@ -222,73 +228,79 @@ export const HeroButton = styled.a`
   @media (max-width: 1200px) {
     padding: 18px 32px;
     font-size: 1rem;
+    min-width: 150px;
   }
 
   @media (max-width: 992px) {
     padding: 16px 30px;
     font-size: 0.95rem;
+    min-width: 140px;
   }
 
   @media (max-width: 768px) {
     padding: 15px 28px;
     font-size: 0.9rem;
+    min-width: 130px;
   }
 
   @media (max-width: 576px) {
     padding: 13px 25px;
     font-size: 0.85rem;
+    min-width: 120px;
   }
 
   @media (max-width: 480px) {
     padding: 12px 22px;
     font-size: 0.8rem;
+    min-width: 110px;
   }
 
   &:hover {
     background-color: #f0f0f0;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    
+
     @media (max-width: 768px) {
       transform: translateY(-1px);
     }
-    
+
     @media (max-width: 576px) {
       transform: translateY(0);
     }
   }
-  
+
   @media (max-width: 400px) {
     padding: 10px 20px;
     font-size: 0.75rem;
+    min-width: 100px;
   }
 `;
 
 // Adicionando regras específicas para os botões fixos
 export const FixedButtons = styled.div`
   position: absolute;
-  bottom: 140px;
-  right: 400px;
+  bottom: 18vh;
+  right: 10vw;
   display: flex;
   gap: 45px;
   flex-wrap: wrap;
   justify-content: center;
 
   @media (max-width: 1400px) {
-    bottom: 130px;
-    right: 350px;
+    bottom: 16vh;
+    right: 9vw;
     gap: 40px;
   }
 
   @media (max-width: 1200px) {
-    bottom: 120px;
-    right: 300px;
+    bottom: 14vh;
+    right: 8vw;
     gap: 35px;
   }
 
   @media (max-width: 992px) {
-    bottom: 100px;
-    right: 200px;
+    bottom: 12vh;
+    right: 6vw;
     gap: 30px;
   }
 

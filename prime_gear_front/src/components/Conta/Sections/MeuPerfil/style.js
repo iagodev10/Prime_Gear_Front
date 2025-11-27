@@ -30,7 +30,7 @@ export const SectionIcon = styled.div`
 export const SectionTitle = styled.h2`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111827;
+  color: black;
   margin: 0;
 `
 
@@ -76,7 +76,7 @@ export const FormGroup = styled.div`
 export const Label = styled.label`
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: black;
 
   span {
     color: #ef4444;
@@ -89,7 +89,7 @@ export const Input = styled.input`
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  color: #111827;
+  color: black;
   transition: border-color 0.2s ease;
 
   &:focus {
@@ -114,7 +114,7 @@ export const Select = styled.select`
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  color: #111827;
+  color: black;
   cursor: pointer;
   transition: border-color 0.2s ease;
 
@@ -125,14 +125,14 @@ export const Select = styled.select`
 
   &:disabled {
     background-color: #f9fafb;
-    color: #6b7280;
+    color: black;
     cursor: not-allowed;
   }
 `
 
 export const HelperText = styled.p`
   font-size: 0.75rem;
-  color: #dc2626;
+  color: black;
   margin: 0;
 `
 
@@ -145,8 +145,8 @@ export const FullWidthGroup = styled.div`
 
 export const SaveButton = styled.button`
   padding: 0.75rem 1.5rem;
-  background-color: #1e293b;
-  color: #ffffff;
+  background-color: black;
+  color: white;
   border: none;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -155,6 +155,6 @@ export const SaveButton = styled.button`
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #334155;
+    background-color: black;
   }
 `

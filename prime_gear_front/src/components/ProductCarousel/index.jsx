@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules'; 
+import { Navigation } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-import ProductCard from '../ProductCard'; 
+import ProductCard from '../ProductCard';
 import laptopvendaImage from '../../assets/images/laptopvenda.png';
 
 import { CarouselContainer, SectionTitle, SwiperContainer } from './style';
@@ -63,21 +63,30 @@ const ProductCarousel = ({ title, produtos }) => {
 
       <SwiperContainer>
         <Swiper
-          modules={[Navigation]} 
-          navigation 
-          spaceBetween={30} 
+          modules={[Navigation]}
+          navigation
+          slidesPerView={4}
+          spaceBetween={25}
           breakpoints={{
+            // Mobile pequeno - 2 cards por linha
             320: {
-              slidesPerView: 1, 
+              slidesPerView: 2,
+              spaceBetween: 6
+            },
+            // Mobile grande - 2 cards por linha
+            480: {
+              slidesPerView: 2,
+              spaceBetween: 8
+            },
+            // Tablet - 3 cards por linha
+            768: {
+              slidesPerView: 3,
               spaceBetween: 20
             },
-            768: {
-              slidesPerView: 2, 
-              spaceBetween: 30
-            },
+            // Desktop - 4 cards por linha (padrão)
             1024: {
-              slidesPerView: 4, 
-              spaceBetween: 30
+              slidesPerView: 4,
+              spaceBetween: 25
             }
           }}
         >
@@ -97,7 +106,7 @@ const ProductCarousel = ({ title, produtos }) => {
               />
             </SwiperSlide>
           ))}
-          
+
         </Swiper>
       </SwiperContainer>
     </CarouselContainer>

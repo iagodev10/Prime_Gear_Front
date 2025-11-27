@@ -4,7 +4,7 @@ import { Navigation } from "swiper/modules";
 import 'swiper/css'
 import 'swiper/css/navigation';
 
-import {Container, Title, Card, SwiperContainer} from './style';
+import { Container, Title, Card, SwiperContainer } from './style';
 
 import Asus from '../../assets/images/Asus.png';
 import Dell from '../../assets/images/Dell.png';
@@ -15,13 +15,13 @@ import Lenovo from '../../assets/images/lenovo.png'
 
 const Marcas = [
     { id: 1, name: "Asus", image: Asus },
-    { id: 1, name: "Asus", image: Dell },
-    { id: 1, name: "Samsung", image: Samsung },
-    { id: 1, name: "Apple", image: Apple },
-    { id: 1, name: "Lenovo", image: Lenovo },
-    { id: 1, name: "Asus", image: Asus },
-    { id: 1, name: "Asus", image: Asus },
-    { id: 1, name: "Asus", image: Asus },
+    { id: 2, name: "Dell", image: Dell },
+    { id: 3, name: "Samsung", image: Samsung },
+    { id: 4, name: "Apple", image: Apple },
+    { id: 5, name: "Lenovo", image: Lenovo },
+    { id: 6, name: "Asus", image: Asus },
+    { id: 7, name: "Dell", image: Dell },
+    { id: 8, name: "Samsung", image: Samsung },
 ]
 
 const BrandsCarousel = () => {
@@ -33,16 +33,16 @@ const BrandsCarousel = () => {
                 <Swiper
                     modules={[Navigation]}
                     navigation
+                    slidesPerView={5}
                     spaceBetween={30}
-
-                    // Este carrossel tem mais itens visíveis
                     breakpoints={{
-                        320: { slidesPerView: 2, spaceBetween: 20 },
-                        768: { slidesPerView: 4, spaceBetween: 30 },
-                        1024: { slidesPerView: 6, spaceBetween: 30 }
+                        320: { slidesPerView: 2, spaceBetween: 12 },
+                        480: { slidesPerView: 3, spaceBetween: 16 },
+                        768: { slidesPerView: 4, spaceBetween: 20 },
+                        1024: { slidesPerView: 5, spaceBetween: 25 }
                     }}
                 >
-                    {Marcas.map((brand) =>(
+                    {Marcas.map((brand) => (
                         <SwiperSlide key={brand.id}>
                             <Card>
                                 <img src={brand.image} alt={brand.name} />
