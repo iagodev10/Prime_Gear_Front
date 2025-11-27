@@ -4,19 +4,19 @@ export const Container = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: #f5f5f5;
-  padding-top: 10vh;
+  padding-top: 8vh;
   padding-bottom: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
 
   @media (max-width: 768px) {
-    padding-top: 8vh;
+    padding-top: 70px;
     padding-bottom: 30px;
   }
 
   @media (max-width: 480px) {
-    padding-top: 6vh;
+    padding-top: 70px;
     padding-bottom: 20px;
   }
 `;
