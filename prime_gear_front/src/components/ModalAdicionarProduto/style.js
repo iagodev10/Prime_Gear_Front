@@ -20,7 +20,13 @@ export const ModalContent = styled.div`
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     width: 90%;
     max-width: 700px;
-    overflow: hidden;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    
+    @media (max-height: 800px) {
+      max-height: calc(100vh - 24px);
+    }
 `;
 
 export const ModalHeader = styled.div`
@@ -59,6 +65,11 @@ export const Form = styled.form`
   flex-direction: column;
   gap: 16px;
   padding-bottom: 24px; 
+
+  @media (max-height: 800px) {
+    padding: 16px;
+    padding-bottom: 16px;
+  }
 
   > div {
     display: flex;
@@ -103,6 +114,7 @@ export const Divide = styled.div`
     flex-direction: row !important;
     gap: 16px;
     width: 100%;
+    flex-wrap: wrap;
     
     > div {
         flex: 1;

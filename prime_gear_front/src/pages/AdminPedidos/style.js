@@ -896,7 +896,7 @@ export const OrderSelect = styled.select`
   background: #fff;
   color: #111;
   font-weight: 500;
-  width: 100%;
+  width: 80%;
   cursor: pointer;
   transition: all 0.2s ease;
 

@@ -120,6 +120,7 @@ export const SwiperContainer = styled.div`
   max-width: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  background: transparent;
   
   .swiper {
     overflow: hidden;
@@ -140,7 +141,7 @@ export const SwiperContainer = styled.div`
     transform: translateY(-50%) !important;
     width: 44px !important;
     height: 44px !important;
-    background: #ffffff !important;
+    // background: red !important;
     border-radius: 50% !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
     transition: all 0.3s ease !important;
@@ -154,7 +155,7 @@ export const SwiperContainer = styled.div`
     }
     
     &:hover {
-      background: #f5f5f5 !important;
+      // background: #f5f5f5 !important;
       transform: translateY(-50%) scale(1.1) !important;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
       color: #000000 !important;
