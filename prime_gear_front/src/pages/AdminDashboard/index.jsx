@@ -30,7 +30,12 @@ import {
   TableHeader,
   TableRow,
   TableCell,
-  StatusBadge
+  StatusBadge,
+  Background,
+  ChartArea,
+  Bars,
+  Bar,
+  ChartLegend
 } from './style';
 
 const AdminDashboard = () => {
@@ -53,10 +58,13 @@ const AdminDashboard = () => {
     { id: '#1020', cliente: 'João Pedro', data: '21/11/2025', valor: 'R$ 2.300,00', status: 'Cancelado' },
   ];
 
+  const trendData = [40, 90, 120, 80, 160, 140, 110, 180, 150, 130, 170, 200];
+
   return (
     <PageContainer>
+      <Background />
       <DashboardHeader>
-        <div>
+        <div className="title">
           <h1>Dashboard Administrativo</h1>
           <p>Bem-vindo de volta! Aqui está o resumo da sua loja hoje.</p>
         </div>
@@ -117,6 +125,19 @@ const AdminDashboard = () => {
           </StatInfo>
         </StatCard>
       </StatsGrid>
+
+      <SectionTitle>Performance (Últimos 12 dias)</SectionTitle>
+      <ChartArea>
+        <Bars>
+          {trendData.map((h, i) => (
+            <Bar key={i} $h={h} />
+          ))}
+        </Bars>
+        <ChartLegend>
+          <span style={{ display: 'inline-flex', width: 14, height: 14, borderRadius: 4, background: 'linear-gradient(180deg, #4d7294 0%, #2a4055 100%)' }} />
+          Receita diária
+        </ChartLegend>
+      </ChartArea>
 
       {/* Seção de Alertas e Pendências (Layout menor) */}
       <SectionTitle>Atenção Necessária</SectionTitle>
