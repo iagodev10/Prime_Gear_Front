@@ -17,9 +17,11 @@ import {
   CardBlock,
   Divider,
   PassionSection,
+  PassionHero,
+  PassionTitle,
   PassionContent,
-  PassionText,
-  PassionImage,
+  Texto,
+  ImageWrapper,
   TeamSection,
   TeamTitle,
   TeamGrid,
@@ -30,6 +32,8 @@ import {
 
 import EmailSignUp from '../../components/EmailSignUp';
 import Logo from '../../assets/images/logoligth.png';
+
+import Player from '../../assets/images/player.png';
 
 const InstitutionalPage = () => {
   return (
@@ -49,7 +53,7 @@ const InstitutionalPage = () => {
 
           {/* LADO DIREITO */}
           <HeroImageWrapper>
-            <img src={Logo} alt="logo" />
+            <img src={Player} alt="logo" />
           </HeroImageWrapper>
 
         </HeroContainer>
@@ -102,30 +106,30 @@ const InstitutionalPage = () => {
 
       {/* Paixão por tecnologia Section */}
       <PassionSection>
-        <PassionContent>
-          <PassionText>
-            <h2>Paixão por tecnologia, compromisso com você</h2>
-            <p>
-              Na PrimeGear, nossa paixão pela tecnologia se traduz em um compromisso inabalável com você. Cada produto que oferecemos é cuidadosamente selecionado para garantir que você tenha acesso ao melhor do mercado, com a confiança de estar fazendo a escolha certa.
-            </p>
-          </PassionText>
-          <PassionImage>
-            {/* Placeholder for person image */}
-            <div style={{
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: '18px'
-            }}>
-              Imagem do colaborador
-            </div>
-          </PassionImage>
-        </PassionContent>
-      </PassionSection>
+
+  <PassionHero />
+
+  <PassionTitle>
+    Paixão por tecnologia, <br />
+    compromisso com você
+  </PassionTitle>
+
+  <PassionContent>
+
+    <Texto>
+      Na <b>PrimeGear</b>, aproximamos pessoas da tecnologia que transforma
+      o dia a dia, e fazemos isso com compromisso, transparência e paixão
+      pelo que fazemos.
+    </Texto>
+
+    <ImageWrapper>
+      <img src="/homen.png" alt="Homem sorrindo" />
+    </ImageWrapper>
+
+  </PassionContent>
+
+</PassionSection>
+
 
       {/* Nossa Equipe Section */}
       <TeamSection>

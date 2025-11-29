@@ -255,76 +255,128 @@ export const CardBlock = styled.div`
 
 
 
+
 // Passion Section
 export const PassionSection = styled.section`
   background: #f5f5f5;
   padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 40px;
   
   @media (max-width: 768px) {
     padding: 60px 20px;
   }
 `;
 
-export const PassionContent = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  
-  @media (max-width: 968px) {
-    grid-template-columns: 1fr;
-    gap: 40px;
+/* ====================== */
+/*        TOP BAR         */
+/* ====================== */
+
+export const PassionHero = styled.section`
+  background: linear-gradient(135deg, #0f323d 0%, #000c17 100%);
+  width: 80%;
+  padding: 40px 0;
+  display: flex;
+  justify-content: flex-start;
+  border-top-left-radius: 40px;
+  border-bottom-left-radius: 40px;
+  margin-left: auto;
+
+  @media (max-width: 900px) {
+    width: 100%;
+    border-radius: 0;
+    margin-left: 0;
   }
 `;
 
-export const PassionText = styled.div`
-  background: #1a4d5e;
-  color: white;
-  padding: 50px 40px;
-  border-radius: 16px;
-  
-  h2 {
+/* ====================== */
+/*         TITLE          */
+/* ====================== */
+
+export const PassionTitle = styled.h2`
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #0f323d;
+  width: 80%;
+  text-align: left;
+  margin: 0;
+  margin-bottom: 40px;
+
+  @media (max-width: 768px) {
     font-size: 2rem;
-    font-weight: 700;
-    margin: 0 0 24px;
-    line-height: 1.3;
-  }
-  
-  p {
-    font-size: 1.05rem;
-    line-height: 1.8;
-    margin: 0;
-  }
-  
-  @media (max-width: 768px) {
-    padding: 40px 30px;
-    
-    h2 {
-      font-size: 1.6rem;
-    }
-    
-    p {
-      font-size: 1rem;
-    }
   }
 `;
 
-export const PassionImage = styled.div`
-  width: 100%;
-  height: 500px;
-  border-radius: 16px;
-  overflow: hidden;
-  
-  @media (max-width: 968px) {
-    height: 400px;
+/* ====================== */
+/*     IMAGE WRAPPER      */
+/* ====================== */
+
+export const ImageWrapper = styled.div`
+  position: absolute;
+  right: 0;             /* alinha à direita do PassionContent */
+  bottom: 0;            /* cola na base do bloco escuro */
+  transform: translate(50%, 35%);  /* move para fora à direita e desce um pouco */
+
+  background: #031c27;
+  padding: 20px 20px 0 20px;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  z-index: 5;
+
+  img {
+    width: 280px;
+    height: auto;
   }
-  
-  @media (max-width: 768px) {
-    height: 300px;
+
+  @media (max-width: 900px) {
+    display: none;
   }
 `;
+
+
+/* ====================== */
+/*    CONTENT BLOCK       */
+/* ====================== */
+
+export const PassionContent = styled.section`
+  background: linear-gradient(135deg, #0f323d 0%, #000c17 100%);
+  width: 70%;
+  padding: 80px 40px;
+  display: flex;
+  justify-content: flex-start;
+  position: relative;    /* <-- necessário para a imagem se posicionar aqui */
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  margin-right: auto;
+  overflow: visible;     /* <-- permite a imagem sair do container */
+
+  @media (max-width: 900px) {
+    width: 100%;
+    border-radius: 0;
+    margin-right: 0;
+  }
+`;
+
+
+/* ====================== */
+/*      CONTENT TEXT      */
+/* ====================== */
+
+export const Texto = styled.p`
+  font-size: 1.5rem;
+  line-height: 1.8;
+  color: white;
+  margin: 0;
+  text-align: left;
+  margin-left: 10%;
+  max-width: 40%;
+`;
+
+
 
 // Team Section
 export const TeamSection = styled.section`
