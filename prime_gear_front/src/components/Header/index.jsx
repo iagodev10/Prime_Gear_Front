@@ -158,7 +158,7 @@ const Header = () => {
               size={20}
               onClick={() => setIsCartModalOpen(true)}
             />
-            <Link to="/login" style={{ color: "inherit" }}>
+            <Link to="/user" style={{ color: "inherit" }}>
               <FiUser size={20} />
             </Link>
           </Icons>

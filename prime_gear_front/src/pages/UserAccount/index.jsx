@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CustomerHeader from "../../components/Conta/CustomerHeader"
 import CustomerSidebar from "../../components/Conta/CustomerSidebar"
 import MeuPerfil from "../../components/Conta/Sections/MeuPerfil"
@@ -11,8 +11,9 @@ import Pagamentos from "../../components/Conta/Sections/Pagamentos"
 import Preferencias from "../../components/Conta/Sections/Preferencias"
 import Seguranca from "../../components/Conta/Sections/Seguranca"
 import { ContaContainer, ContaContent, MainContent } from "./style"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
-// Dados mockados do usuário
 const mockUser = {
   nome: "IAGO BORGES BARBOSA",
   email: "iago.barbosa@estudante.iftm.edu.br",
@@ -25,7 +26,38 @@ const mockUser = {
 }
 
 const Conta = () => {
+
+  const navigate = useNavigate()
+
   const [activeSection, setActiveSection] = useState("meu-perfil")
+
+  const buscarDadosDoUsuario = async () => {
+
+    
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/get-dados-user', null,
+        {
+          withCredentials:true
+        }
+      );
+
+      if(response.data.res==false){
+        navigate('/login')
+      }
+      console.log('Dados do usuário:', response.data);
+      return response.data;
+
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    buscarDadosDoUsuario()
+  }, [])
 
   const renderContent = () => {
     switch (activeSection) {
