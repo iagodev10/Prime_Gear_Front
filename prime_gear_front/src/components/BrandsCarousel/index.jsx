@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from "swiper/modules";
 import 'swiper/css'
@@ -25,6 +26,21 @@ const Marcas = [
 ]
 
 const BrandsCarousel = ({marcas}) => {
+    const navigate = useNavigate();
+
+    const handleBrandClick = (brandName) => {
+        console.log('Navegando para loja com marca:', brandName);
+        
+        navigate('/loja', {
+            state: {
+                selectedBrand: brandName
+            },
+            replace: false
+        });
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <Container>
             <Title>Nossas Marcas</Title>
@@ -44,7 +60,7 @@ const BrandsCarousel = ({marcas}) => {
                 >
                     {marcas.map((brand) => (
                         <SwiperSlide key={brand.cod_marca}>
-                            <Card>
+                            <Card onClick={() => handleBrandClick(brand.nome_marca)}>
                                 <img src={brand.url_nome_img_marca} alt={brand.nome_marca} />
                             </Card>
                         </SwiperSlide>

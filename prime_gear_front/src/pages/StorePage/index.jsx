@@ -425,7 +425,25 @@ useEffect(() => {
             window.history.replaceState({}, document.title);
         }
     }
-}, [location.state, categorias]);
+}, [location.state, categorias])
+
+useEffect(() => {
+    if (marcas.length > 0 && location.state?.selectedBrand) {
+        const brandName = location.state.selectedBrand;
+        
+        console.log('Marca selecionada:', brandName);
+        console.log('Marcas disponíveis:', marcas.map(m => m.nome_marca));
+        
+        const matchedBrand = marcas.find(m => m.nome_marca === brandName);
+        
+        if (matchedBrand && !selectedBrands.includes(brandName)) {
+            setSelectedBrands(prev => [...prev, brandName]);
+            console.log('Marca adicionada aos filtros:', brandName);
+        }
+        
+        window.history.replaceState({}, document.title);
+    }
+}, [location.state, marcas]);
 
  
     useEffect(() => {
