@@ -20,13 +20,13 @@ const ProductPage = () => {
     try {
       setLoading(true);
       
-      // Buscar produto
+     
       const responseProduto = await axios.get(`http://localhost:8080/produto/${id}`);
       const produtoData = responseProduto.data;
       setProduto(produtoData);
       setImagemPrincipal(produtoData.url_img_prod);
 
-      // Buscar categoria se existir
+    
       if (produtoData.cod_categoria) {
         try {
           const responseCategoria = await axios.get(`http://localhost:8080/categoria/${produtoData.cod_categoria}`);
@@ -37,7 +37,7 @@ const ProductPage = () => {
       }
     } catch (error) {
       console.error('Erro ao buscar produto:', error);
-      // Redirecionar para loja se produto não existir
+  
       setTimeout(() => navigate('/loja'), 2000);
     } finally {
       setLoading(false);
@@ -53,7 +53,7 @@ const ProductPage = () => {
   };
 
   const adicionarAoCarrinho = () => {
-    // Implementar lógica de adicionar ao carrinho
+   
     console.log('Adicionar ao carrinho:', { produto, quantidade });
     alert(`${quantidade}x ${produto.nome_prod} adicionado ao carrinho!`);
   };

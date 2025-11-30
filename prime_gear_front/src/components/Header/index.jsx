@@ -101,6 +101,11 @@ const Header = () => {
           <NavLinks>
             <Link
               to="/loja"
+            >
+              Loja{" "}
+            </Link>
+            <Link
+              to="/loja"
               onMouseEnter={() => setOpenCategory("laptops")}
               onClick={(e) => handleCategoryClick(e, "laptop")}
             >

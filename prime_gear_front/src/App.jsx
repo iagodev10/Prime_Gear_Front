@@ -60,7 +60,7 @@ const AppContent = () => {
           <Route path="/" element={<PublicLayout />}>
             <Route index element={<HomePage />} />
             <Route path="loja" element={<Store />} />
-            <Route path="detalhe" element={<ProductPage />} />
+            <Route path="detalhe/:id" element={<ProductPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="admin/login" element={<AdminLogin />} />
             <Route path="institucional" element={<Institutional />} />

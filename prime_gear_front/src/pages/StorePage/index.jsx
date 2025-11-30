@@ -840,6 +840,7 @@ useEffect(() => {
                                         price={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                                         oldPrice={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                                         image={prod.url_img_prod}
+                                        idProd={prod.cod_produto}
                                     />
                                 ))
                             ) : (
