@@ -370,16 +370,62 @@ function Store() {
     }, [selectedCategories, selectedBrands, selectedPriceRanges, selectedRatings, categoryFromCarousel]); // ✅ ADICIONE selectedRatings
 
    
-    useEffect(() => {
-        if (location.state?.selectedCategory && categorias.length > 0) {
-            const category = location.state.selectedCategory;
-            setCategoryFromCarousel(category);
+
+
+useEffect(() => {
+    if (categorias.length > 0) {
+     
+        if (location.state?.categoryIdentifier) {
+            const identifier = location.state.categoryIdentifier.toLowerCase();
+            
+            console.log('🔍 Buscando categoria com identificador:', identifier);
+            console.log('📦 Categorias disponíveis:', categorias.map(c => c.nome_cat));
+            
        
+            const matchedCategory = categorias.find(cat => {
+                const catName = cat.nome_cat.toLowerCase();
+                
+      
+                return catName.includes(identifier) || 
+                       identifier.includes(catName) ||
+                     
+                       (identifier === 'laptop' && (catName.includes('notebook') || catName.includes('laptop'))) ||
+                       (identifier === 'desktop' && (catName.includes('desktop') || catName.includes('pc') || catName.includes('computador'))) ||
+                       (identifier === 'console' && (catName.includes('console') || catName.includes('videogame'))) ||
+                       (identifier === 'periferico' && (catName.includes('periférico') || catName.includes('periferico')));
+            });
+            
+            console.log('✅ Categoria encontrada:', matchedCategory);
+            
+            if (matchedCategory) {
+                setCategoryFromCarousel(matchedCategory);
+                
+                if (!selectedCategories.includes(matchedCategory.nome_cat)) {
+                    setSelectedCategories(prev => [...prev, matchedCategory.nome_cat]);
+                }
+            } else {
+                console.warn('⚠️ Nenhuma categoria encontrada para:', identifier);
+            }
+            
+          
+            window.history.replaceState({}, document.title);
+        }
+    
+        else if (location.state?.selectedCategory) {
+            const category = location.state.selectedCategory;
+            console.log('📌 Categoria selecionada diretamente:', category);
+            
+            setCategoryFromCarousel(category);
+            
             if (!selectedCategories.includes(category.nome_cat)) {
                 setSelectedCategories(prev => [...prev, category.nome_cat]);
             }
+            
+        
+            window.history.replaceState({}, document.title);
         }
-    }, [location.state, categorias]);
+    }
+}, [location.state, categorias]);
 
  
     useEffect(() => {

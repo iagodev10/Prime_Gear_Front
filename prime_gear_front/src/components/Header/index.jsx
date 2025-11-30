@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
@@ -24,6 +24,7 @@ import LogoDark from "../../assets/images/logodark.png";
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isHome = location.pathname === "/";
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +45,6 @@ const Header = () => {
 
   useEffect(() => {
     if (!isHome) {
-      // reset scroll state for non-home pages
       setIsScrolled(true);
       return;
     }
@@ -53,6 +53,23 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
+
+
+  const handleCategoryClick = (e, categoryIdentifier) => {
+    e.preventDefault();
+    
+    console.log('🔗 Header: Navegando para loja com categoria:', categoryIdentifier);
+    
+    navigate('/loja', {
+      state: {
+        categoryIdentifier: categoryIdentifier
+      },
+      replace: false
+    });
+    
+ 
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <>
@@ -83,14 +100,9 @@ const Header = () => {
 
           <NavLinks>
             <Link
-              to="/laptops"
+              to="/loja"
               onMouseEnter={() => setOpenCategory("laptops")}
-              onClick={(e) => {
-                if (window.innerWidth <= 768) {
-                  e.preventDefault();
-                  setOpenCategory("laptops");
-                }
-              }}
+              onClick={(e) => handleCategoryClick(e, "laptop")}
             >
               Laptops{" "}
               <FaChevronDown
@@ -99,14 +111,9 @@ const Header = () => {
               />
             </Link>
             <Link
-              to="/desktops"
+              to="/loja"
               onMouseEnter={() => setOpenCategory("desktops")}
-              onClick={(e) => {
-                if (window.innerWidth <= 768) {
-                  e.preventDefault();
-                  setOpenCategory("desktops");
-                }
-              }}
+              onClick={(e) => handleCategoryClick(e, "desktop")}
             >
               Desktops{" "}
               <FaChevronDown
@@ -115,14 +122,9 @@ const Header = () => {
               />
             </Link>
             <Link
-              to="/consoles"
+              to="/loja"
               onMouseEnter={() => setOpenCategory("consoles")}
-              onClick={(e) => {
-                if (window.innerWidth <= 768) {
-                  e.preventDefault();
-                  setOpenCategory("consoles");
-                }
-              }}
+              onClick={(e) => handleCategoryClick(e, "console")}
             >
               Consoles{" "}
               <FaChevronDown
@@ -131,14 +133,9 @@ const Header = () => {
               />
             </Link>
             <Link
-              to="/perifericos"
+              to="/loja"
               onMouseEnter={() => setOpenCategory("perifericos")}
-              onClick={(e) => {
-                if (window.innerWidth <= 768) {
-                  e.preventDefault();
-                  setOpenCategory("perifericos");
-                }
-              }}
+              onClick={(e) => handleCategoryClick(e, "periferico")}
             >
               Periféricos{" "}
               <FaChevronDown
