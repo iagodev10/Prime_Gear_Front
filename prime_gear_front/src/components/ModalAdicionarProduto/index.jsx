@@ -8,100 +8,129 @@ import { ModalOverlay, ModalContent, ModalHeader, Form, Divide, ProdDestaque, Sw
 
 const ModalAdicionarProduto = ({ onClose }) => {
 
- 
-  
+
+
   const [produtoDestaque, setProdutoDestaque] = useState(false);
-  const [categorias,setCategorias]=useState([])
+  const [categorias, setCategorias] = useState([])
+  const [marcas,setMarcas]=useState([])
 
+  const [nomeProd, setNomeProd] = useState()
+  const [precoProd, setPrecoProd] = useState()
+  const [qtdEstoqueProd, setQtdEstoqueProd] = useState()
+  const [categoriaProd, setCategoriaProd] = useState()
+  const [descricaoProd, setDescricaoProd] = useState()
+  const [pesoProd, setPesoProd] = useState()
+  const [alturaProd, setAlturaProd] = useState()
+  const [larguraProd, setLarguraProd] = useState()
+  const [comprimentoProd, seComprimentoProd] = useState()
+  const [imagemProd, setImagemProd] = useState(null)
+  const [marcaProd, setMarcaProd] = useState()
 
-  const [nomeProd, setNomeProd]=useState()
-  const [precoProd, setPrecoProd]=useState()
-  const [qtdEstoqueProd, setQtdEstoqueProd]=useState()
-  const [categoriaProd, setCategoriaProd]=useState()
-  const [descricaoProd, setDescricaoProd]=useState()
-  const [pesoProd, setPesoProd]=useState()
-  const [alturaProd, setAlturaProd]=useState()
-  const [larguraProd, setLarguraProd]=useState()
-  const [comprimentoProd, seComprimentoProd]=useState()
-  const [imagemProd, setImagemProd]=useState(null)
-
-  function setarNomeProd(e){
+  function setarNomeProd(e) {
     setNomeProd(e.target.value)
   }
-  function setarPrecoProd(e){
+  function setarPrecoProd(e) {
     setPrecoProd(e.target.value)
   }
-  function setarQtdEstoqueProd(e){
+  function setarQtdEstoqueProd(e) {
     setQtdEstoqueProd(e.target.value)
   }
-  function setarCategoriaProd(e){
+  function setarCategoriaProd(e) {
     setCategoriaProd(e.target.value)
   }
-  function setarDescricaoProd(e){
+  function setarDescricaoProd(e) {
     setDescricaoProd(e.target.value)
   }
-  function setarPesoProd(e){
+  function setarPesoProd(e) {
     setPesoProd(e.target.value)
   }
-  function setarAlturaProd(e){
+  function setarAlturaProd(e) {
     setAlturaProd(e.target.value)
   }
-  function setarLarguraProd(e){
+  function setarLarguraProd(e) {
     setLarguraProd(e.target.value)
   }
-  function setarComprimentoProd(e){
+  function setarComprimentoProd(e) {
     seComprimentoProd(e.target.value)
   }
-  function setarImagemProd(e){
+  function setarImagemProd(e) {
     setImagemProd(e.target.files[0])
   }
 
-  async function obterCategorias(){
+  async function obterCategorias() {
     try {
-        const response=await axios.get('http://localhost:8080/get-categorias')
-        setCategorias(response.data)
+      const response = await axios.get('http://localhost:8080/get-categorias')
+      setCategorias(response.data)
     } catch (error) {
       console.log(error);
     }
   }
-  useEffect(()=>{
+  async function obterMarcas() {
+    try {
+      const response = await axios.get('http://localhost:8080/get-marcas')
+      setMarcas(response.data)
+      console.log("marcas");
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
     obterCategorias()
-  },[])
+    obterMarcas()
+  }, [])
+  useEffect(() => {
+    if (categorias.length > 0 && !categoriaProd) {
+      setCategoriaProd(categorias[0].cod_categoria);
+    }
+  }, [categorias]);
+  
+  useEffect(() => {
+    if (marcas.length > 0 && !marcaProd) {
+      setMarcaProd(marcas[0].cod_marca);
+    }
+  }, [marcas]);
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
-  
-  async function adicionarProduto(e){
+
+  async function adicionarProduto(e) {
     e.preventDefault();
+
+
+    const formData = new FormData()
+
+    formData.append('nome_prod', nomeProd)
+    formData.append('preco_prod', precoProd)
+    formData.append('descricao_prod', descricaoProd)
+    formData.append('qtd_estoque_prod', qtdEstoqueProd)
+    formData.append('altura_prod', alturaProd)
+    formData.append('largura_prod', larguraProd)
+    formData.append('comprimento_prod', comprimentoProd)
+    formData.append('cod_categoria', categoriaProd)
+    formData.append('cod_marca', marcaProd)
+    formData.append('peso_prod', pesoProd)
+    formData.append('avaliacao_prod', 0)
     
 
-    const formData=new FormData()
-
-    formData.append('nome_prod',nomeProd)
-    formData.append('preco_prod',precoProd)
-    formData.append('descricao_prod',descricaoProd)
-    formData.append('qtd_estoque_prod',qtdEstoqueProd)
-    formData.append('altura_prod',alturaProd)
-    formData.append('largura_prod',larguraProd)
-    formData.append('comprimento_prod',comprimentoProd)
-    formData.append('cod_categoria',categoriaProd)
-    formData.append('peso_prod',pesoProd)
-    
-    if(imagemProd){
-      formData.append('imagem1',imagemProd)
+    if (imagemProd) {
+      formData.append('imagem1', imagemProd)
     }
-
+    console.log("form");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+  }
     try {
-      const response=await axios.post('http://localhost:8080/adicionar-produto', formData)
+      const response = await axios.post('http://localhost:8080/adicionar-produto', formData)
       onClose()
     } catch (error) {
       console.log(error);
     }
-    
-  
+
+
   }
 
   return (
@@ -119,39 +148,55 @@ const ModalAdicionarProduto = ({ onClose }) => {
           <Form>
             <div>
               <label htmlFor="nome">Nome do Produto</label>
-              <input type="text" id="nome" required onChange={setarNomeProd}/>
+              <input type="text" id="nome" required onChange={setarNomeProd} />
             </div>
 
             <Divide>
               <div>
                 <label htmlFor="preco">Preço (R$)</label>
-                <input type="number" id="preco" required placeholder="0" onChange={setarPrecoProd}/>
+                <input type="number" id="preco" required placeholder="0" onChange={setarPrecoProd} />
               </div>
 
               <div>
                 <label htmlFor="quantidade">Quantidade em Estoque</label>
-                <input type="number" id="quantidade" required placeholder="0" onChange={setarQtdEstoqueProd}/>
+                <input type="number" id="quantidade" required placeholder="0" onChange={setarQtdEstoqueProd} />
+              </div>
+            </Divide>
+            <Divide>
+              <div>
+                <label htmlFor="categoria">Categoria</label>
+                <select id="categoria" onChange={setarCategoriaProd}>
+                  {
+                    categorias.map((cat) => (
+                      <>
+                        <option value={cat.cod_categoria} >{cat.nome_cat}</option>
+                      </>
+                    ))
+                  }
+
+
+                </select>
+              </div>
+              <div>
+                <label htmlFor="marca">Marca</label>
+                <select id="marca" onChange={(e)=>setMarcaProd(e.target.value)}>
+                  {
+                    marcas.map((marca) => (
+                      <>
+                        <option value={marca.cod_marca} >{marca.nome_marca}</option>
+                      </>
+                    ))
+                  }
+
+
+                </select>
               </div>
             </Divide>
 
-            <div>
-              <label htmlFor="categoria">Categoria</label>
-              <select id="categoria" onChange={setarCategoriaProd}>
-                {
-                  categorias.map((cat)=>(
-                    <>
-                      <option value={cat.cod_categoria} >{cat.nome_cat}</option>
-                    </>
-                  ))
-                }
-                
-            
-              </select>
-            </div>
 
             <div>
               <label htmlFor="imagem">Imagem do Produto</label>
-              <input type="file" id="imagem" accept="image/*" onChange={setarImagemProd}/>
+              <input type="file" id="imagem" accept="image/*" onChange={setarImagemProd} />
             </div>
 
             <div>
@@ -167,28 +212,28 @@ const ModalAdicionarProduto = ({ onClose }) => {
 
                 <div className="divs">
                   <label htmlFor="peso">Peso (Kg)</label>
-                  <input type="number" placeholder="0" onChange={setarPesoProd}/>
+                  <input type="number" placeholder="0" onChange={setarPesoProd} />
                 </div>
 
                 <div className="divs">
                   <label htmlFor="altura">Altura (cm)</label>
-                  <input type="number" placeholder="0" onChange={setarAlturaProd}/>
+                  <input type="number" placeholder="0" onChange={setarAlturaProd} />
                 </div>
 
                 <div className="divs">
                   <label htmlFor="largura">Largura (cm)</label>
-                  <input type="number" placeholder="0" onChange={setarLarguraProd}/>
+                  <input type="number" placeholder="0" onChange={setarLarguraProd} />
                 </div>
 
                 <div className="divs">
                   <label htmlFor="comprimento">Comprimento (cm)</label>
-                  <input type="number" placeholder="0" onChange={setarComprimentoProd}/>
+                  <input type="number" placeholder="0" onChange={setarComprimentoProd} />
                 </div>
 
               </Divide>
             </div>
 
-           
+
 
             <SubmitButton onClick={adicionarProduto}>
               Cadastrar Produto

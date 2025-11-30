@@ -30,40 +30,23 @@ const ScrollContainer = styled.div`
   }
 `;
 
-export default function CategoryNav({ categorias, onCategoryChange, initialCategory }) {
+export default function CategoryNav({ categorias, selectedCategories = [], onCategoryChange }) {
   const categories = categorias;
-  const [activeCategory, setActiveCategory] = useState(initialCategory || null);
+
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
 
-  useEffect(() => {
-    if (initialCategory) {
-      setActiveCategory(initialCategory);
-    }
-  }, [initialCategory]);
+
 
   const handleCategoryClick = (category) => {
-  
     const isOnStorePage = location.pathname === '/loja';
-    
-  
-    if (activeCategory?.cod_categoria === category.cod_categoria) {
-      setActiveCategory(null);
-      if (isOnStorePage) {
-        onCategoryChange?.(null);
-      }
+
+    if (!isOnStorePage) {
+      navigate('/loja', { state: { selectedCategory: category } });
     } else {
-      setActiveCategory(category);
-      
-    
-      if (!isOnStorePage) {
-        navigate('/loja', { state: { selectedCategory: category } });
-      } else {
-        
-        onCategoryChange?.(category);
-      }
+      onCategoryChange?.(category);
     }
   };
 
@@ -81,19 +64,23 @@ export default function CategoryNav({ categorias, onCategoryChange, initialCateg
       </Button>
 
       <ScrollContainer ref={scrollContainerRef}>
-        {categories.map((cat) => (
-          <Button
-            key={cat.cod_categoria}
-            onClick={() => handleCategoryClick(cat)}
-            style={{
-              background: activeCategory?.cod_categoria === cat.cod_categoria ? "#000" : "#e5e5e5",
-              color: activeCategory?.cod_categoria === cat.cod_categoria ? "#fff" : "#333",
-              transition: "all 0.3s ease",
-            }}
-          >
-            {cat.nome_cat}
-          </Button>
-        ))}
+        {categories.map((cat) => {
+          const isActive = selectedCategories.includes(cat.nome_cat);
+
+          return (
+            <Button
+              key={cat.cod_categoria}
+              onClick={() => handleCategoryClick(cat)}
+              style={{
+                background: isActive ? "#000" : "#e5e5e5",
+                color: isActive ? "#fff" : "#333",
+                transition: "all 0.3s ease",
+              }}
+            >
+              {cat.nome_cat}
+            </Button>
+          );
+        })}
       </ScrollContainer>
 
       <Button onClick={() => scroll("right")}>

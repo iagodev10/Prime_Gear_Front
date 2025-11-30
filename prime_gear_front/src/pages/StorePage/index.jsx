@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-// Adicionar o hook 'useLocation' do 'react-router-dom' para usar 'location.state'
+
 import { useLocation } from 'react-router-dom';
 
 import ProductCard from "../../components/ProductCard";
@@ -17,12 +17,12 @@ import fone from '../../assets/images/foneJBL.png'
 
 import axios from 'axios'
 
-// Componente auxiliar para a seção de filtros no modal (mobile)
-const FilterSection = ({ 
+
+const FilterSection = ({
     categorias, toggleCategory, selectedCategories,
     marcas, toggleBrand, selectedBrands,
     priceRanges, togglePriceRange, selectedPriceRanges,
-    expandedFilters, toggleFilter, labelStyle, inputStyle
+    expandedFilters, toggleFilter, labelStyle, inputStyle, selectedRatings, toggleRating
 }) => (
     <>
         {/* Categoria */}
@@ -145,7 +145,7 @@ const FilterSection = ({
                 </div>
             )}
         </div>
-        
+
         {/* Avaliações (Deixadas aqui, mas pode ser removida se a lógica não for implementada) */}
         <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
             <button
@@ -169,55 +169,64 @@ const FilterSection = ({
             </button>
             {expandedFilters.avaliacoes && (
                 <div style={{ paddingTop: '12px' }}>
-                    <label style={labelStyle}>
-                        <input type="checkbox" style={inputStyle} />
-                        1 estrela
-                    </label>
-                    <label style={labelStyle}>
-                        <input type="checkbox" style={inputStyle} />
-                        2 estrelas
-                    </label>
-                    <label style={labelStyle}>
-                        <input type="checkbox" style={inputStyle} />
-                        3 estrelas
-                    </label>
-                    <label style={labelStyle}>
-                        <input type="checkbox" style={inputStyle} />
-                        4 estrelas
-                    </label>
-                    <label style={labelStyle}>
-                        <input type="checkbox" style={inputStyle} />
-                        5 estrelas
-                    </label>
+                    {[5, 4, 3, 2, 1].map(rating => (
+                        <label key={rating} style={labelStyle}>
+                            <input
+                                type="checkbox"
+                                style={inputStyle}
+                                checked={selectedRatings.includes(rating)}
+                                onChange={() => toggleRating(rating)}
+                            />
+                            {rating} {rating === 1 ? 'estrela' : 'estrelas'} ou mais
+                        </label>
+                    ))}
                 </div>
             )}
         </div>
-        
+
         {/* Outros filtros comentados na versão original (removidos para simplificar o código) */}
     </>
 );
 
 
 function Store() {
-    // Para usar location.state
+
+    const handleCategoryChange = (category) => {
+        const categoryName = category.nome_cat;
+
+        if (selectedCategories.includes(categoryName)) {
+            setSelectedCategories(prev => prev.filter(c => c !== categoryName));
+            if (categoryFromCarousel?.nome_cat === categoryName) {
+                setCategoryFromCarousel(null);
+            }
+        } else {
+            setSelectedCategories(prev => [...prev, categoryName]);
+            setCategoryFromCarousel(category);
+        }
+
+        setCurrentPage(1);
+    };
+
+   
+    const [selectedRatings, setSelectedRatings] = useState([])
     const location = useLocation();
 
     const [produtos, setProdutos] = useState([])
     const [categorias, setCategorias] = useState([])
     const [marcas, setMarcas] = useState([])
 
-    // Corrigido: `selectedBrands` estava duplicado, renomeado para `selectedCategories` na primeira aparição
+  
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedBrands, setSelectedBrands] = useState([]); // A linha duplicada foi removida
+    const [selectedBrands, setSelectedBrands] = useState([]); 
     const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
-    const [categoryFromCarousel, setCategoryFromCarousel] = useState(null); 
-    const [favorites, setFavorites] = useState([]); // Usado, mas não implementado logicamente
+    const [categoryFromCarousel, setCategoryFromCarousel] = useState(null);
+    const [favorites, setFavorites] = useState([]); 
 
-    // Erro corrigido: Chaves duplicadas `categoria` e `marca` removidas na inicialização.
+ 
     const [expandedFilters, setExpandedFilters] = useState({
-        categoria: true,
-        marca: true,
+        categoria: false,
+        marca: false,
         preco: false,
         capacidadeSSD: false,
         avaliacoes: false,
@@ -227,16 +236,16 @@ function Store() {
         processador: false
     });
 
-    // Erro: Removida a segunda declaração duplicada de `selectedBrands`.
-    
-    // States relacionados ao layout/responsive (sidebarHeight não é realmente usado na versão corrigida da lógica de scroll)
+  
+
+   
     const [sidebarHeight, setSidebarHeight] = useState('auto');
     const [isMobile, setIsMobile] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    
-    // States para o `useEffect` de scroll
+
+
     const [isStickyFixed, setIsStickyFixed] = useState(false);
-    const [stickyLeft, setStickyLeft] = useState(0); 
+    const [stickyLeft, setStickyLeft] = useState(0);
 
     const sidebarRef = useRef(null);
     const paginationRef = useRef(null);
@@ -244,7 +253,7 @@ function Store() {
 
     const itemsPerPage = 6;
 
-    // Definição do array de faixas de preço (ausente no código original, mas necessário para a lógica de filtro)
+    
     const priceRanges = [
         { label: "Até R$ 1.000", min: 0, max: 1000 },
         { label: "R$ 1.000 a R$ 2.500", min: 1000, max: 2500 },
@@ -256,7 +265,7 @@ function Store() {
     ];
 
 
-    // Estilos movidos para dentro do componente Store para serem acessíveis
+
     const labelStyle = {
         display: "flex",
         alignItems: "center",
@@ -273,16 +282,17 @@ function Store() {
         cursor: 'pointer',
     };
 
-    // Cálculos de paginação
+
     const totalPages = Math.ceil(produtos.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentProducts = produtos.slice(startIndex, endIndex);
 
-    // Funções de busca de dados (mantidas)
+
     async function getCats() {
         try {
             const response = await axios.get('http://localhost:8080/get-categorias')
+            console.log('alou');
             setCategorias(response.data)
         } catch (error) {
             console.log(error);
@@ -297,17 +307,20 @@ function Store() {
         }
     }
 
-    // Função de filtro de produtos (mantida, corrigida a dependência de `priceRanges`)
+    useEffect(()=>{
+        getMarcas()
+        getCats()
+    },[])
+
     async function obterProdutosFiltrados() {
         try {
-            
             let precoMin = undefined;
             let precoMax = undefined;
-            
+
             if (selectedPriceRanges.length > 0) {
-                const ranges = selectedPriceRanges.map(label => 
+                const ranges = selectedPriceRanges.map(label =>
                     priceRanges.find(r => r.label === label)
-                ).filter(r => r); // Garante que apenas ranges encontrados sejam considerados
+                ).filter(r => r);
 
                 if (ranges.length > 0) {
                     precoMin = Math.min(...ranges.map(r => r.min));
@@ -315,16 +328,15 @@ function Store() {
                 }
             }
 
-            
             let categoriasParaFiltrar = [...selectedCategories];
             if (categoryFromCarousel && !categoriasParaFiltrar.includes(categoryFromCarousel.nome_cat)) {
-                // Adiciona a categoria do carrossel apenas se ela não estiver já selecionada
                 categoriasParaFiltrar.push(categoryFromCarousel.nome_cat);
             }
 
             const filtros = {
                 categorias: categoriasParaFiltrar,
                 marcas: selectedBrands,
+                avaliacoes: selectedRatings,  
                 precoMin,
                 precoMax
             };
@@ -339,7 +351,7 @@ function Store() {
         }
     }
 
-    // Função para obter todos os produtos (mantida)
+  
     async function obterTodosProdutos() {
         try {
             const response = await axios.get('http://localhost:8080/produtos-adm')
@@ -349,26 +361,27 @@ function Store() {
         }
     }
 
-    // Efeito para carregar dados iniciais (mantido)
     useEffect(() => {
-        getCats();
-        getMarcas();
-        obterTodosProdutos();
-    }, []);
+        if (selectedCategories.length > 0 || selectedBrands.length > 0 || selectedPriceRanges.length > 0 || selectedRatings.length > 0 || categoryFromCarousel) {
+            obterProdutosFiltrados();
+        } else {
+            obterTodosProdutos();
+        }
+    }, [selectedCategories, selectedBrands, selectedPriceRanges, selectedRatings, categoryFromCarousel]); // ✅ ADICIONE selectedRatings
 
-    // Efeito para carregar categoria do location.state (mantido, mas precisa do useLocation)
+   
     useEffect(() => {
         if (location.state?.selectedCategory && categorias.length > 0) {
             const category = location.state.selectedCategory;
             setCategoryFromCarousel(category);
-            // Corrige: Adicionar a categoria do carrossel aos filtros selecionados
+       
             if (!selectedCategories.includes(category.nome_cat)) {
                 setSelectedCategories(prev => [...prev, category.nome_cat]);
             }
         }
     }, [location.state, categorias]);
 
-    // Efeito para aplicar filtros (mantido)
+ 
     useEffect(() => {
         if (selectedCategories.length > 0 || selectedBrands.length > 0 || selectedPriceRanges.length > 0 || categoryFromCarousel) {
             obterProdutosFiltrados();
@@ -378,34 +391,14 @@ function Store() {
     }, [selectedCategories, selectedBrands, selectedPriceRanges, categoryFromCarousel]);
 
 
-    // Erro corrigido: `useEffect` de rolagem estava incompleto e usava variáveis de estado (`isStickyFixed`, `stickyLeft`) que não existiam ou não eram devidamente atualizadas.
-    // O useEffect original:
-    /*
-    useEffect(() => {
-        const onResize = () => setIsMobile(window.innerWidth <= 900);
-        onResize();
-        window.addEventListener('resize', onResize);
-        const handleScroll = () => {
-            if (!sidebarRef.current || !paginationRef.current || !containerRef.current) return;
-
-            const containerTop = containerRef.current.offsetTop;
-            const paginationTop = paginationRef.current.offsetTop;
-            const scrollY = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const sidebarOffsetHeight = sidebarRef.current.offsetHeight;
-
-            // Calcula quando a sidebar deve parar (quando chegar na paginação)
-            const stopPoint = paginationTop - sidebarOffsetHeight - 20;
-
-        if (scrollY > containerTop) {
-            if (!isStickyFixed) {
-            const rect = sidebarRef.current.getBoundingClientRect();
-            setStickyLeft(rect.left);
-            }
-        }
-        }, []);
-    */
-    // Correção: simplificado e adicionada limpeza do listener
+   
+    const toggleRating = (rating) => {
+        setSelectedRatings(prev =>
+            prev.includes(rating)
+                ? prev.filter(r => r !== rating)
+                : [...prev, rating]
+        );
+    };
     useEffect(() => {
         const onResize = () => setIsMobile(window.innerWidth <= 900);
         onResize();
@@ -413,19 +406,14 @@ function Store() {
         return () => window.removeEventListener('resize', onResize);
     }, []);
 
-    // A lógica de "sticky" complexa que envolvia scroll/pagination/container foi removida
-    // pois estava incompleta e exigiria CSS/Estado adicional complexo. 
-    // Para simplificar, o CSS 'position: sticky; top: 20px' já lida com o "stickiness" em desktop.
+   
 
 
-    // Erro corrigido: `handleCategoryFromCarousel` estava duplicando a categoria selecionada 
-    // se o `selectedCategories` fosse uma cópia inicializada do `location.state`
     const handleCategoryFromCarousel = (category) => {
         setCategoryFromCarousel(category);
-        
+
         if (category) {
-            // A lógica de filtro no useEffect já garante a inclusão, mas esta função 
-            // foi refeita para ser mais limpa se chamada diretamente.
+        
             setSelectedCategories(prev => {
                 const categoryName = category.nome_cat;
                 if (!prev.includes(categoryName)) {
@@ -434,16 +422,16 @@ function Store() {
                 return prev;
             });
         } else {
-            // Se a categoria for deselecionada, remove ela de selectedCategories
+          
             if (categoryFromCarousel) {
-                setSelectedCategories(prev => 
+                setSelectedCategories(prev =>
                     prev.filter(c => c !== categoryFromCarousel.nome_cat)
                 );
             }
         }
     };
 
-    // Funções de toggle de filtros (mantidas)
+
     const toggleFilter = (filterName) => {
         setExpandedFilters(prev => ({
             ...prev,
@@ -456,18 +444,17 @@ function Store() {
             const newCategories = prev.includes(categoryName)
                 ? prev.filter(c => c !== categoryName)
                 : [...prev, categoryName];
-            
-            // Remove a categoria do carrossel se ela for deselecionada
+
+           
             if (categoryFromCarousel && categoryFromCarousel.nome_cat === categoryName && !newCategories.includes(categoryName)) {
                 setCategoryFromCarousel(null);
             }
-            
+
             return newCategories;
         });
     };
 
-    // Erro corrigido: O CategoryNav original estava usando `toggleBrand` e `selectedBrands` para categorias,
-    // o que estava incorreto com base na lógica de filtragem da sidebar. Corrigido para `toggleCategory` e `selectedCategories`.
+  
     const toggleBrand = (brandName) => {
         setSelectedBrands(prev =>
             prev.includes(brandName)
@@ -484,18 +471,20 @@ function Store() {
         );
     };
 
+
     const clearAllFilters = () => {
         setSelectedCategories([]);
         setSelectedBrands([]);
         setSelectedPriceRanges([]);
+        setSelectedRatings([]);  
         setCategoryFromCarousel(null);
     };
 
-    // Função de renderização da paginação (mantida)
+ 
     const renderPagination = () => {
         const pages = [];
 
-        // Lógica de paginação... (mantida)
+   
 
         pages.push(
             <button
@@ -521,7 +510,7 @@ function Store() {
         );
 
         if (totalPages > 0) {
-            // Primeira página
+          
             if (currentPage > 2) {
                 pages.push(
                     <button
@@ -548,7 +537,7 @@ function Store() {
                 }
             }
 
-            // Páginas próximas à atual
+          
             for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
                 pages.push(
                     <button
@@ -570,7 +559,7 @@ function Store() {
                 );
             }
 
-            // Última página
+         
             if (currentPage < totalPages - 1) {
                 if (currentPage < totalPages - 2) {
                     pages.push(
@@ -598,7 +587,7 @@ function Store() {
             }
         }
 
-        // Botão próximo
+      
         pages.push(
             <button
                 key="next"
@@ -678,9 +667,8 @@ function Store() {
             `}</style>
             <CategoryNav
                 categorias={categorias}
-                // Corrigido: `activeCategory` deve ser `selectedCategories` e `onSelectCategory` deve ser `toggleCategory`
-                activeCategory={selectedCategories} 
-                onSelectCategory={toggleCategory} 
+                selectedCategories={selectedCategories}
+                onCategoryChange={handleCategoryChange}
             />
             <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: isMobile ? '100px 10px 100px' : '40px 20px' }}>
                 <div ref={containerRef} style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: isMobile ? '20px' : '40px', position: 'relative', flexDirection: isMobile ? 'column' : 'row' }}>
@@ -692,34 +680,36 @@ function Store() {
                             style={{
                                 width: '280px',
                                 flexShrink: 0,
-                                // Simplificado: usando sticky nativo que estava parcialmente implementado.
+                              
                                 position: 'sticky',
-                                top: '20px', 
+                                top: '20px',
                                 alignSelf: 'flex-start',
-                                maxHeight: 'calc(100vh - 40px)', // Altura máxima para permitir scroll
+                                maxHeight: 'calc(100vh - 40px)', 
                                 overflowY: 'auto'
                             }}
                         >
                             <div style={{ backgroundColor: 'white', borderRadius: '8px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
                                 <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '24px', color: '#333' }}>Filtros</h2>
-                                
+
                                 {/* Uso do componente auxiliar para renderizar os filtros na sidebar desktop */}
-                                <FilterSection 
-                                    categorias={categorias} 
-                                    toggleCategory={toggleCategory} 
-                                    selectedCategories={selectedCategories} 
-                                    marcas={marcas} 
-                                    toggleBrand={toggleBrand} 
-                                    selectedBrands={selectedBrands} 
-                                    priceRanges={priceRanges} 
-                                    togglePriceRange={togglePriceRange} 
-                                    selectedPriceRanges={selectedPriceRanges} 
-                                    expandedFilters={expandedFilters} 
+                                <FilterSection
+                                    categorias={categorias}
+                                    toggleCategory={toggleCategory}
+                                    selectedCategories={selectedCategories}
+                                    marcas={marcas}
+                                    toggleBrand={toggleBrand}
+                                    selectedBrands={selectedBrands}
+                                    priceRanges={priceRanges}
+                                    togglePriceRange={togglePriceRange}
+                                    selectedPriceRanges={selectedPriceRanges}
+                                    expandedFilters={expandedFilters}
                                     toggleFilter={toggleFilter}
                                     labelStyle={labelStyle}
                                     inputStyle={inputStyle}
+                                    toggleRating={toggleRating}
+                                    selectedRatings={selectedRatings}
                                 />
-                                
+
                                 {/* Botão Limpar Filtros Desktop */}
                                 <button onClick={clearAllFilters} style={{
                                     width: '100%',
@@ -777,19 +767,19 @@ function Store() {
                             {/* Erro corrigido: Removidas as chamadas redundantes a <ProductCard /> sem props */}
                             {currentProducts.length > 0 ? (
                                 currentProducts.map((prod) => (
-                                    // A remoção de <> </> aqui é crucial, pois estava duplicando as chaves.
+                                 
                                     <ProductCard
                                         key={prod.cod_produto}
                                         cod_produto={prod.cod_produto}
                                         title={prod.nome_prod}
-                                        // A formatação de preço deve ser para ambos, ou ajustada na API/Backend
-                                        price={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} 
-                                        oldPrice={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} 
+                                     
+                                        price={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                                        oldPrice={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                                         image={prod.url_img_prod}
                                     />
                                 ))
                             ) : (
-                                // Mensagem de 'nenhum produto' se a lista estiver vazia após o filtro/carregamento
+                               
                                 <p style={{ gridColumn: '1 / -1', textAlign: 'center', fontSize: '1.2rem', padding: '40px', backgroundColor: 'white', borderRadius: '8px' }}>
                                     Nenhum produto encontrado com os filtros selecionados.
                                 </p>
@@ -797,7 +787,7 @@ function Store() {
                         </div>
 
                         {/* Paginação */}
-                        {totalPages > 1 && ( // Renderiza a paginação apenas se houver mais de 1 página
+                        {totalPages > 1 && ( 
                             <div
                                 ref={paginationRef}
                                 style={{
@@ -899,25 +889,32 @@ function Store() {
                                         border: '1px solid #000', borderRadius: '999px', padding: '6px 12px', background: '#fff', cursor: 'pointer', fontSize: '14px'
                                     }}>{chip} ×</button>
                                 ))}
+                                {selectedRatings.map((chip) => (
+                                    <button key={`rating-${chip}`} onClick={() => toggleRating(chip)} style={{
+                                        border: '1px solid #000', borderRadius: '999px', padding: '6px 12px', background: '#fff', cursor: 'pointer', fontSize: '14px'
+                                    }}>{chip} ★ ×</button>
+                                ))}
                             </div>
                         )}
-                        
+
                         <div style={{ flex: 1, overflowY: 'auto', padding: '8px 20px' }}>
                             {/* Corrigido: Passando as props necessárias para o FilterSection no modal */}
-                            <FilterSection 
-                                categorias={categorias} 
-                                toggleCategory={toggleCategory} 
-                                selectedCategories={selectedCategories} 
-                                marcas={marcas} 
-                                toggleBrand={toggleBrand} 
-                                selectedBrands={selectedBrands} 
-                                priceRanges={priceRanges} 
-                                togglePriceRange={togglePriceRange} 
-                                selectedPriceRanges={selectedPriceRanges} 
-                                expandedFilters={expandedFilters} 
+                            <FilterSection
+                                categorias={categorias}
+                                toggleCategory={toggleCategory}
+                                selectedCategories={selectedCategories}
+                                marcas={marcas}
+                                toggleBrand={toggleBrand}
+                                selectedBrands={selectedBrands}
+                                priceRanges={priceRanges}
+                                togglePriceRange={togglePriceRange}
+                                selectedPriceRanges={selectedPriceRanges}
+                                expandedFilters={expandedFilters}
                                 toggleFilter={toggleFilter}
                                 labelStyle={labelStyle}
                                 inputStyle={inputStyle}
+                                toggleRating={toggleRating}
+                                selectedRatings={selectedRatings}
                             />
                         </div>
                         <div style={{ borderTop: '1px solid #eee', padding: '12px 20px', display: 'flex', gap: '12px' }}>
@@ -933,47 +930,103 @@ function Store() {
                     </div>
                 </>
             )}
-            
+
             {/* Seção de Cards de Categorias (Mantida) */}
             <>
-            {/* ... restante do código do carrossel/grid de categorias e do rodapé ... */}
-            <div style={{
-                width: '100%',
-                background: '',
-                minHeight: isMobile ? 'auto' : '25vh',
-                padding: isMobile ? '40px 20px' : '40px 0',
-                maxWidth: '1400px',
-                margin: '0 auto'
-            }}>
-                {isMobile ? (
-                    // Carousel para Mobile (Mantido)
-                    <Swiper
-                        modules={[Navigation]}
-                        navigation
-                        slidesPerView={1}
-                        spaceBetween={20}
-                        className="category-swiper"
-                        style={{ paddingBottom: '40px' }}
-                    >
-                        {[
-                            { id: 1, name: 'Laptops', image: notebook },
-                            { id: 2, name: 'Fones de Ouvido', image: fone },
-                            { id: 3, name: 'Desktops', image: desktop }
-                        ].map((category) => (
-                            <SwiperSlide key={category.id}>
-                                <div style={{
-                                    width: "100%",
+                {/* ... restante do código do carrossel/grid de categorias e do rodapé ... */}
+                <div style={{
+                    width: '100%',
+                    background: '',
+                    minHeight: isMobile ? 'auto' : '25vh',
+                    padding: isMobile ? '40px 20px' : '40px 0',
+                    maxWidth: '1400px',
+                    margin: '0 auto'
+                }}>
+                    {isMobile ? (
+                       
+                        <Swiper
+                            modules={[Navigation]}
+                            navigation
+                            slidesPerView={1}
+                            spaceBetween={20}
+                            className="category-swiper"
+                            style={{ paddingBottom: '40px' }}
+                        >
+                            {[
+                                { id: 1, name: 'Laptops', image: notebook },
+                                { id: 2, name: 'Fones de Ouvido', image: fone },
+                                { id: 3, name: 'Desktops', image: desktop }
+                            ].map((category) => (
+                                <SwiperSlide key={category.id}>
+                                    <div style={{
+                                        width: "100%",
+                                        background: "#e1e1e1",
+                                        height: "140px",
+                                        borderRadius: "20px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-around",
+                                        padding: "16px 20px",
+                                        flexDirection: "row",
+                                        gap: "16px"
+                                    }}>
+                                        <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "110px", objectFit: "contain", flexShrink: 0 }} />
+                                        <div style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            flexDirection: "column",
+                                            gap: "12px",
+                                            flex: 1,
+                                            justifyContent: "center"
+                                        }}>
+                                            <p style={{ fontSize: "1.1rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
+                                            <button style={{
+                                                background: "black",
+                                                color: "white",
+                                                padding: "10px 20px",
+                                                borderRadius: "60px",
+                                                textAlign: "center",
+                                                cursor: "pointer",
+                                                border: "none",
+                                                transition: "0.3s",
+                                                fontSize: "0.9rem",
+                                                fontWeight: 500,
+                                                whiteSpace: "nowrap"
+                                            }}>
+                                                Comprar Agora
+                                            </button>
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    ) : (
+                    
+                        <div style={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                            alignItems: "center",
+                            gap: "20px",
+                            padding: "0 20px"
+                        }}>
+                            {[
+                                { id: 1, name: 'Laptops', image: notebook },
+                                { id: 2, name: 'Fones de Ouvido', image: fone },
+                                { id: 3, name: 'Desktops', image: desktop }
+                            ].map((category) => (
+                                <div key={category.id} style={{
+                                    width: "23%",
                                     background: "#e1e1e1",
-                                    height: "140px",
+                                    height: "160px",
                                     borderRadius: "20px",
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "space-around",
-                                    padding: "16px 20px",
+                                    padding: "20px",
                                     flexDirection: "row",
                                     gap: "16px"
                                 }}>
-                                    <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "110px", objectFit: "contain", flexShrink: 0 }} />
+                                    <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "120px", objectFit: "contain", flexShrink: 0 }} />
                                     <div style={{
                                         display: "flex",
                                         alignItems: "center",
@@ -982,7 +1035,7 @@ function Store() {
                                         flex: 1,
                                         justifyContent: "center"
                                     }}>
-                                        <p style={{ fontSize: "1.1rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
+                                        <p style={{ fontSize: "1.3rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
                                         <button style={{
                                             background: "black",
                                             color: "white",
@@ -992,7 +1045,7 @@ function Store() {
                                             cursor: "pointer",
                                             border: "none",
                                             transition: "0.3s",
-                                            fontSize: "0.9rem",
+                                            fontSize: "0.95rem",
                                             fontWeight: 500,
                                             whiteSpace: "nowrap"
                                         }}>
@@ -1000,141 +1053,85 @@ function Store() {
                                         </button>
                                     </div>
                                 </div>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                ) : (
-                    // Grid para Desktop (Mantido)
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                        alignItems: "center",
-                        gap: "20px",
-                        padding: "0 20px"
-                    }}>
-                        {[
-                            { id: 1, name: 'Laptops', image: notebook },
-                            { id: 2, name: 'Fones de Ouvido', image: fone },
-                            { id: 3, name: 'Desktops', image: desktop }
-                        ].map((category) => (
-                            <div key={category.id} style={{
-                                width: "23%",
-                                background: "#e1e1e1",
-                                height: "160px",
-                                borderRadius: "20px",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-around",
-                                padding: "20px",
-                                flexDirection: "row",
-                                gap: "16px"
-                            }}>
-                                <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "120px", objectFit: "contain", flexShrink: 0 }} />
-                                <div style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    flexDirection: "column",
-                                    gap: "12px",
-                                    flex: 1,
-                                    justifyContent: "center"
-                                }}>
-                                    <p style={{ fontSize: "1.3rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
-                                    <button style={{
-                                        background: "black",
-                                        color: "white",
-                                        padding: "10px 20px",
-                                        borderRadius: "60px",
-                                        textAlign: "center",
-                                        cursor: "pointer",
-                                        border: "none",
-                                        transition: "0.3s",
-                                        fontSize: "0.95rem",
-                                        fontWeight: 500,
-                                        whiteSpace: "nowrap"
-                                    }}>
-                                        Comprar Agora
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-
-
-
-            <div style={{
-                width: '100%',
-                background: '#2f2f2f',
-                minHeight: isMobile ? 'auto' : '12vh',
-                padding: isMobile ? '40px 20px' : '0',
-                display: "flex",
-                justifyContent: "space-around",
-                alignItems: "center",
-                marginTop: isMobile ? "40px" : "100px"
-            }}>
-                <div style={{
-                    width: isMobile ? "100%" : "70%",
-                    height: isMobile ? "auto" : "60%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    flexDirection: isMobile ? "column" : "row",
-                    gap: isMobile ? "20px" : "0",
-                    padding: isMobile ? '0' : '20px 0' // Adiciona padding vertical em desktop
-                }}>
-                    <div style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: isMobile ? "center" : "space-between",
-                        width: isMobile ? "100%" : "56%",
-                        flexDirection: isMobile ? "column" : "row",
-                        gap: isMobile ? "15px" : "20px", // Aumenta o gap para melhor espaçamento
-                        textAlign: isMobile ? "center" : "left"
-                    }}>
-                        {!isMobile && <img src={Email} alt="Ícone de E-mail" style={{ width: "40px" }} />}
-                        <div>
-                            <p style={{ color: "#f5f5f5", fontSize: isMobile ? "1.2rem" : "1.5rem", fontWeight: "600", marginBottom: isMobile ? "8px" : "0" }}>Cadastre-se para receber descontos</p>
-                            <p style={{ color: "#f5f5f5", fontSize: isMobile ? "1rem" : "1.2rem", margin: 0 }}>Cadastre-se para receber ofertas e atualizações da empresa.</p>
+                            ))}
                         </div>
-                    </div>
-                    <div style={{
-                        background: "#5c595933",
-                        width: isMobile ? "100%" : "40%",
-                        height: isMobile ? "auto" : "85%",
-                        minHeight: "50px", // Definido um min-height consistente
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        borderRadius: "40px",
-                        padding: "4px", // Adiciona padding para o conteúdo interno
-                    }}>
-                        <input placeholder="Seu e-mail" type="text" style={{
-                            background: "transparent",
-                            outline: "none",
-                            height: "45px",
-                            paddingLeft: "25px",
-                            fontSize: isMobile ? "14px" : "16px",
-                            color: "white",
-                            width: "65%", // Ajustado para dar espaço ao botão
-                            border: "none"
-                        }} />
-                        <div>
-                            <button style={{
-                                padding: "10px 20px",
-                                borderRadius: "60px",
-                                background: "#fff",
-                                color: "#000",
-                                border: "none",
-                                cursor: "pointer",
-                                fontWeight: "600",
-                                whiteSpace: "nowrap"
-                            }}>Increver-se</button>
-                        </div>
-                    </div>
+                    )}
                 </div>
 
-            </div>
+
+
+                <div style={{
+                    width: '100%',
+                    background: '#2f2f2f',
+                    minHeight: isMobile ? 'auto' : '12vh',
+                    padding: isMobile ? '40px 20px' : '0',
+                    display: "flex",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                    marginTop: isMobile ? "40px" : "100px"
+                }}>
+                    <div style={{
+                        width: isMobile ? "100%" : "70%",
+                        height: isMobile ? "auto" : "60%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        flexDirection: isMobile ? "column" : "row",
+                        gap: isMobile ? "20px" : "0",
+                        padding: isMobile ? '0' : '20px 0' 
+                    }}>
+                        <div style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: isMobile ? "center" : "space-between",
+                            width: isMobile ? "100%" : "56%",
+                            flexDirection: isMobile ? "column" : "row",
+                            gap: isMobile ? "15px" : "20px", 
+                            textAlign: isMobile ? "center" : "left"
+                        }}>
+                            {!isMobile && <img src={Email} alt="Ícone de E-mail" style={{ width: "40px" }} />}
+                            <div>
+                                <p style={{ color: "#f5f5f5", fontSize: isMobile ? "1.2rem" : "1.5rem", fontWeight: "600", marginBottom: isMobile ? "8px" : "0" }}>Cadastre-se para receber descontos</p>
+                                <p style={{ color: "#f5f5f5", fontSize: isMobile ? "1rem" : "1.2rem", margin: 0 }}>Cadastre-se para receber ofertas e atualizações da empresa.</p>
+                            </div>
+                        </div>
+                        <div style={{
+                            background: "#5c595933",
+                            width: isMobile ? "100%" : "40%",
+                            height: isMobile ? "auto" : "85%",
+                            minHeight: "50px", 
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            borderRadius: "40px",
+                            padding: "4px", 
+                        }}>
+                            <input placeholder="Seu e-mail" type="text" style={{
+                                background: "transparent",
+                                outline: "none",
+                                height: "45px",
+                                paddingLeft: "25px",
+                                fontSize: isMobile ? "14px" : "16px",
+                                color: "white",
+                                width: "65%", 
+                                border: "none"
+                            }} />
+                            <div>
+                                <button style={{
+                                    padding: "10px 20px",
+                                    borderRadius: "60px",
+                                    background: "#fff",
+                                    color: "#000",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    fontWeight: "600",
+                                    whiteSpace: "nowrap"
+                                }}>Increver-se</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </>
         </>
     )
