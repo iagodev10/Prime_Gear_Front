@@ -5,7 +5,6 @@ import CustomerSidebar from "../../components/Conta/CustomerSidebar"
 import MeuPerfil from "../../components/Conta/Sections/MeuPerfil"
 import MeusPedidos from "../../components/Conta/Sections/MeusPedidos"
 import MeuCarrinho from "../../components/Conta/Sections/MeuCarrinho"
-import Favoritos from "../../components/Conta/Sections/Favoritos"
 import Enderecos from "../../components/Conta/Sections/Enderecos"
 import Pagamentos from "../../components/Conta/Sections/Pagamentos"
 import Preferencias from "../../components/Conta/Sections/Preferencias"
@@ -67,8 +66,6 @@ const Conta = () => {
         return <MeusPedidos />
       case "carrinho":
         return <MeuCarrinho />
-      case "favoritos":
-        return <Favoritos />
       case "enderecos":
         return <Enderecos />
       case "pagamentos":
