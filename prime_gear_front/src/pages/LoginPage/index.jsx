@@ -68,8 +68,9 @@ const LoginPage = () => {
       const data = await login(email, password)
       
       console.log('Dados retornados:', data); 
-      
-      if (data.user.perfil === 'Administrador') {
+    
+
+      if (data.user.tipo === 'Administrador') {
         navigate('/admin')
       } else {
         navigate('/user')

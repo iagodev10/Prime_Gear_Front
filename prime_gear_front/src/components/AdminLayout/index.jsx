@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import axios from 'axios';
 
 import {
   LayoutContainer,
@@ -24,6 +25,25 @@ const AdminLayout = () => {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const handleLogout = async () => {
+    console.log('clicou');
+    try {
+      const url='http://localhost:8080/logout'
+
+      const response=await axios.get(url,{
+        withCredentials: true  
+      })
+      
+      window.location.href = response.data.redirect
+    } catch (error) {
+        console.log(error);
+    }
+    console.log("Logout clicked")
+  }
+
+
+
   return (
     <LayoutContainer>
 
@@ -39,7 +59,7 @@ const AdminLayout = () => {
           <NavItem to="/admin/usuarios">Usuários</NavItem>
           <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
           <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
-          <NavItem to="/logout" style={{gap: '10px', display: 'flex', alignItems: 'center' }}>Sair <RxExit size={20}/></NavItem>
+          <NavItem onClick={handleLogout} style={{gap: '10px', display: 'flex', alignItems: 'center' }}>Sair <RxExit size={20}/></NavItem>
         </NavCenter>
 
         <RightSection>
@@ -59,7 +79,7 @@ const AdminLayout = () => {
           <NavItem to="/admin/usuarios">Usuários</NavItem>
           <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
           <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
-          <NavItem to="/logout" style={{gap: '10px', display: 'flex', alignItems: 'center' }}>Sair <RxExit size={20}/></NavItem>
+          <NavItem onClick={handleLogout} style={{gap: '10px', display: 'flex', alignItems: 'center' }}>Sair <RxExit size={20}/></NavItem>
       </NavCenter>
       <Outlet />
     </LayoutContainer>
