@@ -15,10 +15,16 @@ import {
 
 import logo from '../../assets/images/logodark.png';
 import { RxExit } from 'react-icons/rx';
+import { useAuth } from '../../contexts/AuthContext';
 
 const AdminLayout = () => {
+  const { user } = useAuth();
+  console.log(user);
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
+
+  const isAdmin = user?.cod_perfil === 1;
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
@@ -29,58 +35,78 @@ const AdminLayout = () => {
   const handleLogout = async () => {
     console.log('clicou');
     try {
-      const url='http://localhost:8080/logout'
+      const url = 'http://localhost:8080/logout';
 
-      const response=await axios.get(url,{
-        withCredentials: true  
-      })
-      
-      window.location.href = response.data.redirect
+      const response = await axios.get(url, {
+        withCredentials: true
+      });
+
+      window.location.href = response.data.redirect;
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-    console.log("Logout clicked")
-  }
-
-
+  };
 
   return (
     <LayoutContainer>
+      <Top $scrolled={isScrolled}>
+        <TopNav>
+          <MenuButton onClick={() => setOpenMenu((v) => !v)}>Menu</MenuButton>
+          <NavCenter>
+            <NavItem to="/admin/">Dashboard</NavItem>
+            <NavItem to="/admin/produtos">Produtos</NavItem>
+            <NavItem to="/admin/categorias">Categorias</NavItem>
+            <NavItem to="/admin/marcas">Marcas</NavItem>
+            
+            {/* Mostrar apenas para Administrador */}
+            {isAdmin && (
+              <>
+                <NavItem to="/admin/pedidos">Pedidos</NavItem>
+                <NavItem to="/admin/usuarios">Usuários</NavItem>
+              </>
+            )}
+            
+            <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
+            <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
+            <NavItem
+              onClick={handleLogout}
+              style={{ gap: '10px', display: 'flex', alignItems: 'center' }}
+            >
+              Sair <RxExit size={20} />
+            </NavItem>
+          </NavCenter>
 
-    <Top $scrolled={isScrolled}>
-      <TopNav>
-        <MenuButton onClick={() => setOpenMenu((v)=>!v)}>Menu</MenuButton>
-        <NavCenter>
-          <NavItem to="/admin/">Dashboard</NavItem>
-          <NavItem to="/admin/produtos">Produtos</NavItem>
-          <NavItem to="/admin/categorias">Categorias</NavItem>
-          <NavItem to="/admin/marcas">Marcas</NavItem>
-          <NavItem to="/admin/pedidos">Pedidos</NavItem>
-          <NavItem to="/admin/usuarios">Usuários</NavItem>
-          <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
-          <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
-          <NavItem onClick={handleLogout} style={{gap: '10px', display: 'flex', alignItems: 'center' }}>Sair <RxExit size={20}/></NavItem>
-        </NavCenter>
+          <RightSection>
+            <RightImage src={logo} alt="Logo" />
+          </RightSection>
+        </TopNav>
+      </Top>
 
-        <RightSection>
-          <RightImage
-            src={logo}
-            alt="Logo"
-          />
-        </RightSection>
-      </TopNav>
-    </Top>
+      {/* Menu Mobile */}
       <NavCenter $open={openMenu}>
-          <NavItem to="/admin/">Dashboard</NavItem>
-          <NavItem to="/admin/produtos">Produtos</NavItem>
-          <NavItem to="/admin/categorias">Categorias</NavItem>
-          <NavItem to="/admin/marcas">Marcas</NavItem>
-          <NavItem to="/admin/pedidos">Pedidos</NavItem>
-          <NavItem to="/admin/usuarios">Usuários</NavItem>
-          <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
-          <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
-          <NavItem onClick={handleLogout} style={{gap: '10px', display: 'flex', alignItems: 'center' }}>Sair <RxExit size={20}/></NavItem>
+        <NavItem to="/admin/">Dashboard</NavItem>
+        <NavItem to="/admin/produtos">Produtos</NavItem>
+        <NavItem to="/admin/categorias">Categorias</NavItem>
+        <NavItem to="/admin/marcas">Marcas</NavItem>
+        
+        {/* Mostrar apenas para Administrador */}
+        {isAdmin && (
+          <>
+            <NavItem to="/admin/pedidos">Pedidos</NavItem>
+            <NavItem to="/admin/usuarios">Usuários</NavItem>
+          </>
+        )}
+        
+        <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
+        <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
+        <NavItem
+          onClick={handleLogout}
+          style={{ gap: '10px', display: 'flex', alignItems: 'center' }}
+        >
+          Sair <RxExit size={20} />
+        </NavItem>
       </NavCenter>
+
       <Outlet />
     </LayoutContainer>
   );
