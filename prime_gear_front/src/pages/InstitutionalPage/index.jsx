@@ -34,6 +34,10 @@ import EmailSignUp from '../../components/EmailSignUp';
 import Logo from '../../assets/images/logoligth.png';
 
 import Player from '../../assets/images/player.png';
+import caioImg from '../../assets/images/caio.jpeg';
+import felipeImg from '../../assets/images/felipe.jpeg';
+import iagoImg from '../../assets/images/iago.jpeg';
+import viniciusImg from '../../assets/images/vinicius.jpeg';
 
 const InstitutionalPage = () => {
   return (
@@ -137,47 +141,27 @@ const InstitutionalPage = () => {
         <TeamGrid>
           <TeamMember>
             <TeamPhoto>
-              <div style={{
-                width: '100%',
-                height: '100%',
-                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                borderRadius: '50%'
-              }} />
+              <img src={caioImg} alt="Caio" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </TeamPhoto>
             <TeamName>Caio Gabriel</TeamName>
           </TeamMember>
           <TeamMember>
             <TeamPhoto>
-              <div style={{
-                width: '100%',
-                height: '100%',
-                background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                borderRadius: '50%'
-              }} />
+              <img src={felipeImg} alt="Felipe" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </TeamPhoto>
+            <TeamName>Felipe Peixoto</TeamName>
+          </TeamMember>
+          <TeamMember>
+            <TeamPhoto>
+              <img src={iagoImg} alt="Iago" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </TeamPhoto>
             <TeamName>Iago Borges</TeamName>
           </TeamMember>
           <TeamMember>
             <TeamPhoto>
-              <div style={{
-                width: '100%',
-                height: '100%',
-                background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-                borderRadius: '50%'
-              }} />
+              <img src={viniciusImg} alt="Vinicius" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </TeamPhoto>
             <TeamName>Vinicius Mendes</TeamName>
-          </TeamMember>
-          <TeamMember>
-            <TeamPhoto>
-              <div style={{
-                width: '100%',
-                height: '100%',
-                background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-                borderRadius: '50%'
-              }} />
-            </TeamPhoto>
-            <TeamName>Felipe Peixoto</TeamName>
           </TeamMember>
         </TeamGrid>
       </TeamSection>
