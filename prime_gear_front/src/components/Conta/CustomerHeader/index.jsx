@@ -11,13 +11,24 @@ import {
   ClientBadge,
   LogoutButton,
 } from "./style"
+import axios from "axios"
 
 const CustomerHeader = ({ user }) => {
   // Pega a primeira letra do nome para o avatar
   const avatarInitial = user.nome.charAt(0).toUpperCase()
 
-  const handleLogout = () => {
-    // Implementar lógica de logout
+  const handleLogout = async () => {
+    try {
+      const url='http://localhost:8080/logout'
+
+      const response=await axios.get(url,{
+        withCredentials: true  
+      })
+      
+      window.location.href = response.data.redirect
+    } catch (error) {
+        console.log(error);
+    }
     console.log("Logout clicked")
   }
 

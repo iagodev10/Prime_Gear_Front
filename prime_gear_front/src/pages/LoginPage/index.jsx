@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
-
+import axios from 'axios';
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import EmailSignUp from "../../components/EmailSignUp";
 
 import {
@@ -36,6 +38,9 @@ import {
 } from "./style";
 
 const LoginPage = () => {
+
+  const navigate=useNavigate()
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [flipped, setFlipped] = useState(false);
@@ -43,37 +48,90 @@ const LoginPage = () => {
   const backRef = useRef(null);
   const [cardHeight, setCardHeight] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const { login } = useAuth()
 
-  // Campos de cadastro do Cliente
+
   const [nome, setNome] = useState("");
+  const [emailCreate, setEmailCreate] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
   const [telefone, setTelefone] = useState("");
   const [genero, setGenero] = useState("");
   const [endereco, setEndereco] = useState("");
   const [cpf, setCpf] = useState("");
   const [cep, setCep] = useState("");
+  const [senhaCadastro,setSenhaCadastro]=useState()
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // Impede o recarregamento da página
-    console.log("Dados do Login:", { email, password });
-    // Aqui você adicionaria a lógica de login (ex: API, Firebase, etc.)
-  };
-
-  const handleRegister = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    try {
+      const data = await login(email, password)
+      
+      console.log('Dados retornados:', data); 
+      
+      if (data.user.perfil === 'Administrador') {
+        navigate('/admin')
+      } else {
+        navigate('/user')
+      }
+
+    } catch (error) {
+   
+      console.error('Erro completo:', error); 
+      
+      let errorMessage = 'Erro desconhecido';
+      
+      if (error.response) {
+        errorMessage = error.response.data?.message || `Erro ${error.response.status}`;
+      } else if (error.request) {
+        errorMessage = 'Sem resposta do servidor. Verifique sua conexão.';
+      } else {
+        errorMessage = error.message || 'Erro ao processar requisição';
+      }
+      
+      alert(`Erro: ${errorMessage}`);
+    }
+};
+
+  const handleRegister = async (event) => {
+    event.preventDefault();
+
     const payload = {
-      nome,
-      data_nascimento,
-      email,
-      telefone,
-      genero,
-      endereco,
-      cpf,
-      cep,
+        nome_user: nome,
+        email_user: emailCreate,
+        senha_user: senhaCadastro,
+        data_nascimento_user: data_nascimento,
+        telefone_user: telefone,
+        genero_user: genero === 'masculino' ? 'M' : genero === 'feminino' ? 'F' : genero,
+        endereco_user: endereco,
+        cpf_user: cpf.replace(/\D/g, ''),
+        login_user: emailCreate,
+       
     };
-    console.log("Cadastro de Cliente:", payload);
-    // Integração com API pode ser adicionada aqui
-  };
+
+    try {
+     
+        const response = await axios.post(
+            'http://localhost:8080/criar-user-cliente', 
+            payload
+        );
+    
+        console.log('Resposta do Cadastro:', response.data);
+        alert('Cadastro realizado com sucesso! Faça o login para continuar.');
+        setFlipped(false);
+
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || 'Erro desconhecido ao cadastrar.';
+        
+        console.error('Erro no Cadastro:', errorMessage);
+        
+        if (error.response && error.response.status === 409) {
+            alert(`Falha no cadastro: Usuário ou e-mail já cadastrado.`);
+        } else {
+            alert(`Falha no cadastro: ${errorMessage}`);
+        }
+    }
+};
 
   const handleBuscarCep = async () => {
     const cepLimpo = cep.replace(/\D/g, '');
@@ -101,7 +159,7 @@ const LoginPage = () => {
       const frontEl = frontRef.current;
       const backEl = backRef.current;
       if (frontEl && backEl) {
-        // Usa a maior altura entre os dois cards
+     
         const frontHeight = frontEl.offsetHeight;
         const backHeight = backEl.offsetHeight;
         const maxHeight = Math.max(frontHeight, backHeight);
@@ -109,7 +167,7 @@ const LoginPage = () => {
       }
     };
     
-    // Mede após um pequeno delay para garantir que o DOM foi renderizado
+ 
     const timeoutId = setTimeout(measure, 100);
     measure();
     
@@ -134,6 +192,7 @@ const LoginPage = () => {
     endereco,
     cpf,
     cep,
+    emailCreate
   ]);
 
   useEffect(() => {
@@ -219,8 +278,8 @@ const LoginPage = () => {
                       <Label>Email</Label>
                       <Input
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={emailCreate}
+                        onChange={(e) => setEmailCreate(e.target.value)}
                         required
                       />
                     </InputGroup>
@@ -286,6 +345,15 @@ const LoginPage = () => {
                       type="text"
                       value={endereco}
                       onChange={(e) => setEndereco(e.target.value)}
+                      required
+                    />
+                  </InputGroup>
+                  <InputGroup>
+                    <Label>Senha</Label>
+                    <Input
+                      type="text"
+                      value={senhaCadastro}
+                      onChange={(e) => setSenhaCadastro(e.target.value)}
                       required
                     />
                   </InputGroup>

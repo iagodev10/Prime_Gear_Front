@@ -162,8 +162,7 @@ export const Divider = styled.hr`
 `;
 
 export const Results = styled.div`
-  display: grid;
-  grid-template-columns: 220px 1fr;
+
   gap: 32px;
   height: calc(80vh - 90px);
   overflow: hidden;
