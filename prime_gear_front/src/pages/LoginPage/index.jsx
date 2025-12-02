@@ -3,7 +3,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import axios from 'axios';
-
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import EmailSignUp from "../../components/EmailSignUp";
 
 import {
@@ -37,6 +38,9 @@ import {
 } from "./style";
 
 const LoginPage = () => {
+
+  const navigate=useNavigate()
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [flipped, setFlipped] = useState(false);
@@ -44,8 +48,9 @@ const LoginPage = () => {
   const backRef = useRef(null);
   const [cardHeight, setCardHeight] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const { login } = useAuth()
 
-  // Campos de cadastro do Cliente
+
   const [nome, setNome] = useState("");
   const [emailCreate, setEmailCreate] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
@@ -59,36 +64,32 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const payload = {
-        email: email,
-        password: password,
-    };
-
     try {
-        const response = await axios.post(
-            'http://localhost:8080/login', 
-            payload,{
-              withCredentials:true
-            }
-        );
-        
-        console.log('Login bem-sucedido:', response.data);
-        if (response.data.success && response.data.redirect) {
-            window.location.href = response.data.redirect;
-        }
+      const data = await login(email, password)
+      
+      console.log('Dados retornados:', data); 
+      
+      if (data.user.perfil === 'Administrador') {
+        navigate('/admin')
+      } else {
+        navigate('/user')
+      }
 
     } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Erro desconhecido ao tentar fazer login.';
-        
-        console.error('Falha no Login:', errorMessage);
-        
-        if (error.response && error.response.status === 404) {
-            alert(`Erro: ${errorMessage}`);
-        } else if (error.response && error.response.status === 400) {
-            alert(`Erro: ${errorMessage}`);
-        } else {
-            alert(`Erro ao tentar fazer login: ${errorMessage}`);
-        }
+   
+      console.error('Erro completo:', error); 
+      
+      let errorMessage = 'Erro desconhecido';
+      
+      if (error.response) {
+        errorMessage = error.response.data?.message || `Erro ${error.response.status}`;
+      } else if (error.request) {
+        errorMessage = 'Sem resposta do servidor. Verifique sua conexão.';
+      } else {
+        errorMessage = error.message || 'Erro ao processar requisição';
+      }
+      
+      alert(`Erro: ${errorMessage}`);
     }
 };
 
@@ -158,7 +159,7 @@ const LoginPage = () => {
       const frontEl = frontRef.current;
       const backEl = backRef.current;
       if (frontEl && backEl) {
-        // Usa a maior altura entre os dois cards
+     
         const frontHeight = frontEl.offsetHeight;
         const backHeight = backEl.offsetHeight;
         const maxHeight = Math.max(frontHeight, backHeight);
@@ -166,7 +167,7 @@ const LoginPage = () => {
       }
     };
     
-    // Mede após um pequeno delay para garantir que o DOM foi renderizado
+ 
     const timeoutId = setTimeout(measure, 100);
     measure();
     

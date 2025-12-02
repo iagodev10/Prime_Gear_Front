@@ -31,6 +31,8 @@ import AdminLayout from './components/AdminLayout'
 import PublicLayout from './components/PublicLayout'
 import AdminLogin from './pages/AdminLogin'
 
+import { AuthProvider } from './contexts/AuthContext'
+
 // App.jsx (somente AppContent ATUALIZADO)
 const AppContent = () => {
   const { isLoading, startLoading } = useLoader();
@@ -56,31 +58,33 @@ const AppContent = () => {
       {isLoading ? (
         <PageLoader key="loader" />
       ) : (
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<PublicLayout />}>
-            <Route index element={<HomePage />} />
-            <Route path="loja" element={<Store />} />
-            <Route path="detalhe/:id" element={<ProductPage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="admin/login" element={<AdminLogin />} />
-            <Route path="institucional" element={<Institutional />} />
-            <Route path="fale-conosco" element={<FaleConosco />} />
-            <Route path="primeira-compra" element={<PrimeiraCompra />} />
-            <Route path="checkout" element={<CheckoutPage />} />
-            <Route path="user" element={<UserAccount />} />
-          </Route>
+        <AuthProvider>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PublicLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="loja" element={<Store />} />
+              <Route path="detalhe/:id" element={<ProductPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="admin/login" element={<AdminLogin />} />
+              <Route path="institucional" element={<Institutional />} />
+              <Route path="fale-conosco" element={<FaleConosco />} />
+              <Route path="primeira-compra" element={<PrimeiraCompra />} />
+              <Route path="checkout" element={<CheckoutPage />} />
+              <Route path="user" element={<UserAccount />} />
+            </Route>
 
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="produtos" element={<AdminProdutos />} />
-            <Route path="categorias" element={<AdminCategorias />} />
-            <Route path="marcas" element={<AdminMarcas />} />
-            <Route path="fornecedores" element={<AdminFornecedor />} />
-            <Route path="pedidos" element={<AdminPedidos />} />
-            <Route path="transportadoras" element={<AdminTransportadora />} />
-            <Route path="usuarios" element={<AdminUsers />} />
-          </Route>
-        </Routes>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="produtos" element={<AdminProdutos />} />
+              <Route path="categorias" element={<AdminCategorias />} />
+              <Route path="marcas" element={<AdminMarcas />} />
+              <Route path="fornecedores" element={<AdminFornecedor />} />
+              <Route path="pedidos" element={<AdminPedidos />} />
+              <Route path="transportadoras" element={<AdminTransportadora />} />
+              <Route path="usuarios" element={<AdminUsers />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
       )}
     </AnimatePresence>
   );
