@@ -67,7 +67,9 @@ const LoginPage = () => {
     try {
         const response = await axios.post(
             'http://localhost:8080/login', 
-            payload
+            payload,{
+              withCredentials:true
+            }
         );
         
         console.log('Login bem-sucedido:', response.data);

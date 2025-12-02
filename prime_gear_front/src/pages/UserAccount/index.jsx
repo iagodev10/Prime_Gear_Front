@@ -42,7 +42,7 @@ const Conta = () => {
           withCredentials:true
         }
       );
-
+      console.log(response.data);
       if(response.data.res==false){
         navigate('/login')
       }
@@ -50,6 +50,7 @@ const Conta = () => {
       return response.data;
 
     } catch (error) {
+      navigate('/login')
       console.log(error);
       throw error;
     }
