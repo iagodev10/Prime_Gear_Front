@@ -18,33 +18,27 @@ export const ModalOverlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 2000;
   animation: ${fadeIn} 0.3s ease-out;
 `;
 
 export const Container = styled.div`
   position: fixed;
-  top: 8vh;
+  top: clamp(60px, 8vh, 100px);
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
   background: #2f2f2f;
   border-radius: 0;
   height: auto;
-  max-height: calc(100vh - 25vh);
-  overflow: visible;
+  max-height: calc(100vh - clamp(60px, 8vh, 100px) - 16px);
+  overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   animation: ${slideDown} 0.4s ease-out;
   display: flex;
   flex-direction: column;
-  z-index: 1000;
-
-  @media (max-width: 768px) {
-    top: 70px;
-    max-height: calc(100vh - 70px);
-  }
+  z-index: 2001;
 `;
-
 
 export const Header = styled.div`
   display: flex;
@@ -124,12 +118,26 @@ export const CartContent = styled.div`
   flex-direction: column;
   gap: 16px;
   overflow: hidden;
+  flex: 1;
   margin-left: 5%;
   margin-right: 5%;
+  padding-bottom: 24px;
+
+  @media (max-width: 1024px) {
+    padding: 16px 24px;
+    padding-bottom: 20px;
+  }
 
   @media (max-width: 768px) {
-    padding: 16px 24px;
-    gap: 16px;
+    padding: 14px 20px;
+    gap: 14px;
+    padding-bottom: 16px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 16px;
+    gap: 12px;
+    padding-bottom: 16px;
   }
 `;
 
@@ -204,6 +212,11 @@ export const ItemName = styled.p`
   margin: 0;
   line-height: 1.4;
   font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 
   @media (max-width: 768px) {
     font-size: 13px;
@@ -211,14 +224,30 @@ export const ItemName = styled.p`
 `;
 
 export const ProfileSection = styled.div`
-  padding-top: 14px;
+  padding-top: 20px;
+  margin-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  gap: 12px;
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    padding-top: 16px;
+    margin-top: 12px;
+    gap: 10px;
+  }
 
   @media (max-width: 768px) {
+    padding-top: 14px;
+    margin-top: 10px;
+    gap: 8px;
+  }
+
+  @media (max-width: 480px) {
     padding-top: 12px;
-    gap: 10px;
+    margin-top: 8px;
+    gap: 6px;
   }
 `;
 
@@ -282,4 +311,3 @@ export const ProfileLinkText = styled.span`
     font-size: 14px;
   }
 `;
-
