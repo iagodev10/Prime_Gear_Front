@@ -390,7 +390,7 @@ export const TeamSection = styled.section`
 
 export const TeamTitle = styled.h2`
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 600;
   text-align: left;
   margin: 0 0 10px 15%;
   color: #1a1a1a;
@@ -425,8 +425,8 @@ export const TeamMember = styled.div`
 `;
 
 export const TeamPhoto = styled.div`
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   margin: 0 auto 16px;
   overflow: hidden;

@@ -13,6 +13,7 @@ import Institutional from './pages/InstitutionalPage'
 import FaleConosco from './pages/FaleConosco'
 import PrimeiraCompra from './pages/PrimeiraCompra'
 import CheckoutPage from './pages/CheckoutPage'
+import Transportadora from './pages/Transportadora'
 
 import AdminDashboard from './pages/AdminDashboard'
 import AdminProdutos from './pages/AdminProdutos'
@@ -71,6 +72,7 @@ const AppContent = () => {
               <Route path="primeira-compra" element={<PrimeiraCompra />} />
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="user" element={<UserAccount />} />
+              <Route path="transportadora" element={<Transportadora />} />
             </Route>
 
             <Route path="/admin" element={<AdminLayout />}>
