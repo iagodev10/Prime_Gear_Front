@@ -70,7 +70,7 @@ const LoginPage = () => {
       console.log('Dados retornados:', data); 
     
 
-      if (data.user.tipo === 'Administrador') {
+      if (data.user.tipo === 'Administrador' || data.user.tipo === 'Transportadora' || data.user.tipo === 'Funcionário') {
         navigate('/admin')
       } else {
         navigate('/user')

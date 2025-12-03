@@ -36,6 +36,8 @@ import AdminLogin from './pages/AdminLogin'
 
 import { AuthProvider } from './contexts/AuthContext'
 
+import TranspPedidos from './pages/TranspPedidos'
+
 // App.jsx (somente AppContent ATUALIZADO)
 const AppContent = () => {
   const { isLoading, startLoading } = useLoader();
@@ -82,6 +84,7 @@ const AppContent = () => {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="produtos" element={<AdminProdutos />} />
+              <Route path="pedidos-transportadora" element={<TranspPedidos />} />
               <Route path="categorias" element={<AdminCategorias />} />
               <Route path="marcas" element={<AdminMarcas />} />
               <Route path="fornecedores" element={<AdminFornecedor />} />
