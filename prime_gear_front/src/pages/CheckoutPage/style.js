@@ -131,7 +131,7 @@ export const Label = styled.label`
 
 export const Input = styled.input`
   height: 48px;
-  border: 1px solid #c9c9ce;
+  border: 1px solid ${(props) => (props.$error ? '#dc2626' : '#c9c9ce')};
   border-radius: 6px;
   padding: 0 14px;
   font-size: 0.95rem;
@@ -144,13 +144,13 @@ export const Input = styled.input`
   }
 
   &:focus {
-    border-color: #4d7294;
+    border-color: ${(props) => (props.$error ? '#dc2626' : '#4d7294')};
   }
 `;
 
 export const Select = styled.select`
   height: 48px;
-  border: 1px solid #c9c9ce;
+  border: 1px solid ${(props) => (props.$error ? '#dc2626' : '#c9c9ce')};
   border-radius: 6px;
   padding: 0 14px;
   font-size: 0.95rem;
@@ -160,7 +160,7 @@ export const Select = styled.select`
   cursor: pointer;
 
   &:focus {
-    border-color: #4d7294;
+    border-color: ${(props) => (props.$error ? '#dc2626' : '#4d7294')};
   }
 `;
 
@@ -184,6 +184,14 @@ export const CheckRow = styled.div`
     line-height: 1.4;
     color: #666;
   }
+`;
+
+export const ErrorMessage = styled.span`
+  display: block;
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  line-height: 1.3;
 `;
 
 export const Actions = styled.div`
