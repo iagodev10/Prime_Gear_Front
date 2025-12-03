@@ -330,37 +330,37 @@ export const FixedButtons = styled.div`
 export const ButtonGroup = styled.div`
   display: flex;
   gap: 45px;
-  margin-top: -130px;
+  margin-top: 0;
   flex-wrap: wrap;
   justify-content: center;
 
   @media (max-width: 1400px) {
     gap: 40px;
-    margin-top: -120px;
+    margin-top: 0;
   }
 
   @media (max-width: 1200px) {
     gap: 35px;
-    margin-top: -110px;
+    margin-top: 0;
   }
 
   @media (max-width: 992px) {
     gap: 30px;
-    margin-top: -100px;
+    margin-top: 0;
   }
 
   @media (max-width: 768px) {
     gap: 25px;
-    margin-top: -80px;
+    margin-top: 0;
   }
 
   @media (max-width: 576px) {
     gap: 20px;
-    margin-top: -60px;
+    margin-top: 0;
   }
 
   @media (max-width: 480px) {
     gap: 15px;
-    margin-top: -50px;
+    margin-top: 0;
   }
 `;
