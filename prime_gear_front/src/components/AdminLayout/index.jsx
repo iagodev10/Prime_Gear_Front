@@ -23,8 +23,12 @@ const AdminLayout = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
-
+  console.log(user);
   const isAdmin = user?.cod_perfil === 1;
+
+  const isFunc = user?.cod_perfil === 4;
+
+  const isTransp = user?.cod_perfil === 3;
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
@@ -53,11 +57,16 @@ const AdminLayout = () => {
         <TopNav>
           <MenuButton onClick={() => setOpenMenu((v) => !v)}>Menu</MenuButton>
           <NavCenter>
-            <NavItem to="/admin/">Dashboard</NavItem>
-            <NavItem to="/admin/produtos">Produtos</NavItem>
-            <NavItem to="/admin/categorias">Categorias</NavItem>
-            <NavItem to="/admin/marcas">Marcas</NavItem>
-            
+            {(isAdmin || isFunc) && (
+              <>
+                <NavItem to="/admin/">Dashboard</NavItem>
+                <NavItem to="/admin/produtos">Produtos</NavItem>
+                <NavItem to="/admin/categorias">Categorias</NavItem>
+                <NavItem to="/admin/marcas">Marcas</NavItem>
+              </>
+            )}
+
+
             {/* Mostrar apenas para Administrador */}
             {isAdmin && (
               <>
@@ -65,15 +74,26 @@ const AdminLayout = () => {
                 <NavItem to="/admin/usuarios">Usuários</NavItem>
               </>
             )}
-            
-            <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
-            <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
-            <NavItem
-              onClick={handleLogout}
-              style={{ gap: '10px', display: 'flex', alignItems: 'center' }}
-            >
-              Sair <RxExit size={20} />
-            </NavItem>
+            {/* Mostrar apenas para Administrador */}
+            {isTransp && (
+              <>
+                <NavItem to="/admin/pedidos-transportadora">Pedidos</NavItem>
+              </>
+            )}
+
+            {(isAdmin || isFunc) && (
+              <>
+                <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
+                <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
+                <NavItem
+                  onClick={handleLogout}
+                  style={{ gap: '10px', display: 'flex', alignItems: 'center' }}
+                >
+                  Sair <RxExit size={20} />
+                </NavItem>
+              </>
+            )}
+
           </NavCenter>
 
           <RightSection>
@@ -84,27 +104,42 @@ const AdminLayout = () => {
 
       {/* Menu Mobile */}
       <NavCenter $open={openMenu}>
-        <NavItem to="/admin/">Dashboard</NavItem>
-        <NavItem to="/admin/produtos">Produtos</NavItem>
-        <NavItem to="/admin/categorias">Categorias</NavItem>
-        <NavItem to="/admin/marcas">Marcas</NavItem>
-        
-        {/* Mostrar apenas para Administrador */}
-        {isAdmin && (
-          <>
-            <NavItem to="/admin/pedidos">Pedidos</NavItem>
-            <NavItem to="/admin/usuarios">Usuários</NavItem>
-          </>
-        )}
-        
-        <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
-        <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
-        <NavItem
-          onClick={handleLogout}
-          style={{ gap: '10px', display: 'flex', alignItems: 'center' }}
-        >
-          Sair <RxExit size={20} />
-        </NavItem>
+      {(isAdmin || isFunc) && (
+              <>
+                <NavItem to="/admin/">Dashboard</NavItem>
+                <NavItem to="/admin/produtos">Produtos</NavItem>
+                <NavItem to="/admin/categorias">Categorias</NavItem>
+                <NavItem to="/admin/marcas">Marcas</NavItem>
+              </>
+            )}
+
+
+            {/* Mostrar apenas para Administrador */}
+            {isAdmin && (
+              <>
+                <NavItem to="/admin/pedidos">Pedidos</NavItem>
+                <NavItem to="/admin/usuarios">Usuários</NavItem>
+              </>
+            )}
+            {/* Mostrar apenas para Administrador */}
+            {isTransp && (
+              <>
+                <NavItem to="/admin/pedidos-transportadora">Pedidos</NavItem>
+              </>
+            )}
+
+            {(isAdmin || isFunc) && (
+              <>
+                <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
+                <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
+                <NavItem
+                  onClick={handleLogout}
+                  style={{ gap: '10px', display: 'flex', alignItems: 'center' }}
+                >
+                  Sair <RxExit size={20} />
+                </NavItem>
+              </>
+            )}
       </NavCenter>
 
       <Outlet />
