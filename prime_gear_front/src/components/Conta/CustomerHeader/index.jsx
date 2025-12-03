@@ -20,12 +20,12 @@ const CustomerHeader = ({ user }) => {
 
   console.log("User no Header:", user)
 
-  // ⚠️ PROTEÇÃO: se não tem user, não renderiza
+
   if (!user) {
     return null
   }
 
-  // ⚠️ PROTEÇÃO: usa optional chaining
+
   const avatarInitial = user.nome_user?.charAt(0).toUpperCase() || '?'
 
   const handleLogout = async () => {

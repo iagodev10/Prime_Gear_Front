@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FiX, FiClock, FiHeart, FiUser } from "react-icons/fi";
 import { Link } from "react-router-dom";
-
-import foneJBL from "../../assets/images/foneJBL.png";
+import axios from "axios";
 
 import {
   ModalOverlay,
@@ -25,62 +24,42 @@ import {
   ProfileLinkIcon,
   ProfileLinkText,
 } from "./style";
-
-// Mock de produtos do carrinho (total de 10 itens)
-const allCartItems = [
-  {
-    id: 1,
-    name: "Headphone Bluetooth JBL Tune 520BT com Microfone - Preto",
-    image: foneJBL,
-  },
-  {
-    id: 2,
-    name: "Mouse Gamer Logitech G502 HERO com RGB LIGHTSYNC, Ajustes de Peso, 11 Botões Programáveis e Sensor HERO 25K",
-    image: foneJBL,
-  },
-  {
-    id: 3,
-    name: "Teclado Mecânico Gamer Redragon Lakshmi, Rainbow Brown, Switch, ABNT2, Preto - K606R",
-    image: foneJBL,
-  },
-  {
-    id: 4,
-    name: "Produto 4",
-    image: foneJBL,
-  },
-  {
-    id: 5,
-    name: "Produto 5",
-    image: foneJBL,
-  },
-  {
-    id: 6,
-    name: "Produto 6",
-    image: foneJBL,
-  },
-  {
-    id: 7,
-    name: "Produto 7",
-    image: foneJBL,
-  },
-  {
-    id: 8,
-    name: "Produto 8",
-    image: foneJBL,
-  },
-  {
-    id: 9,
-    name: "Produto 9",
-    image: foneJBL,
-  },
-  {
-    id: 10,
-    name: "Produto 10",
-    image: foneJBL,
-  },
-];
+import { useAuth } from "../../contexts/AuthContext";
 
 const CartModal = ({ isOpen, onClose }) => {
+
+  const { user } = useAuth();
+
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchCartItems();
+    }
+  }, [isOpen]);
+
+  const fetchCartItems = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await axios.get(`http://localhost:8080/get-produtos-cart/${user.cod_user}`, {
+        withCredentials: true
+      });
+      
+      console.log("Produtos recebidos:", response.data);
+      setCartItems(response.data || []);
+    } catch (err) {
+      console.error("Erro ao buscar itens do carrinho:", err);
+      setError("Não foi possível carregar os itens do carrinho");
+      setCartItems([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   const handleOverlayClick = (e) => {
@@ -89,9 +68,9 @@ const CartModal = ({ isOpen, onClose }) => {
     }
   };
 
-  // Mostrar apenas os 3 primeiros produtos
-  const displayedItems = allCartItems.slice(0, 3);
-  const remainingItems = allCartItems.length - 3; 
+
+  const displayedItems = cartItems.slice(0, 3);
+  const remainingItems = cartItems.length > 3 ? cartItems.length - 3 : 0;
 
   return (
     <>
@@ -110,23 +89,45 @@ const CartModal = ({ isOpen, onClose }) => {
         </Header>
 
         <CartContent>
-          <CartItemsList>
-            {displayedItems.map((item) => (
-              <CartItem key={item.id}>
-                <ItemImage>
-                  <img src={item.image} alt={item.name} />
-                </ItemImage>
-                <ItemInfo>
-                  <ItemName>{item.name}</ItemName>
-                </ItemInfo>
-              </CartItem>
-            ))}
-          </CartItemsList>
+          {loading ? (
+            <div style={{ padding: "20px", textAlign: "center" }}>
+              Carregando...
+            </div>
+          ) : error ? (
+            <div style={{ padding: "20px", textAlign: "center", color: "#e74c3c" }}>
+              {error}
+            </div>
+          ) : cartItems.length === 0 ? (
+            <div style={{ padding: "20px", textAlign: "center" }}>
+              Seu carrinho está vazio
+            </div>
+          ) : (
+            <>
+              <CartItemsList>
+                {displayedItems.map((item) => (
+                  <CartItem key={item.id}>
+                    <ItemImage>
+                      <img 
+                        src={item.imagem} 
+                        alt={item.nome}
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/80x80?text=Sem+Imagem';
+                        }}
+                      />
+                    </ItemImage>
+                    <ItemInfo>
+                      <ItemName>{item.nome}</ItemName>
+                    </ItemInfo>
+                  </CartItem>
+                ))}
+              </CartItemsList>
 
-          {remainingItems > 0 && (
-            <MoreItemsText>
-              Mais {remainingItems} item(ns) no seu carrinho
-            </MoreItemsText>
+              {remainingItems > 0 && (
+                <MoreItemsText>
+                  Mais {remainingItems} item(ns) no seu carrinho
+                </MoreItemsText>
+              )}
+            </>
           )}
 
           <ProfileSection>
@@ -159,4 +160,3 @@ const CartModal = ({ isOpen, onClose }) => {
 };
 
 export default CartModal;
-

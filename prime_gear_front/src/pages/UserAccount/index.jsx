@@ -14,17 +14,17 @@ import { ContaContainer, ContaContent, MainContent } from "./style"
 
 const UserAccount = () => {
   const navigate = useNavigate()
-  const { user, loading } = useAuth()  // ← pegue o loading também
+  const { user, loading } = useAuth()  
   const [activeSection, setActiveSection] = useState("meu-perfil")
 
-  // Redireciona se não estiver autenticado
+
   useEffect(() => {
     if (!loading && !user) {
       navigate('/login')
     }
   }, [user, loading, navigate])
 
-  // Mostra loading enquanto verifica autenticação
+
   if (loading) {
     return (
       <ContaContainer>
@@ -40,7 +40,7 @@ const UserAccount = () => {
     )
   }
 
-  // Se não tem user, não renderiza nada (useEffect vai redirecionar)
+
   if (!user) {
     return null
   }
@@ -57,8 +57,6 @@ const UserAccount = () => {
         return <Enderecos />
       case "pagamentos":
         return <Pagamentos />
-      case "preferencias":
-        return <Preferencias />
       case "seguranca":
         return <Seguranca />
       default:
