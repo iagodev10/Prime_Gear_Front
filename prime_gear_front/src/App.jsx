@@ -14,6 +14,8 @@ import FaleConosco from './pages/FaleConosco'
 import PrimeiraCompra from './pages/PrimeiraCompra'
 import CheckoutPage from './pages/CheckoutPage'
 import Transportadora from './pages/Transportadora'
+import TermsPage from './pages/TermsPage'
+import PrivacyPage from './pages/PrivacyPage'
 
 import AdminDashboard from './pages/AdminDashboard'
 import AdminProdutos from './pages/AdminProdutos'
@@ -73,6 +75,8 @@ const AppContent = () => {
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="user" element={<UserAccount />} />
               <Route path="transportadora" element={<Transportadora />} />
+              <Route path="termos" element={<TermsPage />} />
+              <Route path="privacidade" element={<PrivacyPage />} />
             </Route>
 
             <Route path="/admin" element={<AdminLayout />}>
