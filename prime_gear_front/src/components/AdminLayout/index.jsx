@@ -85,14 +85,15 @@ const AdminLayout = () => {
               <>
                 <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
                 <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
-                <NavItem
+                
+              </>
+            )}
+            <NavItem
                   onClick={handleLogout}
                   style={{ gap: '10px', display: 'flex', alignItems: 'center' }}
                 >
                   Sair <RxExit size={20} />
                 </NavItem>
-              </>
-            )}
 
           </NavCenter>
 
@@ -132,14 +133,15 @@ const AdminLayout = () => {
               <>
                 <NavItem to="/admin/fornecedores">Fornecedores</NavItem>
                 <NavItem to="/admin/transportadoras">Transportadoras</NavItem>
-                <NavItem
+               
+              </>
+            )}
+             <NavItem
                   onClick={handleLogout}
                   style={{ gap: '10px', display: 'flex', alignItems: 'center' }}
                 >
                   Sair <RxExit size={20} />
                 </NavItem>
-              </>
-            )}
       </NavCenter>
 
       <Outlet />

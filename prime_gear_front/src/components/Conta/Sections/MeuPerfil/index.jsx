@@ -22,15 +22,16 @@ import {
 const MeuPerfil = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
-    nome: user.nome,
-    email: user.email,
-    telefone: user.telefone,
-    cpf: user.cpf,
-    dataNascimento: user.dataNascimento,
-    genero: user.genero,
-    endereco: user.endereco,
+    nome: user.nome_user ,
+    email: user.email_user,
+    telefone: user.telefone_user,
+    cpf: user.cpf_user,
+    dataNascimento: user.data_nascimento_user,
+    genero: user.genero_user,
+    endereco: user.endereco_user,
   })
-
+  console.log("FORM");
+  console.log(formData);
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
@@ -124,10 +125,8 @@ const MeuPerfil = ({ user }) => {
               disabled={!isEditing}
             >
               <option value="">Selecione</option>
-              <option value="masculino">Masculino</option>
-              <option value="feminino">Feminino</option>
-              <option value="outro">Outro</option>
-              <option value="prefiro-nao-dizer">Prefiro não dizer</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
             </Select>
           </FormGroup>
         </FormGrid>

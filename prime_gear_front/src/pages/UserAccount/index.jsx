@@ -1,5 +1,6 @@
-
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from '../../contexts/AuthContext'
 import CustomerHeader from "../../components/Conta/CustomerHeader"
 import CustomerSidebar from "../../components/Conta/CustomerSidebar"
 import MeuPerfil from "../../components/Conta/Sections/MeuPerfil"
@@ -10,59 +11,44 @@ import Pagamentos from "../../components/Conta/Sections/Pagamentos"
 import Preferencias from "../../components/Conta/Sections/Preferencias"
 import Seguranca from "../../components/Conta/Sections/Seguranca"
 import { ContaContainer, ContaContent, MainContent } from "./style"
-import axios from "axios"
-import { useNavigate } from "react-router-dom"
 
-const mockUser = {
-  nome: "IAGO BORGES BARBOSA",
-  email: "iago.barbosa@estudante.iftm.edu.br",
-  clienteDesde: 2025,
-  telefone: "",
-  cpf: "",
-  dataNascimento: "",
-  genero: "",
-  endereco: "",
-}
-
-const Conta = () => {
-
+const UserAccount = () => {
   const navigate = useNavigate()
-
+  const { user, loading } = useAuth()  // ← pegue o loading também
   const [activeSection, setActiveSection] = useState("meu-perfil")
 
-  const buscarDadosDoUsuario = async () => {
-
-    
-
-    try {
-      const response = await axios.post(
-        'http://localhost:8080/get-dados-user', null,
-        {
-          withCredentials:true
-        }
-      );
-      console.log(response.data);
-      if(response.data.res==false){
-        navigate('/login')
-      }
-      console.log('Dados do usuário:', response.data);
-      return response.data;
-
-    } catch (error) {
-      navigate('/login')
-      console.log(error);
-      throw error;
-    }
-  };
-
+  // Redireciona se não estiver autenticado
   useEffect(() => {
-    buscarDadosDoUsuario()
-  }, [])
+    if (!loading && !user) {
+      navigate('/login')
+    }
+  }, [user, loading, navigate])
+
+  // Mostra loading enquanto verifica autenticação
+  if (loading) {
+    return (
+      <ContaContainer>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          height: '100vh' 
+        }}>
+          Carregando...
+        </div>
+      </ContaContainer>
+    )
+  }
+
+  // Se não tem user, não renderiza nada (useEffect vai redirecionar)
+  if (!user) {
+    return null
+  }
 
   const renderContent = () => {
     switch (activeSection) {
       case "meu-perfil":
-        return <MeuPerfil user={mockUser} />
+        return <MeuPerfil user={user} />
       case "meus-pedidos":
         return <MeusPedidos />
       case "carrinho":
@@ -76,13 +62,13 @@ const Conta = () => {
       case "seguranca":
         return <Seguranca />
       default:
-        return <MeuPerfil user={mockUser} />
+        return <MeuPerfil user={user} />
     }
   }
 
   return (
     <ContaContainer>
-      <CustomerHeader user={mockUser} />
+      <CustomerHeader user={user} />
 
       <ContaContent>
         <CustomerSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
@@ -93,4 +79,4 @@ const Conta = () => {
   )
 }
 
-export default Conta
+export default UserAccount
