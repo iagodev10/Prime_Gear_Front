@@ -88,8 +88,17 @@ export const NavLinks = styled.nav`
     font-weight: 500;
     transition: 0.3s;
 
+    svg {
+      transition: transform 0.25s ease;
+      transform-origin: center;
+    }
+
     &:hover {
       opacity: 0.7;
+      
+      svg {
+        transform: rotate(180deg);
+      }
     }
   }
 
