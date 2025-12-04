@@ -1,462 +1,631 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import "swiper/css";
+import "swiper/css/pagination";
 import axios from 'axios';
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import EmailSignUp from "../../components/EmailSignUp";
 
 import {
-  LoginBack,
-  LoginBox,
-  Title,
-  Form,
-  InputGroup,
-  LoginLogin,
-  Input,
-  Label,
-  ForgotPassword,
-  SubmitButton,
-  SignUpLink,
-  FeaturesGrid,
-  FeaturesCarousel,
-  FeatureCardLarge,
-  FeatureCardSmall,
-  FeatureCard,
-  FeatureTitle,
-  FeatureMainText,
-  FlipWrapper,
-  FlipCard,
-  FaceFront,
-  FaceBack,
-  Row,
-  Select,
-  CepRow,
-  CepInput,
-  CepButton,
+    LoginBack,
+    LoginLogin,
+    LoginBox,
+    FlipWrapper,
+    FlipCard,
+    FaceFront,
+    FaceBack,
+    Title,
+    Form,
+    InputGroup,
+    Label,
+    LabelOptional,
+    Input,
+    ForgotPassword,
+    SubmitButton,
+    SignUpLink,
+    FeaturesGrid,
+    FeatureCardLarge,
+    FeatureCardSmall,
+    FeaturesCarousel,
+    FeatureCard,
+    FeatureTitle,
+    FeatureMainText,
+    Row,
+    Select,
+    CepRow,
+    CepInput,
+    CepButton,
+    AddressSection,
+    SectionTitle
 } from "./style";
 
-const LoginPage = () => {
+const Login = () => {
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
-  const navigate=useNavigate()
+    const [flipped, setFlipped] = useState(false);
+    const [formData, setFormData] = useState({
+        // Login
+        loginEmail: '',
+        loginSenha: '',
+        // Cadastro
+        nome: '',
+        email: '',
+        senha: '',
+        confirmarSenha: '',
+        telefone: '',
+        cpf: '',
+        dataNascimento: '',
+        genero: '', // Adicionado campo de gênero
+        // Endereço
+        pais: '',
+        estado: '',
+        cidade: '',
+        rua: '',
+        numero: '',
+        bairro: '',
+        complemento: '',
+        cep: ''
+    });
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [flipped, setFlipped] = useState(false);
-  const frontRef = useRef(null);
-  const backRef = useRef(null);
-  const [cardHeight, setCardHeight] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const { login } = useAuth()
+    const [estados, setEstados] = useState([]);
 
+    const paises = [
+        { value: '', label: 'Selecione um país' },
+        { value: 'BR', label: 'Brasil' },
+        { value: 'US', label: 'Estados Unidos' },
+        { value: 'AR', label: 'Argentina' },
+    ];
 
-  const [nome, setNome] = useState("");
-  const [emailCreate, setEmailCreate] = useState("");
-  const [data_nascimento, setDataNascimento] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [genero, setGenero] = useState("");
-  const [endereco, setEndereco] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [cep, setCep] = useState("");
-  const [senhaCadastro,setSenhaCadastro]=useState()
+    const estadosBrasileiros = [
+        { value: '', label: 'Selecione um estado' },
+        { value: 'AC', label: 'Acre' },
+        { value: 'AL', label: 'Alagoas' },
+        { value: 'AP', label: 'Amapá' },
+        { value: 'AM', label: 'Amazonas' },
+        { value: 'BA', label: 'Bahia' },
+        { value: 'CE', label: 'Ceará' },
+        { value: 'DF', label: 'Distrito Federal' },
+        { value: 'ES', label: 'Espírito Santo' },
+        { value: 'GO', label: 'Goiás' },
+        { value: 'MA', label: 'Maranhão' },
+        { value: 'MT', label: 'Mato Grosso' },
+        { value: 'MS', label: 'Mato Grosso do Sul' },
+        { value: 'MG', label: 'Minas Gerais' },
+        { value: 'PA', label: 'Pará' },
+        { value: 'PB', label: 'Paraíba' },
+        { value: 'PR', label: 'Paraná' },
+        { value: 'PE', label: 'Pernambuco' },
+        { value: 'PI', label: 'Piauí' },
+        { value: 'RJ', label: 'Rio de Janeiro' },
+        { value: 'RN', label: 'Rio Grande do Norte' },
+        { value: 'RS', label: 'Rio Grande do Sul' },
+        { value: 'RO', label: 'Rondônia' },
+        { value: 'RR', label: 'Roraima' },
+        { value: 'SC', label: 'Santa Catarina' },
+        { value: 'SP', label: 'São Paulo' },
+        { value: 'SE', label: 'Sergipe' },
+        { value: 'TO', label: 'Tocantins' }
+    ];
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
 
-    try {
-      const data = await login(email, password)
-      
-      console.log('Dados retornados:', data); 
-    
-
-      if (data.user.tipo === 'Administrador' || data.user.tipo === 'Transportadora' || data.user.tipo === 'Funcionário') {
-        navigate('/admin')
-      } else {
-        navigate('/user')
-      }
-
-    } catch (error) {
-   
-      console.error('Erro completo:', error); 
-      
-      let errorMessage = 'Erro desconhecido';
-      
-      if (error.response) {
-        errorMessage = error.response.data?.message || `Erro ${error.response.status}`;
-      } else if (error.request) {
-        errorMessage = 'Sem resposta do servidor. Verifique sua conexão.';
-      } else {
-        errorMessage = error.message || 'Erro ao processar requisição';
-      }
-      
-      alert(`Erro: ${errorMessage}`);
-    }
-};
-
-  const handleRegister = async (event) => {
-    event.preventDefault();
-
-    const payload = {
-        nome_user: nome,
-        email_user: emailCreate,
-        senha_user: senhaCadastro,
-        data_nascimento_user: data_nascimento,
-        telefone_user: telefone,
-        genero_user: genero === 'masculino' ? 'M' : genero === 'feminino' ? 'F' : genero,
-        endereco_user: endereco,
-        cpf_user: cpf.replace(/\D/g, ''),
-        login_user: emailCreate,
-       
+        if (name === 'pais' && value === 'BR') {
+            setEstados(estadosBrasileiros);
+        }
     };
 
-    try {
-     
-        const response = await axios.post(
-            'http://localhost:8080/criar-user-cliente', 
-            payload
-        );
-    
-        console.log('Resposta do Cadastro:', response.data);
-        alert('Cadastro realizado com sucesso! Faça o login para continuar.');
+    const buscarCep = async () => {
+        const cepLimpo = formData.cep.replace(/\D/g, '');
+        
+        if (cepLimpo.length !== 8) {
+            alert('CEP deve ter 8 dígitos');
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+            const data = await response.json();
+
+            if (data.erro) {
+                alert('CEP não encontrado');
+                return;
+            }
+
+            setFormData(prev => ({
+                ...prev,
+                rua: data.logradouro || '',
+                bairro: data.bairro || '',
+                cidade: data.localidade || '',
+                estado: data.uf || '',
+                pais: 'BR'
+            }));
+
+            setEstados(estadosBrasileiros);
+
+        } catch (error) {
+            console.error('Erro ao buscar CEP:', error);
+            alert('Erro ao buscar CEP');
+        }
+    };
+
+    const handleFlipToLogin = () => {
         setFlipped(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
-    } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Erro desconhecido ao cadastrar.';
-        
-        console.error('Erro no Cadastro:', errorMessage);
-        
-        if (error.response && error.response.status === 409) {
-            alert(`Falha no cadastro: Usuário ou e-mail já cadastrado.`);
-        } else {
-            alert(`Falha no cadastro: ${errorMessage}`);
-        }
-    }
-};
+    const handleFlipToSignup = () => {
+        setFlipped(true);
+    };
 
-  const handleBuscarCep = async () => {
-    const cepLimpo = cep.replace(/\D/g, '');
-    if (cepLimpo.length === 8) {
-      try {
-        const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-        const data = await response.json();
-        if (!data.erro) {
-          const enderecoCompleto = `${data.logradouro || ''}, ${data.bairro || ''}, ${data.localidade || ''} - ${data.uf || ''}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',');
-          setEndereco(enderecoCompleto);
-        } else {
-          alert("CEP não encontrado");
+    const handleLoginSubmit = async (e) => {
+        e.preventDefault();
+        
+        try {
+            const data = await login(formData.loginEmail, formData.loginSenha);
+            console.log('Dados retornados:', data); 
+
+            if (data.user.tipo === 'Administrador' || data.user.tipo === 'Transportadora' || data.user.tipo === 'Funcionário') {
+                navigate('/admin');
+            } else {
+                navigate('/user');
+            }
+
+        } catch (error) {
+            console.error('Erro completo:', error); 
+            let errorMessage = 'Erro desconhecido';
+            
+            if (error.response) {
+                errorMessage = error.response.data?.message || `Erro ${error.response.status}`;
+            } else if (error.request) {
+                errorMessage = 'Sem resposta do servidor. Verifique sua conexão.';
+            } else {
+                errorMessage = error.message || 'Erro ao processar requisição';
+            }
+            
+            alert(`Erro: ${errorMessage}`);
         }
-      } catch (error) {
-        console.error("Erro ao buscar CEP:", error);
-        alert("Erro ao buscar CEP");
+    };
+
+    const handleSignUpSubmit = async (e) => {
+      e.preventDefault();
+      
+      if (formData.senha !== formData.confirmarSenha) {
+          alert('As senhas não coincidem');
+          return;
       }
-    } else {
-      alert("CEP deve ter 8 dígitos");
-    }
+  
+     
+      const enderecoCompleto = `${formData.rua}, ${formData.numero}${formData.complemento ? ' (' + formData.complemento + ')' : ''} - ${formData.bairro}, ${formData.cidade} - ${formData.estado}`;
+      
+      const generoMapeado = formData.genero === 'masculino' ? 'M' : formData.genero === 'feminino' ? 'F' : formData.genero;
+  
+      const payload = {
+        
+          nome_user: formData.nome,
+          email_user: formData.email,
+          senha_user: formData.senha,
+          data_nascimento_user: formData.dataNascimento,
+          telefone_user: formData.telefone,
+          genero_user: generoMapeado, 
+          cpf_user: formData.cpf.replace(/\D/g, ''),
+          login_user: formData.email,
+          
+          // os novos campo aqui
+          cep_user: formData.cep.replace(/\D/g, ''), 
+          pais_user: formData.pais,
+          estado_user: formData.estado,
+          cidade_user: formData.cidade,
+          rua_user: formData.rua,     // posso adicionar o numero tbm
+          numero_user: formData.numero,
+          bairro_user: formData.bairro,
+          complemento_user: formData.complemento,
+  
+          // tenho que ver a adaptacao no back
+          endereco_user: enderecoCompleto,
+      };
+  
+      try {
+          const response = await axios.post(
+              'http://localhost:8080/criar-user-cliente', 
+              payload
+          );
+      
+          console.log('Resposta do Cadastro:', response.data);
+          alert('Cadastro realizado com sucesso! Faça o login para continuar.');
+          
+          setFlipped(false);
+          setFormData(prev => ({
+              ...prev,
+              senha: '',
+              confirmarSenha: ''
+          }));
+  
+      } catch (error) {
+          const errorMessage = error.response?.data?.message || 'Erro desconhecido ao cadastrar.';
+          console.error('Erro no Cadastro:', errorMessage);
+          
+          if (error.response && error.response.status === 409) {
+              alert(`Falha no cadastro: Usuário ou e-mail já cadastrado.`);
+          } else {
+              alert(`Falha no cadastro: ${errorMessage}`);
+          }
+      }
   };
 
-  useEffect(() => {
-    const measure = () => {
-      const frontEl = frontRef.current;
-      const backEl = backRef.current;
-      if (frontEl && backEl) {
-     
-        const frontHeight = frontEl.offsetHeight;
-        const backHeight = backEl.offsetHeight;
-        const maxHeight = Math.max(frontHeight, backHeight);
-        setCardHeight(maxHeight);
-      }
-    };
-    
- 
-    const timeoutId = setTimeout(measure, 100);
-    measure();
-    
-    const onResize = () => {
-      clearTimeout(timeoutId);
-      setTimeout(measure, 100);
-    };
-    
-    window.addEventListener("resize", onResize);
-    return () => {
-      window.removeEventListener("resize", onResize);
-      clearTimeout(timeoutId);
-    };
-  }, [
-    flipped,
-    email,
-    password,
-    nome,
-    data_nascimento,
-    telefone,
-    genero,
-    endereco,
-    cpf,
-    cep,
-    emailCreate
-  ]);
+    return (
+        <LoginBack>
+            <LoginLogin $hasLargeContent={flipped}>
+                <FlipWrapper $flipped={flipped}>
+                    <FlipCard $flipped={flipped}>
+                        {/* FRENTE DO LOGIN TA AQUI*/}
+                        <FaceFront $visible={!flipped}>
+                            <LoginBox $isVisible={!flipped} $flipped={flipped}>
+                                <Title>Login</Title>
+                                <Form onSubmit={handleLoginSubmit}>
+                                    <InputGroup>
+                                        <Label>E-mail</Label>
+                                        <Input
+                                            type="email"
+                                            name="loginEmail"
+                                            value={formData.loginEmail}
+                                            onChange={handleChange}
+                                            placeholder="Digite seu e-mail"
+                                            required
+                                        />
+                                    </InputGroup>
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 1024);
-    };
-    
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+                                    <InputGroup>
+                                        <Label>Senha</Label>
+                                        <Input
+                                            type="password"
+                                            name="loginSenha"
+                                            value={formData.loginSenha}
+                                            onChange={handleChange}
+                                            placeholder="Digite sua senha"
+                                            required
+                                        />
+                                    </InputGroup>
 
-  return (
-    <LoginBack>
-      <LoginLogin>
-        <FlipWrapper>
-          <FlipCard $flipped={flipped} style={{ height: cardHeight || "auto" }}>
-            <FaceFront ref={frontRef} $visible={!flipped}>
-              <LoginBox>
-                <Title>Login</Title>
-                <Form onSubmit={handleSubmit}>
-                  <InputGroup>
-                    <Label>Email</Label>
-                    <Input
-                      type="email"
-                      placeholder="john.smith@exemplo.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </InputGroup>
+                                    <ForgotPassword href="#">Esqueceu a senha?</ForgotPassword>
 
-                  <InputGroup>
-                    <Label>Senha</Label>
-                    <Input
-                      type="password"
-                      placeholder="Digite sua senha"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </InputGroup>
+                                    <SubmitButton type="submit">Entrar</SubmitButton>
 
-                  <ForgotPassword href="#">Esqueceu sua Senha?</ForgotPassword>
+                                    <SignUpLink>
+                                        Não tem uma conta?{" "}
+                                        <span onClick={handleFlipToSignup}>Cadastre-se</span>
+                                    </SignUpLink>
+                                </Form>
+                            </LoginBox>
+                        </FaceFront>
 
-                  <SubmitButton type="submit">Entrar</SubmitButton>
-                </Form>
+                        {/* VERSO DO CADASTRO AQUI */}
+                        <FaceBack $visible={flipped}>
+                            <LoginBox $isVisible={flipped} $flipped={flipped}>
+                                <Title>Criar Conta</Title>
+                                <Form onSubmit={handleSignUpSubmit}>
+                               
+                                    <InputGroup>
+                                        <Label>Nome Completo</Label>
+                                        <Input
+                                            type="text"
+                                            name="nome"
+                                            value={formData.nome}
+                                            onChange={handleChange}
+                                            placeholder="Digite seu nome completo"
+                                            required
+                                        />
+                                    </InputGroup>
 
-                <SignUpLink>
-                  Novo por aqui?{" "}
-                  <span onClick={() => setFlipped(true)}>Crie sua conta</span>
-                </SignUpLink>
-              </LoginBox>
-            </FaceFront>
+                                    <InputGroup>
+                                        <Label>E-mail</Label>
+                                        <Input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            placeholder="Digite seu e-mail"
+                                            required
+                                        />
+                                    </InputGroup>
 
-            <FaceBack ref={backRef} $visible={flipped}>
-              <LoginBox>
-                <Title>Crie sua conta</Title>
-                <Form onSubmit={handleRegister}>
-                  <Row>
-                    <InputGroup>
-                      <Label>Nome</Label>
-                      <Input
-                        type="text"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
-                        required
-                      />
-                    </InputGroup>
-                    <InputGroup>
-                      <Label>Data de Nascimento</Label>
-                      <Input
-                        type="date"
-                        value={data_nascimento}
-                        onChange={(e) => setDataNascimento(e.target.value)}
-                        required
-                      />
-                    </InputGroup>
-                  </Row>
+                                    <Row>
+                                        <InputGroup>
+                                            <Label>CPF</Label>
+                                            <Input
+                                                type="text"
+                                                name="cpf"
+                                                value={formData.cpf}
+                                                onChange={handleChange}
+                                                placeholder="000.000.000-00"
+                                                maxLength="14"
+                                                required
+                                            />
+                                        </InputGroup>
 
-                  <Row>
-                    <InputGroup>
-                      <Label>Email</Label>
-                      <Input
-                        type="email"
-                        value={emailCreate}
-                        onChange={(e) => setEmailCreate(e.target.value)}
-                        required
-                      />
-                    </InputGroup>
-                    <InputGroup>
-                      <Label>Telefone</Label>
-                      <Input
-                        type="tel"
-                        value={telefone}
-                        onChange={(e) => setTelefone(e.target.value)}
-                        required
-                      />
-                    </InputGroup>
-                  </Row>
+                                        <InputGroup>
+                                            <Label>Telefone</Label>
+                                            <Input
+                                                type="tel"
+                                                name="telefone"
+                                                value={formData.telefone}
+                                                onChange={handleChange}
+                                                placeholder="(00) 00000-0000"
+                                                required
+                                            />
+                                        </InputGroup>
+                                    </Row>
 
-                  <Row>
-                    <InputGroup>
-                      <Label>Gênero</Label>
-                      <Select
-                        value={genero}
-                        onChange={(e) => setGenero(e.target.value)}
-                        required
-                      >
-                        <option value="">Selecione</option>
-                        <option value="masculino">Masculino</option>
-                        <option value="feminino">Feminino</option>
-                      </Select>
-                    </InputGroup>
-                    <InputGroup>
-                      <Label>CPF</Label>
-                      <Input
-                        type="text"
-                        value={cpf}
-                        onChange={(e) => setCpf(e.target.value)}
-                        required
-                      />
-                    </InputGroup>
-                  </Row>
+                             
+                                    <Row>
+                                        <InputGroup>
+                                            <Label>Data de Nascimento</Label>
+                                            <Input
+                                                type="date"
+                                                name="dataNascimento"
+                                                value={formData.dataNascimento}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </InputGroup>
 
-                  <CepRow>
-                    <InputGroup style={{ flex: 1 }}>
-                      <Label>CEP</Label>
-                      <CepInput
-                        type="text"
-                        placeholder="00000-000"
-                        value={cep.length > 0 ? (cep.length <= 5 ? cep : cep.replace(/(\d{5})(\d{0,3})/, '$1-$2')) : ''}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, '');
-                          if (value.length <= 8) {
-                            setCep(value);
-                          }
-                        }}
-                        required
-                      />
-                    </InputGroup>
-                    <CepButton type="button" onClick={handleBuscarCep}>
-                      Buscar
-                    </CepButton>
-                  </CepRow>
+                                        <InputGroup>
+                                            <Label>Gênero</Label>
+                                            <Select
+                                                name="genero"
+                                                value={formData.genero}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="">Selecione</option>
+                                                <option value="masculino">Masculino</option>
+                                                <option value="feminino">Feminino</option>
+                                                <option value="outro">Outro</option>
+                                            </Select>
+                                        </InputGroup>
+                                    </Row>
 
-                  <InputGroup>
-                    <Label>Endereço</Label>
-                    <Input
-                      type="text"
-                      value={endereco}
-                      onChange={(e) => setEndereco(e.target.value)}
-                      required
-                    />
-                  </InputGroup>
-                  <InputGroup>
-                    <Label>Senha</Label>
-                    <Input
-                      type="text"
-                      value={senhaCadastro}
-                      onChange={(e) => setSenhaCadastro(e.target.value)}
-                      required
-                    />
-                  </InputGroup>
+                                    <Row>
+                                        <InputGroup>
+                                            <Label>Senha</Label>
+                                            <Input
+                                                type="password"
+                                                name="senha"
+                                                value={formData.senha}
+                                                onChange={handleChange}
+                                                placeholder="Digite sua senha"
+                                                required
+                                            />
+                                        </InputGroup>
 
-                  <SubmitButton type="submit">Cadastrar</SubmitButton>
-                </Form>
+                                        <InputGroup>
+                                            <Label>Confirmar Senha</Label>
+                                            <Input
+                                                type="password"
+                                                name="confirmarSenha"
+                                                value={formData.confirmarSenha}
+                                                onChange={handleChange}
+                                                placeholder="Confirme sua senha"
+                                                required
+                                            />
+                                        </InputGroup>
+                                    </Row>
 
-                <SignUpLink>
-                  Já tem conta?{" "}
-                  <span onClick={() => setFlipped(false)}>Voltar ao login</span>
-                </SignUpLink>
-              </LoginBox>
-            </FaceBack>
-          </FlipCard>
-        </FlipWrapper>
-      </LoginLogin>
+                                
+                                    <AddressSection>
+                                        <SectionTitle>Endereço</SectionTitle>
 
-      {isMobile ? (
-        <FeaturesCarousel>
-          <Swiper
-            modules={[Autoplay]}
-            spaceBetween={20}
-            slidesPerView={1}
-            autoplay={{
-              delay: 2500,
-              disableOnInteraction: false,
-            }}
-            loop={true}
-            breakpoints={{
-              640: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-              },
-            }}
-          >
-            <SwiperSlide>
-              <FeatureCard>
-                <FeatureTitle>Entrega rápida com DHL</FeatureTitle>
-                <FeatureMainText>Entrega Expressa</FeatureMainText>
-              </FeatureCard>
-            </SwiperSlide>
-            <SwiperSlide>
-              <FeatureCard>
-                <FeatureTitle>
-                  Produtos de informática com garantia para sua tranquilidade
-                </FeatureTitle>
-                <FeatureMainText>Garantia de Satisfação</FeatureMainText>
-              </FeatureCard>
-            </SwiperSlide>
-            <SwiperSlide>
-              <FeatureCard>
-                <FeatureTitle>Entre em Contato para Suporte</FeatureTitle>
-                <FeatureMainText>Atendimento ao Cliente</FeatureMainText>
-              </FeatureCard>
-            </SwiperSlide>
-            <SwiperSlide>
-              <FeatureCard>
-                <FeatureTitle>Produtos com preços acessíveis</FeatureTitle>
-                <FeatureMainText>Preços Competitivos</FeatureMainText>
-              </FeatureCard>
-            </SwiperSlide>
-            <SwiperSlide>
-              <FeatureCard>
-                <FeatureTitle>Produtos tecnológicos de qualidade</FeatureTitle>
-                <FeatureMainText>Alta Qualidade</FeatureMainText>
-              </FeatureCard>
-            </SwiperSlide>
-          </Swiper>
-        </FeaturesCarousel>
-      ) : (
-        <FeaturesGrid>
-          {/* Linha 1 */}
-          <FeatureCardLarge>
-            <FeatureTitle>Entrega rápida com DHL</FeatureTitle>
-            <FeatureMainText>Entrega Expressa</FeatureMainText>
-          </FeatureCardLarge>
-          <FeatureCardLarge>
-            <FeatureTitle>
-              Produtos de informática com garantia para sua tranquilidade
-            </FeatureTitle>
-            <FeatureMainText>Garantia de Satisfação</FeatureMainText>
-          </FeatureCardLarge>
+                                        <InputGroup>
+                                            <Label>CEP</Label>
+                                            <CepRow>
+                                                <CepInput
+                                                    type="text"
+                                                    name="cep"
+                                                    value={formData.cep}
+                                                    onChange={handleChange}
+                                                    placeholder="00000-000"
+                                                    maxLength="9"
+                                                    required
+                                                />
+                                                <CepButton type="button" onClick={buscarCep}>
+                                                    Buscar
+                                                </CepButton>
+                                            </CepRow>
+                                        </InputGroup>
 
-          {/* Linha 2 */}
-          <FeatureCardSmall>
-            <FeatureTitle>Entre em Contato para Suporte</FeatureTitle>
-            <FeatureMainText>Atendimento ao Cliente</FeatureMainText>
-          </FeatureCardSmall>
-          <FeatureCardSmall>
-            <FeatureTitle>Produtos com preços acessíveis</FeatureTitle>
-            <FeatureMainText>Preços Competitivos</FeatureMainText>
-          </FeatureCardSmall>
-          <FeatureCardSmall>
-            <FeatureTitle>Produtos tecnológicos de qualidade</FeatureTitle>
-            <FeatureMainText>Alta Qualidade</FeatureMainText>
-          </FeatureCardSmall>
-        </FeaturesGrid>
-      )}
+                                        <Row>
+                                            <InputGroup>
+                                                <Label>País</Label>
+                                                <Select
+                                                    name="pais"
+                                                    value={formData.pais}
+                                                    onChange={handleChange}
+                                                    required
+                                                >
+                                                    {paises.map(pais => (
+                                                        <option key={pais.value} value={pais.value}>
+                                                            {pais.label}
+                                                        </option>
+                                                    ))}
+                                                </Select>
+                                            </InputGroup>
 
-      <EmailSignUp />
-    </LoginBack>
-  );
+                                            <InputGroup>
+                                                <Label>Estado</Label>
+                                                <Select
+                                                    name="estado"
+                                                    value={formData.estado}
+                                                    onChange={handleChange}
+                                                    required
+                                                    disabled={!formData.pais}
+                                                >
+                                                    {estados.length > 0 ? (
+                                                        estados.map(estado => (
+                                                            <option key={estado.value} value={estado.value}>
+                                                                {estado.label}
+                                                            </option>
+                                                        ))
+                                                    ) : (
+                                                        <option value="">Selecione um país primeiro</option>
+                                                    )}
+                                                </Select>
+                                            </InputGroup>
+                                        </Row>
+
+                                        <InputGroup>
+                                            <Label>Cidade</Label>
+                                            <Input
+                                                type="text"
+                                                name="cidade"
+                                                value={formData.cidade}
+                                                onChange={handleChange}
+                                                placeholder="Digite sua cidade"
+                                                required
+                                            />
+                                        </InputGroup>
+
+                                        <Row>
+                                            <InputGroup>
+                                                <Label>Rua</Label>
+                                                <Input
+                                                    type="text"
+                                                    name="rua"
+                                                    value={formData.rua}
+                                                    onChange={handleChange}
+                                                    placeholder="Nome da rua"
+                                                    required
+                                                />
+                                            </InputGroup>
+
+                                            <InputGroup>
+                                                <Label>Bairro</Label>
+                                                <Input
+                                                    type="text"
+                                                    name="bairro"
+                                                    value={formData.bairro}
+                                                    onChange={handleChange}
+                                                    placeholder="Nome do bairro"
+                                                    required
+                                                />
+                                            </InputGroup>
+                                        </Row>
+
+                                        <Row>
+                                            <InputGroup>
+                                                <LabelOptional>Complemento (Opcional)</LabelOptional>
+                                                <Input
+                                                    type="text"
+                                                    name="complemento"
+                                                    value={formData.complemento}
+                                                    onChange={handleChange}
+                                                    placeholder="Apto, bloco, etc."
+                                                />
+                                            </InputGroup>
+
+                                            <InputGroup>
+                                                <Label>Número</Label>
+                                                <Input
+                                                    type="text"
+                                                    name="numero"
+                                                    value={formData.numero}
+                                                    onChange={handleChange}
+                                                    placeholder="Número"
+                                                    required
+                                                />
+                                            </InputGroup>
+                                        </Row>
+                                    </AddressSection>
+
+                                    <SubmitButton type="submit">Cadastrar</SubmitButton>
+
+                                    <SignUpLink>
+                                        Já tem uma conta?{" "}
+                                        <span onClick={handleFlipToLogin}>Entre aqui</span>
+                                    </SignUpLink>
+                                </Form>
+                            </LoginBox>
+                        </FaceBack>
+                    </FlipCard>
+                </FlipWrapper>
+            </LoginLogin>
+
+         
+            <FeaturesGrid>
+                <FeatureCardLarge>
+                    <FeatureTitle>Atendimento humanizado</FeatureTitle>
+                    <FeatureMainText>Converse com a gente!</FeatureMainText>
+                </FeatureCardLarge>
+                <FeatureCardLarge>
+                    <FeatureTitle>Devolução grátis</FeatureTitle>
+                    <FeatureMainText>Compra garantida!</FeatureMainText>
+                </FeatureCardLarge>
+                <FeatureCardSmall>
+                    <FeatureTitle>Frete grátis</FeatureTitle>
+                    <FeatureMainText>Sul e sudeste</FeatureMainText>
+                </FeatureCardSmall>
+                <FeatureCardSmall>
+                    <FeatureTitle>Parcele em até</FeatureTitle>
+                    <FeatureMainText>10x sem juros</FeatureMainText>
+                </FeatureCardSmall>
+                <FeatureCardSmall>
+                    <FeatureTitle>Loja 100%</FeatureTitle>
+                    <FeatureMainText>Segura</FeatureMainText>
+                </FeatureCardSmall>
+            </FeaturesGrid>
+
+            {/* Features Carousel - Mobile/Tablet */}
+            <FeaturesCarousel>
+                <Swiper
+                    modules={[Pagination]}
+                    spaceBetween={16}
+                    slidesPerView={1.2}
+                    pagination={{ clickable: true }}
+                    breakpoints={{
+                        480: { slidesPerView: 1.5, spaceBetween: 16 },
+                        640: { slidesPerView: 2, spaceBetween: 16 },
+                        768: { slidesPerView: 2.5, spaceBetween: 20 }
+                    }}
+                >
+                    <SwiperSlide>
+                        <FeatureCard>
+                            <FeatureTitle>Atendimento humanizado</FeatureTitle>
+                            <FeatureMainText>Converse com a gente!</FeatureMainText>
+                        </FeatureCard>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <FeatureCard>
+                            <FeatureTitle>Devolução grátis</FeatureTitle>
+                            <FeatureMainText>Compra garantida!</FeatureMainText>
+                        </FeatureCard>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <FeatureCard>
+                            <FeatureTitle>Frete grátis</FeatureTitle>
+                            <FeatureMainText>Sul e sudeste</FeatureMainText>
+                        </FeatureCard>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <FeatureCard>
+                            <FeatureTitle>Parcele em até</FeatureTitle>
+                            <FeatureMainText>10x sem juros</FeatureMainText>
+                        </FeatureCard>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <FeatureCard>
+                            <FeatureTitle>Loja 100%</FeatureTitle>
+                            <FeatureMainText>Segura</FeatureMainText>
+                        </FeatureCard>
+                    </SwiperSlide>
+                </Swiper>
+            </FeaturesCarousel>
+        </LoginBack>
+    );
 };
 
-export default LoginPage;
+export default Login;

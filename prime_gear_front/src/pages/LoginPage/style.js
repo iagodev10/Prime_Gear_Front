@@ -15,38 +15,43 @@ export const LoginLogin = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    min-height: 80vh;
+    min-height: ${({ $hasLargeContent }) => $hasLargeContent ? 'auto' : '80vh'};
     width: 100%;
     position: relative;
     z-index: 1;
     background: radial-gradient(circle, #333, #111);
-    padding: 60px 16px 40px;
+    padding: 60px 16px 60px;
+    transition: min-height 1.2s ease, padding 1.2s ease; /* Aumentado de 0.6s para 1.2s */
 
     @media (max-width: 768px) {
-        padding: 40px 12px 30px;
+        padding: 40px 12px 40px;
         min-height: auto;
         align-items: center;
     }
 
     @media (max-width: 480px) {
-        padding: 30px 10px 20px;
+        padding: 30px 10px 30px;
     }
 `;
-
 
 export const LoginBox = styled.div`
     background: #fff;
     padding: clamp(20px, 4vw, 40px);
     border-radius: 16px;
     width: 100%;
-    max-width: 620px;
+    max-width: ${({ $isVisible, $flipped }) => $flipped && $isVisible ? '900px' : '620px'};
     text-align: left;
     box-shadow: 0 12px 32px rgba(0,0,0,0.18);
     position: relative;
+    overflow: hidden;
+    max-height: ${({ $isVisible }) => $isVisible ? '5000px' : '0'};
+    opacity: ${({ $isVisible }) => $isVisible ? '1' : '0'};
+    transition: max-height 0.6s ease, opacity 0.3s ease, max-width 1s ease;
 
     @media (max-width: 768px) {
         padding: clamp(20px, 5vw, 32px);
         border-radius: 12px;
+        max-width: 100%;
     }
 
     @media (max-width: 480px) {
@@ -58,13 +63,15 @@ export const LoginBox = styled.div`
 export const FlipWrapper = styled.div`
     perspective: 1200px;
     width: 100%;
-    max-width: 620px;
+    max-width: ${({ $flipped }) => $flipped ? '900px' : '620px'};
     position: relative;
     z-index: 2;
     margin-bottom: 40px;
+    transition: max-width 1s ease;
 
     @media (max-width: 768px) {
         margin-bottom: 30px;
+        max-width: 100%;
     }
 
     @media (max-width: 480px) {
@@ -75,14 +82,13 @@ export const FlipWrapper = styled.div`
 export const FlipCard = styled.div`
     position: relative;
     width: 100%;
-    min-height: 420px;
+    min-height: ${({ $flipped }) => $flipped ? 'auto' : '420px'};
     transform-style: preserve-3d;
-    transition: transform 0.6s ease, height 0.3s ease;
+    transition: transform 0.6s ease, min-height 0.3s ease;
     transform: ${({ $flipped }) => ($flipped ? 'rotateY(180deg)' : 'rotateY(0deg)')};
-    will-change: transform, height;
+    will-change: transform;
     z-index: 2;
     margin-bottom: 0;
-    overflow: visible;
 
     @media (max-width: 768px) {
         min-height: auto;
@@ -106,6 +112,7 @@ export const FaceFront = styled(Face)`
 
 export const FaceBack = styled(Face)`
     transform: rotateY(180deg);
+    position: ${({ $visible }) => $visible ? 'relative' : 'absolute'};
 `;
 
 export const Title = styled.h1`
@@ -126,7 +133,6 @@ export const Title = styled.h1`
     }
 `;
 
-
 export const Form = styled.form`
     display: flex;
     flex-direction: column;
@@ -141,13 +147,11 @@ export const Form = styled.form`
     }
 `;
 
-
 export const InputGroup = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
 `;
-
 
 export const Label = styled.label`
     font-weight: 500;
@@ -164,6 +168,11 @@ export const Label = styled.label`
     }
 `;
 
+export const LabelOptional = styled(Label)`
+    &::after {
+        display: none;
+    }
+`;
 
 export const Input = styled.input`
     padding: 14px 20px;
@@ -192,7 +201,6 @@ export const Input = styled.input`
     }
 `;
 
-
 export const ForgotPassword = styled.a`
     text-align: left;
     font-size: 0.9rem;
@@ -204,7 +212,6 @@ export const ForgotPassword = styled.a`
     }
 `;
 
-// Botão "Entrar"
 export const SubmitButton = styled.button`
     background: #000;
     color: #fff;
@@ -260,7 +267,6 @@ export const SignUpLink = styled.p`
     }
 `;
 
-
 export const FeaturesGrid = styled.section`
     width: 90%;
     max-width: 1400px;
@@ -281,7 +287,6 @@ export const FeaturesGrid = styled.section`
     }
 `;
 
-// Card base
 const BaseFeatureCard = styled.div`
     background-color: #d9d9d9;
     border-radius: 16px;
@@ -341,7 +346,6 @@ export const FeaturesCarousel = styled.section`
         height: auto;
     }
 
-    /* Esconder setas de navegação */
     .swiper-button-next,
     .swiper-button-prev {
         display: none !important;
@@ -501,5 +505,35 @@ export const CepButton = styled.button`
     @media (max-width: 480px) {
         padding: 10px;
         font-size: 0.9rem;
+    }
+`;
+
+export const AddressSection = styled.div`
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
+    animation: fadeIn 4s ease;
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+`;
+
+export const SectionTitle = styled.h3`
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    color: #222;
+    font-weight: 500;
+
+    @media (max-width: 480px) {
+        font-size: 1.1rem;
+        margin-bottom: 14px;
     }
 `;
