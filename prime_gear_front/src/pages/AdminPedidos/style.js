@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
   width: 100%;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f3f4f6;
   padding-top: 8vh;
   padding-bottom: 40px;
   display: flex;
@@ -336,14 +336,9 @@ export const Info = styled.div`
 
 export const Content = styled.div`
   width: 90%;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 16px;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
 
   @media (max-width: 480px) {
     width: 92%;
@@ -356,25 +351,25 @@ export const UserCard = styled.div`
   background-color: white;
   color: #111;
   border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 6px 18px rgba(20, 20, 30, 0.06);
-  border: 1px solid #eef1f7;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
   border-left: 4px solid
     ${(p) =>
       p.status === "Entregue"
-        ? "#16a34a"
+        ? "#10B981"
         : p.status === "Pendente"
-        ? "#ea580c"
-        : "#2563eb"};
-  transition: all 0.3s ease;
+        ? "#F59E0B"
+        : "#3B82F6"};
+  transition: all 0.2s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  margin-bottom: 0;
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(20, 20, 30, 0.12);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
   }
 
   @media (max-width: 768px) {
@@ -383,46 +378,37 @@ export const UserCard = styled.div`
     gap: 16px;
     padding: 20px;
   }
-
-  @media (max-width: 480px) {
-    padding: 16px;
-    gap: 14px;
-    border-left-width: 3px;
-  }
 `;
 
 export const Icone = styled.div`
-  width: 55px;
-  height: 55px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: ${(p) =>
     p.status === "Entregue"
-      ? "linear-gradient(135deg, #E8F8EE 0%, #D7F7E6 100%)"
+      ? "#10B981"
       : p.status === "Pendente"
-      ? "linear-gradient(135deg, #FFEDE3 0%, #FFD6BF 100%)"
-      : "linear-gradient(135deg, #E6F0FF 0%, #D9E8FF 100%)"};
+      ? "#F59E0B"
+      : "#3B82F6"};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  color: white;
+
+  svg {
+    stroke-width: 2.5px;
+    width: 22px;
+    height: 22px;
+  }
 
   @media (max-width: 768px) {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 
     svg {
       width: 20px;
       height: 20px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    width: 45px;
-    height: 45px;
-
-    svg {
-      width: 18px;
-      height: 18px;
     }
   }
 `;
@@ -431,18 +417,18 @@ export const Informacoes = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
+  gap: 6px;
   margin-left: 16px;
   flex: 1;
 
   @media (max-width: 768px) {
     margin-left: 12px;
-    gap: 10px;
+    gap: 6px;
   }
 
   @media (max-width: 480px) {
     margin-left: 10px;
-    gap: 8px;
+    gap: 5px;
   }
 `;
 
@@ -458,17 +444,17 @@ export const Status = styled.div`
 `;
 
 export const SNome = styled.p`
-  font-size: 1.4rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: black;
+  color: #111;
   margin: 0;
 
   @media (max-width: 768px) {
-    font-size: 1.2rem;
+    font-size: 0.95rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
   }
 `;
 
@@ -492,24 +478,30 @@ export const SRol = styled.span`
 `;
 
 export const SMail = styled.p`
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #666;
   margin: 0;
   display: flex;
   align-items: center;
   gap: 6px;
 
+  svg {
+    width: 16px;
+    height: 16px;
+    color: #666;
+  }
+
   @media (max-width: 768px) {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     gap: 5px;
 
     svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
     }
   }
 `;
@@ -533,24 +525,36 @@ export const MetaRow = styled.div`
   align-items: center;
   gap: 6px;
   color: #666;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: #666;
+  }
 
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     gap: 5px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 `;
 
 export const Conteudo = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   flex: 1;
+  min-width: 0;
 
   @media (max-width: 768px) {
     justify-content: flex-start;
@@ -558,79 +562,65 @@ export const Conteudo = styled.div`
   }
 
   @media (max-width: 480px) {
-    gap: 10px;
+    gap: 12px;
   }
 `;
 
 export const Conteudo2 = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   min-width: 200px;
 
   @media (max-width: 768px) {
     width: 100%;
+    align-items: flex-start;
+    flex-direction: row;
     justify-content: space-between;
     min-width: unset;
-  }
-
-  @media (max-width: 480px) {
-    gap: 10px;
   }
 `;
 
 export const PriceValue = styled.p`
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #2563eb;
+  line-height: 1.3;
 
   @media (max-width: 768px) {
-    font-size: 1.3rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 `;
 
 export const FreteText = styled.p`
-  margin: 2px 0 10px 0;
-  font-size: 0.95rem;
-  color: #666;
-
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 0.85rem;
-  }
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+  line-height: 1.3;
 `;
 
 export const StatusPill = styled.span`
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
   display: inline-block;
+  white-space: nowrap;
   background: ${(p) =>
     p.status === "Entregue"
-      ? "#EAF7F0"
+      ? "#D1FAE5"
       : p.status === "Pendente"
-      ? "#FFEDE3"
-      : "#E6F0FF"};
+      ? "#FEF3C7"
+      : "#DBEAFE"};
   color: ${(p) =>
     p.status === "Entregue"
-      ? "#16a34a"
+      ? "#059669"
       : p.status === "Pendente"
-      ? "#ea580c"
+      ? "#D97706"
       : "#2563eb"};
-
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
-    padding: 5px 10px;
-  }
 `;
 
 export const ModalOverlay = styled.div`
@@ -893,23 +883,33 @@ export const OrderSelect = styled.select`
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
-  background: #fff;
+  background: #f9fafb;
   color: #111;
   font-weight: 500;
-  width: 80%;
+  font-size: 0.85rem;
+  width: 100%;
+  min-width: 120px;
   cursor: pointer;
   transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
 
   &:hover {
+    background-color: #f3f4f6;
     border-color: #d1d5db;
   }
 
   @media (max-width: 768px) {
     padding: 9px 12px;
+    padding-right: 32px;
   }
 
   @media (max-width: 480px) {
     padding: 9px 10px;
+    padding-right: 30px;
   }
 `;
 

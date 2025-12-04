@@ -15,7 +15,7 @@ import {
   HeroButton,
   SlideContent,
   FixedButtons,
-  ButtonGroup,
+  ButtonGroup
 } from "./style";
 
 const HeroBanner = () => {
@@ -53,16 +53,7 @@ const HeroBanner = () => {
               backgroundRepeat: "no-repeat",
             }}
           >
-            <SlideContent
-              style={{
-                alignItems: "center",
-                margin: "auto",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
+            <SlideContent style={{ alignItems: "center", margin: "auto", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <ButtonGroup>
                 <HeroButton href="#">Saiba mais</HeroButton>
                 <HeroButton
@@ -71,7 +62,7 @@ const HeroBanner = () => {
                     backgroundColor: "transparent",
                     color: "#FFFFFF",
                     border: "1px solid #FFFFFF",
-                    boxShadow: "none",
+                    boxShadow: "none"
                   }}
                 >
                   Ver preços
@@ -122,6 +113,7 @@ const HeroBanner = () => {
             </FixedButtons>
           </StyledSwiperSlide>
         </SwiperSlide>
+
       </Swiper>
     </HeroContainer>
   );

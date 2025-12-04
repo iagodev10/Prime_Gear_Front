@@ -196,13 +196,10 @@ const AdminPedidos = () => {
             <UserCard key={p.id} status={p.status} onClick={() => abrirModal(p)}>
               <Conteudo>
                 <Icone status={p.status}>
-                  <FiPackage size={22} color="black" />
+                  <FiPackage size={22} />
                 </Icone>
-
                 <Informacoes>
-                  <Status>
-                    <SNome>Pedido #{p.id}</SNome>
-                  </Status>
+                  <SNome>Pedido #{p.id}</SNome>
                   <SMail>
                     <LuMail /> {p.email}
                   </SMail>
@@ -213,25 +210,27 @@ const AdminPedidos = () => {
               </Conteudo>
 
               <Conteudo2>
-                <div style={{ textAlign: "right", width: "100%" }}>
-                  <PriceValue>R$ {p.total.toFixed(2)}</PriceValue>
-                  <FreteText>+ R$ {p.frete.toFixed(2)} frete</FreteText>
-
-                  <StatusPill status={p.status}>{p.status}</StatusPill>
-
-                  <OrderSelect
-                    value={p.status}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => {
-                      e.stopPropagation()
-                      alterarStatus(p.id, e.target.value)
-                    }}
-                    aria-label="Alterar status do pedido"
-                  >
-                    <option value="Entregue">Entregue</option>
-                    <option value="Pendente">Pendente</option>
-                    <option value="Enviado">Enviado</option>
-                  </OrderSelect>
+                <div style={{ textAlign: "right", width: "100%", display: "flex", flexDirection: "column", gap: "10px", alignItems: "flex-end" }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2px" }}>
+                    <PriceValue>R$ {p.total.toFixed(2)}</PriceValue>
+                    <FreteText>+ R$ {p.frete.toFixed(2)} frete</FreteText>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "flex-end", width: "100%" }}>
+                    <StatusPill status={p.status}>{p.status}</StatusPill>
+                    <OrderSelect
+                      value={p.status}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => {
+                        e.stopPropagation()
+                        alterarStatus(p.id, e.target.value)
+                      }}
+                      aria-label="Alterar status do pedido"
+                    >
+                      <option value="Entregue">Entregue</option>
+                      <option value="Pendente">Pendente</option>
+                      <option value="Enviado">Enviado</option>
+                    </OrderSelect>
+                  </div>
                 </div>
               </Conteudo2>
             </UserCard>

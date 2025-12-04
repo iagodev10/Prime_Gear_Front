@@ -37,37 +37,7 @@ export const BannerImg = styled.div`
     display: block;
   }
 
-  @media (max-width: 992px) {
-    max-height: 320px;
-    
-    img {
-      max-height: 320px;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    max-height: 250px;
-    
-    img {
-      max-height: 250px;
-    }
-  }
-  
-  @media (max-width: 576px) {
-    max-height: 180px;
-    
-    img {
-      max-height: 180px;
-    }
-  }
-  
-  @media (max-width: 420px) {
-    max-height: 140px;
-    
-    img {
-      max-height: 140px;
-    }
-  }
+
 `;
 
 export const BannerBuy = styled.a`
@@ -158,13 +128,12 @@ export const IdeaImg = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
-    max-height: 300px;
   }
   @media (max-width: 576px) {
-    max-height: 240px;
+    height: auto;
   }
   @media (max-width: 420px) {
-    max-height: 200px;
+    height: auto;
   }
 
   img {
