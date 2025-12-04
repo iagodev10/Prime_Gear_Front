@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
   PageContainer,
   Wrapper,
@@ -54,12 +55,18 @@ import ProductImg from "../../assets/images/desktop-ilustration.png";
 import { FiCreditCard, FiFileText } from "react-icons/fi";
 import { RiQrCodeLine } from "react-icons/ri";
 import { masks, validators, errorMessages } from "../../utils/formValidation";
+import { useAuth } from "../../contexts/AuthContext";
 
 const CheckoutPage = () => {
+  const { user } = useAuth();
+  console.log(user);
+  
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("credit");
+  const [cartProducts, setCartProducts] = useState([]);
+  const [loadingCart, setLoadingCart] = useState(true);
 
-  // Form state
+
   const [formData, setFormData] = useState({
     email: "",
     firstName: "",
@@ -74,23 +81,128 @@ const CheckoutPage = () => {
     neighborhood: "",
     complement: "",
     cep: "",
+    numero: "",
   });
 
-  // Error state
+ 
   const [errors, setErrors] = useState({});
 
-  // Handle input change with masks
+
+  useEffect(() => {
+    if (user) {
+    
+      const nomeCompleto = user.nome_user || "";
+      const partesNome = nomeCompleto.trim().split(" ");
+      const primeiroNome = partesNome[0] || "";
+      const ultimoNome = partesNome.slice(1).join(" ") || "";
+
+    
+      const formatarData = (dataISO) => {
+        if (!dataISO) return "";
+        const [ano, mes, dia] = dataISO.split("-");
+        return `${dia}/${mes}/${ano}`;
+      };
+
+    
+      const formatarCPF = (cpf) => {
+        if (!cpf) return "";
+        const numeros = cpf.replace(/\D/g, "");
+        return masks.cpf(numeros);
+      };
+
+    
+      const formatarCEP = (cep) => {
+        if (!cep) return "";
+        const numeros = cep.replace(/\D/g, "");
+        return masks.cep(numeros);
+      };
+
+     
+      const formatarTelefone = (tel) => {
+        if (!tel) return "";
+        const numeros = tel.replace(/\D/g, "");
+        return masks.phone(numeros);
+      };
+
+      setFormData({
+        email: user.email_user || "",
+        firstName: primeiroNome,
+        lastName: ultimoNome,
+        cpf: formatarCPF(user.cpf_user),
+        birthDate: formatarData(user.data_nascimento_user),
+        phone: formatarTelefone(user.telefone_user),
+        country: user.pais_user === "BR" ? "Brasil" : user.pais_user || "",
+        state: user.estado_user || "",
+        city: user.cidade_user || "",
+        street: user.rua_user || "",
+        neighborhood: user.bairro_user || "",
+        complement: user.complemento_user || "",
+        cep: formatarCEP(user.cep_user),
+        numero: user.numero_user || "",
+      });
+    }
+  }, [user]);
+
+ 
+  useEffect(() => {
+    const fetchCartProducts = async () => {
+      if (!user || !user.cod_user) {
+        setLoadingCart(false);
+        return;
+      }
+
+      try {
+        setLoadingCart(true);
+        const token = localStorage.getItem('token'); 
+        
+        const response = await axios.get(
+          `http://localhost:8080/get-produtos-cart/${user.cod_user}`,
+          {
+            withCredentials:true
+          }
+        );
+        console.log("cart>>>>>>>");
+        console.log(response.data);
+        setCartProducts(response.data);
+        setLoadingCart(false);
+      } catch (error) {
+        console.error('Erro ao buscar produtos do carrinho:', error);
+        setCartProducts([]);
+        setLoadingCart(false);
+      }
+    };
+
+    fetchCartProducts();
+  }, [user]);
+
+  
+  const calcularTotais = () => {
+    const subtotal = cartProducts.reduce((acc, item) => acc + item.preco_total, 0);
+    const desconto = subtotal * 0.1; 
+    const total = subtotal - desconto;
+    
+    return {
+      subtotal: subtotal.toFixed(2),
+      desconto: desconto.toFixed(2),
+      total: total.toFixed(2),
+      parcela: (subtotal / 4).toFixed(2) 
+    };
+  };
+
+  const totais = calcularTotais();
+
+ 
   const handleInputChange = (field, value, maskFunction) => {
     const maskedValue = maskFunction ? maskFunction(value) : value;
     setFormData(prev => ({ ...prev, [field]: maskedValue }));
 
-    // Clear error when user starts typing
+  
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
   };
 
-  // Validate field on blur
+
   const handleBlur = (field, validatorFunction, errorMessage) => {
     const value = formData[field];
 
@@ -99,7 +211,7 @@ const CheckoutPage = () => {
     }
   };
 
-  // Validate all fields before continuing
+ 
   const validateForm = () => {
     const newErrors = {};
 
@@ -172,7 +284,7 @@ const CheckoutPage = () => {
         <Grid>
           <FlipContainer>
             <Flipper $flipped={currentStep === 2}>
-              <Front>
+              <Front $flipped={currentStep === 2}>
                 <Card>
                   <Title>Dados pessoais</Title>
 
@@ -300,18 +412,45 @@ const CheckoutPage = () => {
                           $error={!!errors.state}
                         >
                           <option value="">Estado *</option>
+                          <option value="AC">Acre</option>
+                          <option value="AL">Alagoas</option>
+                          <option value="AP">Amapá</option>
+                          <option value="AM">Amazonas</option>
+                          <option value="BA">Bahia</option>
+                          <option value="CE">Ceará</option>
+                          <option value="DF">Distrito Federal</option>
+                          <option value="ES">Espírito Santo</option>
+                          <option value="GO">Goiás</option>
+                          <option value="MA">Maranhão</option>
+                          <option value="MT">Mato Grosso</option>
+                          <option value="MS">Mato Grosso do Sul</option>
+                          <option value="MG">Minas Gerais</option>
+                          <option value="PA">Pará</option>
+                          <option value="PB">Paraíba</option>
+                          <option value="PR">Paraná</option>
+                          <option value="PE">Pernambuco</option>
+                          <option value="PI">Piauí</option>
+                          <option value="RJ">Rio de Janeiro</option>
+                          <option value="RN">Rio Grande do Norte</option>
+                          <option value="RS">Rio Grande do Sul</option>
+                          <option value="RO">Rondônia</option>
+                          <option value="RR">Roraima</option>
+                          <option value="SC">Santa Catarina</option>
+                          <option value="SP">São Paulo</option>
+                          <option value="SE">Sergipe</option>
+                          <option value="TO">Tocantins</option>
                         </Select>
                         {errors.state && <ErrorMessage>{errors.state}</ErrorMessage>}
                       </Field>
                       <Field>
-                        <Select
+                        <Input
+                          type="text"
+                          placeholder="Cidade *"
                           value={formData.city}
                           onChange={(e) => handleInputChange("city", e.target.value)}
                           onBlur={() => handleBlur("city", validators.required, errorMessages.city)}
                           $error={!!errors.city}
-                        >
-                          <option value="">Cidade *</option>
-                        </Select>
+                        />
                         {errors.city && <ErrorMessage>{errors.city}</ErrorMessage>}
                       </Field>
                     </Row3>
@@ -322,7 +461,7 @@ const CheckoutPage = () => {
                       <Field>
                         <Input
                           type="text"
-                          placeholder="Rua, número *"
+                          placeholder="Rua *"
                           value={formData.street}
                           onChange={(e) => handleInputChange("street", e.target.value)}
                           onBlur={() => handleBlur("street", validators.required, errorMessages.street)}
@@ -330,6 +469,22 @@ const CheckoutPage = () => {
                         />
                         {errors.street && <ErrorMessage>{errors.street}</ErrorMessage>}
                       </Field>
+                      <Field>
+                        <Input
+                          type="text"
+                          placeholder="Número *"
+                          value={formData.numero}
+                          onChange={(e) => handleInputChange("numero", e.target.value)}
+                          onBlur={() => handleBlur("numero", validators.required, "Número é obrigatório")}
+                          $error={!!errors.numero}
+                        />
+                        {errors.numero && <ErrorMessage>{errors.numero}</ErrorMessage>}
+                      </Field>
+                    </Row>
+                  </Section>
+
+                  <Section>
+                    <Row>
                       <Field>
                         <Input
                           type="text"
@@ -341,11 +496,6 @@ const CheckoutPage = () => {
                         />
                         {errors.neighborhood && <ErrorMessage>{errors.neighborhood}</ErrorMessage>}
                       </Field>
-                    </Row>
-                  </Section>
-
-                  <Section>
-                    <Row>
                       <Field>
                         <Input
                           type="text"
@@ -354,24 +504,27 @@ const CheckoutPage = () => {
                           onChange={(e) => handleInputChange("complement", e.target.value)}
                         />
                       </Field>
-                      <Field>
-                        <div style={{ position: 'relative' }}>
-                          <Input
-                            type="text"
-                            placeholder="CEP *"
-                            value={formData.cep}
-                            onChange={(e) => handleInputChange("cep", e.target.value, masks.cep)}
-                            onBlur={() => handleBlur("cep", validators.cep, errorMessages.cep)}
-                            $error={!!errors.cep}
-                            maxLength="9"
-                          />
-                          <div style={{ position: 'absolute', right: 14, top: 14 }}>
-                            <SearchButton>Buscar</SearchButton>
-                          </div>
-                        </div>
-                        {errors.cep && <ErrorMessage>{errors.cep}</ErrorMessage>}
-                      </Field>
                     </Row>
+                  </Section>
+
+                  <Section>
+                    <Field>
+                      <div style={{ position: 'relative' }}>
+                        <Input
+                          type="text"
+                          placeholder="CEP *"
+                          value={formData.cep}
+                          onChange={(e) => handleInputChange("cep", e.target.value, masks.cep)}
+                          onBlur={() => handleBlur("cep", validators.cep, errorMessages.cep)}
+                          $error={!!errors.cep}
+                          maxLength="9"
+                        />
+                        <div style={{ position: 'absolute', right: 14, top: 14 }}>
+                          <SearchButton>Buscar</SearchButton>
+                        </div>
+                      </div>
+                      {errors.cep && <ErrorMessage>{errors.cep}</ErrorMessage>}
+                    </Field>
                   </Section>
 
                   <Actions>
@@ -380,7 +533,7 @@ const CheckoutPage = () => {
                 </Card>
               </Front>
 
-              <Back>
+              <Back $flipped={currentStep === 2}>
                 <Card>
                   <Title>Forma de pagamento</Title>
 
@@ -474,55 +627,73 @@ const CheckoutPage = () => {
               </Link>
             </SummaryHeader>
 
-            <BagItem>
-              <BagImageWrapper>
-                <BagImage src={ProductImg} alt="Produto" />
-                <BagBadge>1</BagBadge>
-              </BagImageWrapper>
-
-              <div>
-                <BagTitle>
-                  Gabinete Gamer Rise Mode Galaxy Glass, Mid Tower, ATX,
-                  Lateral e Frontal em Vidro Temperado, Preto - RM-GA-GG-FB
-                </BagTitle>
+            {loadingCart ? (
+              <div style={{ textAlign: 'center', padding: '40px 0', color: '#666' }}>
+                Carregando produtos...
               </div>
-            </BagItem>
-
-            <SummaryDivider />
-
-            <RowPrice>
-              <PriceText>Subtotal</PriceText>
-              <PriceText>R$ 552,93</PriceText>
-            </RowPrice>
-            <RowPrice>
-              <PriceText>Descontos totais</PriceText>
-              <PriceValue $discount>-R$ 55,94</PriceValue>
-            </RowPrice>
-            <DiscountNote>Oferta especial PrimeGear -R$ 55,94</DiscountNote>
-            <RowPrice>
-              <PriceText>Frete</PriceText>
-              <ShippingFree>Grátis</ShippingFree>
-            </RowPrice>
-
-            <SummaryDivider />
-
-            <TotalBlock>
-              <TotalLabel>
-                <span>Total</span>
-              </TotalLabel>
-              <div style={{ textAlign: 'right' }}>
-                <Total>R$ 496,99</Total>
-                <Installments>
-                  R$ 552,93 em até 4x de R$ 138,23 sem juros
-                </Installments>
+            ) : cartProducts.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '40px 0', color: '#666' }}>
+                Seu carrinho está vazio
               </div>
-            </TotalBlock>
+            ) : (
+              <>
+                {cartProducts.map((produto) => (
+                  <BagItem key={produto.id}>
+                    <BagImageWrapper>
+                      <BagImage 
+                        src={produto.imagem || ProductImg} 
+                        alt={produto.nome}
+                        onError={(e) => { e.target.src = ProductImg }}
+                      />
+                      <BagBadge>{produto.quantidade}</BagBadge>
+                    </BagImageWrapper>
 
-            <SignUpBox>
-              Cadastre-se na PrimeGear e ganhe 10% de desconto na primeira
-              compra, além de acesso antecipado às vendas, novidades,
-              promoções e muito mais.
-            </SignUpBox>
+                    <div>
+                      <BagTitle>{produto.nome}</BagTitle>
+                      <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '4px' }}>
+                        R$ {produto.preco_unitario.toFixed(2)} × {produto.quantidade}
+                      </div>
+                    </div>
+                  </BagItem>
+                ))}
+
+                <SummaryDivider />
+
+                <RowPrice>
+                  <PriceText>Subtotal</PriceText>
+                  <PriceText>R$ {totais.subtotal}</PriceText>
+                </RowPrice>
+                <RowPrice>
+                  <PriceText>Descontos totais</PriceText>
+                  <PriceValue $discount>-R$ {totais.desconto}</PriceValue>
+                </RowPrice>
+                <DiscountNote>Oferta especial PrimeGear -R$ {totais.desconto}</DiscountNote>
+                <RowPrice>
+                  <PriceText>Frete</PriceText>
+                  <ShippingFree>Grátis</ShippingFree>
+                </RowPrice>
+
+                <SummaryDivider />
+
+                <TotalBlock>
+                  <TotalLabel>
+                    <span>Total</span>
+                  </TotalLabel>
+                  <div style={{ textAlign: 'right' }}>
+                    <Total>R$ {totais.total}</Total>
+                    <Installments>
+                      R$ {totais.subtotal} em até 4x de R$ {totais.parcela} sem juros
+                    </Installments>
+                  </div>
+                </TotalBlock>
+
+                <SignUpBox>
+                  Cadastre-se na PrimeGear e ganhe 10% de desconto na primeira
+                  compra, além de acesso antecipado às vendas, novidades,
+                  promoções e muito mais.
+                </SignUpBox>
+              </>
+            )}
           </Card>
         </Grid>
       </Wrapper>
