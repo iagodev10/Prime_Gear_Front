@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react"
-
+import { useState, useMemo, useEffect } from "react"
+import axios from "axios"
 import { FiSearch, FiUsers, FiShield, FiPackage, FiCalendar, FiX } from "react-icons/fi"
 import { LuMail } from "react-icons/lu"
 import {
@@ -40,58 +40,62 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "./style"
-
+import { useAuth } from "../../contexts/AuthContext"
 const TranspPedidos = () => {
+  const {user}=useAuth()
   const [search, setSearch] = useState("")
   const [statusFiltro, setStatusFiltro] = useState("todos")
   const [selected, setSelected] = useState(null)
   const [isModalOpen, setModalOpen] = useState(false)
-  const [pedidos, setPedidos] = useState([
-    {
-      id: "6918F27A",
-      email: "admin@primegear.com",
-      data: "15/11/2025",
-      dataHora: "15/11/2025, 21:36:58",
-      endereco: "Av. Getúlio Vargas, 1500 - Belo Horizonte MG - CEP: 30112-021",
-      total: 799.0,
-      frete: 25.0,
-      status: "Entregue",
-      items: [{ name: "SSD Samsung 1TB", qty: 1, price: 799.0 }],
-    },
-    {
-      id: "6918F27B",
-      email: "admin@primegear.com",
-      data: "15/11/2025",
-      dataHora: "15/11/2025, 21:36:58",
-      endereco: "Rua XV de Novembro, 200 - Curitiba PR - CEP: 80020-310",
-      total: 899.0,
-      frete: 30.0,
-      status: "Pendente",
-      items: [{ name: "Teclado Mecânico RGB", qty: 1, price: 899.0 }],
-    },
-    {
-      id: "6918F27C",
-      email: "admin@primegear.com",
-      data: "15/11/2025",
-      dataHora: "15/11/2025, 21:36:58",
-      endereco: "Av. Rebouças, 3000 - São Paulo SP - CEP: 05402-600",
-      total: 5499.0,
-      frete: 40.0,
-      status: "Enviado",
-      items: [{ name: "Notebook Gamer RTX 4070", qty: 1, price: 5499.0 }],
-    },
-    {
-      id: "6918F27D",
-      email: "admin@primegear.com",
-      data: "15/11/2025",
-      dataHora: "15/11/2025, 21:36:58",
-      endereco: "Rua das Flores, 450 - Rio de Janeiro RJ - CEP: 20040-020",
-      total: 1299.0,
-      frete: 25.0,
-      status: "Enviado",
-      items: [{ name: "Headset JBL Quantum", qty: 1, price: 1299.0 }],
-    },
-  ])
+  const [pedidos, setPedidos] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const [dadosTransp,setDadosTransp]=useState()
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      if (!user || !user.email_user) {
+        setLoading(false);
+        return;
+      }
+  
+      try {
+        setLoading(true);
+  
+     
+        const transpResponse = await axios.get(
+          `http://localhost:8080/get-dados-transp/${user.email_user}`,
+          { withCredentials: true }
+        );
+        
+        const transportadoraData = transpResponse.data.transportadora;
+        setDadosTransp(transportadoraData);
+        console.log("Transportadora:", transportadoraData);
+  
+    
+        const pedidosResponse = await axios.get(
+          `http://localhost:8080/get-pedidos-transportadora/${transportadoraData.cod_transportadora}`,
+          { withCredentials: true }
+        );
+  
+        if (pedidosResponse.data.success) {
+          setPedidos(pedidosResponse.data.pedidos);
+        }
+  
+        setLoading(false);
+      } catch (err) {
+        console.error('Erro ao buscar dados:', err);
+        setError('Erro ao carregar dados');
+        setLoading(false);
+      }
+    };
+  
+    fetchAllData();
+  }, [user]);
+   
+   
+
 
   const pedidosFiltrados = useMemo(() => {
     return pedidos.filter((p) => {
@@ -104,8 +108,39 @@ const TranspPedidos = () => {
     })
   }, [pedidos, search, statusFiltro])
 
-  const alterarStatus = (id, novoStatus) => {
-    setPedidos((prev) => prev.map((p) => (p.id === id ? { ...p, status: novoStatus } : p)))
+  const alterarStatus = async (id, novoStatus) => {
+    try {
+      const token = localStorage.getItem('token')
+      
+   
+      const pedido = pedidos.find(p => p.id === id)
+      
+      const response = await axios.patch(
+        `http://localhost:8080/atualizar-status-pedido/${pedido.codPedido}`,
+        { status: novoStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          withCredentials: true
+        }
+      )
+
+      if (response.data.success) {
+     
+        setPedidos((prev) => 
+          prev.map((p) => (p.id === id ? { ...p, status: novoStatus } : p))
+        )
+        
+     
+        if (selected && selected.id === id) {
+          setSelected({ ...selected, status: novoStatus })
+        }
+      }
+    } catch (err) {
+      console.error('Erro ao atualizar status:', err)
+      alert('Erro ao atualizar status do pedido')
+    }
   }
 
   const abrirModal = (pedido) => {
@@ -118,6 +153,40 @@ const TranspPedidos = () => {
     setSelected(null)
   }
 
+  if (loading) {
+    return (
+      <Container>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '400px',
+          fontSize: '1.1rem',
+          color: '#666'
+        }}>
+          Carregando pedidos...
+        </div>
+      </Container>
+    )
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '400px',
+          fontSize: '1.1rem',
+          color: '#dc2626'
+        }}>
+          {error}
+        </div>
+      </Container>
+    )
+  }
+
   return (
     <>
       <Container>
@@ -126,10 +195,6 @@ const TranspPedidos = () => {
             <h1>Gerenciar Pedidos</h1>
             <p>{pedidos.length} pedidos no sistema</p>
           </Title>
-          {/* <Button>
-            <FiPlus size={18} />
-            Adicionar Pedido
-          </Button> */}
         </Header>
 
         <CardGeral>
@@ -244,7 +309,11 @@ const TranspPedidos = () => {
               <FiSearch size={22} />
             </EmptyIcon>
             <EmptyTitle>Nenhum pedido encontrado</EmptyTitle>
-            <EmptyDescription>Ajuste a busca ou o filtro de status</EmptyDescription>
+            <EmptyDescription>
+              {pedidos.length === 0 
+                ? 'Ainda não há pedidos cadastrados para esta transportadora'
+                : 'Ajuste a busca ou o filtro de status'}
+            </EmptyDescription>
           </EmptyStateWrapper>
         )}
 
@@ -266,6 +335,9 @@ const TranspPedidos = () => {
                 <ModalSection>
                   <h4>Cliente</h4>
                   <p style={{ fontWeight: 700 }}>{selected.email}</p>
+                  {selected.nomeCliente && (
+                    <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>{selected.nomeCliente}</p>
+                  )}
                 </ModalSection>
                 <ModalSection>
                   <h4>Data do Pedido</h4>
@@ -288,15 +360,19 @@ const TranspPedidos = () => {
 
               <ModalSection>
                 <h4>Itens do Pedido</h4>
-                {selected.items.map((it, i) => (
-                  <ItemRow key={i}>
-                    <div>
-                      <p style={{ margin: 0, fontWeight: 600 }}>{it.name}</p>
-                      <p style={{ margin: 0, color: "#6b7280" }}>Quantidade: {it.qty}</p>
-                    </div>
-                    <PriceValue>R$ {it.price.toFixed(2)}</PriceValue>
-                  </ItemRow>
-                ))}
+                {selected.items && selected.items.length > 0 ? (
+                  selected.items.map((it, i) => (
+                    <ItemRow key={i}>
+                      <div>
+                        <p style={{ margin: 0, fontWeight: 600 }}>{it.name}</p>
+                        <p style={{ margin: 0, color: "#6b7280" }}>Quantidade: {it.qty}</p>
+                      </div>
+                      <PriceValue>R$ {it.price.toFixed(2)}</PriceValue>
+                    </ItemRow>
+                  ))
+                ) : (
+                  <p style={{ color: '#6b7280' }}>Nenhum item encontrado</p>
+                )}
               </ModalSection>
               <ModalDivider />
               <TotalsRow>

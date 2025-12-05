@@ -23,12 +23,13 @@ const AdminLayout = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
+  console.log('user=>>>');
   console.log(user);
   const isAdmin = user?.cod_perfil === 1;
 
-  const isFunc = user?.cod_perfil === 4;
+  const isFunc = user?.cod_perfil === 3;
 
-  const isTransp = user?.cod_perfil === 3;
+  const isTransp = user?.cod_perfil === 4;
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);

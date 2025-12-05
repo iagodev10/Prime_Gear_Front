@@ -6,7 +6,7 @@ export const PageContainer = styled.div`
   margin: 0 auto;
   color: #0f0f12;
   background-color: #fff;
-  padding-top: 10vh; /* Account for fixed header */
+  padding-top: 10vh;
 `;
 
 export const Wrapper = styled.div`
@@ -54,7 +54,7 @@ export const StepDivider = styled.div`
   height: 1px;
   width: 60px;
   background: #e0e0e0;
-  margin-bottom: 20px; /* Align with circles */
+  margin-bottom: 20px;
 `;
 
 export const Grid = styled.div`
@@ -74,15 +74,18 @@ export const VerticalDivider = styled.div`
 export const Card = styled.div`
   padding: ${(props) => (props.$summary ? "40px 5%" : "40px 10%")};
   background-color: ${(props) => (props.$summary ? "transparent" : "#fff")};
-  height: ${(props) => (props.$summary ? "60vh" : "100%")};
+  height: ${(props) => (props.$summary ? "auto" : "auto")};
+  min-height: ${(props) => (props.$summary ? "auto" : "100%")};
   border-left: none;
-  overflow: ${(props) => (props.$summary ? "auto" : "visible")};
+  overflow: visible;
+  padding-bottom: 60px;
 
   @media (max-width: 900px) {
     padding: ${(props) => (props.$summary ? "24px 5%" : "24px")};
     border-left: none;
     border-top: none;
     height: auto;
+    padding-bottom: 40px;
   }
 `;
 
@@ -196,6 +199,7 @@ export const ErrorMessage = styled.span`
 
 export const Actions = styled.div`
   margin-top: 32px;
+  margin-bottom: 20px;
 `;
 
 export const PrimaryButton = styled.button`
@@ -207,7 +211,7 @@ export const PrimaryButton = styled.button`
   background: ${(props) =>
     props.disabled
       ? "#e0e0e0"
-      : "#d1d1d6"}; /* Light gray as per image for disabled/inactive */
+      : "#d1d1d6"};
   color: ${(props) => (props.disabled ? "#8e8e93" : "#fff")};
   font-weight: 500;
   font-size: 1rem;
@@ -228,9 +232,10 @@ export const SummaryHeader = styled.div`
 
 export const BagItem = styled.div`
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 80px 1fr auto;
   gap: 16px;
   margin-bottom: 24px;
+  align-items: center;
 `;
 
 export const BagImageWrapper = styled.div`
@@ -368,14 +373,15 @@ export const SearchButton = styled.button`
 export const FlipContainer = styled.div`
   perspective: 1000px;
   width: 100%;
-  height: 100%;
-  min-height: 600px; /* Ensure enough height for both faces */
+  height: auto;
+  min-height: 100%;
 `;
 
 export const Flipper = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  height: auto;
+  min-height: 100%;
   transition: transform 0.8s;
   transform-style: preserve-3d;
   transform: ${({ $flipped }) =>
@@ -383,26 +389,25 @@ export const Flipper = styled.div`
 `;
 
 export const Front = styled.div`
-  position: absolute;
   width: 100%;
-  height: 100%;
+  height: auto;
   backface-visibility: hidden;
-  top: 0;
-  left: 0;
   background: #fff;
   z-index: 2;
+  transform: rotateY(0deg);
+  position: ${({ $flipped }) => ($flipped ? "absolute" : "relative")};
 `;
 
 export const Back = styled.div`
-  position: absolute;
   width: 100%;
-  height: 100%;
+  height: auto;
   backface-visibility: hidden;
-  top: 0;
-  left: 0;
   transform: rotateY(180deg);
   background: #fff;
   z-index: 1;
+  position: ${({ $flipped }) => ($flipped ? "relative" : "absolute")};
+  top: 0;
+  left: 0;
 `;
 
 /* Payment Form Styles */

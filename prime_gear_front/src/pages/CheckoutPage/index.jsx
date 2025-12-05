@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
   PageContainer,
   Wrapper,
@@ -14,7 +15,6 @@ import {
   Row,
   Row3,
   Field,
-  Label,
   Input,
   SummaryDivider,
   Select,
@@ -47,19 +47,23 @@ import {
   PaymentIcon,
   PaymentLabel,
   PaymentIcons,
-  CardIcon,
   ErrorMessage,
 } from "./style";
 import ProductImg from "../../assets/images/desktop-ilustration.png";
-import { FiCreditCard, FiFileText } from "react-icons/fi";
+import { FiCreditCard, FiFileText, FiTrash2 } from "react-icons/fi";
 import { RiQrCodeLine } from "react-icons/ri";
 import { masks, validators, errorMessages } from "../../utils/formValidation";
+import { useAuth } from "../../contexts/AuthContext";
 
 const CheckoutPage = () => {
+  const { user } = useAuth();
+  
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("credit");
+  const [cartProducts, setCartProducts] = useState([]);
+  const [loadingCart, setLoadingCart] = useState(true);
+  const [loadingPayment, setLoadingPayment] = useState(false);
 
-  // Form state
   const [formData, setFormData] = useState({
     email: "",
     firstName: "",
@@ -74,23 +78,145 @@ const CheckoutPage = () => {
     neighborhood: "",
     complement: "",
     cep: "",
+    numero: "",
   });
 
-  // Error state
   const [errors, setErrors] = useState({});
 
-  // Handle input change with masks
+
+  useEffect(() => {
+    if (user) {
+      const nomeCompleto = user.nome_user || "";
+      const partesNome = nomeCompleto.trim().split(" ");
+      const primeiroNome = partesNome[0] || "";
+      const ultimoNome = partesNome.slice(1).join(" ") || "";
+
+      const formatarData = (dataISO) => {
+        if (!dataISO) return "";
+        const [ano, mes, dia] = dataISO.split("-");
+        return `${dia}/${mes}/${ano}`;
+      };
+
+      const formatarCPF = (cpf) => {
+        if (!cpf) return "";
+        const numeros = cpf.replace(/\D/g, "");
+        return masks.cpf(numeros);
+      };
+
+      const formatarCEP = (cep) => {
+        if (!cep) return "";
+        const numeros = cep.replace(/\D/g, "");
+        return masks.cep(numeros);
+      };
+
+      const formatarTelefone = (tel) => {
+        if (!tel) return "";
+        const numeros = tel.replace(/\D/g, "");
+        return masks.phone(numeros);
+      };
+
+      setFormData({
+        email: user.email_user || "",
+        firstName: primeiroNome,
+        lastName: ultimoNome,
+        cpf: formatarCPF(user.cpf_user),
+        birthDate: formatarData(user.data_nascimento_user),
+        phone: formatarTelefone(user.telefone_user),
+        country: user.pais_user === "BR" ? "Brasil" : user.pais_user || "",
+        state: user.estado_user || "",
+        city: user.cidade_user || "",
+        street: user.rua_user || "",
+        neighborhood: user.bairro_user || "",
+        complement: user.complemento_user || "",
+        cep: formatarCEP(user.cep_user),
+        numero: user.numero_user || "",
+      });
+    }
+  }, [user]);
+
+
+  useEffect(() => {
+    const fetchCartProducts = async () => {
+      if (!user || !user.cod_user) {
+        setLoadingCart(false);
+        return;
+      }
+
+      try {
+        setLoadingCart(true);
+        
+        const response = await axios.get(
+          `http://localhost:8080/get-produtos-cart/${user.cod_user}`,
+          {
+            withCredentials: true
+          }
+        );
+
+        setCartProducts(response.data);
+        setLoadingCart(false);
+      } catch (error) {
+        console.error('Erro ao buscar produtos do carrinho:', error);
+        setCartProducts([]);
+        setLoadingCart(false);
+      }
+    };
+
+    fetchCartProducts();
+  }, [user]);
+
+ 
+  const calcularTotais = () => {
+    const subtotal = cartProducts.reduce((acc, item) => acc + item.preco_total, 0);
+    const desconto = subtotal * 0.1;
+    const total = subtotal - desconto;
+    
+    return {
+      subtotal: subtotal.toFixed(2),
+      desconto: desconto.toFixed(2),
+      total: total.toFixed(2),
+      parcela: (subtotal / 4).toFixed(2)
+    };
+  };
+
+  const totais = calcularTotais();
+
+ 
+  const handleRemoveItem = async (itemId) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!window.confirm('Deseja realmente remover este item do carrinho?')) {
+        return;
+      }
+  
+      await axios.delete(
+        `http://localhost:8080/remove-from-cart/${itemId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          withCredentials: true
+        }
+      );
+  
+      setCartProducts(prev => prev.filter(item => item.id !== itemId));
+      alert('Item removido com sucesso!');
+      
+    } catch (error) {
+      console.error('Erro ao remover item do carrinho:', error);
+      alert('Erro ao remover item. Tente novamente.');
+    }
+  };
+
   const handleInputChange = (field, value, maskFunction) => {
     const maskedValue = maskFunction ? maskFunction(value) : value;
     setFormData(prev => ({ ...prev, [field]: maskedValue }));
 
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
   };
 
-  // Validate field on blur
   const handleBlur = (field, validatorFunction, errorMessage) => {
     const value = formData[field];
 
@@ -99,7 +225,6 @@ const CheckoutPage = () => {
     }
   };
 
-  // Validate all fields before continuing
   const validateForm = () => {
     const newErrors = {};
 
@@ -139,6 +264,9 @@ const CheckoutPage = () => {
     if (!validators.cep(formData.cep)) {
       newErrors.cep = errorMessages.cep;
     }
+    if (!validators.required(formData.numero)) {
+      newErrors.numero = "Número é obrigatório";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -152,6 +280,52 @@ const CheckoutPage = () => {
 
   const handleBack = () => {
     setCurrentStep(1);
+  };
+
+  const handlePayment = async () => {
+    try {
+      setLoadingPayment(true);
+      const token = localStorage.getItem('token');
+
+      if (cartProducts.length === 0) {
+        alert('Seu carrinho está vazio');
+        return;
+      }
+
+  
+      const enderecoCompleto = `${formData.street}, ${formData.numero}${formData.complement ? ', ' + formData.complement : ''} - ${formData.neighborhood}, ${formData.city} - ${formData.state}, ${formData.cep}`;
+
+      const orderData = {
+        paymentMethod: paymentMethod,
+        shippingAddress: enderecoCompleto,
+        total: totais.total,
+        subtotal: totais.subtotal,
+        discount: totais.desconto
+      };
+
+      const response = await axios.post(
+        'http://localhost:8080/create-order',
+        orderData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          withCredentials: true
+        }
+      );
+
+      if (response.data.success) {
+        alert(`Pedido #${response.data.pedido.cod_pedido} realizado com sucesso!\n\nTotal: R$ ${response.data.pedido.total}\nStatus: ${response.data.pedido.status}`);
+        setCartProducts([]);
+        setCurrentStep(1);
+      }
+
+    } catch (error) {
+      console.error('Erro ao processar pagamento:', error);
+      alert(error.response?.data?.message || 'Erro ao processar pagamento. Tente novamente.');
+    } finally {
+      setLoadingPayment(false);
+    }
   };
 
   return (
@@ -172,7 +346,7 @@ const CheckoutPage = () => {
         <Grid>
           <FlipContainer>
             <Flipper $flipped={currentStep === 2}>
-              <Front>
+              <Front $flipped={currentStep === 2}>
                 <Card>
                   <Title>Dados pessoais</Title>
 
@@ -300,18 +474,45 @@ const CheckoutPage = () => {
                           $error={!!errors.state}
                         >
                           <option value="">Estado *</option>
+                          <option value="AC">Acre</option>
+                          <option value="AL">Alagoas</option>
+                          <option value="AP">Amapá</option>
+                          <option value="AM">Amazonas</option>
+                          <option value="BA">Bahia</option>
+                          <option value="CE">Ceará</option>
+                          <option value="DF">Distrito Federal</option>
+                          <option value="ES">Espírito Santo</option>
+                          <option value="GO">Goiás</option>
+                          <option value="MA">Maranhão</option>
+                          <option value="MT">Mato Grosso</option>
+                          <option value="MS">Mato Grosso do Sul</option>
+                          <option value="MG">Minas Gerais</option>
+                          <option value="PA">Pará</option>
+                          <option value="PB">Paraíba</option>
+                          <option value="PR">Paraná</option>
+                          <option value="PE">Pernambuco</option>
+                          <option value="PI">Piauí</option>
+                          <option value="RJ">Rio de Janeiro</option>
+                          <option value="RN">Rio Grande do Norte</option>
+                          <option value="RS">Rio Grande do Sul</option>
+                          <option value="RO">Rondônia</option>
+                          <option value="RR">Roraima</option>
+                          <option value="SC">Santa Catarina</option>
+                          <option value="SP">São Paulo</option>
+                          <option value="SE">Sergipe</option>
+                          <option value="TO">Tocantins</option>
                         </Select>
                         {errors.state && <ErrorMessage>{errors.state}</ErrorMessage>}
                       </Field>
                       <Field>
-                        <Select
+                        <Input
+                          type="text"
+                          placeholder="Cidade *"
                           value={formData.city}
                           onChange={(e) => handleInputChange("city", e.target.value)}
                           onBlur={() => handleBlur("city", validators.required, errorMessages.city)}
                           $error={!!errors.city}
-                        >
-                          <option value="">Cidade *</option>
-                        </Select>
+                        />
                         {errors.city && <ErrorMessage>{errors.city}</ErrorMessage>}
                       </Field>
                     </Row3>
@@ -322,7 +523,7 @@ const CheckoutPage = () => {
                       <Field>
                         <Input
                           type="text"
-                          placeholder="Rua, número *"
+                          placeholder="Rua *"
                           value={formData.street}
                           onChange={(e) => handleInputChange("street", e.target.value)}
                           onBlur={() => handleBlur("street", validators.required, errorMessages.street)}
@@ -330,6 +531,22 @@ const CheckoutPage = () => {
                         />
                         {errors.street && <ErrorMessage>{errors.street}</ErrorMessage>}
                       </Field>
+                      <Field>
+                        <Input
+                          type="text"
+                          placeholder="Número *"
+                          value={formData.numero}
+                          onChange={(e) => handleInputChange("numero", e.target.value)}
+                          onBlur={() => handleBlur("numero", validators.required, "Número é obrigatório")}
+                          $error={!!errors.numero}
+                        />
+                        {errors.numero && <ErrorMessage>{errors.numero}</ErrorMessage>}
+                      </Field>
+                    </Row>
+                  </Section>
+
+                  <Section>
+                    <Row>
                       <Field>
                         <Input
                           type="text"
@@ -341,11 +558,6 @@ const CheckoutPage = () => {
                         />
                         {errors.neighborhood && <ErrorMessage>{errors.neighborhood}</ErrorMessage>}
                       </Field>
-                    </Row>
-                  </Section>
-
-                  <Section>
-                    <Row>
                       <Field>
                         <Input
                           type="text"
@@ -354,24 +566,27 @@ const CheckoutPage = () => {
                           onChange={(e) => handleInputChange("complement", e.target.value)}
                         />
                       </Field>
-                      <Field>
-                        <div style={{ position: 'relative' }}>
-                          <Input
-                            type="text"
-                            placeholder="CEP *"
-                            value={formData.cep}
-                            onChange={(e) => handleInputChange("cep", e.target.value, masks.cep)}
-                            onBlur={() => handleBlur("cep", validators.cep, errorMessages.cep)}
-                            $error={!!errors.cep}
-                            maxLength="9"
-                          />
-                          <div style={{ position: 'absolute', right: 14, top: 14 }}>
-                            <SearchButton>Buscar</SearchButton>
-                          </div>
-                        </div>
-                        {errors.cep && <ErrorMessage>{errors.cep}</ErrorMessage>}
-                      </Field>
                     </Row>
+                  </Section>
+
+                  <Section>
+                    <Field>
+                      <div style={{ position: 'relative' }}>
+                        <Input
+                          type="text"
+                          placeholder="CEP *"
+                          value={formData.cep}
+                          onChange={(e) => handleInputChange("cep", e.target.value, masks.cep)}
+                          onBlur={() => handleBlur("cep", validators.cep, errorMessages.cep)}
+                          $error={!!errors.cep}
+                          maxLength="9"
+                        />
+                        <div style={{ position: 'absolute', right: 14, top: 14 }}>
+                          <SearchButton>Buscar</SearchButton>
+                        </div>
+                      </div>
+                      {errors.cep && <ErrorMessage>{errors.cep}</ErrorMessage>}
+                    </Field>
                   </Section>
 
                   <Actions>
@@ -380,7 +595,7 @@ const CheckoutPage = () => {
                 </Card>
               </Front>
 
-              <Back>
+              <Back $flipped={currentStep === 2}>
                 <Card>
                   <Title>Forma de pagamento</Title>
 
@@ -457,7 +672,9 @@ const CheckoutPage = () => {
                   </Section>
 
                   <Actions>
-                    <PrimaryButton>Pagar agora</PrimaryButton>
+                    <PrimaryButton onClick={handlePayment} disabled={loadingPayment}>
+                      {loadingPayment ? 'Processando...' : 'Pagar agora'}
+                    </PrimaryButton>
                   </Actions>
                 </Card>
               </Back>
@@ -469,60 +686,96 @@ const CheckoutPage = () => {
               <Title style={{ margin: 0, fontSize: "1.2rem", fontWeight: 500 }}>
                 Sua sacola
               </Title>
-              <Link to="/loja" style={{ textDecoration: "none", color: "#666", fontSize: "0.9rem" }}>
-                Editar
-              </Link>
             </SummaryHeader>
 
-            <BagItem>
-              <BagImageWrapper>
-                <BagImage src={ProductImg} alt="Produto" />
-                <BagBadge>1</BagBadge>
-              </BagImageWrapper>
-
-              <div>
-                <BagTitle>
-                  Gabinete Gamer Rise Mode Galaxy Glass, Mid Tower, ATX,
-                  Lateral e Frontal em Vidro Temperado, Preto - RM-GA-GG-FB
-                </BagTitle>
+            {loadingCart ? (
+              <div style={{ textAlign: 'center', padding: '40px 0', color: '#666' }}>
+                Carregando produtos...
               </div>
-            </BagItem>
-
-            <SummaryDivider />
-
-            <RowPrice>
-              <PriceText>Subtotal</PriceText>
-              <PriceText>R$ 552,93</PriceText>
-            </RowPrice>
-            <RowPrice>
-              <PriceText>Descontos totais</PriceText>
-              <PriceValue $discount>-R$ 55,94</PriceValue>
-            </RowPrice>
-            <DiscountNote>Oferta especial PrimeGear -R$ 55,94</DiscountNote>
-            <RowPrice>
-              <PriceText>Frete</PriceText>
-              <ShippingFree>Grátis</ShippingFree>
-            </RowPrice>
-
-            <SummaryDivider />
-
-            <TotalBlock>
-              <TotalLabel>
-                <span>Total</span>
-              </TotalLabel>
-              <div style={{ textAlign: 'right' }}>
-                <Total>R$ 496,99</Total>
-                <Installments>
-                  R$ 552,93 em até 4x de R$ 138,23 sem juros
-                </Installments>
+            ) : cartProducts.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '40px 0', color: '#666' }}>
+                Seu carrinho está vazio
               </div>
-            </TotalBlock>
+            ) : (
+              <>
+                {cartProducts.map((produto) => (
+                  <BagItem key={produto.id}>
+                    <BagImageWrapper>
+                      <BagImage 
+                        src={produto.imagem || ProductImg} 
+                        alt={produto.nome}
+                        onError={(e) => { e.target.src = ProductImg }}
+                      />
+                      <BagBadge>{produto.quantidade}</BagBadge>
+                    </BagImageWrapper>
 
-            <SignUpBox>
-              Cadastre-se na PrimeGear e ganhe 10% de desconto na primeira
-              compra, além de acesso antecipado às vendas, novidades,
-              promoções e muito mais.
-            </SignUpBox>
+                    <div style={{ flex: 1 }}>
+                      <BagTitle>{produto.nome}</BagTitle>
+                      <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '4px' }}>
+                        R$ {produto.preco_unitario.toFixed(2)} × {produto.quantidade}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleRemoveItem(produto.id)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#dc2626',
+                        cursor: 'pointer',
+                        padding: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'opacity 0.2s',
+                        fontSize: '1.2rem'
+                      }}
+                      onMouseEnter={(e) => e.target.style.opacity = '0.7'}
+                      onMouseLeave={(e) => e.target.style.opacity = '1'}
+                      title="Remover item"
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </BagItem>
+                ))}
+
+                <SummaryDivider />
+
+                <RowPrice>
+                  <PriceText>Subtotal</PriceText>
+                  <PriceText>R$ {totais.subtotal}</PriceText>
+                </RowPrice>
+                <RowPrice>
+                  <PriceText>Descontos totais</PriceText>
+                  <PriceValue $discount>-R$ {totais.desconto}</PriceValue>
+                </RowPrice>
+                <DiscountNote>Oferta especial PrimeGear -R$ {totais.desconto}</DiscountNote>
+                <RowPrice>
+                  <PriceText>Frete</PriceText>
+                  <ShippingFree>Grátis</ShippingFree>
+                </RowPrice>
+
+                <SummaryDivider />
+
+                <TotalBlock>
+                  <TotalLabel>
+                    <span>Total</span>
+                  </TotalLabel>
+                  <div style={{ textAlign: 'right' }}>
+                    <Total>R$ {totais.total}</Total>
+                    <Installments>
+                      R$ {totais.subtotal} em até 4x de R$ {totais.parcela} sem juros
+                    </Installments>
+                  </div>
+                </TotalBlock>
+
+                <SignUpBox>
+                  Cadastre-se na PrimeGear e ganhe 10% de desconto na primeira
+                  compra, além de acesso antecipado às vendas, novidades,
+                  promoções e muito mais.
+                </SignUpBox>
+              </>
+            )}
           </Card>
         </Grid>
       </Wrapper>

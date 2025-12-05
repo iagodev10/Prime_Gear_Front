@@ -46,10 +46,10 @@ const Login = () => {
 
     const [flipped, setFlipped] = useState(false);
     const [formData, setFormData] = useState({
-        // Login
+        
         loginEmail: '',
         loginSenha: '',
-        // Cadastro
+       
         nome: '',
         email: '',
         senha: '',
@@ -57,8 +57,8 @@ const Login = () => {
         telefone: '',
         cpf: '',
         dataNascimento: '',
-        genero: '', // Adicionado campo de gênero
-        // Endereço
+        genero: '', 
+       
         pais: '',
         estado: '',
         cidade: '',
@@ -169,9 +169,9 @@ const Login = () => {
         
         try {
             const data = await login(formData.loginEmail, formData.loginSenha);
-            console.log('Dados retornados:', data); 
+            console.log('==>Dados retornados:', data); 
 
-            if (data.user.tipo === 'Administrador' || data.user.tipo === 'Transportadora' || data.user.tipo === 'Funcionário') {
+            if (data.user.perfil === 'Administrador' || data.user.perfil === 'Transportadora' || data.user.perfil === 'Funcionário') {
                 navigate('/admin');
             } else {
                 navigate('/user');
@@ -217,17 +217,17 @@ const Login = () => {
           cpf_user: formData.cpf.replace(/\D/g, ''),
           login_user: formData.email,
           
-          // os novos campo aqui
+       
           cep_user: formData.cep.replace(/\D/g, ''), 
           pais_user: formData.pais,
           estado_user: formData.estado,
           cidade_user: formData.cidade,
-          rua_user: formData.rua,     // posso adicionar o numero tbm
+          rua_user: formData.rua,     
           numero_user: formData.numero,
           bairro_user: formData.bairro,
           complemento_user: formData.complemento,
   
-          // tenho que ver a adaptacao no back
+        
           endereco_user: enderecoCompleto,
       };
   
