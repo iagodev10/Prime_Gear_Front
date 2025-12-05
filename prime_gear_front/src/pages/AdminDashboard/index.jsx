@@ -58,7 +58,7 @@ const AdminDashboard = () => {
     { id: '#1020', cliente: 'João Pedro', data: '21/11/2025', valor: 'R$ 2.300,00', status: 'Cancelado' },
   ];
 
-  const trendData = [40, 90, 120, 80, 160, 140, 110, 180, 150, 130, 170, 200];
+  // const trendData = [40, 90, 120, 80, 160, 140, 110, 180, 150, 130, 170, 200];
 
   return (
     <PageContainer>
@@ -126,7 +126,7 @@ const AdminDashboard = () => {
         </StatCard>
       </StatsGrid>
 
-      <SectionTitle>Performance (Últimos 12 dias)</SectionTitle>
+      {/* <SectionTitle>Performance (Últimos 12 dias)</SectionTitle>
       <ChartArea>
         <Bars>
           {trendData.map((h, i) => (
@@ -137,7 +137,7 @@ const AdminDashboard = () => {
           <span style={{ display: 'inline-flex', width: 14, height: 14, borderRadius: 4, background: 'linear-gradient(180deg, #4d7294 0%, #2a4055 100%)' }} />
           Receita diária
         </ChartLegend>
-      </ChartArea>
+      </ChartArea> */}
 
       {/* Seção de Alertas e Pendências (Layout menor) */}
       <SectionTitle>Atenção Necessária</SectionTitle>

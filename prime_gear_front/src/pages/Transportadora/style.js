@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const PageContainer = styled.div`
   width: 100%;
@@ -12,7 +12,7 @@ export const PageContainer = styled.div`
 `;
 
 export const Header = styled.header`
-  max-width: 1400px;
+  width: 90%;
   margin: 0 auto 40px;
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   padding: 60px 40px;
@@ -22,19 +22,24 @@ export const Header = styled.header`
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     right: -10%;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 70%
+    );
     border-radius: 50%;
   }
 
   @media (max-width: 768px) {
     padding: 40px 24px;
     margin-bottom: 24px;
+    width: 92%;
   }
 `;
 
@@ -85,7 +90,8 @@ export const InfoItem = styled.div`
 `;
 
 export const StatsContainer = styled.div`
-  max-width: 1400px;
+  width: 90%;
+  // max-width: 1400px;
   margin: 0 auto 40px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -99,6 +105,7 @@ export const StatsContainer = styled.div`
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
+    width: 92%;
   }
 `;
 
@@ -127,14 +134,14 @@ export const StatIcon = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 12px;
-  background: ${props => props.bgColor || '#e3f2fd'};
+  background: ${(props) => props.bgColor || "#e3f2fd"};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 
   svg {
-    color: ${props => props.iconColor || '#1976d2'};
+    color: ${(props) => props.iconColor || "#1976d2"};
   }
 
   @media (max-width: 768px) {
@@ -172,7 +179,7 @@ export const StatInfo = styled.div`
 `;
 
 export const FiltersContainer = styled.div`
-  max-width: 1400px;
+  width: 90%;
   margin: 0 auto 32px;
   background: white;
   padding: 24px;
@@ -186,6 +193,7 @@ export const FiltersContainer = styled.div`
   @media (max-width: 768px) {
     padding: 16px;
     gap: 12px;
+    width: 92%;
   }
 `;
 
@@ -257,13 +265,14 @@ export const FilterSelect = styled.select`
 `;
 
 export const OrdersContainer = styled.div`
-  max-width: 1400px;
+  width: 90%;
   margin: 0 auto;
   display: grid;
   gap: 20px;
 
   @media (max-width: 768px) {
     gap: 16px;
+    width: 92%;
   }
 `;
 
@@ -274,15 +283,21 @@ export const OrderCard = styled.div`
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   cursor: pointer;
-  border-left: 5px solid ${props => {
-    switch(props.status) {
-      case 'Entregue': return '#00a85a';
-      case 'Em Trânsito': return '#2563eb';
-      case 'Pendente': return '#f59e0b';
-      case 'Atrasado': return '#dc2626';
-      default: return '#6b7280';
-    }
-  }};
+  border-left: 5px solid
+    ${(props) => {
+      switch (props.status) {
+        case "Entregue":
+          return "#00a85a";
+        case "Em Trânsito":
+          return "#2563eb";
+        case "Pendente":
+          return "#f59e0b";
+        case "Atrasado":
+          return "#dc2626";
+        default:
+          return "#6b7280";
+      }
+    }};
 
   &:hover {
     transform: translateY(-4px);
@@ -344,25 +359,35 @@ export const OrderInfo = styled.div`
 export const StatusBadge = styled.span`
   padding: 8px 20px;
   border-radius: 24px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
   white-space: nowrap;
-  background: ${props => {
-    switch(props.status) {
-      case 'Entregue': return '#d1fae5';
-      case 'Em Trânsito': return '#dbeafe';
-      case 'Pendente': return '#fef3c7';
-      case 'Atrasado': return '#fee2e2';
-      default: return '#f3f4f6';
+  background: ${(props) => {
+    switch (props.status) {
+      case "Entregue":
+        return "#d1fae5";
+      case "Em Trânsito":
+        return "#dbeafe";
+      case "Pendente":
+        return "#fef3c7";
+      case "Atrasado":
+        return "#fee2e2";
+      default:
+        return "#f3f4f6";
     }
   }};
-  color: ${props => {
-    switch(props.status) {
-      case 'Entregue': return '#065f46';
-      case 'Em Trânsito': return '#1e40af';
-      case 'Pendente': return '#92400e';
-      case 'Atrasado': return '#991b1b';
-      default: return '#374151';
+  color: ${(props) => {
+    switch (props.status) {
+      case "Entregue":
+        return "#065f46";
+      case "Em Trânsito":
+        return "#1e40af";
+      case "Pendente":
+        return "#92400e";
+      case "Atrasado":
+        return "#991b1b";
+      default:
+        return "#374151";
     }
   }};
 
