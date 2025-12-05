@@ -33,6 +33,7 @@ const Header = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     function handleScroll() {
@@ -53,6 +54,12 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
 
   const handleCategoryClick = (e, categoryIdentifier) => {
@@ -180,10 +187,11 @@ const Header = () => {
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         onOpenCategory={(cat) => setOpenCategory(cat)}
+        openCategory={openCategory}
       />
 
       <SidebarLaptop
-        isOpen={!!openCategory}
+        isOpen={!!openCategory && !isMobile}
         category={openCategory}
         onClose={() => setOpenCategory(null)}
       />

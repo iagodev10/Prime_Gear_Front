@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowLeft, FiX } from "react-icons/fi";
 
 import {
   Container,
@@ -8,7 +9,17 @@ import {
   HeroCard,
   HeroLink,
   ProductsGrid,
-  ProductCard
+  ProductCard,
+  MobileContainer,
+  MobileHeader,
+  MobileBackButton,
+  MobileTitle,
+  MobileCloseButton,
+  MobileContent,
+  MobileHeroCard,
+  MobileHeroLink,
+  MobileProductsGrid,
+  MobileProductCard
 } from "./style";
 
 import LaptopImg from "../../assets/images/laptop.png";
@@ -19,6 +30,18 @@ import HeadsetImg from "../../assets/images/headset.jpeg";
 import MouseImg from "../../assets/images/foneJBL.png";
 
 const SidebarLaptop = ({ isOpen, category, onClose }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Versão Mobile - não renderizar, deixar o SidebarMenu cuidar disso
+  if (isMobile) {
+    return null;
+  }
   
   const cards = {
     laptops: [
@@ -68,6 +91,14 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
     perifericos: '/perifericos'
   };
 
+  const categoryNames = {
+    laptops: 'Laptops',
+    desktops: 'Desktops',
+    consoles: 'Consoles',
+    perifericos: 'Periféricos'
+  };
+
+  // Versão Desktop
   return (
     <>
       {isOpen && (
