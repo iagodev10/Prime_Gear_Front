@@ -386,15 +386,20 @@ export const Icone = styled.div`
   border-radius: 50%;
   background: ${(p) =>
     p.status === "Entregue"
-      ? "#10B981"
+      ? "rgba(16, 185, 129, 0.15)"
       : p.status === "Pendente"
-      ? "#F59E0B"
-      : "#3B82F6"};
+      ? "rgba(245, 158, 11, 0.15)"
+      : "rgba(59, 130, 246, 0.15)"};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: white;
+  color: ${(p) =>
+    p.status === "Entregue"
+      ? "#10B981"
+      : p.status === "Pendente"
+      ? "#F59E0B"
+      : "#3B82F6"};
 
   svg {
     stroke-width: 2.5px;
@@ -607,7 +612,11 @@ export const StatusPill = styled.span`
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 500;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  max-width: max-content;
+  align-self: flex-start;
   white-space: nowrap;
   background: ${(p) =>
     p.status === "Entregue"
@@ -887,7 +896,7 @@ export const OrderSelect = styled.select`
   color: #111;
   font-weight: 500;
   font-size: 0.85rem;
-  width: 100%;
+  width: auto;
   min-width: 120px;
   cursor: pointer;
   transition: all 0.2s ease;
