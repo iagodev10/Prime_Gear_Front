@@ -81,8 +81,14 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory }) => {
             </NavItem>
 
             <NavItem>
-              <Link to="/" onClick={handleClose}>
-                FAQs
+              <Link to="/termos" onClick={handleClose}>
+                Termos
+              </Link>
+            </NavItem>
+
+            <NavItem>
+              <Link to="/privacidade" onClick={handleClose}>
+                Política de Privacidade
               </Link>
             </NavItem>
 
@@ -90,25 +96,49 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory }) => {
               <>
                 <hr />
                 <NavItem>
-                  <Link to="/laptops" onClick={(e) => { e.preventDefault(); onOpenCategory?.('laptops'); }}>
+                  <Link
+                    to="/laptops"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onOpenCategory?.("laptops");
+                    }}
+                  >
                     Laptops
                   </Link>
                   <FiChevronRight size={20} />
                 </NavItem>
                 <NavItem>
-                  <Link to="/desktops" onClick={(e) => { e.preventDefault(); onOpenCategory?.('desktops'); }}>
+                  <Link
+                    to="/desktops"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onOpenCategory?.("desktops");
+                    }}
+                  >
                     Desktops
                   </Link>
                   <FiChevronRight size={20} />
                 </NavItem>
                 <NavItem>
-                  <Link to="/consoles" onClick={(e) => { e.preventDefault(); onOpenCategory?.('consoles'); }}>
+                  <Link
+                    to="/consoles"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onOpenCategory?.("consoles");
+                    }}
+                  >
                     Consoles
                   </Link>
                   <FiChevronRight size={20} />
                 </NavItem>
                 <NavItem>
-                  <Link to="/perifericos" onClick={(e) => { e.preventDefault(); onOpenCategory?.('perifericos'); }}>
+                  <Link
+                    to="/perifericos"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onOpenCategory?.("perifericos");
+                    }}
+                  >
                     Periféricos
                   </Link>
                   <FiChevronRight size={20} />
