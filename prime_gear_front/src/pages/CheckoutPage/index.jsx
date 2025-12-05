@@ -15,7 +15,6 @@ import {
   Row,
   Row3,
   Field,
-  Label,
   Input,
   SummaryDivider,
   Select,
@@ -48,24 +47,22 @@ import {
   PaymentIcon,
   PaymentLabel,
   PaymentIcons,
-  CardIcon,
   ErrorMessage,
 } from "./style";
 import ProductImg from "../../assets/images/desktop-ilustration.png";
-import { FiCreditCard, FiFileText } from "react-icons/fi";
+import { FiCreditCard, FiFileText, FiTrash2 } from "react-icons/fi";
 import { RiQrCodeLine } from "react-icons/ri";
 import { masks, validators, errorMessages } from "../../utils/formValidation";
 import { useAuth } from "../../contexts/AuthContext";
 
 const CheckoutPage = () => {
   const { user } = useAuth();
-  console.log(user);
   
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("credit");
   const [cartProducts, setCartProducts] = useState([]);
   const [loadingCart, setLoadingCart] = useState(true);
-
+  const [loadingPayment, setLoadingPayment] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -84,40 +81,34 @@ const CheckoutPage = () => {
     numero: "",
   });
 
- 
   const [errors, setErrors] = useState({});
 
 
   useEffect(() => {
     if (user) {
-    
       const nomeCompleto = user.nome_user || "";
       const partesNome = nomeCompleto.trim().split(" ");
       const primeiroNome = partesNome[0] || "";
       const ultimoNome = partesNome.slice(1).join(" ") || "";
 
-    
       const formatarData = (dataISO) => {
         if (!dataISO) return "";
         const [ano, mes, dia] = dataISO.split("-");
         return `${dia}/${mes}/${ano}`;
       };
 
-    
       const formatarCPF = (cpf) => {
         if (!cpf) return "";
         const numeros = cpf.replace(/\D/g, "");
         return masks.cpf(numeros);
       };
 
-    
       const formatarCEP = (cep) => {
         if (!cep) return "";
         const numeros = cep.replace(/\D/g, "");
         return masks.cep(numeros);
       };
 
-     
       const formatarTelefone = (tel) => {
         if (!tel) return "";
         const numeros = tel.replace(/\D/g, "");
@@ -143,7 +134,7 @@ const CheckoutPage = () => {
     }
   }, [user]);
 
- 
+
   useEffect(() => {
     const fetchCartProducts = async () => {
       if (!user || !user.cod_user) {
@@ -153,16 +144,14 @@ const CheckoutPage = () => {
 
       try {
         setLoadingCart(true);
-        const token = localStorage.getItem('token'); 
         
         const response = await axios.get(
           `http://localhost:8080/get-produtos-cart/${user.cod_user}`,
           {
-            withCredentials:true
+            withCredentials: true
           }
         );
-        console.log("cart>>>>>>>");
-        console.log(response.data);
+
         setCartProducts(response.data);
         setLoadingCart(false);
       } catch (error) {
@@ -175,33 +164,58 @@ const CheckoutPage = () => {
     fetchCartProducts();
   }, [user]);
 
-  
+ 
   const calcularTotais = () => {
     const subtotal = cartProducts.reduce((acc, item) => acc + item.preco_total, 0);
-    const desconto = subtotal * 0.1; 
+    const desconto = subtotal * 0.1;
     const total = subtotal - desconto;
     
     return {
       subtotal: subtotal.toFixed(2),
       desconto: desconto.toFixed(2),
       total: total.toFixed(2),
-      parcela: (subtotal / 4).toFixed(2) 
+      parcela: (subtotal / 4).toFixed(2)
     };
   };
 
   const totais = calcularTotais();
 
  
+  const handleRemoveItem = async (itemId) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!window.confirm('Deseja realmente remover este item do carrinho?')) {
+        return;
+      }
+  
+      await axios.delete(
+        `http://localhost:8080/remove-from-cart/${itemId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          withCredentials: true
+        }
+      );
+  
+      setCartProducts(prev => prev.filter(item => item.id !== itemId));
+      alert('Item removido com sucesso!');
+      
+    } catch (error) {
+      console.error('Erro ao remover item do carrinho:', error);
+      alert('Erro ao remover item. Tente novamente.');
+    }
+  };
+
   const handleInputChange = (field, value, maskFunction) => {
     const maskedValue = maskFunction ? maskFunction(value) : value;
     setFormData(prev => ({ ...prev, [field]: maskedValue }));
 
-  
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
   };
-
 
   const handleBlur = (field, validatorFunction, errorMessage) => {
     const value = formData[field];
@@ -211,7 +225,6 @@ const CheckoutPage = () => {
     }
   };
 
- 
   const validateForm = () => {
     const newErrors = {};
 
@@ -251,6 +264,9 @@ const CheckoutPage = () => {
     if (!validators.cep(formData.cep)) {
       newErrors.cep = errorMessages.cep;
     }
+    if (!validators.required(formData.numero)) {
+      newErrors.numero = "Número é obrigatório";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -264,6 +280,52 @@ const CheckoutPage = () => {
 
   const handleBack = () => {
     setCurrentStep(1);
+  };
+
+  const handlePayment = async () => {
+    try {
+      setLoadingPayment(true);
+      const token = localStorage.getItem('token');
+
+      if (cartProducts.length === 0) {
+        alert('Seu carrinho está vazio');
+        return;
+      }
+
+  
+      const enderecoCompleto = `${formData.street}, ${formData.numero}${formData.complement ? ', ' + formData.complement : ''} - ${formData.neighborhood}, ${formData.city} - ${formData.state}, ${formData.cep}`;
+
+      const orderData = {
+        paymentMethod: paymentMethod,
+        shippingAddress: enderecoCompleto,
+        total: totais.total,
+        subtotal: totais.subtotal,
+        discount: totais.desconto
+      };
+
+      const response = await axios.post(
+        'http://localhost:8080/create-order',
+        orderData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          withCredentials: true
+        }
+      );
+
+      if (response.data.success) {
+        alert(`Pedido #${response.data.pedido.cod_pedido} realizado com sucesso!\n\nTotal: R$ ${response.data.pedido.total}\nStatus: ${response.data.pedido.status}`);
+        setCartProducts([]);
+        setCurrentStep(1);
+      }
+
+    } catch (error) {
+      console.error('Erro ao processar pagamento:', error);
+      alert(error.response?.data?.message || 'Erro ao processar pagamento. Tente novamente.');
+    } finally {
+      setLoadingPayment(false);
+    }
   };
 
   return (
@@ -610,7 +672,9 @@ const CheckoutPage = () => {
                   </Section>
 
                   <Actions>
-                    <PrimaryButton>Pagar agora</PrimaryButton>
+                    <PrimaryButton onClick={handlePayment} disabled={loadingPayment}>
+                      {loadingPayment ? 'Processando...' : 'Pagar agora'}
+                    </PrimaryButton>
                   </Actions>
                 </Card>
               </Back>
@@ -622,9 +686,6 @@ const CheckoutPage = () => {
               <Title style={{ margin: 0, fontSize: "1.2rem", fontWeight: 500 }}>
                 Sua sacola
               </Title>
-              <Link to="/loja" style={{ textDecoration: "none", color: "#666", fontSize: "0.9rem" }}>
-                Editar
-              </Link>
             </SummaryHeader>
 
             {loadingCart ? (
@@ -648,12 +709,33 @@ const CheckoutPage = () => {
                       <BagBadge>{produto.quantidade}</BagBadge>
                     </BagImageWrapper>
 
-                    <div>
+                    <div style={{ flex: 1 }}>
                       <BagTitle>{produto.nome}</BagTitle>
                       <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '4px' }}>
                         R$ {produto.preco_unitario.toFixed(2)} × {produto.quantidade}
                       </div>
                     </div>
+
+                    <button
+                      onClick={() => handleRemoveItem(produto.id)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#dc2626',
+                        cursor: 'pointer',
+                        padding: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'opacity 0.2s',
+                        fontSize: '1.2rem'
+                      }}
+                      onMouseEnter={(e) => e.target.style.opacity = '0.7'}
+                      onMouseLeave={(e) => e.target.style.opacity = '1'}
+                      title="Remover item"
+                    >
+                      <FiTrash2 />
+                    </button>
                   </BagItem>
                 ))}
 

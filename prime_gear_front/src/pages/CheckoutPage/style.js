@@ -232,9 +232,10 @@ export const SummaryHeader = styled.div`
 
 export const BagItem = styled.div`
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 80px 1fr auto;
   gap: 16px;
   margin-bottom: 24px;
+  align-items: center;
 `;
 
 export const BagImageWrapper = styled.div`
