@@ -3,32 +3,10 @@ import styled from "styled-components";
 export const PageContainer = styled.div`
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f0f12 0%, #1a1a24 100%);
+  background: #fff;
   padding-top: 10vh;
   padding-bottom: 60px;
   box-sizing: border-box;
-  position: relative;
-  overflow-x: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-      linear-gradient(rgba(0, 0, 0, 0.3) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.3) 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.3;
-    pointer-events: none;
-  }
-
-  @media (max-width: 768px) {
-    padding-top: 8vh;
-    padding-bottom: 40px;
-  }
 `;
 
 export const ContentWrapper = styled.div`
@@ -48,10 +26,10 @@ export const SuccessSection = styled.div`
   text-align: center;
   margin-bottom: 60px;
   padding: 40px 20px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #fff;
   border-radius: 20px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
 
   @media (max-width: 768px) {
     padding: 30px 16px;
@@ -64,25 +42,11 @@ export const SuccessIcon = styled.div`
   height: 120px;
   margin: 0 auto 30px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4d7294 0%, #2d4a6b 100%);
+  background: linear-gradient(135deg, #111 0%, #000 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  box-shadow: 0 0 40px rgba(77, 114, 148, 0.5);
-
-  &::before {
-    content: "";
-    position: absolute;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(77, 114, 148, 0.3) 0%, rgba(45, 74, 107, 0.3) 100%);
-    top: -10px;
-    left: -10px;
-    z-index: -1;
-    animation: pulse 2s ease-in-out infinite;
-  }
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
 
   svg {
     width: 60px;
@@ -91,25 +55,9 @@ export const SuccessIcon = styled.div`
     stroke-width: 4;
   }
 
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 0.5;
-    }
-    50% {
-      transform: scale(1.1);
-      opacity: 0.3;
-    }
-  }
-
   @media (max-width: 768px) {
     width: 100px;
     height: 100px;
-
-    &::before {
-      width: 120px;
-      height: 120px;
-    }
 
     svg {
       width: 50px;
@@ -121,9 +69,8 @@ export const SuccessIcon = styled.div`
 export const SuccessTitle = styled.h1`
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #111;
   margin-bottom: 16px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
     font-size: 2rem;
@@ -136,7 +83,7 @@ export const SuccessTitle = styled.h1`
 
 export const ThankYouMessage = styled.p`
   font-size: 1.25rem;
-  color: #e0e0e0;
+  color: #666;
   margin-bottom: 30px;
 
   @media (max-width: 768px) {
@@ -154,13 +101,13 @@ export const OrderNumberSection = styled.div`
   justify-content: center;
   gap: 12px;
   font-size: 1.1rem;
-  color: #e0e0e0;
+  color: #333;
   margin-bottom: 20px;
 
   svg {
     width: 24px;
     height: 24px;
-    color: #4d7294;
+    color: #111;
   }
 
   @media (max-width: 768px) {
@@ -170,19 +117,19 @@ export const OrderNumberSection = styled.div`
 `;
 
 export const OrderNumber = styled.span`
-  color: #4d7294;
+  color: #111;
   font-weight: 600;
   font-size: 1.2rem;
 `;
 
 export const EmailMessage = styled.p`
   font-size: 1rem;
-  color: #b0b0b0;
+  color: #666;
   margin-bottom: 40px;
   line-height: 1.6;
 
   strong {
-    color: #4d7294;
+    color: #111;
     font-weight: 600;
   }
 
@@ -206,21 +153,21 @@ export const ActionButtons = styled.div`
 
 export const PrimaryButton = styled.button`
   padding: 18px 40px;
-  background: linear-gradient(135deg, #4d7294 0%, #2d4a6b 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, #111 0%, #000 100%);
+  color: #fff;
   border: none;
   border-radius: 50px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(77, 114, 148, 0.3);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
   white-space: nowrap;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(77, 114, 148, 0.4);
-    background: linear-gradient(135deg, #5a85a8 0%, #3a5a7f 100%);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+    filter: brightness(1.08);
   }
 
   &:active {
@@ -241,8 +188,8 @@ export const PrimaryButton = styled.button`
 export const SecondaryButton = styled.button`
   padding: 18px 40px;
   background: transparent;
-  color: #e0e0e0;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #111;
+  border: 1px solid #e0e0e0;
   border-radius: 50px;
   font-size: 1.1rem;
   font-weight: 600;
@@ -251,9 +198,9 @@ export const SecondaryButton = styled.button`
   white-space: nowrap;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
-    color: #ffffff;
+    background: #f5f5f5;
+    border-color: #ddd;
+    color: #111;
   }
 
   @media (max-width: 768px) {
@@ -268,11 +215,11 @@ export const SecondaryButton = styled.button`
 `;
 
 export const OrderSummarySection = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: #fff;
   border-radius: 20px;
   padding: 40px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
 
   @media (max-width: 768px) {
     padding: 30px 20px;
@@ -286,7 +233,7 @@ export const OrderSummarySection = styled.div`
 export const SummaryTitle = styled.h2`
   font-size: 1.75rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #111;
   margin-bottom: 30px;
   text-align: center;
 
@@ -311,7 +258,7 @@ export const OrderItems = styled.div`
   h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #ffffff;
+    color: #111;
     margin-bottom: 20px;
   }
 
@@ -326,15 +273,15 @@ export const OrderItem = styled.div`
   display: flex;
   gap: 16px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.03);
+  background: #fafafa;
   border-radius: 12px;
   margin-bottom: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.3s ease;
+  border: 1px solid #eee;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: #f5f5f5;
+    border-color: #e0e0e0;
   }
 
   @media (max-width: 480px) {
@@ -348,7 +295,8 @@ export const ItemImage = styled.img`
   height: 100px;
   object-fit: cover;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #fff;
+  border: 1px solid #eee;
 
   @media (max-width: 480px) {
     width: 80px;
@@ -366,7 +314,7 @@ export const ItemInfo = styled.div`
 export const ItemName = styled.h4`
   font-size: 1rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #111;
   margin-bottom: 8px;
 
   @media (max-width: 480px) {
@@ -376,14 +324,14 @@ export const ItemName = styled.h4`
 
 export const ItemQuantity = styled.p`
   font-size: 0.9rem;
-  color: #b0b0b0;
+  color: #666;
   margin-bottom: 8px;
 `;
 
 export const ItemPrice = styled.p`
   font-size: 1.1rem;
   font-weight: 600;
-  color: #4d7294;
+  color: #111;
 
   @media (max-width: 480px) {
     font-size: 1rem;
@@ -397,10 +345,10 @@ export const SummaryDetails = styled.div`
 `;
 
 export const DetailCard = styled.div`
-  background: rgba(255, 255, 255, 0.03);
+  background: #fafafa;
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid #eee;
 `;
 
 export const DetailTitle = styled.h4`
@@ -409,7 +357,7 @@ export const DetailTitle = styled.h4`
   gap: 12px;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #111;
   margin-bottom: 12px;
 
   @media (max-width: 768px) {
@@ -424,8 +372,8 @@ export const DetailIcon = styled.span`
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(77, 114, 148, 0.2);
-  color: #4d7294;
+  background: #111;
+  color: #fff;
 
   svg {
     width: 18px;
@@ -434,19 +382,20 @@ export const DetailIcon = styled.span`
 `;
 
 export const TotalSection = styled.div`
-  background: rgba(255, 255, 255, 0.03);
+  background: #fafafa;
   border-radius: 12px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid #eee;
 `;
 
 export const TotalRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${props => props.$highlight ? "0" : "12px"};
-  padding-bottom: ${props => props.$highlight ? "0" : "12px"};
-  border-bottom: ${props => props.$highlight ? "none" : "1px solid rgba(255, 255, 255, 0.1)"};
+  margin-bottom: ${(props) => (props.$highlight ? "0" : "12px")};
+  padding-bottom: ${(props) => (props.$highlight ? "0" : "12px")};
+  border-bottom: ${(props) =>
+    props.$highlight ? "none" : "1px solid rgba(255, 255, 255, 0.1)"};
 
   &:last-child {
     margin-top: 16px;
@@ -457,30 +406,30 @@ export const TotalRow = styled.div`
 
 export const TotalLabel = styled.span`
   font-size: 1rem;
-  color: ${props => props.$highlight ? "#ffffff" : "#b0b0b0"};
-  font-weight: ${props => props.$highlight ? "600" : "400"};
+  color: ${(props) => (props.$highlight ? "#111" : "#666")};
+  font-weight: ${(props) => (props.$highlight ? "600" : "400")};
 `;
 
 export const TotalValue = styled.span`
-  font-size: ${props => props.$highlight ? "1.5rem" : "1rem"};
-  color: ${props => props.$highlight ? "#4d7294" : "#ffffff"};
+  font-size: ${(props) => (props.$highlight ? "1.5rem" : "1rem")};
+  color: ${(props) => (props.$highlight ? "#111" : "#333")};
   font-weight: 600;
 
   @media (max-width: 768px) {
-    font-size: ${props => props.$highlight ? "1.3rem" : "1rem"};
+    font-size: ${(props) => (props.$highlight ? "1.3rem" : "1rem")};
   }
 `;
 
 export const DeliveryInfo = styled.p`
   font-size: 0.95rem;
-  color: #b0b0b0;
+  color: #666;
   line-height: 1.6;
   margin: 0;
 `;
 
 export const PaymentInfo = styled.p`
   font-size: 0.95rem;
-  color: #b0b0b0;
+  color: #666;
   line-height: 1.6;
   margin: 0;
 `;
@@ -495,4 +444,3 @@ export const EmptyState = styled.div`
     margin-bottom: 20px;
   }
 `;
-

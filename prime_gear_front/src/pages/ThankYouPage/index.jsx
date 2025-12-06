@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   PageContainer,
   ContentWrapper,
@@ -38,9 +38,10 @@ import { FiCheck, FiPackage, FiMapPin, FiCreditCard, FiTruck } from "react-icons
 
 const ThankYouPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Dados mockados do pedido
-  const orderData = {
+  const orderState = location.state?.order;
+  const orderData = orderState || {
     cod_pedido: 1,
     itens: [
       {
@@ -78,7 +79,6 @@ const ThankYouPage = () => {
     metodo_pagamento: "credit",
     cartao_final: "1234",
     prazo_entrega: "5 a 7 dias úteis",
-    email: "seu@email.com"
   };
 
   const formatCurrency = (value) => {
@@ -110,7 +110,7 @@ const ThankYouPage = () => {
           </OrderNumberSection>
 
           <EmailMessage>
-            Enviamos uma confirmação para <strong>{orderData.email}</strong> com todos os detalhes do seu pedido.
+            Enviamos a confirmação para seu e-mail cadastrado com os detalhes do pedido.
           </EmailMessage>
 
           <ActionButtons>
