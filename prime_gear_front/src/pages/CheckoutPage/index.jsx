@@ -48,21 +48,49 @@ import {
   PaymentLabel,
   PaymentIcons,
   ErrorMessage,
+  CreditCardSection,
+  CreditCardForm,
+  CardRow,
+  CardField,
+  CardLabel,
+  CardInput,
+  CardSelect,
+  CardBrandSelector,
+  BrandOption,
+  InstallmentSelect,
+  CardFormTitle,
+  CardInfoIcon,
+  SecurityBadge,
+  PixSection,
+  PixContainer,
+  PixQRCode,
+  PixTitle,
+  PixKeyContainer,
+  PixKeyLabel,
+  PixKeyField,
+  PixKeyInput,
+  CopyButton,
+  PixInstructions,
 } from "./style";
 import ProductImg from "../../assets/images/desktop-ilustration.png";
-import { FiCreditCard, FiFileText, FiTrash2 } from "react-icons/fi";
+import QRCodeImg from "../../assets/images/qrcode.png";
+import { FiCreditCard, FiFileText, FiTrash2, FiShield, FiCopy, FiCheck } from "react-icons/fi";
 import { RiQrCodeLine } from "react-icons/ri";
 import { masks, validators, errorMessages } from "../../utils/formValidation";
 import { useAuth } from "../../contexts/AuthContext";
 
 const CheckoutPage = () => {
   const { user } = useAuth();
-  
+
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("credit");
   const [cartProducts, setCartProducts] = useState([]);
   const [loadingCart, setLoadingCart] = useState(true);
   const [loadingPayment, setLoadingPayment] = useState(false);
+  const [pixKeyCopied, setPixKeyCopied] = useState(false);
+
+  // Mock PIX key - in production, this would come from backend
+  const pixKey = "00020126580014br.gov.bcb.pix0136a7f7e4c9-1234-5678-90ab-cdef12345678520400005303986540510.005802BR5925PRIMEGEAR OFICIAL STORE6009SAO PAULO62070503***6304ABCD";
 
   const [formData, setFormData] = useState({
     email: "",
@@ -80,6 +108,18 @@ const CheckoutPage = () => {
     cep: "",
     numero: "",
   });
+
+  const [cardData, setCardData] = useState({
+    cardHolderName: "",
+    cardHolderCPF: "",
+    cardNumber: "",
+    cardExpiry: "",
+    cardCVV: "",
+    cardBrand: "",
+    installments: "1",
+  });
+
+  const [cardErrors, setCardErrors] = useState({});
 
   const [errors, setErrors] = useState({});
 
@@ -144,7 +184,7 @@ const CheckoutPage = () => {
 
       try {
         setLoadingCart(true);
-        
+
         const response = await axios.get(
           `http://localhost:8080/get-produtos-cart/${user.cod_user}`,
           {
@@ -164,12 +204,12 @@ const CheckoutPage = () => {
     fetchCartProducts();
   }, [user]);
 
- 
+
   const calcularTotais = () => {
     const subtotal = cartProducts.reduce((acc, item) => acc + item.preco_total, 0);
     const desconto = subtotal * 0.1;
     const total = subtotal - desconto;
-    
+
     return {
       subtotal: subtotal.toFixed(2),
       desconto: desconto.toFixed(2),
@@ -180,15 +220,15 @@ const CheckoutPage = () => {
 
   const totais = calcularTotais();
 
- 
+
   const handleRemoveItem = async (itemId) => {
     try {
       const token = localStorage.getItem('token');
-      
+
       if (!window.confirm('Deseja realmente remover este item do carrinho?')) {
         return;
       }
-  
+
       await axios.delete(
         `http://localhost:8080/remove-from-cart/${itemId}`,
         {
@@ -198,10 +238,10 @@ const CheckoutPage = () => {
           withCredentials: true
         }
       );
-  
+
       setCartProducts(prev => prev.filter(item => item.id !== itemId));
       alert('Item removido com sucesso!');
-      
+
     } catch (error) {
       console.error('Erro ao remover item do carrinho:', error);
       alert('Erro ao remover item. Tente novamente.');
@@ -223,6 +263,111 @@ const CheckoutPage = () => {
     if (!value || !validatorFunction(value)) {
       setErrors(prev => ({ ...prev, [field]: errorMessage }));
     }
+  };
+
+  const copyPixKey = async () => {
+    try {
+      await navigator.clipboard.writeText(pixKey);
+      setPixKeyCopied(true);
+      setTimeout(() => setPixKeyCopied(false), 2000);
+    } catch (err) {
+      console.error('Erro ao copiar chave PIX:', err);
+      alert('Erro ao copiar chave PIX. Tente copiar manualmente.');
+    }
+  };
+
+  // Credit Card Utility Functions
+  const cardMasks = {
+    cardNumber: (value) => {
+      const numbers = value.replace(/\D/g, "");
+      return numbers.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+    },
+    cardExpiry: (value) => {
+      const numbers = value.replace(/\D/g, "");
+      if (numbers.length >= 2) {
+        return numbers.slice(0, 2) + "/" + numbers.slice(2, 4);
+      }
+      return numbers;
+    },
+    cardCVV: (value) => {
+      return value.replace(/\D/g, "").slice(0, 4);
+    },
+    cardCPF: (value) => {
+      const numbers = value.replace(/\D/g, "");
+      return numbers
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+        .slice(0, 14);
+    },
+  };
+
+  const detectCardBrand = (cardNumber) => {
+    const number = cardNumber.replace(/\s/g, "");
+
+    if (/^4/.test(number)) return "visa";
+    if (/^5[1-5]/.test(number)) return "mastercard";
+    if (/^3[47]/.test(number)) return "amex";
+    if (/^6(?:011|5)/.test(number)) return "discover";
+    if (/^35/.test(number)) return "jcb";
+    if (/^(?:5[0678]|6304|6390|67)/.test(number)) return "elo";
+    if (/^(606282|3841)/.test(number)) return "hipercard";
+
+    return "";
+  };
+
+  const handleCardInputChange = (field, value, maskFunction) => {
+    let maskedValue = maskFunction ? maskFunction(value) : value;
+
+    // Auto-detect card brand when card number changes
+    if (field === "cardNumber") {
+      const brand = detectCardBrand(maskedValue);
+      setCardData(prev => ({ ...prev, [field]: maskedValue, cardBrand: brand }));
+    } else {
+      setCardData(prev => ({ ...prev, [field]: maskedValue }));
+    }
+
+    // Clear error when user starts typing
+    if (cardErrors[field]) {
+      setCardErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const validateCardForm = () => {
+    const newErrors = {};
+
+    if (!cardData.cardHolderName.trim()) {
+      newErrors.cardHolderName = "Nome do titular é obrigatório";
+    }
+    if (!validators.cpf(cardData.cardHolderCPF)) {
+      newErrors.cardHolderCPF = "CPF inválido";
+    }
+    const cardNumberClean = cardData.cardNumber.replace(/\s/g, "");
+    if (cardNumberClean.length < 13 || cardNumberClean.length > 19) {
+      newErrors.cardNumber = "Número do cartão inválido";
+    }
+    if (!cardData.cardExpiry || cardData.cardExpiry.length !== 5) {
+      newErrors.cardExpiry = "Validade inválida";
+    } else {
+      const [month, year] = cardData.cardExpiry.split("/");
+      const currentYear = new Date().getFullYear() % 100;
+      const currentMonth = new Date().getMonth() + 1;
+      if (parseInt(month) < 1 || parseInt(month) > 12) {
+        newErrors.cardExpiry = "Mês inválido";
+      } else if (parseInt(year) < currentYear ||
+        (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
+        newErrors.cardExpiry = "Cartão vencido";
+      }
+    }
+    if (!cardData.cardCVV || cardData.cardCVV.length < 3) {
+      newErrors.cardCVV = "CVV inválido";
+    }
+    if (!cardData.cardBrand) {
+      newErrors.cardBrand = "Selecione a bandeira do cartão";
+    }
+
+    setCardErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const validateForm = () => {
@@ -292,7 +437,13 @@ const CheckoutPage = () => {
         return;
       }
 
-  
+      // Validate credit card form if payment method is credit or debit
+      if ((paymentMethod === "credit" || paymentMethod === "debit") && !validateCardForm()) {
+        alert('Por favor, preencha todos os campos do cartão corretamente');
+        setLoadingPayment(false);
+        return;
+      }
+
       const enderecoCompleto = `${formData.street}, ${formData.numero}${formData.complement ? ', ' + formData.complement : ''} - ${formData.neighborhood}, ${formData.city} - ${formData.state}, ${formData.cep}`;
 
       const orderData = {
@@ -300,7 +451,17 @@ const CheckoutPage = () => {
         shippingAddress: enderecoCompleto,
         total: totais.total,
         subtotal: totais.subtotal,
-        discount: totais.desconto
+        discount: totais.desconto,
+        ...((paymentMethod === "credit" || paymentMethod === "debit") && {
+          cardData: {
+            cardHolderName: cardData.cardHolderName,
+            cardHolderCPF: cardData.cardHolderCPF,
+            cardNumber: cardData.cardNumber.replace(/\s/g, ""),
+            cardExpiry: cardData.cardExpiry,
+            cardBrand: cardData.cardBrand,
+            installments: paymentMethod === "credit" ? cardData.installments : "1",
+          }
+        })
       };
 
       const response = await axios.post(
@@ -315,7 +476,7 @@ const CheckoutPage = () => {
       );
 
       if (response.data.success) {
-        alert(`Pedido #${response.data.pedido.cod_pedido} realizado com sucesso!\n\nTotal: R$ ${response.data.pedido.total}\nStatus: ${response.data.pedido.status}`);
+        alert(`Pedido #${response.data.pedido.cod_pedido} realizado com sucesso!\\n\\nTotal: R$ ${response.data.pedido.total}\\nStatus: ${response.data.pedido.status}`);
         setCartProducts([]);
         setCurrentStep(1);
       }
@@ -620,6 +781,176 @@ const CheckoutPage = () => {
                       />
                     </PaymentOption>
 
+                    {/* Expandable Credit Card Form */}
+                    <CreditCardSection $expanded={paymentMethod === "credit"}>
+                      <CreditCardForm $expanded={paymentMethod === "credit"}>
+                        <CardFormTitle>Dados do Cartão de Crédito</CardFormTitle>
+
+                        <CardRow $columns={1}>
+                          <CardField>
+                            <CardLabel>
+                              Nome impresso no cartão <span>*</span>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="Nome como está no cartão"
+                              value={cardData.cardHolderName}
+                              onChange={(e) => handleCardInputChange("cardHolderName", e.target.value)}
+                              $error={!!cardErrors.cardHolderName}
+                            />
+                            {cardErrors.cardHolderName && <ErrorMessage>{cardErrors.cardHolderName}</ErrorMessage>}
+                          </CardField>
+                        </CardRow>
+
+                        <CardRow $columns={2}>
+                          <CardField>
+                            <CardLabel>
+                              CPF do titular <span>*</span>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="000.000.000-00"
+                              value={cardData.cardHolderCPF}
+                              onChange={(e) => handleCardInputChange("cardHolderCPF", e.target.value, cardMasks.cardCPF)}
+                              $error={!!cardErrors.cardHolderCPF}
+                              maxLength="14"
+                            />
+                            {cardErrors.cardHolderCPF && <ErrorMessage>{cardErrors.cardHolderCPF}</ErrorMessage>}
+                          </CardField>
+
+                          <CardField>
+                            <CardLabel>
+                              Número do cartão <span>*</span>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="0000 0000 0000 0000"
+                              value={cardData.cardNumber}
+                              onChange={(e) => handleCardInputChange("cardNumber", e.target.value, cardMasks.cardNumber)}
+                              $error={!!cardErrors.cardNumber}
+                              maxLength="19"
+                            />
+                            {cardErrors.cardNumber && <ErrorMessage>{cardErrors.cardNumber}</ErrorMessage>}
+                          </CardField>
+                        </CardRow>
+
+                        <CardRow $columns={3}>
+                          <CardField>
+                            <CardLabel>
+                              Validade <span>*</span>
+                              <CardInfoIcon title="Mês/Ano">?</CardInfoIcon>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="MM/AA"
+                              value={cardData.cardExpiry}
+                              onChange={(e) => handleCardInputChange("cardExpiry", e.target.value, cardMasks.cardExpiry)}
+                              $error={!!cardErrors.cardExpiry}
+                              maxLength="5"
+                            />
+                            {cardErrors.cardExpiry && <ErrorMessage>{cardErrors.cardExpiry}</ErrorMessage>}
+                          </CardField>
+
+                          <CardField>
+                            <CardLabel>
+                              CVV <span>*</span>
+                              <CardInfoIcon title="Código de segurança">?</CardInfoIcon>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="000"
+                              value={cardData.cardCVV}
+                              onChange={(e) => handleCardInputChange("cardCVV", e.target.value, cardMasks.cardCVV)}
+                              $error={!!cardErrors.cardCVV}
+                              maxLength="4"
+                            />
+                            {cardErrors.cardCVV && <ErrorMessage>{cardErrors.cardCVV}</ErrorMessage>}
+                          </CardField>
+
+                          <CardField>
+                            <CardLabel>
+                              Parcelas <span>*</span>
+                            </CardLabel>
+                            <InstallmentSelect
+                              value={cardData.installments}
+                              onChange={(e) => setCardData(prev => ({ ...prev, installments: e.target.value }))}
+                            >
+                              <option value="1">1x de R$ {totais.total} sem juros</option>
+                              <option value="2">2x de R$ {(parseFloat(totais.total) / 2).toFixed(2)} sem juros</option>
+                              <option value="3">3x de R$ {(parseFloat(totais.total) / 3).toFixed(2)} sem juros</option>
+                              <option value="4">4x de R$ {(parseFloat(totais.total) / 4).toFixed(2)} sem juros</option>
+                              <option value="5">5x de R$ {(parseFloat(totais.total) / 5).toFixed(2)} sem juros</option>
+                              <option value="6">6x de R$ {(parseFloat(totais.total) / 6).toFixed(2)} sem juros</option>
+                            </InstallmentSelect>
+                          </CardField>
+                        </CardRow>
+
+                        <CardField>
+                          <CardLabel>
+                            Bandeira do cartão <span>*</span>
+                          </CardLabel>
+                          <CardBrandSelector>
+                            <BrandOption $selected={cardData.cardBrand === "visa"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="visa"
+                                checked={cardData.cardBrand === "visa"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Visa</span>
+                            </BrandOption>
+                            <BrandOption $selected={cardData.cardBrand === "mastercard"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="mastercard"
+                                checked={cardData.cardBrand === "mastercard"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Mastercard</span>
+                            </BrandOption>
+                            <BrandOption $selected={cardData.cardBrand === "elo"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="elo"
+                                checked={cardData.cardBrand === "elo"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Elo</span>
+                            </BrandOption>
+                            <BrandOption $selected={cardData.cardBrand === "amex"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="amex"
+                                checked={cardData.cardBrand === "amex"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Amex</span>
+                            </BrandOption>
+                            <BrandOption $selected={cardData.cardBrand === "hipercard"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="hipercard"
+                                checked={cardData.cardBrand === "hipercard"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Hipercard</span>
+                            </BrandOption>
+                          </CardBrandSelector>
+                          {cardErrors.cardBrand && <ErrorMessage>{cardErrors.cardBrand}</ErrorMessage>}
+                        </CardField>
+
+                        <SecurityBadge>
+                          <FiShield />
+                          <span>Pagamento 100% seguro e criptografado</span>
+                        </SecurityBadge>
+                      </CreditCardForm>
+                    </CreditCardSection>
+
                     <PaymentOption onClick={() => setPaymentMethod("debit")}>
                       <PaymentContent>
                         <PaymentIcon>
@@ -640,6 +971,159 @@ const CheckoutPage = () => {
                       />
                     </PaymentOption>
 
+                    {/* Expandable Debit Card Form */}
+                    <CreditCardSection $expanded={paymentMethod === "debit"}>
+                      <CreditCardForm $expanded={paymentMethod === "debit"}>
+                        <CardFormTitle>Dados do Cartão de Débito</CardFormTitle>
+
+                        <CardRow $columns={1}>
+                          <CardField>
+                            <CardLabel>
+                              Nome impresso no cartão <span>*</span>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="Nome como está no cartão"
+                              value={cardData.cardHolderName}
+                              onChange={(e) => handleCardInputChange("cardHolderName", e.target.value)}
+                              $error={!!cardErrors.cardHolderName}
+                            />
+                            {cardErrors.cardHolderName && <ErrorMessage>{cardErrors.cardHolderName}</ErrorMessage>}
+                          </CardField>
+                        </CardRow>
+
+                        <CardRow $columns={2}>
+                          <CardField>
+                            <CardLabel>
+                              CPF do titular <span>*</span>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="000.000.000-00"
+                              value={cardData.cardHolderCPF}
+                              onChange={(e) => handleCardInputChange("cardHolderCPF", e.target.value, cardMasks.cardCPF)}
+                              $error={!!cardErrors.cardHolderCPF}
+                              maxLength="14"
+                            />
+                            {cardErrors.cardHolderCPF && <ErrorMessage>{cardErrors.cardHolderCPF}</ErrorMessage>}
+                          </CardField>
+
+                          <CardField>
+                            <CardLabel>
+                              Número do cartão <span>*</span>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="0000 0000 0000 0000"
+                              value={cardData.cardNumber}
+                              onChange={(e) => handleCardInputChange("cardNumber", e.target.value, cardMasks.cardNumber)}
+                              $error={!!cardErrors.cardNumber}
+                              maxLength="19"
+                            />
+                            {cardErrors.cardNumber && <ErrorMessage>{cardErrors.cardNumber}</ErrorMessage>}
+                          </CardField>
+                        </CardRow>
+
+                        <CardRow $columns={2}>
+                          <CardField>
+                            <CardLabel>
+                              Validade <span>*</span>
+                              <CardInfoIcon title="Mês/Ano">?</CardInfoIcon>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="MM/AA"
+                              value={cardData.cardExpiry}
+                              onChange={(e) => handleCardInputChange("cardExpiry", e.target.value, cardMasks.cardExpiry)}
+                              $error={!!cardErrors.cardExpiry}
+                              maxLength="5"
+                            />
+                            {cardErrors.cardExpiry && <ErrorMessage>{cardErrors.cardExpiry}</ErrorMessage>}
+                          </CardField>
+
+                          <CardField>
+                            <CardLabel>
+                              CVV <span>*</span>
+                              <CardInfoIcon title="Código de segurança">?</CardInfoIcon>
+                            </CardLabel>
+                            <CardInput
+                              type="text"
+                              placeholder="000"
+                              value={cardData.cardCVV}
+                              onChange={(e) => handleCardInputChange("cardCVV", e.target.value, cardMasks.cardCVV)}
+                              $error={!!cardErrors.cardCVV}
+                              maxLength="4"
+                            />
+                            {cardErrors.cardCVV && <ErrorMessage>{cardErrors.cardCVV}</ErrorMessage>}
+                          </CardField>
+                        </CardRow>
+
+                        <CardField>
+                          <CardLabel>
+                            Bandeira do cartão <span>*</span>
+                          </CardLabel>
+                          <CardBrandSelector>
+                            <BrandOption $selected={cardData.cardBrand === "visa"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="visa"
+                                checked={cardData.cardBrand === "visa"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Visa</span>
+                            </BrandOption>
+                            <BrandOption $selected={cardData.cardBrand === "mastercard"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="mastercard"
+                                checked={cardData.cardBrand === "mastercard"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Mastercard</span>
+                            </BrandOption>
+                            <BrandOption $selected={cardData.cardBrand === "elo"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="elo"
+                                checked={cardData.cardBrand === "elo"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Elo</span>
+                            </BrandOption>
+                            <BrandOption $selected={cardData.cardBrand === "amex"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="amex"
+                                checked={cardData.cardBrand === "amex"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Amex</span>
+                            </BrandOption>
+                            <BrandOption $selected={cardData.cardBrand === "hipercard"}>
+                              <input
+                                type="radio"
+                                name="cardBrand"
+                                value="hipercard"
+                                checked={cardData.cardBrand === "hipercard"}
+                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                              />
+                              <span>Hipercard</span>
+                            </BrandOption>
+                          </CardBrandSelector>
+                          {cardErrors.cardBrand && <ErrorMessage>{cardErrors.cardBrand}</ErrorMessage>}
+                        </CardField>
+
+                        <SecurityBadge>
+                          <FiShield />
+                          <span>Pagamento 100% seguro e criptografado</span>
+                        </SecurityBadge>
+                      </CreditCardForm>
+                    </CreditCardSection>
+
                     <PaymentOption onClick={() => setPaymentMethod("pix")}>
                       <PaymentContent>
                         <PaymentIcon>
@@ -654,6 +1138,63 @@ const CheckoutPage = () => {
                         onChange={() => setPaymentMethod("pix")}
                       />
                     </PaymentOption>
+
+                    {/* Expandable PIX Section */}
+                    <PixSection $expanded={paymentMethod === "pix"}>
+                      <PixContainer $expanded={paymentMethod === "pix"}>
+                        <PixTitle>Pagamento via PIX</PixTitle>
+
+                        <PixQRCode>
+                          <img src={QRCodeImg} alt="QR Code PIX" />
+                          <span style={{ fontSize: '0.85rem', color: '#666', textAlign: 'center' }}>
+                            Escaneie o QR Code com o app do seu banco
+                          </span>
+                        </PixQRCode>
+
+                        <PixKeyContainer>
+                          <PixKeyLabel>Ou copie a chave PIX Copia e Cola:</PixKeyLabel>
+                          <PixKeyField>
+                            <PixKeyInput
+                              type="text"
+                              value={pixKey}
+                              readOnly
+                              onClick={(e) => e.target.select()}
+                            />
+                            <CopyButton
+                              onClick={copyPixKey}
+                              className={pixKeyCopied ? 'copied' : ''}
+                            >
+                              {pixKeyCopied ? (
+                                <>
+                                  <FiCheck />
+                                  Copiado!
+                                </>
+                              ) : (
+                                <>
+                                  <FiCopy />
+                                  Copiar
+                                </>
+                              )}
+                            </CopyButton>
+                          </PixKeyField>
+                        </PixKeyContainer>
+
+                        <PixInstructions>
+                          <strong>Como pagar:</strong>
+                          <ol>
+                            <li>Abra o app do seu banco</li>
+                            <li>Escolha pagar com PIX</li>
+                            <li>Escaneie o QR Code ou cole a chave PIX</li>
+                            <li>Confirme o pagamento</li>
+                          </ol>
+                        </PixInstructions>
+
+                        <SecurityBadge>
+                          <FiShield />
+                          <span>Pagamento processado instantaneamente</span>
+                        </SecurityBadge>
+                      </PixContainer>
+                    </PixSection>
 
                     <PaymentOption onClick={() => setPaymentMethod("boleto")}>
                       <PaymentContent>
@@ -701,8 +1242,8 @@ const CheckoutPage = () => {
                 {cartProducts.map((produto) => (
                   <BagItem key={produto.id}>
                     <BagImageWrapper>
-                      <BagImage 
-                        src={produto.imagem || ProductImg} 
+                      <BagImage
+                        src={produto.imagem || ProductImg}
                         alt={produto.nome}
                         onError={(e) => { e.target.src = ProductImg }}
                       />

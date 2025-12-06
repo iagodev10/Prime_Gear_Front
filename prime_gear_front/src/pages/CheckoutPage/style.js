@@ -470,3 +470,435 @@ export const CardIcon = styled.img`
   height: 20px;
   width: auto;
 `;
+
+/* Credit Card Form Styles */
+export const CreditCardSection = styled.div`
+  max-height: ${({ $expanded }) => ($expanded ? '800px' : '0')};
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s ease,
+              margin 0.3s ease;
+  opacity: ${({ $expanded }) => ($expanded ? '1' : '0')};
+  margin-top: ${({ $expanded }) => ($expanded ? '16px' : '0')};
+  margin-bottom: ${({ $expanded }) => ($expanded ? '16px' : '0')};
+`;
+
+export const CreditCardForm = styled.div`
+  padding: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  animation: ${({ $expanded }) => ($expanded ? 'slideIn 0.4s ease-out' : 'none')};
+
+  @keyframes slideIn {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    padding: 16px;
+  }
+`;
+
+export const CardRow = styled.div`
+  display: grid;
+  grid-template-columns: ${({ $columns }) => `repeat(${$columns || 2}, 1fr)`};
+  gap: 16px;
+  margin-bottom: 16px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const CardField = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+`;
+
+export const CardLabel = styled.label`
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  span {
+    color: #dc2626;
+  }
+`;
+
+export const CardInput = styled.input`
+  height: 48px;
+  border: 1px solid ${(props) => (props.$error ? '#dc2626' : '#c9c9ce')};
+  border-radius: 8px;
+  padding: 0 14px;
+  font-size: 0.95rem;
+  outline: none;
+  background: #fff;
+  color: #3b3b40;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  &::placeholder {
+    color: #8e8e93;
+  }
+
+  &:focus {
+    border-color: ${(props) => (props.$error ? '#dc2626' : '#4d7294')};
+    box-shadow: 0 0 0 3px ${(props) => (props.$error ? 'rgba(220, 38, 38, 0.1)' : 'rgba(77, 114, 148, 0.1)')};
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+  }
+`;
+
+export const CardSelect = styled.select`
+  height: 48px;
+  border: 1px solid ${(props) => (props.$error ? '#dc2626' : '#c9c9ce')};
+  border-radius: 8px;
+  padding: 0 14px;
+  font-size: 0.95rem;
+  background: #fff;
+  color: #3b3b40;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  &:focus {
+    border-color: ${(props) => (props.$error ? '#dc2626' : '#4d7294')};
+    box-shadow: 0 0 0 3px ${(props) => (props.$error ? 'rgba(220, 38, 38, 0.1)' : 'rgba(77, 114, 148, 0.1)')};
+  }
+
+  option {
+    padding: 10px;
+  }
+`;
+
+export const CardBrandSelector = styled.div`
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+`;
+
+export const BrandOption = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border: 2px solid ${({ $selected }) => ($selected ? '#4d7294' : '#e0e0e0')};
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: ${({ $selected }) => ($selected ? '#f0f4f8' : '#fff')};
+  min-width: 80px;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    border-color: #4d7294;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(77, 114, 148, 0.05) 0%, transparent 100%);
+    opacity: ${({ $selected }) => ($selected ? '1' : '0')};
+    transition: opacity 0.2s ease;
+  }
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: ${({ $selected }) => ($selected ? '#4d7294' : '#666')};
+    position: relative;
+    z-index: 1;
+  }
+`;
+
+export const InstallmentSelect = styled(CardSelect)`
+  font-weight: 500;
+  
+  option {
+    font-weight: 400;
+  }
+`;
+
+export const CardFormTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(135deg, #4d7294 0%, #3a5a7a 100%);
+    border-radius: 2px;
+  }
+`;
+
+export const CardInfoIcon = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #666;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: help;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #4d7294;
+    color: #fff;
+    transform: scale(1.1);
+  }
+`;
+
+export const SecurityBadge = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 8px;
+  margin-top: 16px;
+  border: 1px solid #bae6fd;
+
+  svg {
+    color: #0284c7;
+    font-size: 1.2rem;
+  }
+
+  span {
+    font-size: 0.85rem;
+    color: #0c4a6e;
+    font-weight: 500;
+  }
+`;
+
+/* PIX Payment Styles */
+export const PixSection = styled.div`
+  max-height: ${({ $expanded }) => ($expanded ? '600px' : '0')};
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s ease,
+              margin 0.3s ease;
+  opacity: ${({ $expanded }) => ($expanded ? '1' : '0')};
+  margin-top: ${({ $expanded }) => ($expanded ? '16px' : '0')};
+  margin-bottom: ${({ $expanded }) => ($expanded ? '16px' : '0')};
+`;
+
+export const PixContainer = styled.div`
+  padding: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  animation: ${({ $expanded }) => ($expanded ? 'slideIn 0.4s ease-out' : 'none')};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  @keyframes slideIn {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    padding: 16px;
+  }
+`;
+
+export const PixQRCode = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  img {
+    width: 250px;
+    height: 250px;
+    border-radius: 8px;
+    object-fit: contain;
+  }
+
+  @media (max-width: 600px) {
+    padding: 16px;
+    
+    img {
+      width: 200px;
+      height: 200px;
+    }
+  }
+`;
+
+export const PixTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(135deg, #4d7294 0%, #3a5a7a 100%);
+    border-radius: 2px;
+  }
+`;
+
+export const PixKeyContainer = styled.div`
+  width: 100%;
+  max-width: 500px;
+`;
+
+export const PixKeyLabel = styled.label`
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
+`;
+
+export const PixKeyField = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+`;
+
+export const PixKeyInput = styled.input`
+  flex: 1;
+  height: 48px;
+  border: 1px solid #c9c9ce;
+  border-radius: 8px;
+  padding: 0 14px;
+  font-size: 0.9rem;
+  background: #fff;
+  color: #3b3b40;
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+
+  &:focus {
+    outline: none;
+    border-color: #4d7294;
+    box-shadow: 0 0 0 3px rgba(77, 114, 148, 0.1);
+  }
+`;
+
+export const CopyButton = styled.button`
+  height: 48px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 8px;
+  background: #d1d1d6;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+
+  svg {
+    font-size: 1.1rem;
+  }
+
+  &:hover {
+    background: #b0b0b5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.copied {
+    background: #4d7294;
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: center;
+  }
+`;
+
+export const PixInstructions = styled.div`
+  width: 100%;
+  max-width: 500px;
+  padding: 16px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #333;
+  line-height: 1.6;
+
+  strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #111;
+  }
+
+  ol {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+  }
+
+  li {
+    margin-bottom: 4px;
+  }
+`;
