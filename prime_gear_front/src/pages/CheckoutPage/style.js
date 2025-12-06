@@ -7,6 +7,12 @@ export const PageContainer = styled.div`
   color: #0f0f12;
   background-color: #fff;
   padding-top: 10vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
+
+  @media (max-width: 600px) {
+    padding-top: 8vh;
+  }
 `;
 
 export const Wrapper = styled.div`
@@ -14,6 +20,8 @@ export const Wrapper = styled.div`
   max-width: 100%;
   margin: 0 auto;
   padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
 `;
 
 export const Steps = styled.div`
@@ -21,10 +29,16 @@ export const Steps = styled.div`
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding: 24px 0;
+  padding: 24px 16px;
   width: 100%;
   border-bottom: 1px solid #e0e0e0;
   background: #fff;
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    padding: 20px 16px;
+    gap: 12px;
+  }
 `;
 
 export const StepItem = styled.div`
@@ -55,14 +69,24 @@ export const StepDivider = styled.div`
   width: 60px;
   background: #e0e0e0;
   margin-bottom: 20px;
+
+  @media (max-width: 600px) {
+    width: 40px;
+  }
 `;
 
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: calc(100vh - 100px);
+  gap: 0;
 
   @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  @media (max-width: 600px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -79,13 +103,21 @@ export const Card = styled.div`
   border-left: none;
   overflow: visible;
   padding-bottom: 60px;
+  width: 100%;
+  box-sizing: border-box;
 
   @media (max-width: 900px) {
     padding: ${(props) => (props.$summary ? "24px 5%" : "24px")};
     border-left: none;
-    border-top: none;
+    border-top: ${(props) => (props.$summary ? "1px solid #e0e0e0" : "none")};
     height: auto;
     padding-bottom: 40px;
+    margin-top: ${(props) => (props.$summary ? "0" : "0")};
+  }
+
+  @media (max-width: 600px) {
+    padding: ${(props) => (props.$summary ? "20px 16px" : "20px 16px")};
+    padding-bottom: 32px;
   }
 `;
 
@@ -107,6 +139,7 @@ export const Row = styled.div`
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 `;
 
@@ -115,8 +148,13 @@ export const Row3 = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 `;
 
@@ -375,6 +413,8 @@ export const FlipContainer = styled.div`
   width: 100%;
   height: auto;
   min-height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 `;
 
 export const Flipper = styled.div`
@@ -512,8 +552,19 @@ export const CardRow = styled.div`
   gap: 16px;
   margin-bottom: 16px;
 
+  @media (max-width: 768px) {
+    grid-template-columns: ${({ $columns }) => {
+      if ($columns === 3) return 'repeat(2, 1fr)';
+      if ($columns === 2) return 'repeat(2, 1fr)';
+      return '1fr';
+    }};
+    gap: 12px;
+  }
+
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
   }
 `;
 
@@ -712,7 +763,7 @@ export const SecurityBadge = styled.div`
 
 /* PIX Payment Styles */
 export const PixSection = styled.div`
-  max-height: ${({ $expanded }) => ($expanded ? '600px' : '0')};
+  max-height: ${({ $expanded }) => ($expanded ? '800px' : '0')};
   overflow: hidden;
   transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
               opacity 0.3s ease,
@@ -900,5 +951,98 @@ export const PixInstructions = styled.div`
 
   li {
     margin-bottom: 4px;
+  }
+`;
+
+/* Boleto Payment Styles */
+export const BoletoSection = styled.div`
+  max-height: ${({ $expanded }) => ($expanded ? '1200px' : '0')};
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s ease,
+              margin 0.3s ease;
+  opacity: ${({ $expanded }) => ($expanded ? '1' : '0')};
+  margin-top: ${({ $expanded }) => ($expanded ? '16px' : '0')};
+  margin-bottom: ${({ $expanded }) => ($expanded ? '16px' : '0')};
+`;
+
+export const BoletoContainer = styled.div`
+  padding: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  animation: ${({ $expanded }) => ($expanded ? 'slideIn 0.4s ease-out' : 'none')};
+
+  @keyframes slideIn {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    padding: 16px;
+  }
+`;
+
+export const BoletoTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(135deg, #4d7294 0%, #3a5a7a 100%);
+    border-radius: 2px;
+  }
+`;
+
+export const BoletoForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+`;
+
+export const GenerateBoletoButton = styled.button`
+  width: 100%;
+  height: 52px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: #4d7294;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  &:hover {
+    background: #3a5a7a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(77, 114, 148, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 600px) {
+    height: 48px;
+    font-size: 0.95rem;
   }
 `;

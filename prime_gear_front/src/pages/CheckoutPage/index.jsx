@@ -71,6 +71,11 @@ import {
   PixKeyInput,
   CopyButton,
   PixInstructions,
+  BoletoSection,
+  BoletoContainer,
+  BoletoTitle,
+  BoletoForm,
+  GenerateBoletoButton,
 } from "./style";
 import ProductImg from "../../assets/images/desktop-ilustration.png";
 import QRCodeImg from "../../assets/images/qrcode.png";
@@ -123,6 +128,21 @@ const CheckoutPage = () => {
 
   const [errors, setErrors] = useState({});
 
+  const [boletoData, setBoletoData] = useState({
+    nomeCompleto: "",
+    cpf: "",
+    email: "",
+    enderecoCompleto: "",
+    cep: "",
+    rua: "",
+    numero: "",
+    bairro: "",
+    cidade: "",
+    estado: "",
+  });
+
+  const [boletoErrors, setBoletoErrors] = useState({});
+
 
   useEffect(() => {
     if (user) {
@@ -170,6 +190,20 @@ const CheckoutPage = () => {
         complement: user.complemento_user || "",
         cep: formatarCEP(user.cep_user),
         numero: user.numero_user || "",
+      });
+
+      // Preencher dados do boleto com dados do usuário
+      setBoletoData({
+        nomeCompleto: nomeCompleto,
+        cpf: formatarCPF(user.cpf_user),
+        email: user.email_user || "",
+        enderecoCompleto: `${user.rua_user || ""}, ${user.numero_user || ""}${user.complemento_user ? ', ' + user.complemento_user : ''} - ${user.bairro_user || ""}, ${user.cidade_user || ""} - ${user.estado_user || ""}, ${formatarCEP(user.cep_user)}`,
+        cep: formatarCEP(user.cep_user),
+        rua: user.rua_user || "",
+        numero: user.numero_user || "",
+        bairro: user.bairro_user || "",
+        cidade: user.cidade_user || "",
+        estado: user.estado_user || "",
       });
     }
   }, [user]);
@@ -370,6 +404,67 @@ const CheckoutPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const validateBoletoForm = () => {
+    const newErrors = {};
+
+    if (!validators.required(boletoData.nomeCompleto)) {
+      newErrors.nomeCompleto = "Nome completo é obrigatório";
+    }
+    if (!validators.cpf(boletoData.cpf)) {
+      newErrors.cpf = "CPF inválido";
+    }
+    if (!validators.email(boletoData.email)) {
+      newErrors.email = "E-mail inválido";
+    }
+    if (!validators.required(boletoData.cep)) {
+      newErrors.cep = "CEP é obrigatório";
+    } else if (!validators.cep(boletoData.cep)) {
+      newErrors.cep = "CEP inválido";
+    }
+    if (!validators.required(boletoData.rua)) {
+      newErrors.rua = "Rua é obrigatória";
+    }
+    if (!validators.required(boletoData.numero)) {
+      newErrors.numero = "Número é obrigatório";
+    }
+    if (!validators.required(boletoData.bairro)) {
+      newErrors.bairro = "Bairro é obrigatório";
+    }
+    if (!validators.required(boletoData.cidade)) {
+      newErrors.cidade = "Cidade é obrigatória";
+    }
+    if (!validators.required(boletoData.estado)) {
+      newErrors.estado = "Estado é obrigatório";
+    }
+
+    setBoletoErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleBoletoInputChange = (field, value, maskFunction) => {
+    const maskedValue = maskFunction ? maskFunction(value) : value;
+    setBoletoData(prev => {
+      const updated = { ...prev, [field]: maskedValue };
+      // Atualizar endereço completo automaticamente
+      if (['rua', 'numero', 'bairro', 'cidade', 'estado', 'cep'].includes(field)) {
+        updated.enderecoCompleto = `${updated.rua || ''}, ${updated.numero || ''} - ${updated.bairro || ''}, ${updated.cidade || ''} - ${updated.estado || ''}, ${updated.cep || ''}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',');
+      }
+      return updated;
+    });
+
+    if (boletoErrors[field]) {
+      setBoletoErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const handleGenerateBoleto = () => {
+    if (validateBoletoForm()) {
+      const enderecoCompleto = `${boletoData.rua}, ${boletoData.numero} - ${boletoData.bairro}, ${boletoData.cidade} - ${boletoData.estado}, ${boletoData.cep}`;
+      setBoletoData(prev => ({ ...prev, enderecoCompleto }));
+      alert('Boleto gerado com sucesso! Você receberá o boleto por e-mail.');
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -444,11 +539,18 @@ const CheckoutPage = () => {
         return;
       }
 
+      // Validate boleto form if payment method is boleto
+      if (paymentMethod === "boleto" && !validateBoletoForm()) {
+        alert('Por favor, preencha todos os campos do boleto corretamente');
+        setLoadingPayment(false);
+        return;
+      }
+
       const enderecoCompleto = `${formData.street}, ${formData.numero}${formData.complement ? ', ' + formData.complement : ''} - ${formData.neighborhood}, ${formData.city} - ${formData.state}, ${formData.cep}`;
 
       const orderData = {
         paymentMethod: paymentMethod,
-        shippingAddress: enderecoCompleto,
+        shippingAddress: paymentMethod === "boleto" ? boletoData.enderecoCompleto : enderecoCompleto,
         total: totais.total,
         subtotal: totais.subtotal,
         discount: totais.desconto,
@@ -460,6 +562,20 @@ const CheckoutPage = () => {
             cardExpiry: cardData.cardExpiry,
             cardBrand: cardData.cardBrand,
             installments: paymentMethod === "credit" ? cardData.installments : "1",
+          }
+        }),
+        ...(paymentMethod === "boleto" && {
+          boletoData: {
+            nomeCompleto: boletoData.nomeCompleto,
+            cpf: boletoData.cpf,
+            email: boletoData.email,
+            enderecoCompleto: boletoData.enderecoCompleto,
+            cep: boletoData.cep,
+            rua: boletoData.rua,
+            numero: boletoData.numero,
+            bairro: boletoData.bairro,
+            cidade: boletoData.cidade,
+            estado: boletoData.estado,
           }
         })
       };
@@ -1210,6 +1326,205 @@ const CheckoutPage = () => {
                         onChange={() => setPaymentMethod("boleto")}
                       />
                     </PaymentOption>
+
+                    {/* Expandable Boleto Section */}
+                    <BoletoSection $expanded={paymentMethod === "boleto"}>
+                      <BoletoContainer $expanded={paymentMethod === "boleto"}>
+                        <BoletoTitle>Dados para Geração do Boleto</BoletoTitle>
+
+                        <BoletoForm>
+                          <CardRow $columns={1}>
+                            <CardField>
+                              <CardLabel>
+                                Nome completo do pagador <span>*</span>
+                              </CardLabel>
+                              <CardInput
+                                type="text"
+                                placeholder="Nome completo"
+                                value={boletoData.nomeCompleto}
+                                onChange={(e) => handleBoletoInputChange("nomeCompleto", e.target.value)}
+                                $error={!!boletoErrors.nomeCompleto}
+                              />
+                              {boletoErrors.nomeCompleto && <ErrorMessage>{boletoErrors.nomeCompleto}</ErrorMessage>}
+                            </CardField>
+                          </CardRow>
+
+                          <CardRow $columns={2}>
+                            <CardField>
+                              <CardLabel>
+                                CPF <span>*</span>
+                              </CardLabel>
+                              <CardInput
+                                type="text"
+                                placeholder="000.000.000-00"
+                                value={boletoData.cpf}
+                                onChange={(e) => handleBoletoInputChange("cpf", e.target.value, masks.cpf)}
+                                $error={!!boletoErrors.cpf}
+                                maxLength="14"
+                              />
+                              {boletoErrors.cpf && <ErrorMessage>{boletoErrors.cpf}</ErrorMessage>}
+                            </CardField>
+
+                            <CardField>
+                              <CardLabel>
+                                E-mail do cliente <span>*</span>
+                              </CardLabel>
+                              <CardInput
+                                type="email"
+                                placeholder="email@exemplo.com"
+                                value={boletoData.email}
+                                onChange={(e) => handleBoletoInputChange("email", e.target.value)}
+                                $error={!!boletoErrors.email}
+                              />
+                              {boletoErrors.email && <ErrorMessage>{boletoErrors.email}</ErrorMessage>}
+                            </CardField>
+                          </CardRow>
+
+                          <CardRow $columns={1}>
+                            <CardField>
+                              <CardLabel>
+                                Endereço completo <span>*</span>
+                              </CardLabel>
+                              <CardInput
+                                type="text"
+                                placeholder="Rua, número, bairro, cidade - estado, CEP"
+                                value={boletoData.enderecoCompleto}
+                                onChange={(e) => handleBoletoInputChange("enderecoCompleto", e.target.value)}
+                                readOnly
+                                style={{ background: '#f5f5f5', cursor: 'not-allowed' }}
+                              />
+                            </CardField>
+                          </CardRow>
+
+                          <CardRow $columns={2}>
+                            <CardField>
+                              <CardLabel>
+                                CEP <span>*</span>
+                              </CardLabel>
+                              <CardInput
+                                type="text"
+                                placeholder="00000-000"
+                                value={boletoData.cep}
+                                onChange={(e) => handleBoletoInputChange("cep", e.target.value, masks.cep)}
+                                $error={!!boletoErrors.cep}
+                                maxLength="9"
+                              />
+                              {boletoErrors.cep && <ErrorMessage>{boletoErrors.cep}</ErrorMessage>}
+                            </CardField>
+
+                            <CardField>
+                              <CardLabel>
+                                Rua <span>*</span>
+                              </CardLabel>
+                              <CardInput
+                                type="text"
+                                placeholder="Nome da rua"
+                                value={boletoData.rua}
+                                onChange={(e) => handleBoletoInputChange("rua", e.target.value)}
+                                $error={!!boletoErrors.rua}
+                              />
+                              {boletoErrors.rua && <ErrorMessage>{boletoErrors.rua}</ErrorMessage>}
+                            </CardField>
+                          </CardRow>
+
+                          <CardRow $columns={3}>
+                            <CardField>
+                              <CardLabel>
+                                Número <span>*</span>
+                              </CardLabel>
+                              <CardInput
+                                type="text"
+                                placeholder="123"
+                                value={boletoData.numero}
+                                onChange={(e) => handleBoletoInputChange("numero", e.target.value)}
+                                $error={!!boletoErrors.numero}
+                              />
+                              {boletoErrors.numero && <ErrorMessage>{boletoErrors.numero}</ErrorMessage>}
+                            </CardField>
+
+                            <CardField>
+                              <CardLabel>
+                                Bairro <span>*</span>
+                              </CardLabel>
+                              <CardInput
+                                type="text"
+                                placeholder="Nome do bairro"
+                                value={boletoData.bairro}
+                                onChange={(e) => handleBoletoInputChange("bairro", e.target.value)}
+                                $error={!!boletoErrors.bairro}
+                              />
+                              {boletoErrors.bairro && <ErrorMessage>{boletoErrors.bairro}</ErrorMessage>}
+                            </CardField>
+
+                            <CardField>
+                              <CardLabel>
+                                Cidade <span>*</span>
+                              </CardLabel>
+                              <CardInput
+                                type="text"
+                                placeholder="Nome da cidade"
+                                value={boletoData.cidade}
+                                onChange={(e) => handleBoletoInputChange("cidade", e.target.value)}
+                                $error={!!boletoErrors.cidade}
+                              />
+                              {boletoErrors.cidade && <ErrorMessage>{boletoErrors.cidade}</ErrorMessage>}
+                            </CardField>
+                          </CardRow>
+
+                          <CardRow $columns={1}>
+                            <CardField>
+                              <CardLabel>
+                                Estado <span>*</span>
+                              </CardLabel>
+                              <CardSelect
+                                value={boletoData.estado}
+                                onChange={(e) => handleBoletoInputChange("estado", e.target.value)}
+                                $error={!!boletoErrors.estado}
+                              >
+                                <option value="">Selecione o estado</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                              </CardSelect>
+                              {boletoErrors.estado && <ErrorMessage>{boletoErrors.estado}</ErrorMessage>}
+                            </CardField>
+                          </CardRow>
+
+                          <GenerateBoletoButton onClick={handleGenerateBoleto}>
+                            Gerar Boleto
+                          </GenerateBoletoButton>
+
+                          <SecurityBadge>
+                            <FiShield />
+                            <span>Boleto válido por 3 dias úteis</span>
+                          </SecurityBadge>
+                        </BoletoForm>
+                      </BoletoContainer>
+                    </BoletoSection>
                   </Section>
 
                   <Actions>

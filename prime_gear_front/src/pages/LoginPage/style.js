@@ -565,3 +565,11 @@ export const SectionTitle = styled.h3`
     margin-bottom: 14px;
   }
 `;
+
+export const ErrorMessage = styled.span`
+  display: block;
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  line-height: 1.3;
+`;
