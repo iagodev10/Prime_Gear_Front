@@ -6,12 +6,16 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import HeadSet from "../../assets/images/headset.jpeg";
+import HeadSetMobile from "../../assets/images/headset-mobile.png";
 import Macbook from "../../assets/images/Macbook.png";
 import Omelhor from "../../assets/images/omelhor.png";
+import OmelhorMobile from "../../assets/images/omelhor-mobile.jpg";
 
 import {
   HeroContainer,
   StyledSwiperSlide,
+  HeadsetSlide,
+  OmelhorSlide,
   HeroButton,
   SlideContent,
   FixedButtons,
@@ -30,18 +34,11 @@ const HeroBanner = () => {
         pagination={{ clickable: true }}
       >
         <SwiperSlide>
-          <StyledSwiperSlide
-            style={{
-              backgroundImage: `image-set(url(${HeadSet}) 1x, url(${HeadSet}) 2x)`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
+          <HeadsetSlide>
             <SlideContent>
               <HeroButton href="#">Compre Agora</HeroButton>
             </SlideContent>
-          </StyledSwiperSlide>
+          </HeadsetSlide>
         </SwiperSlide>
 
         <SwiperSlide>
@@ -73,15 +70,7 @@ const HeroBanner = () => {
         </SwiperSlide>
 
         <SwiperSlide>
-          <StyledSwiperSlide
-            style={{
-              backgroundImage: `image-set(url(${Omelhor}) 1x, url(${Omelhor}) 2x)`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              position: "relative",
-            }}
-          >
+          <OmelhorSlide>
             <SlideContent
               style={{
                 alignItems: "center",
@@ -111,7 +100,7 @@ const HeroBanner = () => {
                 Lançamentos
               </HeroButton>
             </FixedButtons>
-          </StyledSwiperSlide>
+          </OmelhorSlide>
         </SwiperSlide>
 
       </Swiper>

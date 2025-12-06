@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   PageContainer,
@@ -86,6 +86,7 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const CheckoutPage = () => {
   const { user } = useAuth();
+   const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("credit");
@@ -592,9 +593,32 @@ const CheckoutPage = () => {
       );
 
       if (response.data.success) {
-        alert(`Pedido #${response.data.pedido.cod_pedido} realizado com sucesso!\\n\\nTotal: R$ ${response.data.pedido.total}\\nStatus: ${response.data.pedido.status}`);
+        // Preparar dados do pedido antes de limpar o carrinho
+        const orderDataForThankYou = {
+          ...response.data.pedido,
+          itens: cartProducts.map(item => ({
+            nome: item.nome_produto || item.nome,
+            nome_produto: item.nome_produto || item.nome,
+            imagem: item.imagem_produto || item.imagem,
+            imagem_produto: item.imagem_produto || item.imagem,
+            quantidade: item.quantidade,
+            preco: item.preco_unitario || item.preco,
+            preco_unitario: item.preco_unitario || item.preco
+          })),
+          endereco_entrega: paymentMethod === "boleto" ? boletoData.enderecoCompleto : enderecoCompleto,
+          metodo_pagamento: paymentMethod,
+          cartao_final: (paymentMethod === "credit" || paymentMethod === "debit") ? cardData.cardNumber.replace(/\s/g, "").slice(-4) : null,
+          subtotal: totais.subtotal,
+          frete: "49.90" // Valor padrão de frete, ajustar conforme necessário
+        };
+        
         setCartProducts([]);
-        setCurrentStep(1);
+        // Redirecionar para página de agradecimento com dados do pedido
+        navigate("/obrigado", {
+          state: {
+            order: orderDataForThankYou
+          }
+        });
       }
 
     } catch (error) {

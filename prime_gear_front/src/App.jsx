@@ -13,6 +13,7 @@ import Institutional from './pages/InstitutionalPage'
 import FaleConosco from './pages/FaleConosco'
 import PrimeiraCompra from './pages/PrimeiraCompra'
 import CheckoutPage from './pages/CheckoutPage'
+import ThankYouPage from './pages/ThankYouPage'
 import Transportadora from './pages/Transportadora'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
@@ -75,6 +76,7 @@ const AppContent = () => {
               <Route path="fale-conosco" element={<FaleConosco />} />
               <Route path="primeira-compra" element={<PrimeiraCompra />} />
               <Route path="checkout" element={<CheckoutPage />} />
+              <Route path="obrigado" element={<ThankYouPage />} />
               <Route path="user" element={<UserAccount />} />
               <Route path="transportadora" element={<Transportadora />} />
               <Route path="termos" element={<TermsPage />} />

@@ -1,4 +1,9 @@
 import styled from "styled-components";
+import HeadSetImg from "../../assets/images/headset.jpeg";
+import HeadSetMobileImg from "../../assets/images/headset-mobile.png";
+import OmelhorImg from "../../assets/images/omelhor.png";
+import OmelhorMobileImg from "../../assets/images/omelhor-mobile.jpg";
+import OmelhorTabletImg from "../../assets/images/omelhor-mobile-tablet.jpg";
 
 export const HeroContainer = styled.section`
   width: 100%;
@@ -134,6 +139,98 @@ export const StyledSwiperSlide = styled.div`
     height: 60vh;
     min-height: 350px;
     background-attachment: scroll;
+  }
+
+  @media (max-width: 576px) {
+    height: 55vh;
+    min-height: 300px;
+  }
+
+  @media (max-width: 480px) {
+    height: 50vh;
+    min-height: 250px;
+  }
+`;
+
+export const HeadsetSlide = styled.div`
+  width: 100%;
+  height: 80vh;
+  min-height: 400px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  background-image: url(${HeadSetImg});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  @media (max-width: 1400px) {
+    height: 75vh;
+  }
+
+  @media (max-width: 1200px) {
+    height: 70vh;
+  }
+
+  @media (max-width: 992px) {
+    height: 65vh;
+  }
+
+  @media (max-width: 768px) {
+    height: 60vh;
+    min-height: 350px;
+    background-attachment: scroll;
+    background-image: url(${HeadSetMobileImg});
+  }
+
+  @media (max-width: 576px) {
+    height: 55vh;
+    min-height: 300px;
+  }
+
+  @media (max-width: 480px) {
+    height: 50vh;
+    min-height: 250px;
+  }
+`;
+
+export const OmelhorSlide = styled.div`
+  width: 100%;
+  height: 80vh;
+  min-height: 400px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  background-image: url(${OmelhorImg});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  @media (max-width: 1400px) {
+    height: 75vh;
+  }
+
+  @media (max-width: 1200px) {
+    height: 70vh;
+  }
+
+  @media (max-width: 992px) {
+    height: 65vh;
+  }
+
+  @media (max-width: 1024px) and (min-width: 769px) {
+    background-image: url(${OmelhorTabletImg});
+  }
+
+  @media (max-width: 768px) {
+    height: 60vh;
+    min-height: 350px;
+    background-attachment: scroll;
+    background-image: url(${OmelhorMobileImg});
   }
 
   @media (max-width: 576px) {
