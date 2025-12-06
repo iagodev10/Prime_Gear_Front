@@ -36,6 +36,8 @@ import {
 } from "./style";
 import { FiCheck, FiPackage, FiMapPin, FiCreditCard, FiTruck } from "react-icons/fi";
 
+import Notebook from "../../assets/images/cat-notebook.png";
+
 const ThankYouPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -47,8 +49,8 @@ const ThankYouPage = () => {
       {
         nome: "NVIDIA RTX 4090 24GB",
         nome_produto: "NVIDIA RTX 4090 24GB",
-        imagem: "https://via.placeholder.com/100",
-        imagem_produto: "https://via.placeholder.com/100",
+        imagem: Notebook,
+        imagem_produto: Notebook,
         quantidade: 1,
         preco: 12999.99,
         preco_unitario: 12999.99
@@ -56,8 +58,8 @@ const ThankYouPage = () => {
       {
         nome: "AMD Ryzen 9 7950X",
         nome_produto: "AMD Ryzen 9 7950X",
-        imagem: "https://via.placeholder.com/100",
-        imagem_produto: "https://via.placeholder.com/100",
+        imagem: Notebook,
+        imagem_produto: Notebook,
         quantidade: 1,
         preco: 3499.99,
         preco_unitario: 3499.99
@@ -65,8 +67,8 @@ const ThankYouPage = () => {
       {
         nome: "Corsair DDR5 32GB",
         nome_produto: "Corsair DDR5 32GB",
-        imagem: "https://via.placeholder.com/100",
-        imagem_produto: "https://via.placeholder.com/100",
+        imagem: Notebook,
+        imagem_produto: Notebook,
         quantidade: 2,
         preco: 1799.98,
         preco_unitario: 899.99
