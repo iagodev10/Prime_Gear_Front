@@ -28,6 +28,13 @@ import DesktopImg from "../../assets/images/desktop.png";
 import DesktopFundo from "../../assets/images/desktop-fundo.png";
 import ConsolesImg from "../../assets/images/consoles.png";
 import HeadsetImg from "../../assets/images/headset.jpeg";
+import UltrabookImg from "../../assets/images/Macbook.png";
+import MouseImg from "../../assets/images/player.png";
+
+import LaptopImagem from "../../assets/images/laptop-fundo.png";
+import DesktopImagem from "../../assets/images/desktop-fundo.png";
+import ConsoleImagem from "../../assets/images/console-fundo.png";
+import PerifericoImagem from "../../assets/images/periferico-fundo.png";
 
 
 const categoriaMap = {
@@ -74,9 +81,9 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
       console.log('ativou');
       try {
         setLoading(true);
-        
+
         const categoriaNome = categoriaMap[openCategory];
-        
+
         if (!categoriaNome) {
           console.error("Categoria não mapeada:", openCategory);
           return;
@@ -97,7 +104,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
 
         if (response.data.success) {
           console.log('Produtos encontrados:', response.data.produtos.length);
-         
+
           setProdutos(response.data.produtos.slice(0, 5));
         }
       } catch (error) {
@@ -147,10 +154,10 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
   };
 
   const hero = {
-    laptops: LaptopImg,
-    desktops: DesktopImg,
-    consoles: ConsolesImg,
-    perifericos: HeadsetImg,
+    laptops: LaptopImagem,
+    desktops: DesktopImagem,
+    consoles: ConsoleImagem,
+    perifericos: PerifericoImagem,
   };
 
   const viewAll = {

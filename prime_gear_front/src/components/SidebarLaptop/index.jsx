@@ -19,6 +19,17 @@ import DesktopImg from "../../assets/images/desktop.png";
 import ConsolesImg from "../../assets/images/consoles.png";
 import HeadsetImg from "../../assets/images/headset.jpeg";
 import MouseImg from "../../assets/images/foneJBL.png";
+import LaptopImagem from "../../assets/images/laptop-fundo.png";
+import DesktopImagem from "../../assets/images/desktop-fundo.png";
+import ConsoleImagem from "../../assets/images/console-fundo.png";
+import PerifericoImagem from "../../assets/images/periferico-fundo.png";
+
+const categoriaMap = {
+  laptops: "Laptops",
+  desktops: "Desktops",
+  consoles: "Consoles",
+  perifericos: "Periféricos"
+};
 
 const SidebarLaptop = ({ isOpen, category, onClose }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -42,9 +53,9 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
       console.log('🖥️ SidebarLaptop: Buscando produtos...');
       try {
         setLoading(true);
-        
+
         const categoriaNome = categoriaMap[category];
-        
+
         if (!categoriaNome) {
           console.error("❌ Categoria não mapeada:", category);
           return;
@@ -67,7 +78,7 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
 
         if (response.data.success) {
           console.log('✅ Produtos encontrados:', response.data.produtos.length);
-       
+
           setProdutos(response.data.produtos.slice(0, 5));
         }
       } catch (error) {
@@ -81,11 +92,11 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
     buscarProdutos();
   }, [isMobile, category, isOpen]);
 
- 
+
   if (isMobile) {
     return null;
   }
-  
+
   const cards = {
     laptops: [
       { img: LaptopImg, title: 'Lenovo IdeaPad Gaming', price: '1.100,00', old: '1.200,00' },
@@ -143,9 +154,9 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
             <RightGrid>
               <HeroCard>
                 <img src={hero[category]} alt="Ver tudo" />
-                <HeroLink 
+                <HeroLink
                   as={Link}
-                  to="/loja" 
+                  to="/loja"
                   state={{ categoryIdentifier: category }}
                 >
                   Ver todos os {categoryNames[category]}
@@ -154,18 +165,18 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
 
               <ProductsGrid>
                 {loading ? (
-                  <div style={{ 
+                  <div style={{
                     gridColumn: '1 / -1',
-                    padding: '2rem', 
+                    padding: '2rem',
                     textAlign: 'center',
                     color: '#666'
                   }}>
                     Carregando produtos...
                   </div>
                 ) : produtos.length === 0 ? (
-                  <div style={{ 
+                  <div style={{
                     gridColumn: '1 / -1',
-                    padding: '2rem', 
+                    padding: '2rem',
                     textAlign: 'center',
                     color: '#666'
                   }}>
@@ -173,14 +184,14 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
                   </div>
                 ) : (
                   produtos.map((produto) => (
-                    <ProductCard 
+                    <ProductCard
                       key={produto.cod_produto}
                       as={Link}
                       to={`/produto/${produto.cod_produto}`}
                       onClick={onClose}
                     >
-                      <img 
-                        src={produto.url_img_prod || LaptopImg} 
+                      <img
+                        src={produto.url_img_prod || LaptopImg}
                         alt={produto.nome_prod || 'Produto'}
                         onError={(e) => {
                           e.target.src = LaptopImg;
@@ -194,7 +205,7 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
                         <div className="price">
                           R$ {produto.preco_prod?.toFixed(2).replace('.', ',') || '0,00'}
                         </div>
-                        
+
                       </div>
                     </ProductCard>
                   ))
