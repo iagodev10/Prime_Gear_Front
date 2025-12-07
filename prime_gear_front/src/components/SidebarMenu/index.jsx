@@ -174,17 +174,17 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
             </NavItem>
 
             <NavItem>
-              <Link to="/loja" onClick={handleClose}>
-                Nossas Lojas
+              <Link to="/primeira-compra" onClick={handleClose}>
+                Primeira Compra
               </Link>
-              <FiChevronRight size={20} />
+              {/* <FiChevronRight size={20} /> */}
             </NavItem>
 
             <NavItem>
               <Link to="/fale-conosco" onClick={handleClose}>
                 Fale Conosco
               </Link>
-              <FiChevronRight size={20} />
+              {/* <FiChevronRight size={20} /> */}
             </NavItem>
 
             <hr />

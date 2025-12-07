@@ -79,14 +79,29 @@ import {
 } from "./style";
 import ProductImg from "../../assets/images/desktop-ilustration.png";
 import QRCodeImg from "../../assets/images/qrcode.png";
-import { FiCreditCard, FiFileText, FiTrash2, FiShield, FiCopy, FiCheck } from "react-icons/fi";
+import Inter from "../../assets/images/pay/inter.svg";
+import Elo from "../../assets/images/pay/elo.svg";
+import Itau from "../../assets/images/pay/itau.svg";
+import MasterCard from "../../assets/images/pay/master.svg";
+import Mercado from "../../assets/images/pay/mercado.svg";
+import PicPay from "../../assets/images/pay/picpay.svg";
+import Pix from "../../assets/images/pay/pix.svg";
+import Visa from "../../assets/images/pay/visa.svg";
+import {
+  FiCreditCard,
+  FiFileText,
+  FiTrash2,
+  FiShield,
+  FiCopy,
+  FiCheck,
+} from "react-icons/fi";
 import { RiQrCodeLine } from "react-icons/ri";
 import { masks, validators, errorMessages } from "../../utils/formValidation";
 import { useAuth } from "../../contexts/AuthContext";
 
 const CheckoutPage = () => {
   const { user } = useAuth();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("credit");
@@ -96,7 +111,8 @@ const CheckoutPage = () => {
   const [pixKeyCopied, setPixKeyCopied] = useState(false);
 
   // Mock PIX key - in production, this would come from backend
-  const pixKey = "00020126580014br.gov.bcb.pix0136a7f7e4c9-1234-5678-90ab-cdef12345678520400005303986540510.005802BR5925PRIMEGEAR OFICIAL STORE6009SAO PAULO62070503***6304ABCD";
+  const pixKey =
+    "00020126580014br.gov.bcb.pix0136a7f7e4c9-1234-5678-90ab-cdef12345678520400005303986540510.005802BR5925PRIMEGEAR OFICIAL STORE6009SAO PAULO62070503***6304ABCD";
 
   const [formData, setFormData] = useState({
     email: "",
@@ -143,7 +159,6 @@ const CheckoutPage = () => {
   });
 
   const [boletoErrors, setBoletoErrors] = useState({});
-
 
   useEffect(() => {
     if (user) {
@@ -198,7 +213,11 @@ const CheckoutPage = () => {
         nomeCompleto: nomeCompleto,
         cpf: formatarCPF(user.cpf_user),
         email: user.email_user || "",
-        enderecoCompleto: `${user.rua_user || ""}, ${user.numero_user || ""}${user.complemento_user ? ', ' + user.complemento_user : ''} - ${user.bairro_user || ""}, ${user.cidade_user || ""} - ${user.estado_user || ""}, ${formatarCEP(user.cep_user)}`,
+        enderecoCompleto: `${user.rua_user || ""}, ${user.numero_user || ""}${
+          user.complemento_user ? ", " + user.complemento_user : ""
+        } - ${user.bairro_user || ""}, ${user.cidade_user || ""} - ${
+          user.estado_user || ""
+        }, ${formatarCEP(user.cep_user)}`,
         cep: formatarCEP(user.cep_user),
         rua: user.rua_user || "",
         numero: user.numero_user || "",
@@ -208,7 +227,6 @@ const CheckoutPage = () => {
       });
     }
   }, [user]);
-
 
   useEffect(() => {
     const fetchCartProducts = async () => {
@@ -223,14 +241,14 @@ const CheckoutPage = () => {
         const response = await axios.get(
           `http://localhost:8080/get-produtos-cart/${user.cod_user}`,
           {
-            withCredentials: true
+            withCredentials: true,
           }
         );
 
         setCartProducts(response.data);
         setLoadingCart(false);
       } catch (error) {
-        console.error('Erro ao buscar produtos do carrinho:', error);
+        console.error("Erro ao buscar produtos do carrinho:", error);
         setCartProducts([]);
         setLoadingCart(false);
       }
@@ -239,9 +257,11 @@ const CheckoutPage = () => {
     fetchCartProducts();
   }, [user]);
 
-
   const calcularTotais = () => {
-    const subtotal = cartProducts.reduce((acc, item) => acc + item.preco_total, 0);
+    const subtotal = cartProducts.reduce(
+      (acc, item) => acc + item.preco_total,
+      0
+    );
     const desconto = subtotal * 0.1;
     const total = subtotal - desconto;
 
@@ -249,46 +269,41 @@ const CheckoutPage = () => {
       subtotal: subtotal.toFixed(2),
       desconto: desconto.toFixed(2),
       total: total.toFixed(2),
-      parcela: (subtotal / 4).toFixed(2)
+      parcela: (subtotal / 4).toFixed(2),
     };
   };
 
   const totais = calcularTotais();
 
-
   const handleRemoveItem = async (itemId) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
-      if (!window.confirm('Deseja realmente remover este item do carrinho?')) {
+      if (!window.confirm("Deseja realmente remover este item do carrinho?")) {
         return;
       }
 
-      await axios.delete(
-        `http://localhost:8080/remove-from-cart/${itemId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          withCredentials: true
-        }
-      );
+      await axios.delete(`http://localhost:8080/remove-from-cart/${itemId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
 
-      setCartProducts(prev => prev.filter(item => item.id !== itemId));
-      alert('Item removido com sucesso!');
-
+      setCartProducts((prev) => prev.filter((item) => item.id !== itemId));
+      alert("Item removido com sucesso!");
     } catch (error) {
-      console.error('Erro ao remover item do carrinho:', error);
-      alert('Erro ao remover item. Tente novamente.');
+      console.error("Erro ao remover item do carrinho:", error);
+      alert("Erro ao remover item. Tente novamente.");
     }
   };
 
   const handleInputChange = (field, value, maskFunction) => {
     const maskedValue = maskFunction ? maskFunction(value) : value;
-    setFormData(prev => ({ ...prev, [field]: maskedValue }));
+    setFormData((prev) => ({ ...prev, [field]: maskedValue }));
 
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -296,7 +311,7 @@ const CheckoutPage = () => {
     const value = formData[field];
 
     if (!value || !validatorFunction(value)) {
-      setErrors(prev => ({ ...prev, [field]: errorMessage }));
+      setErrors((prev) => ({ ...prev, [field]: errorMessage }));
     }
   };
 
@@ -306,8 +321,8 @@ const CheckoutPage = () => {
       setPixKeyCopied(true);
       setTimeout(() => setPixKeyCopied(false), 2000);
     } catch (err) {
-      console.error('Erro ao copiar chave PIX:', err);
-      alert('Erro ao copiar chave PIX. Tente copiar manualmente.');
+      console.error("Erro ao copiar chave PIX:", err);
+      alert("Erro ao copiar chave PIX. Tente copiar manualmente.");
     }
   };
 
@@ -357,14 +372,18 @@ const CheckoutPage = () => {
     // Auto-detect card brand when card number changes
     if (field === "cardNumber") {
       const brand = detectCardBrand(maskedValue);
-      setCardData(prev => ({ ...prev, [field]: maskedValue, cardBrand: brand }));
+      setCardData((prev) => ({
+        ...prev,
+        [field]: maskedValue,
+        cardBrand: brand,
+      }));
     } else {
-      setCardData(prev => ({ ...prev, [field]: maskedValue }));
+      setCardData((prev) => ({ ...prev, [field]: maskedValue }));
     }
 
     // Clear error when user starts typing
     if (cardErrors[field]) {
-      setCardErrors(prev => ({ ...prev, [field]: "" }));
+      setCardErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -389,8 +408,10 @@ const CheckoutPage = () => {
       const currentMonth = new Date().getMonth() + 1;
       if (parseInt(month) < 1 || parseInt(month) > 12) {
         newErrors.cardExpiry = "Mês inválido";
-      } else if (parseInt(year) < currentYear ||
-        (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
+      } else if (
+        parseInt(year) < currentYear ||
+        (parseInt(year) === currentYear && parseInt(month) < currentMonth)
+      ) {
         newErrors.cardExpiry = "Cartão vencido";
       }
     }
@@ -444,25 +465,33 @@ const CheckoutPage = () => {
 
   const handleBoletoInputChange = (field, value, maskFunction) => {
     const maskedValue = maskFunction ? maskFunction(value) : value;
-    setBoletoData(prev => {
+    setBoletoData((prev) => {
       const updated = { ...prev, [field]: maskedValue };
       // Atualizar endereço completo automaticamente
-      if (['rua', 'numero', 'bairro', 'cidade', 'estado', 'cep'].includes(field)) {
-        updated.enderecoCompleto = `${updated.rua || ''}, ${updated.numero || ''} - ${updated.bairro || ''}, ${updated.cidade || ''} - ${updated.estado || ''}, ${updated.cep || ''}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',');
+      if (
+        ["rua", "numero", "bairro", "cidade", "estado", "cep"].includes(field)
+      ) {
+        updated.enderecoCompleto = `${updated.rua || ""}, ${
+          updated.numero || ""
+        } - ${updated.bairro || ""}, ${updated.cidade || ""} - ${
+          updated.estado || ""
+        }, ${updated.cep || ""}`
+          .replace(/^,\s*|,\s*$/g, "")
+          .replace(/,\s*,/g, ",");
       }
       return updated;
     });
 
     if (boletoErrors[field]) {
-      setBoletoErrors(prev => ({ ...prev, [field]: "" }));
+      setBoletoErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   const handleGenerateBoleto = () => {
     if (validateBoletoForm()) {
       const enderecoCompleto = `${boletoData.rua}, ${boletoData.numero} - ${boletoData.bairro}, ${boletoData.cidade} - ${boletoData.estado}, ${boletoData.cep}`;
-      setBoletoData(prev => ({ ...prev, enderecoCompleto }));
-      alert('Boleto gerado com sucesso! Você receberá o boleto por e-mail.');
+      setBoletoData((prev) => ({ ...prev, enderecoCompleto }));
+      alert("Boleto gerado com sucesso! Você receberá o boleto por e-mail.");
     }
   };
 
@@ -526,53 +555,58 @@ const CheckoutPage = () => {
   const handlePayment = async () => {
     try {
       setLoadingPayment(true);
-      const token = localStorage.getItem('token');
-  
-   
-      if (cartProducts.length === 0) {
-        alert('Seu carrinho está vazio');
-        setLoadingPayment(false);
-        return;
-      }
-  
-   
-      if ((paymentMethod === "credit" || paymentMethod === "debit") && !validateCardForm()) {
-        alert('Por favor, preencha todos os campos do cartão corretamente');
-        setLoadingPayment(false);
-        return;
-      }
-  
-      if (paymentMethod === "boleto" && !validateBoletoForm()) {
-        alert('Por favor, preencha todos os campos do boleto corretamente');
-        setLoadingPayment(false);
-        return;
-      }
-  
+      const token = localStorage.getItem("token");
 
-      const enderecoCompleto = paymentMethod === "boleto" 
-        ? boletoData.enderecoCompleto
-        : `${formData.street}, ${formData.numero}${formData.complement ? ', ' + formData.complement : ''} - ${formData.neighborhood}, ${formData.city} - ${formData.state}, ${formData.cep}`;
-  
-     
+      if (cartProducts.length === 0) {
+        alert("Seu carrinho está vazio");
+        setLoadingPayment(false);
+        return;
+      }
+
+      if (
+        (paymentMethod === "credit" || paymentMethod === "debit") &&
+        !validateCardForm()
+      ) {
+        alert("Por favor, preencha todos os campos do cartão corretamente");
+        setLoadingPayment(false);
+        return;
+      }
+
+      if (paymentMethod === "boleto" && !validateBoletoForm()) {
+        alert("Por favor, preencha todos os campos do boleto corretamente");
+        setLoadingPayment(false);
+        return;
+      }
+
+      const enderecoCompleto =
+        paymentMethod === "boleto"
+          ? boletoData.enderecoCompleto
+          : `${formData.street}, ${formData.numero}${
+              formData.complement ? ", " + formData.complement : ""
+            } - ${formData.neighborhood}, ${formData.city} - ${
+              formData.state
+            }, ${formData.cep}`;
+
       let paymentData = {};
-  
+
       if (paymentMethod === "credit" || paymentMethod === "debit") {
         paymentData = {
           cardHolderName: cardData.cardHolderName,
-          cardHolderCPF: cardData.cardHolderCPF.replace(/\D/g, ''), 
-          cardNumber: cardData.cardNumber.replace(/\s/g, ''), 
+          cardHolderCPF: cardData.cardHolderCPF.replace(/\D/g, ""),
+          cardNumber: cardData.cardNumber.replace(/\s/g, ""),
           cardExpiry: cardData.cardExpiry,
           cardCVV: cardData.cardCVV,
           cardBrand: cardData.cardBrand,
-          installments: paymentMethod === "credit" ? cardData.installments : "1",
+          installments:
+            paymentMethod === "credit" ? cardData.installments : "1",
         };
       } else if (paymentMethod === "boleto") {
         paymentData = {
           nomeCompleto: boletoData.nomeCompleto,
-          cpf: boletoData.cpf.replace(/\D/g, ''), 
+          cpf: boletoData.cpf.replace(/\D/g, ""),
           email: boletoData.email,
           enderecoCompleto: boletoData.enderecoCompleto,
-          cep: boletoData.cep.replace(/\D/g, ''), 
+          cep: boletoData.cep.replace(/\D/g, ""),
           rua: boletoData.rua,
           numero: boletoData.numero,
           bairro: boletoData.bairro,
@@ -584,93 +618,85 @@ const CheckoutPage = () => {
           pixKey: pixKey,
           payerEmail: formData.email,
           payerName: `${formData.firstName} ${formData.lastName}`,
-          payerCPF: formData.cpf.replace(/\D/g, ''),
+          payerCPF: formData.cpf.replace(/\D/g, ""),
         };
       }
-  
-   
+
       const orderData = {
         paymentMethod: paymentMethod,
         shippingAddress: enderecoCompleto,
         total: parseFloat(totais.total),
         subtotal: parseFloat(totais.subtotal),
         discount: parseFloat(totais.desconto),
-        paymentData: paymentData 
+        paymentData: paymentData,
       };
-  
-      console.log('Enviando pedido:', orderData); 
-  
+
+      console.log("Enviando pedido:", orderData);
+
       const response = await axios.post(
-        'http://localhost:8080/create-order',
+        "http://localhost:8080/create-order",
         orderData,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-          withCredentials: true
+          withCredentials: true,
         }
       );
-  
+
       if (response.data.success) {
-      
         const orderDataForThankYou = {
           ...response.data.pedido,
-          itens: cartProducts.map(item => ({
+          itens: cartProducts.map((item) => ({
             nome: item.nome_produto || item.nome,
             nome_produto: item.nome_produto || item.nome,
             imagem: item.imagem_produto || item.imagem,
             imagem_produto: item.imagem_produto || item.imagem,
             quantidade: item.quantidade,
             preco: item.preco_unitario || item.preco,
-            preco_unitario: item.preco_unitario || item.preco
+            preco_unitario: item.preco_unitario || item.preco,
           })),
           endereco_entrega: enderecoCompleto,
           metodo_pagamento: paymentMethod,
-          cartao_final: (paymentMethod === "credit" || paymentMethod === "debit") 
-            ? cardData.cardNumber.replace(/\s/g, "").slice(-4) 
-            : null,
+          cartao_final:
+            paymentMethod === "credit" || paymentMethod === "debit"
+              ? cardData.cardNumber.replace(/\s/g, "").slice(-4)
+              : null,
           subtotal: totais.subtotal,
           desconto: totais.desconto,
-          frete: "0.00" 
+          frete: "0.00",
         };
-        
-  
+
         setCartProducts([]);
-        
-     
-        alert('Pedido realizado com sucesso!');
-        
-      
+
+        alert("Pedido realizado com sucesso!");
+
         navigate("/obrigado", {
           state: {
-            order: orderDataForThankYou
-          }
+            order: orderDataForThankYou,
+          },
         });
       }
-  
     } catch (error) {
-      console.error('Erro ao processar pagamento:', error);
-      
-    
+      console.error("Erro ao processar pagamento:", error);
+
       if (error.response) {
-    
-        const errorMessage = error.response.data?.message || 'Erro ao processar pagamento';
+        const errorMessage =
+          error.response.data?.message || "Erro ao processar pagamento";
         alert(errorMessage);
-        
+
         if (error.response.status === 401) {
-          alert('Sessão expirada. Por favor, faça login novamente.');
-          navigate('/login');
+          alert("Sessão expirada. Por favor, faça login novamente.");
+          navigate("/login");
         } else if (error.response.status === 404) {
-          alert('Carrinho não encontrado. Adicione produtos ao carrinho.');
-          navigate('/produtos');
+          alert("Carrinho não encontrado. Adicione produtos ao carrinho.");
+          navigate("/produtos");
         }
       } else if (error.request) {
-     
-        alert('Erro de conexão. Verifique sua internet e tente novamente.');
+        alert("Erro de conexão. Verifique sua internet e tente novamente.");
       } else {
-       
-        alert('Erro inesperado. Tente novamente.');
+        alert("Erro inesperado. Tente novamente.");
       }
     } finally {
       setLoadingPayment(false);
@@ -681,7 +707,11 @@ const CheckoutPage = () => {
     <PageContainer>
       <Wrapper>
         <Steps>
-          <StepItem $active={currentStep >= 1} onClick={handleBack} style={{ cursor: 'pointer' }}>
+          <StepItem
+            $active={currentStep >= 1}
+            onClick={handleBack}
+            style={{ cursor: "pointer" }}
+          >
             <StepCircle $active={currentStep >= 1}>1</StepCircle>
             <span>Dados pessoais</span>
           </StepItem>
@@ -705,11 +735,21 @@ const CheckoutPage = () => {
                         type="email"
                         placeholder="Seu e-mail *"
                         value={formData.email}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
-                        onBlur={() => handleBlur("email", validators.email, errorMessages.email)}
+                        onChange={(e) =>
+                          handleInputChange("email", e.target.value)
+                        }
+                        onBlur={() =>
+                          handleBlur(
+                            "email",
+                            validators.email,
+                            errorMessages.email
+                          )
+                        }
                         $error={!!errors.email}
                       />
-                      {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+                      {errors.email && (
+                        <ErrorMessage>{errors.email}</ErrorMessage>
+                      )}
                     </Field>
                     <CheckRow>
                       <input type="checkbox" id="news" />
@@ -718,7 +758,12 @@ const CheckoutPage = () => {
                       </label>
                       <Link
                         to="/login"
-                        style={{ marginLeft: "auto", textDecoration: "none", color: "#4d7294", fontWeight: 500 }}
+                        style={{
+                          marginLeft: "auto",
+                          textDecoration: "none",
+                          color: "#4d7294",
+                          fontWeight: 500,
+                        }}
                       >
                         Entrar
                       </Link>
@@ -732,22 +777,42 @@ const CheckoutPage = () => {
                           type="text"
                           placeholder="Primeiro nome *"
                           value={formData.firstName}
-                          onChange={(e) => handleInputChange("firstName", e.target.value)}
-                          onBlur={() => handleBlur("firstName", validators.required, errorMessages.firstName)}
+                          onChange={(e) =>
+                            handleInputChange("firstName", e.target.value)
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "firstName",
+                              validators.required,
+                              errorMessages.firstName
+                            )
+                          }
                           $error={!!errors.firstName}
                         />
-                        {errors.firstName && <ErrorMessage>{errors.firstName}</ErrorMessage>}
+                        {errors.firstName && (
+                          <ErrorMessage>{errors.firstName}</ErrorMessage>
+                        )}
                       </Field>
                       <Field>
                         <Input
                           type="text"
                           placeholder="Último nome *"
                           value={formData.lastName}
-                          onChange={(e) => handleInputChange("lastName", e.target.value)}
-                          onBlur={() => handleBlur("lastName", validators.required, errorMessages.lastName)}
+                          onChange={(e) =>
+                            handleInputChange("lastName", e.target.value)
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "lastName",
+                              validators.required,
+                              errorMessages.lastName
+                            )
+                          }
                           $error={!!errors.lastName}
                         />
-                        {errors.lastName && <ErrorMessage>{errors.lastName}</ErrorMessage>}
+                        {errors.lastName && (
+                          <ErrorMessage>{errors.lastName}</ErrorMessage>
+                        )}
                       </Field>
                     </Row>
                   </Section>
@@ -759,36 +824,70 @@ const CheckoutPage = () => {
                           type="text"
                           placeholder="CPF *"
                           value={formData.cpf}
-                          onChange={(e) => handleInputChange("cpf", e.target.value, masks.cpf)}
-                          onBlur={() => handleBlur("cpf", validators.cpf, errorMessages.cpf)}
+                          onChange={(e) =>
+                            handleInputChange("cpf", e.target.value, masks.cpf)
+                          }
+                          onBlur={() =>
+                            handleBlur("cpf", validators.cpf, errorMessages.cpf)
+                          }
                           $error={!!errors.cpf}
                           maxLength="14"
                         />
-                        {errors.cpf && <ErrorMessage>{errors.cpf}</ErrorMessage>}
+                        {errors.cpf && (
+                          <ErrorMessage>{errors.cpf}</ErrorMessage>
+                        )}
                       </Field>
                       <Field>
                         <Input
                           type="text"
                           placeholder="Data de nascimento *"
                           value={formData.birthDate}
-                          onChange={(e) => handleInputChange("birthDate", e.target.value, masks.date)}
-                          onBlur={() => handleBlur("birthDate", validators.date, errorMessages.date)}
+                          onChange={(e) =>
+                            handleInputChange(
+                              "birthDate",
+                              e.target.value,
+                              masks.date
+                            )
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "birthDate",
+                              validators.date,
+                              errorMessages.date
+                            )
+                          }
                           $error={!!errors.birthDate}
                           maxLength="10"
                         />
-                        {errors.birthDate && <ErrorMessage>{errors.birthDate}</ErrorMessage>}
+                        {errors.birthDate && (
+                          <ErrorMessage>{errors.birthDate}</ErrorMessage>
+                        )}
                       </Field>
                       <Field>
                         <Input
                           type="text"
                           placeholder="Telefone *"
                           value={formData.phone}
-                          onChange={(e) => handleInputChange("phone", e.target.value, masks.phone)}
-                          onBlur={() => handleBlur("phone", validators.phone, errorMessages.phone)}
+                          onChange={(e) =>
+                            handleInputChange(
+                              "phone",
+                              e.target.value,
+                              masks.phone
+                            )
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "phone",
+                              validators.phone,
+                              errorMessages.phone
+                            )
+                          }
                           $error={!!errors.phone}
                           maxLength="15"
                         />
-                        {errors.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
+                        {errors.phone && (
+                          <ErrorMessage>{errors.phone}</ErrorMessage>
+                        )}
                       </Field>
                     </Row3>
                   </Section>
@@ -806,20 +905,38 @@ const CheckoutPage = () => {
                       <Field>
                         <Select
                           value={formData.country}
-                          onChange={(e) => handleInputChange("country", e.target.value)}
-                          onBlur={() => handleBlur("country", validators.required, errorMessages.country)}
+                          onChange={(e) =>
+                            handleInputChange("country", e.target.value)
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "country",
+                              validators.required,
+                              errorMessages.country
+                            )
+                          }
                           $error={!!errors.country}
                         >
                           <option value="">País *</option>
                           <option value="Brasil">Brasil</option>
                         </Select>
-                        {errors.country && <ErrorMessage>{errors.country}</ErrorMessage>}
+                        {errors.country && (
+                          <ErrorMessage>{errors.country}</ErrorMessage>
+                        )}
                       </Field>
                       <Field>
                         <Select
                           value={formData.state}
-                          onChange={(e) => handleInputChange("state", e.target.value)}
-                          onBlur={() => handleBlur("state", validators.required, errorMessages.state)}
+                          onChange={(e) =>
+                            handleInputChange("state", e.target.value)
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "state",
+                              validators.required,
+                              errorMessages.state
+                            )
+                          }
                           $error={!!errors.state}
                         >
                           <option value="">Estado *</option>
@@ -851,18 +968,30 @@ const CheckoutPage = () => {
                           <option value="SE">Sergipe</option>
                           <option value="TO">Tocantins</option>
                         </Select>
-                        {errors.state && <ErrorMessage>{errors.state}</ErrorMessage>}
+                        {errors.state && (
+                          <ErrorMessage>{errors.state}</ErrorMessage>
+                        )}
                       </Field>
                       <Field>
                         <Input
                           type="text"
                           placeholder="Cidade *"
                           value={formData.city}
-                          onChange={(e) => handleInputChange("city", e.target.value)}
-                          onBlur={() => handleBlur("city", validators.required, errorMessages.city)}
+                          onChange={(e) =>
+                            handleInputChange("city", e.target.value)
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "city",
+                              validators.required,
+                              errorMessages.city
+                            )
+                          }
                           $error={!!errors.city}
                         />
-                        {errors.city && <ErrorMessage>{errors.city}</ErrorMessage>}
+                        {errors.city && (
+                          <ErrorMessage>{errors.city}</ErrorMessage>
+                        )}
                       </Field>
                     </Row3>
                   </Section>
@@ -874,22 +1003,42 @@ const CheckoutPage = () => {
                           type="text"
                           placeholder="Rua *"
                           value={formData.street}
-                          onChange={(e) => handleInputChange("street", e.target.value)}
-                          onBlur={() => handleBlur("street", validators.required, errorMessages.street)}
+                          onChange={(e) =>
+                            handleInputChange("street", e.target.value)
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "street",
+                              validators.required,
+                              errorMessages.street
+                            )
+                          }
                           $error={!!errors.street}
                         />
-                        {errors.street && <ErrorMessage>{errors.street}</ErrorMessage>}
+                        {errors.street && (
+                          <ErrorMessage>{errors.street}</ErrorMessage>
+                        )}
                       </Field>
                       <Field>
                         <Input
                           type="text"
                           placeholder="Número *"
                           value={formData.numero}
-                          onChange={(e) => handleInputChange("numero", e.target.value)}
-                          onBlur={() => handleBlur("numero", validators.required, "Número é obrigatório")}
+                          onChange={(e) =>
+                            handleInputChange("numero", e.target.value)
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "numero",
+                              validators.required,
+                              "Número é obrigatório"
+                            )
+                          }
                           $error={!!errors.numero}
                         />
-                        {errors.numero && <ErrorMessage>{errors.numero}</ErrorMessage>}
+                        {errors.numero && (
+                          <ErrorMessage>{errors.numero}</ErrorMessage>
+                        )}
                       </Field>
                     </Row>
                   </Section>
@@ -901,18 +1050,30 @@ const CheckoutPage = () => {
                           type="text"
                           placeholder="Bairro *"
                           value={formData.neighborhood}
-                          onChange={(e) => handleInputChange("neighborhood", e.target.value)}
-                          onBlur={() => handleBlur("neighborhood", validators.required, errorMessages.neighborhood)}
+                          onChange={(e) =>
+                            handleInputChange("neighborhood", e.target.value)
+                          }
+                          onBlur={() =>
+                            handleBlur(
+                              "neighborhood",
+                              validators.required,
+                              errorMessages.neighborhood
+                            )
+                          }
                           $error={!!errors.neighborhood}
                         />
-                        {errors.neighborhood && <ErrorMessage>{errors.neighborhood}</ErrorMessage>}
+                        {errors.neighborhood && (
+                          <ErrorMessage>{errors.neighborhood}</ErrorMessage>
+                        )}
                       </Field>
                       <Field>
                         <Input
                           type="text"
                           placeholder="Complemento (Opcional)"
                           value={formData.complement}
-                          onChange={(e) => handleInputChange("complement", e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("complement", e.target.value)
+                          }
                         />
                       </Field>
                     </Row>
@@ -920,17 +1081,23 @@ const CheckoutPage = () => {
 
                   <Section>
                     <Field>
-                      <div style={{ position: 'relative' }}>
+                      <div style={{ position: "relative" }}>
                         <Input
                           type="text"
                           placeholder="CEP *"
                           value={formData.cep}
-                          onChange={(e) => handleInputChange("cep", e.target.value, masks.cep)}
-                          onBlur={() => handleBlur("cep", validators.cep, errorMessages.cep)}
+                          onChange={(e) =>
+                            handleInputChange("cep", e.target.value, masks.cep)
+                          }
+                          onBlur={() =>
+                            handleBlur("cep", validators.cep, errorMessages.cep)
+                          }
                           $error={!!errors.cep}
                           maxLength="9"
                         />
-                        <div style={{ position: 'absolute', right: 14, top: 14 }}>
+                        <div
+                          style={{ position: "absolute", right: 14, top: 14 }}
+                        >
                           <SearchButton>Buscar</SearchButton>
                         </div>
                       </div>
@@ -939,7 +1106,9 @@ const CheckoutPage = () => {
                   </Section>
 
                   <Actions>
-                    <PrimaryButton onClick={handleContinue}>Continuar para pagamento</PrimaryButton>
+                    <PrimaryButton onClick={handleContinue}>
+                      Continuar para pagamento
+                    </PrimaryButton>
                   </Actions>
                 </Card>
               </Front>
@@ -957,7 +1126,9 @@ const CheckoutPage = () => {
                         <div>
                           <PaymentLabel>Cartão de Crédito</PaymentLabel>
                           <PaymentIcons>
-                            <div style={{ fontSize: '0.7rem', color: '#666' }}>Visa, Master, Elo...</div>
+                            <div style={{ fontSize: "0.7rem", color: "#666" }}>
+                              Visa, Master, Elo...
+                            </div>
                           </PaymentIcons>
                         </div>
                       </PaymentContent>
@@ -972,7 +1143,9 @@ const CheckoutPage = () => {
                     {/* Expandable Credit Card Form */}
                     <CreditCardSection $expanded={paymentMethod === "credit"}>
                       <CreditCardForm $expanded={paymentMethod === "credit"}>
-                        <CardFormTitle>Dados do Cartão de Crédito</CardFormTitle>
+                        <CardFormTitle>
+                          Dados do Cartão de Crédito
+                        </CardFormTitle>
 
                         <CardRow $columns={1}>
                           <CardField>
@@ -983,10 +1156,19 @@ const CheckoutPage = () => {
                               type="text"
                               placeholder="Nome como está no cartão"
                               value={cardData.cardHolderName}
-                              onChange={(e) => handleCardInputChange("cardHolderName", e.target.value)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardHolderName",
+                                  e.target.value
+                                )
+                              }
                               $error={!!cardErrors.cardHolderName}
                             />
-                            {cardErrors.cardHolderName && <ErrorMessage>{cardErrors.cardHolderName}</ErrorMessage>}
+                            {cardErrors.cardHolderName && (
+                              <ErrorMessage>
+                                {cardErrors.cardHolderName}
+                              </ErrorMessage>
+                            )}
                           </CardField>
                         </CardRow>
 
@@ -999,11 +1181,21 @@ const CheckoutPage = () => {
                               type="text"
                               placeholder="000.000.000-00"
                               value={cardData.cardHolderCPF}
-                              onChange={(e) => handleCardInputChange("cardHolderCPF", e.target.value, cardMasks.cardCPF)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardHolderCPF",
+                                  e.target.value,
+                                  cardMasks.cardCPF
+                                )
+                              }
                               $error={!!cardErrors.cardHolderCPF}
                               maxLength="14"
                             />
-                            {cardErrors.cardHolderCPF && <ErrorMessage>{cardErrors.cardHolderCPF}</ErrorMessage>}
+                            {cardErrors.cardHolderCPF && (
+                              <ErrorMessage>
+                                {cardErrors.cardHolderCPF}
+                              </ErrorMessage>
+                            )}
                           </CardField>
 
                           <CardField>
@@ -1014,11 +1206,21 @@ const CheckoutPage = () => {
                               type="text"
                               placeholder="0000 0000 0000 0000"
                               value={cardData.cardNumber}
-                              onChange={(e) => handleCardInputChange("cardNumber", e.target.value, cardMasks.cardNumber)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardNumber",
+                                  e.target.value,
+                                  cardMasks.cardNumber
+                                )
+                              }
                               $error={!!cardErrors.cardNumber}
                               maxLength="19"
                             />
-                            {cardErrors.cardNumber && <ErrorMessage>{cardErrors.cardNumber}</ErrorMessage>}
+                            {cardErrors.cardNumber && (
+                              <ErrorMessage>
+                                {cardErrors.cardNumber}
+                              </ErrorMessage>
+                            )}
                           </CardField>
                         </CardRow>
 
@@ -1032,27 +1234,47 @@ const CheckoutPage = () => {
                               type="text"
                               placeholder="MM/AA"
                               value={cardData.cardExpiry}
-                              onChange={(e) => handleCardInputChange("cardExpiry", e.target.value, cardMasks.cardExpiry)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardExpiry",
+                                  e.target.value,
+                                  cardMasks.cardExpiry
+                                )
+                              }
                               $error={!!cardErrors.cardExpiry}
                               maxLength="5"
                             />
-                            {cardErrors.cardExpiry && <ErrorMessage>{cardErrors.cardExpiry}</ErrorMessage>}
+                            {cardErrors.cardExpiry && (
+                              <ErrorMessage>
+                                {cardErrors.cardExpiry}
+                              </ErrorMessage>
+                            )}
                           </CardField>
 
                           <CardField>
                             <CardLabel>
                               CVV <span>*</span>
-                              <CardInfoIcon title="Código de segurança">?</CardInfoIcon>
+                              <CardInfoIcon title="Código de segurança">
+                                ?
+                              </CardInfoIcon>
                             </CardLabel>
                             <CardInput
                               type="text"
                               placeholder="000"
                               value={cardData.cardCVV}
-                              onChange={(e) => handleCardInputChange("cardCVV", e.target.value, cardMasks.cardCVV)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardCVV",
+                                  e.target.value,
+                                  cardMasks.cardCVV
+                                )
+                              }
                               $error={!!cardErrors.cardCVV}
                               maxLength="4"
                             />
-                            {cardErrors.cardCVV && <ErrorMessage>{cardErrors.cardCVV}</ErrorMessage>}
+                            {cardErrors.cardCVV && (
+                              <ErrorMessage>{cardErrors.cardCVV}</ErrorMessage>
+                            )}
                           </CardField>
 
                           <CardField>
@@ -1061,14 +1283,41 @@ const CheckoutPage = () => {
                             </CardLabel>
                             <InstallmentSelect
                               value={cardData.installments}
-                              onChange={(e) => setCardData(prev => ({ ...prev, installments: e.target.value }))}
+                              onChange={(e) =>
+                                setCardData((prev) => ({
+                                  ...prev,
+                                  installments: e.target.value,
+                                }))
+                              }
                             >
-                              <option value="1">1x de R$ {totais.total} sem juros</option>
-                              <option value="2">2x de R$ {(parseFloat(totais.total) / 2).toFixed(2)} sem juros</option>
-                              <option value="3">3x de R$ {(parseFloat(totais.total) / 3).toFixed(2)} sem juros</option>
-                              <option value="4">4x de R$ {(parseFloat(totais.total) / 4).toFixed(2)} sem juros</option>
-                              <option value="5">5x de R$ {(parseFloat(totais.total) / 5).toFixed(2)} sem juros</option>
-                              <option value="6">6x de R$ {(parseFloat(totais.total) / 6).toFixed(2)} sem juros</option>
+                              <option value="1">
+                                1x de R$ {totais.total} sem juros
+                              </option>
+                              <option value="2">
+                                2x de R${" "}
+                                {(parseFloat(totais.total) / 2).toFixed(2)} sem
+                                juros
+                              </option>
+                              <option value="3">
+                                3x de R${" "}
+                                {(parseFloat(totais.total) / 3).toFixed(2)} sem
+                                juros
+                              </option>
+                              <option value="4">
+                                4x de R${" "}
+                                {(parseFloat(totais.total) / 4).toFixed(2)} sem
+                                juros
+                              </option>
+                              <option value="5">
+                                5x de R${" "}
+                                {(parseFloat(totais.total) / 5).toFixed(2)} sem
+                                juros
+                              </option>
+                              <option value="6">
+                                6x de R${" "}
+                                {(parseFloat(totais.total) / 6).toFixed(2)} sem
+                                juros
+                              </option>
                             </InstallmentSelect>
                           </CardField>
                         </CardRow>
@@ -1078,58 +1327,69 @@ const CheckoutPage = () => {
                             Bandeira do cartão <span>*</span>
                           </CardLabel>
                           <CardBrandSelector>
-                            <BrandOption $selected={cardData.cardBrand === "visa"}>
-                              <input
-                                type="radio"
-                                name="cardBrand"
-                                value="visa"
-                                checked={cardData.cardBrand === "visa"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
-                              />
-                              <span>Visa</span>
-                            </BrandOption>
-                            <BrandOption $selected={cardData.cardBrand === "mastercard"}>
-                              <input
-                                type="radio"
-                                name="cardBrand"
-                                value="mastercard"
-                                checked={cardData.cardBrand === "mastercard"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
-                              />
-                              <span>Mastercard</span>
-                            </BrandOption>
-                            <BrandOption $selected={cardData.cardBrand === "elo"}>
+                            <BrandOption
+                              $selected={cardData.cardBrand === "elo"}
+                            >
                               <input
                                 type="radio"
                                 name="cardBrand"
                                 value="elo"
                                 checked={cardData.cardBrand === "elo"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                                onChange={(e) =>
+                                  setCardData((prev) => ({
+                                    ...prev,
+                                    cardBrand: e.target.value,
+                                  }))
+                                }
                               />
-                              <span>Elo</span>
+                              <img src={Elo} alt="Elo" style={{ width: 45 }} />
                             </BrandOption>
-                            <BrandOption $selected={cardData.cardBrand === "amex"}>
+                            <BrandOption
+                              $selected={cardData.cardBrand === "mastercard"}
+                            >
                               <input
                                 type="radio"
                                 name="cardBrand"
-                                value="amex"
-                                checked={cardData.cardBrand === "amex"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                                value="mastercard"
+                                checked={cardData.cardBrand === "mastercard"}
+                                onChange={(e) =>
+                                  setCardData((prev) => ({
+                                    ...prev,
+                                    cardBrand: e.target.value,
+                                  }))
+                                }
                               />
-                              <span>Amex</span>
+                              <img
+                                src={MasterCard}
+                                alt="MasterCard"
+                                style={{ width: 45 }}
+                              />
                             </BrandOption>
-                            <BrandOption $selected={cardData.cardBrand === "hipercard"}>
+                            <BrandOption
+                              $selected={cardData.cardBrand === "visa"}
+                            >
                               <input
                                 type="radio"
                                 name="cardBrand"
-                                value="hipercard"
-                                checked={cardData.cardBrand === "hipercard"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                                value="visa"
+                                checked={cardData.cardBrand === "visa"}
+                                onChange={(e) =>
+                                  setCardData((prev) => ({
+                                    ...prev,
+                                    cardBrand: e.target.value,
+                                  }))
+                                }
                               />
-                              <span>Hipercard</span>
+                              <img
+                                src={Visa}
+                                alt="Visa"
+                                style={{ width: 45 }}
+                              />
                             </BrandOption>
                           </CardBrandSelector>
-                          {cardErrors.cardBrand && <ErrorMessage>{cardErrors.cardBrand}</ErrorMessage>}
+                          {cardErrors.cardBrand && (
+                            <ErrorMessage>{cardErrors.cardBrand}</ErrorMessage>
+                          )}
                         </CardField>
 
                         <SecurityBadge>
@@ -1147,7 +1407,9 @@ const CheckoutPage = () => {
                         <div>
                           <PaymentLabel>Cartão de Débito</PaymentLabel>
                           <PaymentIcons>
-                            <div style={{ fontSize: '0.7rem', color: '#666' }}>Visa, Master, Elo...</div>
+                            <div style={{ fontSize: "0.7rem", color: "#666" }}>
+                              Visa, Master, Elo...
+                            </div>
                           </PaymentIcons>
                         </div>
                       </PaymentContent>
@@ -1173,10 +1435,19 @@ const CheckoutPage = () => {
                               type="text"
                               placeholder="Nome como está no cartão"
                               value={cardData.cardHolderName}
-                              onChange={(e) => handleCardInputChange("cardHolderName", e.target.value)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardHolderName",
+                                  e.target.value
+                                )
+                              }
                               $error={!!cardErrors.cardHolderName}
                             />
-                            {cardErrors.cardHolderName && <ErrorMessage>{cardErrors.cardHolderName}</ErrorMessage>}
+                            {cardErrors.cardHolderName && (
+                              <ErrorMessage>
+                                {cardErrors.cardHolderName}
+                              </ErrorMessage>
+                            )}
                           </CardField>
                         </CardRow>
 
@@ -1189,11 +1460,21 @@ const CheckoutPage = () => {
                               type="text"
                               placeholder="000.000.000-00"
                               value={cardData.cardHolderCPF}
-                              onChange={(e) => handleCardInputChange("cardHolderCPF", e.target.value, cardMasks.cardCPF)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardHolderCPF",
+                                  e.target.value,
+                                  cardMasks.cardCPF
+                                )
+                              }
                               $error={!!cardErrors.cardHolderCPF}
                               maxLength="14"
                             />
-                            {cardErrors.cardHolderCPF && <ErrorMessage>{cardErrors.cardHolderCPF}</ErrorMessage>}
+                            {cardErrors.cardHolderCPF && (
+                              <ErrorMessage>
+                                {cardErrors.cardHolderCPF}
+                              </ErrorMessage>
+                            )}
                           </CardField>
 
                           <CardField>
@@ -1204,11 +1485,21 @@ const CheckoutPage = () => {
                               type="text"
                               placeholder="0000 0000 0000 0000"
                               value={cardData.cardNumber}
-                              onChange={(e) => handleCardInputChange("cardNumber", e.target.value, cardMasks.cardNumber)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardNumber",
+                                  e.target.value,
+                                  cardMasks.cardNumber
+                                )
+                              }
                               $error={!!cardErrors.cardNumber}
                               maxLength="19"
                             />
-                            {cardErrors.cardNumber && <ErrorMessage>{cardErrors.cardNumber}</ErrorMessage>}
+                            {cardErrors.cardNumber && (
+                              <ErrorMessage>
+                                {cardErrors.cardNumber}
+                              </ErrorMessage>
+                            )}
                           </CardField>
                         </CardRow>
 
@@ -1222,27 +1513,47 @@ const CheckoutPage = () => {
                               type="text"
                               placeholder="MM/AA"
                               value={cardData.cardExpiry}
-                              onChange={(e) => handleCardInputChange("cardExpiry", e.target.value, cardMasks.cardExpiry)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardExpiry",
+                                  e.target.value,
+                                  cardMasks.cardExpiry
+                                )
+                              }
                               $error={!!cardErrors.cardExpiry}
                               maxLength="5"
                             />
-                            {cardErrors.cardExpiry && <ErrorMessage>{cardErrors.cardExpiry}</ErrorMessage>}
+                            {cardErrors.cardExpiry && (
+                              <ErrorMessage>
+                                {cardErrors.cardExpiry}
+                              </ErrorMessage>
+                            )}
                           </CardField>
 
                           <CardField>
                             <CardLabel>
                               CVV <span>*</span>
-                              <CardInfoIcon title="Código de segurança">?</CardInfoIcon>
+                              <CardInfoIcon title="Código de segurança">
+                                ?
+                              </CardInfoIcon>
                             </CardLabel>
                             <CardInput
                               type="text"
                               placeholder="000"
                               value={cardData.cardCVV}
-                              onChange={(e) => handleCardInputChange("cardCVV", e.target.value, cardMasks.cardCVV)}
+                              onChange={(e) =>
+                                handleCardInputChange(
+                                  "cardCVV",
+                                  e.target.value,
+                                  cardMasks.cardCVV
+                                )
+                              }
                               $error={!!cardErrors.cardCVV}
                               maxLength="4"
                             />
-                            {cardErrors.cardCVV && <ErrorMessage>{cardErrors.cardCVV}</ErrorMessage>}
+                            {cardErrors.cardCVV && (
+                              <ErrorMessage>{cardErrors.cardCVV}</ErrorMessage>
+                            )}
                           </CardField>
                         </CardRow>
 
@@ -1251,58 +1562,69 @@ const CheckoutPage = () => {
                             Bandeira do cartão <span>*</span>
                           </CardLabel>
                           <CardBrandSelector>
-                            <BrandOption $selected={cardData.cardBrand === "visa"}>
-                              <input
-                                type="radio"
-                                name="cardBrand"
-                                value="visa"
-                                checked={cardData.cardBrand === "visa"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
-                              />
-                              <span>Visa</span>
-                            </BrandOption>
-                            <BrandOption $selected={cardData.cardBrand === "mastercard"}>
-                              <input
-                                type="radio"
-                                name="cardBrand"
-                                value="mastercard"
-                                checked={cardData.cardBrand === "mastercard"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
-                              />
-                              <span>Mastercard</span>
-                            </BrandOption>
-                            <BrandOption $selected={cardData.cardBrand === "elo"}>
+                            <BrandOption
+                              $selected={cardData.cardBrand === "elo"}
+                            >
                               <input
                                 type="radio"
                                 name="cardBrand"
                                 value="elo"
                                 checked={cardData.cardBrand === "elo"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                                onChange={(e) =>
+                                  setCardData((prev) => ({
+                                    ...prev,
+                                    cardBrand: e.target.value,
+                                  }))
+                                }
                               />
-                              <span>Elo</span>
+                              <img src={Elo} alt="Elo" style={{ width: 45 }} />
                             </BrandOption>
-                            <BrandOption $selected={cardData.cardBrand === "amex"}>
+                            <BrandOption
+                              $selected={cardData.cardBrand === "mastercard"}
+                            >
                               <input
                                 type="radio"
                                 name="cardBrand"
-                                value="amex"
-                                checked={cardData.cardBrand === "amex"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                                value="mastercard"
+                                checked={cardData.cardBrand === "mastercard"}
+                                onChange={(e) =>
+                                  setCardData((prev) => ({
+                                    ...prev,
+                                    cardBrand: e.target.value,
+                                  }))
+                                }
                               />
-                              <span>Amex</span>
+                              <img
+                                src={MasterCard}
+                                alt="MasterCard"
+                                style={{ width: 45 }}
+                              />
                             </BrandOption>
-                            <BrandOption $selected={cardData.cardBrand === "hipercard"}>
+                            <BrandOption
+                              $selected={cardData.cardBrand === "visa"}
+                            >
                               <input
                                 type="radio"
                                 name="cardBrand"
-                                value="hipercard"
-                                checked={cardData.cardBrand === "hipercard"}
-                                onChange={(e) => setCardData(prev => ({ ...prev, cardBrand: e.target.value }))}
+                                value="visa"
+                                checked={cardData.cardBrand === "visa"}
+                                onChange={(e) =>
+                                  setCardData((prev) => ({
+                                    ...prev,
+                                    cardBrand: e.target.value,
+                                  }))
+                                }
                               />
-                              <span>Hipercard</span>
+                              <img
+                                src={Visa}
+                                alt="Visa"
+                                style={{ width: 45 }}
+                              />
                             </BrandOption>
                           </CardBrandSelector>
-                          {cardErrors.cardBrand && <ErrorMessage>{cardErrors.cardBrand}</ErrorMessage>}
+                          {cardErrors.cardBrand && (
+                            <ErrorMessage>{cardErrors.cardBrand}</ErrorMessage>
+                          )}
                         </CardField>
 
                         <SecurityBadge>
@@ -1334,13 +1656,21 @@ const CheckoutPage = () => {
 
                         <PixQRCode>
                           <img src={QRCodeImg} alt="QR Code PIX" />
-                          <span style={{ fontSize: '0.85rem', color: '#666', textAlign: 'center' }}>
+                          <span
+                            style={{
+                              fontSize: "0.85rem",
+                              color: "#666",
+                              textAlign: "center",
+                            }}
+                          >
                             Escaneie o QR Code com o app do seu banco
                           </span>
                         </PixQRCode>
 
                         <PixKeyContainer>
-                          <PixKeyLabel>Ou copie a chave PIX Copia e Cola:</PixKeyLabel>
+                          <PixKeyLabel>
+                            Ou copie a chave PIX Copia e Cola:
+                          </PixKeyLabel>
                           <PixKeyField>
                             <PixKeyInput
                               type="text"
@@ -1350,7 +1680,7 @@ const CheckoutPage = () => {
                             />
                             <CopyButton
                               onClick={copyPixKey}
-                              className={pixKeyCopied ? 'copied' : ''}
+                              className={pixKeyCopied ? "copied" : ""}
                             >
                               {pixKeyCopied ? (
                                 <>
@@ -1414,10 +1744,19 @@ const CheckoutPage = () => {
                                 type="text"
                                 placeholder="Nome completo"
                                 value={boletoData.nomeCompleto}
-                                onChange={(e) => handleBoletoInputChange("nomeCompleto", e.target.value)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange(
+                                    "nomeCompleto",
+                                    e.target.value
+                                  )
+                                }
                                 $error={!!boletoErrors.nomeCompleto}
                               />
-                              {boletoErrors.nomeCompleto && <ErrorMessage>{boletoErrors.nomeCompleto}</ErrorMessage>}
+                              {boletoErrors.nomeCompleto && (
+                                <ErrorMessage>
+                                  {boletoErrors.nomeCompleto}
+                                </ErrorMessage>
+                              )}
                             </CardField>
                           </CardRow>
 
@@ -1430,11 +1769,19 @@ const CheckoutPage = () => {
                                 type="text"
                                 placeholder="000.000.000-00"
                                 value={boletoData.cpf}
-                                onChange={(e) => handleBoletoInputChange("cpf", e.target.value, masks.cpf)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange(
+                                    "cpf",
+                                    e.target.value,
+                                    masks.cpf
+                                  )
+                                }
                                 $error={!!boletoErrors.cpf}
                                 maxLength="14"
                               />
-                              {boletoErrors.cpf && <ErrorMessage>{boletoErrors.cpf}</ErrorMessage>}
+                              {boletoErrors.cpf && (
+                                <ErrorMessage>{boletoErrors.cpf}</ErrorMessage>
+                              )}
                             </CardField>
 
                             <CardField>
@@ -1445,10 +1792,19 @@ const CheckoutPage = () => {
                                 type="email"
                                 placeholder="email@exemplo.com"
                                 value={boletoData.email}
-                                onChange={(e) => handleBoletoInputChange("email", e.target.value)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange(
+                                    "email",
+                                    e.target.value
+                                  )
+                                }
                                 $error={!!boletoErrors.email}
                               />
-                              {boletoErrors.email && <ErrorMessage>{boletoErrors.email}</ErrorMessage>}
+                              {boletoErrors.email && (
+                                <ErrorMessage>
+                                  {boletoErrors.email}
+                                </ErrorMessage>
+                              )}
                             </CardField>
                           </CardRow>
 
@@ -1461,9 +1817,17 @@ const CheckoutPage = () => {
                                 type="text"
                                 placeholder="Rua, número, bairro, cidade - estado, CEP"
                                 value={boletoData.enderecoCompleto}
-                                onChange={(e) => handleBoletoInputChange("enderecoCompleto", e.target.value)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange(
+                                    "enderecoCompleto",
+                                    e.target.value
+                                  )
+                                }
                                 readOnly
-                                style={{ background: '#f5f5f5', cursor: 'not-allowed' }}
+                                style={{
+                                  background: "#f5f5f5",
+                                  cursor: "not-allowed",
+                                }}
                               />
                             </CardField>
                           </CardRow>
@@ -1477,11 +1841,19 @@ const CheckoutPage = () => {
                                 type="text"
                                 placeholder="00000-000"
                                 value={boletoData.cep}
-                                onChange={(e) => handleBoletoInputChange("cep", e.target.value, masks.cep)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange(
+                                    "cep",
+                                    e.target.value,
+                                    masks.cep
+                                  )
+                                }
                                 $error={!!boletoErrors.cep}
                                 maxLength="9"
                               />
-                              {boletoErrors.cep && <ErrorMessage>{boletoErrors.cep}</ErrorMessage>}
+                              {boletoErrors.cep && (
+                                <ErrorMessage>{boletoErrors.cep}</ErrorMessage>
+                              )}
                             </CardField>
 
                             <CardField>
@@ -1492,10 +1864,14 @@ const CheckoutPage = () => {
                                 type="text"
                                 placeholder="Nome da rua"
                                 value={boletoData.rua}
-                                onChange={(e) => handleBoletoInputChange("rua", e.target.value)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange("rua", e.target.value)
+                                }
                                 $error={!!boletoErrors.rua}
                               />
-                              {boletoErrors.rua && <ErrorMessage>{boletoErrors.rua}</ErrorMessage>}
+                              {boletoErrors.rua && (
+                                <ErrorMessage>{boletoErrors.rua}</ErrorMessage>
+                              )}
                             </CardField>
                           </CardRow>
 
@@ -1508,10 +1884,19 @@ const CheckoutPage = () => {
                                 type="text"
                                 placeholder="123"
                                 value={boletoData.numero}
-                                onChange={(e) => handleBoletoInputChange("numero", e.target.value)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange(
+                                    "numero",
+                                    e.target.value
+                                  )
+                                }
                                 $error={!!boletoErrors.numero}
                               />
-                              {boletoErrors.numero && <ErrorMessage>{boletoErrors.numero}</ErrorMessage>}
+                              {boletoErrors.numero && (
+                                <ErrorMessage>
+                                  {boletoErrors.numero}
+                                </ErrorMessage>
+                              )}
                             </CardField>
 
                             <CardField>
@@ -1522,10 +1907,19 @@ const CheckoutPage = () => {
                                 type="text"
                                 placeholder="Nome do bairro"
                                 value={boletoData.bairro}
-                                onChange={(e) => handleBoletoInputChange("bairro", e.target.value)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange(
+                                    "bairro",
+                                    e.target.value
+                                  )
+                                }
                                 $error={!!boletoErrors.bairro}
                               />
-                              {boletoErrors.bairro && <ErrorMessage>{boletoErrors.bairro}</ErrorMessage>}
+                              {boletoErrors.bairro && (
+                                <ErrorMessage>
+                                  {boletoErrors.bairro}
+                                </ErrorMessage>
+                              )}
                             </CardField>
 
                             <CardField>
@@ -1536,10 +1930,19 @@ const CheckoutPage = () => {
                                 type="text"
                                 placeholder="Nome da cidade"
                                 value={boletoData.cidade}
-                                onChange={(e) => handleBoletoInputChange("cidade", e.target.value)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange(
+                                    "cidade",
+                                    e.target.value
+                                  )
+                                }
                                 $error={!!boletoErrors.cidade}
                               />
-                              {boletoErrors.cidade && <ErrorMessage>{boletoErrors.cidade}</ErrorMessage>}
+                              {boletoErrors.cidade && (
+                                <ErrorMessage>
+                                  {boletoErrors.cidade}
+                                </ErrorMessage>
+                              )}
                             </CardField>
                           </CardRow>
 
@@ -1550,7 +1953,12 @@ const CheckoutPage = () => {
                               </CardLabel>
                               <CardSelect
                                 value={boletoData.estado}
-                                onChange={(e) => handleBoletoInputChange("estado", e.target.value)}
+                                onChange={(e) =>
+                                  handleBoletoInputChange(
+                                    "estado",
+                                    e.target.value
+                                  )
+                                }
                                 $error={!!boletoErrors.estado}
                               >
                                 <option value="">Selecione o estado</option>
@@ -1582,7 +1990,11 @@ const CheckoutPage = () => {
                                 <option value="SE">Sergipe</option>
                                 <option value="TO">Tocantins</option>
                               </CardSelect>
-                              {boletoErrors.estado && <ErrorMessage>{boletoErrors.estado}</ErrorMessage>}
+                              {boletoErrors.estado && (
+                                <ErrorMessage>
+                                  {boletoErrors.estado}
+                                </ErrorMessage>
+                              )}
                             </CardField>
                           </CardRow>
 
@@ -1600,8 +2012,11 @@ const CheckoutPage = () => {
                   </Section>
 
                   <Actions>
-                    <PrimaryButton onClick={handlePayment} disabled={loadingPayment}>
-                      {loadingPayment ? 'Processando...' : 'Pagar agora'}
+                    <PrimaryButton
+                      onClick={handlePayment}
+                      disabled={loadingPayment}
+                    >
+                      {loadingPayment ? "Processando..." : "Pagar agora"}
                     </PrimaryButton>
                   </Actions>
                 </Card>
@@ -1617,11 +2032,23 @@ const CheckoutPage = () => {
             </SummaryHeader>
 
             {loadingCart ? (
-              <div style={{ textAlign: 'center', padding: '40px 0', color: '#666' }}>
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 0",
+                  color: "#666",
+                }}
+              >
                 Carregando produtos...
               </div>
             ) : cartProducts.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '40px 0', color: '#666' }}>
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 0",
+                  color: "#666",
+                }}
+              >
                 Seu carrinho está vazio
               </div>
             ) : (
@@ -1632,34 +2059,43 @@ const CheckoutPage = () => {
                       <BagImage
                         src={produto.imagem || ProductImg}
                         alt={produto.nome}
-                        onError={(e) => { e.target.src = ProductImg }}
+                        onError={(e) => {
+                          e.target.src = ProductImg;
+                        }}
                       />
                       <BagBadge>{produto.quantidade}</BagBadge>
                     </BagImageWrapper>
 
                     <div style={{ flex: 1 }}>
                       <BagTitle>{produto.nome}</BagTitle>
-                      <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '4px' }}>
-                        R$ {produto.preco_unitario.toFixed(2)} × {produto.quantidade}
+                      <div
+                        style={{
+                          fontSize: "0.85rem",
+                          color: "#666",
+                          marginTop: "4px",
+                        }}
+                      >
+                        R$ {produto.preco_unitario.toFixed(2)} ×{" "}
+                        {produto.quantidade}
                       </div>
                     </div>
 
                     <button
                       onClick={() => handleRemoveItem(produto.id)}
                       style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#dc2626',
-                        cursor: 'pointer',
-                        padding: '8px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'opacity 0.2s',
-                        fontSize: '1.2rem'
+                        background: "none",
+                        border: "none",
+                        color: "#dc2626",
+                        cursor: "pointer",
+                        padding: "8px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        transition: "opacity 0.2s",
+                        fontSize: "1.2rem",
                       }}
-                      onMouseEnter={(e) => e.target.style.opacity = '0.7'}
-                      onMouseLeave={(e) => e.target.style.opacity = '1'}
+                      onMouseEnter={(e) => (e.target.style.opacity = "0.7")}
+                      onMouseLeave={(e) => (e.target.style.opacity = "1")}
                       title="Remover item"
                     >
                       <FiTrash2 />
@@ -1677,7 +2113,9 @@ const CheckoutPage = () => {
                   <PriceText>Descontos totais</PriceText>
                   <PriceValue $discount>-R$ {totais.desconto}</PriceValue>
                 </RowPrice>
-                <DiscountNote>Oferta especial PrimeGear -R$ {totais.desconto}</DiscountNote>
+                <DiscountNote>
+                  Oferta especial PrimeGear -R$ {totais.desconto}
+                </DiscountNote>
                 <RowPrice>
                   <PriceText>Frete</PriceText>
                   <ShippingFree>Grátis</ShippingFree>
@@ -1689,10 +2127,11 @@ const CheckoutPage = () => {
                   <TotalLabel>
                     <span>Total</span>
                   </TotalLabel>
-                  <div style={{ textAlign: 'right' }}>
+                  <div style={{ textAlign: "right" }}>
                     <Total>R$ {totais.total}</Total>
                     <Installments>
-                      R$ {totais.subtotal} em até 4x de R$ {totais.parcela} sem juros
+                      R$ {totais.subtotal} em até 4x de R$ {totais.parcela} sem
+                      juros
                     </Installments>
                   </div>
                 </TotalBlock>

@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 
 import { FaInstagram, FaTwitter, FaFacebook } from "react-icons/fa";
 import Inter from "../../assets/images/pay/inter.svg";
