@@ -15,8 +15,8 @@ const menuItems = [
   { id: "meu-perfil", label: "Meu Perfil", icon: FiUser },
   { id: "meus-pedidos", label: "Meus Pedidos", icon: FiShoppingCart },
   { id: "carrinho", label: "Carrinho", icon: FiShoppingCart },
-  { id: "enderecos", label: "Endereços", icon: FiMapPin },
-  { id: "pagamentos", label: "Pagamentos", icon: FiCreditCard },
+ // { id: "enderecos", label: "Endereços", icon: FiMapPin },
+  //{ id: "pagamentos", label: "Pagamentos", icon: FiCreditCard },
   { id: "seguranca", label: "Segurança", icon: FiShield },
 ]
 
