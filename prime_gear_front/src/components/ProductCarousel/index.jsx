@@ -56,7 +56,7 @@ const ProductCarousel = ({ title, produtos }) => {
               <ProductCard 
                 title={product.name}
                 price={product.price}
-                oldPrice={product.oldPrice}
+              
                 priceInfo={product.priceInfo}
                 image={product.image}
               />

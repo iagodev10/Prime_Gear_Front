@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ShoppingCart, Heart, Share2, Truck, Shield, CreditCard } from 'lucide-react';
+import ProductCarousel from '../../components/ProductCarousel';
 
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [produto, setProduto] = useState(null);
   const [categoria, setCategoria] = useState(null);
+  const [produtosRelacionados, setProdutosRelacionados] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quantidade, setQuantidade] = useState(1);
   const [imagemPrincipal, setImagemPrincipal] = useState('');
@@ -20,7 +22,7 @@ const ProductPage = () => {
     try {
       setLoading(true);
       
-     
+
       const responseProduto = await axios.get(`http://localhost:8080/produto/${id}`);
       const produtoData = responseProduto.data;
       setProduto(produtoData);
@@ -31,16 +33,45 @@ const ProductPage = () => {
         try {
           const responseCategoria = await axios.get(`http://localhost:8080/categoria/${produtoData.cod_categoria}`);
           setCategoria(responseCategoria.data);
+
+         
+          buscarProdutosRelacionados(responseCategoria.data.nome_cat, produtoData.cod_produto);
         } catch (error) {
           console.log('Erro ao buscar categoria:', error);
         }
       }
     } catch (error) {
       console.error('Erro ao buscar produto:', error);
-  
       setTimeout(() => navigate('/loja'), 2000);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const buscarProdutosRelacionados = async (nomeCategoria, produtoAtualId) => {
+    try {
+      console.log('Buscando produtos relacionados da categoria:', nomeCategoria);
+      
+      const response = await axios.post('http://localhost:8080/produtos-filtrados', {
+        categorias: [nomeCategoria],
+        marcas: [],
+        avaliacoes: [],
+        precoMin: undefined,
+        precoMax: undefined
+      });
+
+      if (response.data.success) {
+   
+        const produtosFiltrados = response.data.produtos
+          .filter(p => p.cod_produto !== produtoAtualId)
+          .slice(0, 8);
+        
+        console.log('Produtos relacionados encontrados:', produtosFiltrados.length);
+        setProdutosRelacionados(produtosFiltrados);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar produtos relacionados:', error);
+      setProdutosRelacionados([]);
     }
   };
 
@@ -53,7 +84,6 @@ const ProductPage = () => {
   };
 
   const adicionarAoCarrinho = () => {
-   
     console.log('Adicionar ao carrinho:', { produto, quantidade });
     alert(`${quantidade}x ${produto.nome_prod} adicionado ao carrinho!`);
   };
@@ -439,7 +469,8 @@ const ProductPage = () => {
           backgroundColor: '#fff',
           borderRadius: '12px',
           padding: '40px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          marginBottom: '40px'
         }}>
           <h2 style={{ 
             fontSize: '24px', 
@@ -504,6 +535,21 @@ const ProductPage = () => {
             )}
           </div>
         </div>
+
+        {/* Produtos Relacionados */}
+        {produtosRelacionados.length > 0 && (
+          <ProductCarousel 
+            produtos={produtosRelacionados.map(p => ({
+              cod_produto: p.cod_produto,
+              title: p.nome_prod,
+              price: p.preco_prod.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+              priceInfo: `ou 10x de ${(p.preco_prod / 10).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`,
+              image: p.url_img_prod
+            }))}
+            title={`Mais produtos de ${categoria?.nome_cat || 'desta categoria'}`}
+          />
+        )}
+
       </div>
     </div>
   );

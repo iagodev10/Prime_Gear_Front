@@ -106,6 +106,12 @@ const Header = () => {
           </MenuButton>
 
           <NavLinks>
+          <Link
+              to="/loja"
+             
+            >
+              Loja 
+            </Link>
             <Link
               to="/loja"
               onMouseEnter={() => setOpenCategory("laptops")}
