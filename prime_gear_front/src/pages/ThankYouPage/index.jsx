@@ -43,6 +43,7 @@ const ThankYouPage = () => {
   const location = useLocation();
 
   const orderState = location.state?.order;
+  console.log(orderState);
   const orderData = orderState || {
     cod_pedido: 1,
     itens: [
@@ -116,9 +117,13 @@ const ThankYouPage = () => {
           </EmailMessage>
 
           <ActionButtons>
-            <PrimaryButton onClick={() => navigate(`/user?section=meus-pedidos`)}>
+            {/* TIREI PORQUE NAO VAMOS FAZER RASTREAMENTO
+               <PrimaryButton onClick={() => navigate(`/user?section=meus-pedidos`)}>
               Rastrear pedido
             </PrimaryButton>
+            */
+            }
+           
             <SecondaryButton onClick={() => navigate("/loja")}>
               Continuar comprando
             </SecondaryButton>

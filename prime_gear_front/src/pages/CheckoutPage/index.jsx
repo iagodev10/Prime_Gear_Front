@@ -527,73 +527,93 @@ const CheckoutPage = () => {
     try {
       setLoadingPayment(true);
       const token = localStorage.getItem('token');
-
+  
+   
       if (cartProducts.length === 0) {
         alert('Seu carrinho está vazio');
+        setLoadingPayment(false);
         return;
       }
-
-      // Validate credit card form if payment method is credit or debit
+  
+   
       if ((paymentMethod === "credit" || paymentMethod === "debit") && !validateCardForm()) {
         alert('Por favor, preencha todos os campos do cartão corretamente');
         setLoadingPayment(false);
         return;
       }
-
-      // Validate boleto form if payment method is boleto
+  
       if (paymentMethod === "boleto" && !validateBoletoForm()) {
         alert('Por favor, preencha todos os campos do boleto corretamente');
         setLoadingPayment(false);
         return;
       }
+  
 
-      const enderecoCompleto = `${formData.street}, ${formData.numero}${formData.complement ? ', ' + formData.complement : ''} - ${formData.neighborhood}, ${formData.city} - ${formData.state}, ${formData.cep}`;
-
+      const enderecoCompleto = paymentMethod === "boleto" 
+        ? boletoData.enderecoCompleto
+        : `${formData.street}, ${formData.numero}${formData.complement ? ', ' + formData.complement : ''} - ${formData.neighborhood}, ${formData.city} - ${formData.state}, ${formData.cep}`;
+  
+     
+      let paymentData = {};
+  
+      if (paymentMethod === "credit" || paymentMethod === "debit") {
+        paymentData = {
+          cardHolderName: cardData.cardHolderName,
+          cardHolderCPF: cardData.cardHolderCPF.replace(/\D/g, ''), 
+          cardNumber: cardData.cardNumber.replace(/\s/g, ''), 
+          cardExpiry: cardData.cardExpiry,
+          cardCVV: cardData.cardCVV,
+          cardBrand: cardData.cardBrand,
+          installments: paymentMethod === "credit" ? cardData.installments : "1",
+        };
+      } else if (paymentMethod === "boleto") {
+        paymentData = {
+          nomeCompleto: boletoData.nomeCompleto,
+          cpf: boletoData.cpf.replace(/\D/g, ''), 
+          email: boletoData.email,
+          enderecoCompleto: boletoData.enderecoCompleto,
+          cep: boletoData.cep.replace(/\D/g, ''), 
+          rua: boletoData.rua,
+          numero: boletoData.numero,
+          bairro: boletoData.bairro,
+          cidade: boletoData.cidade,
+          estado: boletoData.estado,
+        };
+      } else if (paymentMethod === "pix") {
+        paymentData = {
+          pixKey: pixKey,
+          payerEmail: formData.email,
+          payerName: `${formData.firstName} ${formData.lastName}`,
+          payerCPF: formData.cpf.replace(/\D/g, ''),
+        };
+      }
+  
+   
       const orderData = {
         paymentMethod: paymentMethod,
-        shippingAddress: paymentMethod === "boleto" ? boletoData.enderecoCompleto : enderecoCompleto,
-        total: totais.total,
-        subtotal: totais.subtotal,
-        discount: totais.desconto,
-        ...((paymentMethod === "credit" || paymentMethod === "debit") && {
-          cardData: {
-            cardHolderName: cardData.cardHolderName,
-            cardHolderCPF: cardData.cardHolderCPF,
-            cardNumber: cardData.cardNumber.replace(/\s/g, ""),
-            cardExpiry: cardData.cardExpiry,
-            cardBrand: cardData.cardBrand,
-            installments: paymentMethod === "credit" ? cardData.installments : "1",
-          }
-        }),
-        ...(paymentMethod === "boleto" && {
-          boletoData: {
-            nomeCompleto: boletoData.nomeCompleto,
-            cpf: boletoData.cpf,
-            email: boletoData.email,
-            enderecoCompleto: boletoData.enderecoCompleto,
-            cep: boletoData.cep,
-            rua: boletoData.rua,
-            numero: boletoData.numero,
-            bairro: boletoData.bairro,
-            cidade: boletoData.cidade,
-            estado: boletoData.estado,
-          }
-        })
+        shippingAddress: enderecoCompleto,
+        total: parseFloat(totais.total),
+        subtotal: parseFloat(totais.subtotal),
+        discount: parseFloat(totais.desconto),
+        paymentData: paymentData 
       };
-
+  
+      console.log('Enviando pedido:', orderData); 
+  
       const response = await axios.post(
         'http://localhost:8080/create-order',
         orderData,
         {
           headers: {
-            Authorization: `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           },
           withCredentials: true
         }
       );
-
+  
       if (response.data.success) {
-        // Preparar dados do pedido antes de limpar o carrinho
+      
         const orderDataForThankYou = {
           ...response.data.pedido,
           itens: cartProducts.map(item => ({
@@ -605,25 +625,53 @@ const CheckoutPage = () => {
             preco: item.preco_unitario || item.preco,
             preco_unitario: item.preco_unitario || item.preco
           })),
-          endereco_entrega: paymentMethod === "boleto" ? boletoData.enderecoCompleto : enderecoCompleto,
+          endereco_entrega: enderecoCompleto,
           metodo_pagamento: paymentMethod,
-          cartao_final: (paymentMethod === "credit" || paymentMethod === "debit") ? cardData.cardNumber.replace(/\s/g, "").slice(-4) : null,
+          cartao_final: (paymentMethod === "credit" || paymentMethod === "debit") 
+            ? cardData.cardNumber.replace(/\s/g, "").slice(-4) 
+            : null,
           subtotal: totais.subtotal,
-          frete: "49.90" // Valor padrão de frete, ajustar conforme necessário
+          desconto: totais.desconto,
+          frete: "0.00" 
         };
         
+  
         setCartProducts([]);
-        // Redirecionar para página de agradecimento com dados do pedido
+        
+     
+        alert('Pedido realizado com sucesso!');
+        
+      
         navigate("/obrigado", {
           state: {
             order: orderDataForThankYou
           }
         });
       }
-
+  
     } catch (error) {
       console.error('Erro ao processar pagamento:', error);
-      alert(error.response?.data?.message || 'Erro ao processar pagamento. Tente novamente.');
+      
+    
+      if (error.response) {
+    
+        const errorMessage = error.response.data?.message || 'Erro ao processar pagamento';
+        alert(errorMessage);
+        
+        if (error.response.status === 401) {
+          alert('Sessão expirada. Por favor, faça login novamente.');
+          navigate('/login');
+        } else if (error.response.status === 404) {
+          alert('Carrinho não encontrado. Adicione produtos ao carrinho.');
+          navigate('/produtos');
+        }
+      } else if (error.request) {
+     
+        alert('Erro de conexão. Verifique sua internet e tente novamente.');
+      } else {
+       
+        alert('Erro inesperado. Tente novamente.');
+      }
     } finally {
       setLoadingPayment(false);
     }
