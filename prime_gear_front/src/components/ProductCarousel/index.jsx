@@ -24,40 +24,40 @@ const ProductCarousel = ({ title, produtos }) => {
           slidesPerView={4}
           spaceBetween={25}
           breakpoints={{
-           
+
             320: {
               slidesPerView: 2,
               spaceBetween: 6
             },
-        
+
             480: {
               slidesPerView: 2,
               spaceBetween: 8
             },
-          
+
             768: {
               slidesPerView: 3,
               spaceBetween: 20
             },
-         
+
             1024: {
               slidesPerView: 4,
               spaceBetween: 25
             }
           }}
         >
-          
+
           {produtos.map((product) => (
-            
-            
+
+
             <SwiperSlide key={product.id}>
-              
-              
-              <ProductCard 
+
+
+              <ProductCard
+                idProd={product.id}
                 title={product.name}
-                price={product.price}
-              
-                priceInfo={product.priceInfo}
+                price={product.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                priceInfo={`ou 10x de ${(product.price / 10).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`}
                 image={product.image}
               />
             </SwiperSlide>

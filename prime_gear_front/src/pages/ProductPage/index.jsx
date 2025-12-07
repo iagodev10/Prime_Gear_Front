@@ -66,7 +66,7 @@ const ProductPage = () => {
           .filter(p => p.cod_produto !== produtoAtualId)
           .slice(0, 8);
         
-        console.log('Produtos relacionados encontrados:', produtosFiltrados.length);
+        console.log('Produtos relacionados encontrados:', produtosFiltrados);
         setProdutosRelacionados(produtosFiltrados);
       }
     } catch (error) {
@@ -542,8 +542,8 @@ const ProductPage = () => {
             produtos={produtosRelacionados.map(p => ({
               cod_produto: p.cod_produto,
               title: p.nome_prod,
-              price: p.preco_prod.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-              priceInfo: `ou 10x de ${(p.preco_prod / 10).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`,
+              price: p.preco_prod,
+              priceInfo: p.preco_prod,
               image: p.url_img_prod
             }))}
             title={`Mais produtos de ${categoria?.nome_cat || 'desta categoria'}`}

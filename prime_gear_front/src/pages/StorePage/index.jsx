@@ -836,7 +836,7 @@ useEffect(() => {
                                         key={prod.cod_produto}
                                         cod_produto={prod.cod_produto}
                                         title={prod.nome_prod}
-                                     
+                                        priceInfo={`ou 10x de ${(prod.preco_prod / 10).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`}
                                         price={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                                         oldPrice={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                                         image={prod.url_img_prod}
