@@ -33,31 +33,31 @@ import axios from "axios"
 
 const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
   const [sections, setSections] = useState([
-    { id: 1, title: nome1, products: [], expanded: true },
-    { id: 2, title: nome2, products: [], expanded: false },
+    { id: 1, title: nome1 || "Primeira Seção", products: [], expanded: true },
+    { id: 2, title: nome2 || "Segunda Seção", products: [], expanded: false },
   ])
   const [modalOpen, setModalOpen] = useState(false)
   const [activeSectionId, setActiveSectionId] = useState(null)
   const [loading, setLoading] = useState(true)
-
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     const carregarProdutosVinculados = async () => {
       try {
         setLoading(true)
         
-      
+        // Carrega produtos da primeira seção
         const response1 = await axios.get('http://localhost:8080/prods-vinculados/1')
         const produtosSecao1 = response1.data.produtos || []
         
-      
+        // Carrega produtos da segunda seção
         const response2 = await axios.get('http://localhost:8080/prods-vinculados/2')
         const produtosSecao2 = response2.data.produtos || []
         
-       
+        // Atualiza as seções com os produtos carregados
         setSections([
-          { id: 1, title: nome1, products: produtosSecao1, expanded: true },
-          { id: 2, title: nome2, products: produtosSecao2, expanded: false },
+          { id: 1, title: nome1 || "Primeira Seção", products: produtosSecao1, expanded: true },
+          { id: 2, title: nome2 || "Segunda Seção", products: produtosSecao2, expanded: false },
         ])
         
         setLoading(false)
@@ -71,11 +71,15 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
   }, [nome1, nome2])
 
   const toggleSection = (id) => {
-    setSections(sections.map((section) => (section.id === id ? { ...section, expanded: !section.expanded } : section)))
+    setSections(sections.map((section) => 
+      section.id === id ? { ...section, expanded: !section.expanded } : section
+    ))
   }
 
   const updateSectionTitle = (id, newTitle) => {
-    setSections(sections.map((section) => (section.id === id ? { ...section, title: newTitle } : section)))
+    setSections(sections.map((section) => 
+      section.id === id ? { ...section, title: newTitle } : section
+    ))
   }
 
   const openProductSelector = (sectionId) => {
@@ -103,6 +107,7 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
   }
 
   const handleSaveAll = async () => {
+    setSaving(true)
     const section1 = sections.find(s => s.id === 1)
     const section2 = sections.find(s => s.id === 2)
     
@@ -112,36 +117,58 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
     }
 
     try {
-     
+      // Atualiza os nomes das seções
       await axios.put('http://localhost:8080/atualizar-nomes', novosNomes)
       
-     
+      // Vincula produtos da primeira seção
       const produtosIds1 = section1.products.map(p => p.id)
       await axios.put(`http://localhost:8080/vincular-secao/${section1.id}`, {
         produtos: produtosIds1
       })
       
-   
+      // Vincula produtos da segunda seção
       const produtosIds2 = section2.products.map(p => p.id)
       await axios.put(`http://localhost:8080/vincular-secao/${section2.id}`, {
         produtos: produtosIds2
       })
 
-      console.log("Alterações salvas com sucesso!")
-      window.location.reload()
+      console.log("✅ Alterações salvas com sucesso!")
+      
+      // Exibe mensagem de sucesso
+      alert("✅ Alterações salvas com sucesso!")
+      
+      // Recarrega a página após um breve delay
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
 
     } catch (error) {
-      console.log("Erro ao salvar:", error)
-      alert("Erro ao salvar as alterações. Tente novamente.")
+      console.error("❌ Erro ao salvar:", error)
+      alert("❌ Erro ao salvar as alterações. Tente novamente.")
+    } finally {
+      setSaving(false)
     }
   }
 
   const sectionColors = [
-    { bg: "#e8f4fd", number: "#3b82f6" },
-    { bg: "#fce7f3", number: "#ec4899" },
-    { bg: "#d1fae5", number: "#10b981" },
-    { bg: "#fef3c7", number: "#f59e0b" },
+    { bg: "#dbeafe", number: "#2563eb" },  // Azul mais suave
+    { bg: "#fce7f3", number: "#db2777" },  // Rosa
   ]
+
+  if (loading) {
+    return (
+      <Container>
+        <div style={{ 
+          padding: '40px', 
+          textAlign: 'center', 
+          color: '#666',
+          fontSize: '1.1rem' 
+        }}>
+          Carregando produtos em destaque...
+        </div>
+      </Container>
+    )
+  }
 
   return (
     <Container>
@@ -150,9 +177,9 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
           <h1>Gerenciar Destaques da Home</h1>
           <p>Configure os títulos e produtos exibidos nas seções de destaque</p>
         </Title>
-        <SaveButton onClick={handleSaveAll}>
+        <SaveButton onClick={handleSaveAll} disabled={saving}>
           <FiSave size={18} />
-          Salvar Todas as Alterações
+          {saving ? "Salvando..." : "Salvar Todas as Alterações"}
         </SaveButton>
       </Header>
 
@@ -164,7 +191,7 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 <SectionNumber $bgColor={colors.number}>{section.id}</SectionNumber>
                 <SectionTitle>
-                  {section.id === 1 ? "Primeira" : section.id === 2 ? "Segunda" : `${section.id}ª`} Seção de Destaques
+                  {section.id === 1 ? "Primeira" : "Segunda"} Seção de Destaques
                 </SectionTitle>
               </div>
               {section.expanded ? <FiChevronUp size={20} /> : <FiChevronDown size={20} />}
@@ -181,7 +208,9 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
                 />
 
                 <ProductsHeader>
-                  <ProductsLabel>Produtos Selecionados</ProductsLabel>
+                  <ProductsLabel>
+                    Produtos Selecionados ({section.products.length})
+                  </ProductsLabel>
                   <SelectButton onClick={() => openProductSelector(section.id)}>
                     <FiPlus size={16} />
                     Selecionar Produtos
@@ -202,15 +231,29 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
                       {section.products.map((product) => (
                         <ProductItem key={product.id}>
                           <ProductImage>
-                            <img src={product.image || "/placeholder.svg"} alt={product.name} />
+                            <img 
+                              src={product.image || "/placeholder.svg"} 
+                              alt={product.name}
+                              onError={(e) => {
+                                e.target.src = 'https://via.placeholder.com/60x60?text=Sem+Imagem'
+                              }}
+                            />
                           </ProductImage>
                           <ProductInfo>
-                            <ProductName>{product.name}</ProductName>
+                            <ProductName title={product.name}>
+                              {product.name}
+                            </ProductName>
                             <ProductPrice>
-                              R$ {product.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                              R$ {product.price.toLocaleString("pt-BR", { 
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2 
+                              })}
                             </ProductPrice>
                           </ProductInfo>
-                          <RemoveButton onClick={() => removeProduct(section.id, product.id)}>
+                          <RemoveButton 
+                            onClick={() => removeProduct(section.id, product.id)}
+                            title="Remover produto"
+                          >
                             <FiX size={16} />
                           </RemoveButton>
                         </ProductItem>

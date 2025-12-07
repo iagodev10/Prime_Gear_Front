@@ -23,11 +23,17 @@ import {
 } from "./style";
 
 import LaptopImg from "../../assets/images/laptop.png";
+
 import UltrabookImg from "../../assets/images/Macbook.png";
 import DesktopImg from "../../assets/images/desktop.png";
 import ConsolesImg from "../../assets/images/consoles.png";
 import HeadsetImg from "../../assets/images/headset.jpeg";
 import MouseImg from "../../assets/images/foneJBL.png";
+
+import DesktopImagem from "../../assets/images/desktop-fundo.png";
+import LaptopImagem from "../../assets/images/laptop-fundo.png";
+import PerifericoImagem from "../../assets/images/periferico-fundo.png";
+import ConsoleImagem from "../../assets/images/console-fundo.png";
 
 const SidebarLaptop = ({ isOpen, category, onClose }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -45,7 +51,7 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
   
   const cards = {
     laptops: [
-      { img: LaptopImg, title: 'Lenovo IdeaPad Gaming', price: '1.100,00', old: '1.200,00' },
+      { img: LaptopImagem, title: 'Lenovo IdeaPad Gaming', price: '1.100,00', old: '1.200,00' },
       { img: UltrabookImg, title: 'MacBook Pro M2', price: '1.800,00' },
       { img: LaptopImg, title: 'Dell Inspiron', price: '900,00', old: '1.000,00' },
       { img: UltrabookImg, title: 'Asus Zenbook', price: '1.300,00' },
@@ -61,27 +67,27 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
     ],
 
     consoles: [
-      { img: ConsolesImg, title: 'PlayStation 5', price: '500,00' },
-      { img: ConsolesImg, title: 'Xbox Series X', price: '480,00' },
-      { img: ConsolesImg, title: 'Nintendo Switch', price: '300,00' },
-      { img: ConsolesImg, title: 'Promoções', price: '—' },
-      { img: ConsolesImg, title: 'Bundles especiais', price: '—' }
+      { img: ConsoleImagem, title: 'PlayStation 5', price: '500,00' },
+      { img: ConsoleImagem, title: 'Xbox Series X', price: '480,00' },
+      { img: ConsoleImagem, title: 'Nintendo Switch', price: '300,00' },
+      { img: ConsoleImagem, title: 'Promoções', price: '—' },
+      { img: ConsoleImagem, title: 'Bundles especiais', price: '—' }
     ],
 
     perifericos: [
-      { img: HeadsetImg, title: 'Headset Gamer', price: '120,00' },
+      { img: PerifericoImagem, title: 'Headset Gamer', price: '120,00' },
       { img: MouseImg, title: 'Mouse Pro', price: '90,00', old: '110,00' },
-      { img: HeadsetImg, title: 'Teclado RGB', price: '150,00' },
+      { img: PerifericoImagem, title: 'Teclado RGB', price: '150,00' },
       { img: MouseImg, title: 'Mousepad XL', price: '25,00' },
-      { img: HeadsetImg, title: 'Microfone USB', price: '80,00' }
+      { img: PerifericoImagem, title: 'Microfone USB', price: '80,00' }
     ]
   };
 
   const hero = {
-    laptops: LaptopImg,
-    desktops: DesktopImg,
-    consoles: ConsolesImg,
-    perifericos: HeadsetImg
+    laptops: LaptopImagem,
+    desktops: DesktopImagem,
+    consoles: ConsoleImagem,
+    perifericos: PerifericoImagem
   };
 
   const viewAll = {
