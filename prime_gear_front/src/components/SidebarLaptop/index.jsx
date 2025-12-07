@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { FiArrowLeft, FiX } from "react-icons/fi";
 
 import {
@@ -10,33 +11,19 @@ import {
   HeroLink,
   ProductsGrid,
   ProductCard,
-  MobileContainer,
-  MobileHeader,
-  MobileBackButton,
-  MobileTitle,
-  MobileCloseButton,
-  MobileContent,
-  MobileHeroCard,
-  MobileHeroLink,
-  MobileProductsGrid,
-  MobileProductCard
 } from "./style";
 
 import LaptopImg from "../../assets/images/laptop.png";
-
 import UltrabookImg from "../../assets/images/Macbook.png";
 import DesktopImg from "../../assets/images/desktop.png";
 import ConsolesImg from "../../assets/images/consoles.png";
 import HeadsetImg from "../../assets/images/headset.jpeg";
 import MouseImg from "../../assets/images/foneJBL.png";
 
-import DesktopImagem from "../../assets/images/desktop-fundo.png";
-import LaptopImagem from "../../assets/images/laptop-fundo.png";
-import PerifericoImagem from "../../assets/images/periferico-fundo.png";
-import ConsoleImagem from "../../assets/images/console-fundo.png";
-
 const SidebarLaptop = ({ isOpen, category, onClose }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [produtos, setProdutos] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= 768);
@@ -44,14 +31,64 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Versão Mobile - não renderizar, deixar o SidebarMenu cuidar disso
+
+  useEffect(() => {
+    if (isMobile || !category || !isOpen) {
+      setProdutos([]);
+      return;
+    }
+
+    const buscarProdutos = async () => {
+      console.log('🖥️ SidebarLaptop: Buscando produtos...');
+      try {
+        setLoading(true);
+        
+        const categoriaNome = categoriaMap[category];
+        
+        if (!categoriaNome) {
+          console.error("❌ Categoria não mapeada:", category);
+          return;
+        }
+
+        console.log('📤 Categoria para backend:', categoriaNome);
+
+        const response = await axios.post(
+          'http://localhost:8080/produtos-filtrados',
+          {
+            categorias: [categoriaNome],
+            marcas: [],
+            avaliacoes: [],
+            precoMin: undefined,
+            precoMax: undefined
+          }
+        );
+
+        console.log('📥 Resposta:', response.data);
+
+        if (response.data.success) {
+          console.log('✅ Produtos encontrados:', response.data.produtos.length);
+       
+          setProdutos(response.data.produtos.slice(0, 5));
+        }
+      } catch (error) {
+        console.error('❌ Erro ao buscar produtos:', error);
+        setProdutos([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    buscarProdutos();
+  }, [isMobile, category, isOpen]);
+
+ 
   if (isMobile) {
     return null;
   }
   
   const cards = {
     laptops: [
-      { img: LaptopImagem, title: 'Lenovo IdeaPad Gaming', price: '1.100,00', old: '1.200,00' },
+      { img: LaptopImg, title: 'Lenovo IdeaPad Gaming', price: '1.100,00', old: '1.200,00' },
       { img: UltrabookImg, title: 'MacBook Pro M2', price: '1.800,00' },
       { img: LaptopImg, title: 'Dell Inspiron', price: '900,00', old: '1.000,00' },
       { img: UltrabookImg, title: 'Asus Zenbook', price: '1.300,00' },
@@ -67,19 +104,19 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
     ],
 
     consoles: [
-      { img: ConsoleImagem, title: 'PlayStation 5', price: '500,00' },
-      { img: ConsoleImagem, title: 'Xbox Series X', price: '480,00' },
-      { img: ConsoleImagem, title: 'Nintendo Switch', price: '300,00' },
-      { img: ConsoleImagem, title: 'Promoções', price: '—' },
-      { img: ConsoleImagem, title: 'Bundles especiais', price: '—' }
+      { img: ConsolesImg, title: 'PlayStation 5', price: '500,00' },
+      { img: ConsolesImg, title: 'Xbox Series X', price: '480,00' },
+      { img: ConsolesImg, title: 'Nintendo Switch', price: '300,00' },
+      { img: ConsolesImg, title: 'Promoções', price: '—' },
+      { img: ConsolesImg, title: 'Bundles especiais', price: '—' }
     ],
 
     perifericos: [
-      { img: PerifericoImagem, title: 'Headset Gamer', price: '120,00' },
+      { img: HeadsetImg, title: 'Headset Gamer', price: '120,00' },
       { img: MouseImg, title: 'Mouse Pro', price: '90,00', old: '110,00' },
-      { img: PerifericoImagem, title: 'Teclado RGB', price: '150,00' },
+      { img: HeadsetImg, title: 'Teclado RGB', price: '150,00' },
       { img: MouseImg, title: 'Mousepad XL', price: '25,00' },
-      { img: PerifericoImagem, title: 'Microfone USB', price: '80,00' }
+      { img: HeadsetImg, title: 'Microfone USB', price: '80,00' }
     ]
   };
 
@@ -90,13 +127,6 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
     perifericos: PerifericoImagem
   };
 
-  const viewAll = {
-    laptops: '/laptops',
-    desktops: '/desktops',
-    consoles: '/consoles',
-    perifericos: '/perifericos'
-  };
-
   const categoryNames = {
     laptops: 'Laptops',
     desktops: 'Desktops',
@@ -104,33 +134,72 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
     perifericos: 'Periféricos'
   };
 
-  // Versão Desktop
+
   return (
     <>
       {isOpen && (
         <Container onMouseLeave={onClose}>
           <Panel>
             <RightGrid>
-
               <HeroCard>
                 <img src={hero[category]} alt="Ver tudo" />
-                <HeroLink href={viewAll[category]}>Ver tudo</HeroLink>
+                <HeroLink 
+                  as={Link}
+                  to="/loja" 
+                  state={{ categoryIdentifier: category }}
+                >
+                  Ver todos os {categoryNames[category]}
+                </HeroLink>
               </HeroCard>
 
               <ProductsGrid>
-                {(cards[category] || []).slice(0, 5).map((c, i) => (
-                  <ProductCard key={i}>
-                    <img src={c.img} alt={c.title} />
+                {loading ? (
+                  <div style={{ 
+                    gridColumn: '1 / -1',
+                    padding: '2rem', 
+                    textAlign: 'center',
+                    color: '#666'
+                  }}>
+                    Carregando produtos...
+                  </div>
+                ) : produtos.length === 0 ? (
+                  <div style={{ 
+                    gridColumn: '1 / -1',
+                    padding: '2rem', 
+                    textAlign: 'center',
+                    color: '#666'
+                  }}>
+                    Nenhum produto encontrado
+                  </div>
+                ) : (
+                  produtos.map((produto) => (
+                    <ProductCard 
+                      key={produto.cod_produto}
+                      as={Link}
+                      to={`/produto/${produto.cod_produto}`}
+                      onClick={onClose}
+                    >
+                      <img 
+                        src={produto.url_img_prod || LaptopImg} 
+                        alt={produto.nome_prod || 'Produto'}
+                        onError={(e) => {
+                          e.target.src = LaptopImg;
+                        }}
+                      />
 
-                    <div className="info">
-                      <div className="title">{c.title}</div>
-                      <div className="price">R$ {c.price}</div>
-                      {c.old && <div className="oldPrice">R$ {c.old}</div>}
-                    </div>
-                  </ProductCard>
-                ))}
+                      <div className="info">
+                        <div className="title">
+                          {produto.nome_prod || 'Produto'}
+                        </div>
+                        <div className="price">
+                          R$ {produto.preco_prod?.toFixed(2).replace('.', ',') || '0,00'}
+                        </div>
+                        
+                      </div>
+                    </ProductCard>
+                  ))
+                )}
               </ProductsGrid>
-
             </RightGrid>
           </Panel>
         </Container>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import {
   Backdrop,
@@ -23,14 +24,24 @@ import { FiX, FiChevronRight, FiArrowLeft } from "react-icons/fi";
 
 import BestSeller from "../../assets/images/bestseller.png";
 import LaptopImg from "../../assets/images/laptop.png";
-import UltrabookImg from "../../assets/images/Macbook.png";
 import DesktopImg from "../../assets/images/desktop.png";
 import DesktopFundo from "../../assets/images/desktop-fundo.png";
 import ConsolesImg from "../../assets/images/consoles.png";
 import HeadsetImg from "../../assets/images/headset.jpeg";
-import MouseImg from "../../assets/images/foneJBL.png";
+
+
+const categoriaMap = {
+  laptops: "Laptops",
+  desktops: "Desktops",
+  consoles: "Consoles",
+  perifericos: "Periféricos"
+};
 
 const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
+  const [produtos, setProdutos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
   const handleClose = useCallback(() => {
     onOpenCategory?.(null);
     onClose?.();
@@ -46,12 +57,59 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
     return () => window.removeEventListener("keydown", handler);
   }, [isOpen, handleClose]);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+
+  useEffect(() => {
+    if (!isMobile || !openCategory || !isOpen) {
+      setProdutos([]);
+      return;
+    }
+
+    const buscarProdutos = async () => {
+      console.log('ativou');
+      try {
+        setLoading(true);
+        
+        const categoriaNome = categoriaMap[openCategory];
+        
+        if (!categoriaNome) {
+          console.error("Categoria não mapeada:", openCategory);
+          return;
+        }
+
+        console.log('Buscando produtos da categoria:', categoriaNome);
+
+        const response = await axios.post(
+          'http://localhost:8080/produtos-filtrados',
+          {
+            categorias: [categoriaNome],
+            marcas: [],
+            avaliacoes: [],
+            precoMin: undefined,
+            precoMax: undefined
+          }
+        );
+
+        if (response.data.success) {
+          console.log('Produtos encontrados:', response.data.produtos.length);
+         
+          setProdutos(response.data.produtos.slice(0, 5));
+        }
+      } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+        setProdutos([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    buscarProdutos();
+  }, [isMobile, openCategory, isOpen]);
 
   const handleBack = () => {
     onOpenCategory?.(null);
@@ -59,48 +117,33 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
 
   const cards = {
     laptops: [
-      {
-        img: LaptopImg,
-        title: "Lenovo IdeaPad Gaming",
-        price: "1.100,00",
-        old: "1.200,00",
-      },
-      { img: UltrabookImg, title: "MacBook Pro M2", price: "1.800,00" },
-      {
-        img: LaptopImg,
-        title: "Dell Inspiron",
-        price: "900,00",
-        old: "1.000,00",
-      },
-      { img: UltrabookImg, title: "Asus Zenbook", price: "1.300,00" },
-      { img: LaptopImg, title: "HP Pavilion", price: "700,00", old: "850,00" },
+      { img: LaptopImg, title: 'Lenovo IdeaPad Gaming', price: '1.100,00', old: '1.200,00' },
+      { img: UltrabookImg, title: 'MacBook Pro M2', price: '1.800,00' },
+      { img: LaptopImg, title: 'Dell Inspiron', price: '900,00', old: '1.000,00' },
+      { img: UltrabookImg, title: 'Asus Zenbook', price: '1.300,00' },
+      { img: LaptopImg, title: 'HP Pavilion', price: '700,00', old: '850,00' }
     ],
     desktops: [
-      { img: DesktopImg, title: "Desktop Gamer RGB", price: "1.500,00" },
-      {
-        img: DesktopImg,
-        title: "Workstation Pro",
-        price: "2.000,00",
-        old: "2.200,00",
-      },
-      { img: DesktopImg, title: "All-in-One", price: "850,00" },
-      { img: DesktopImg, title: "Mini PC", price: "450,00" },
-      { img: DesktopImg, title: "Servidor doméstico", price: "600,00" },
+      { img: DesktopImg, title: 'Desktop Gamer RGB', price: '1.500,00' },
+      { img: DesktopImg, title: 'Workstation Pro', price: '2.000,00', old: '2.200,00' },
+      { img: DesktopImg, title: 'All-in-One', price: '850,00' },
+      { img: DesktopImg, title: 'Mini PC', price: '450,00' },
+      { img: DesktopImg, title: 'Servidor doméstico', price: '600,00' }
     ],
     consoles: [
-      { img: ConsolesImg, title: "PlayStation 5", price: "500,00" },
-      { img: ConsolesImg, title: "Xbox Series X", price: "480,00" },
-      { img: ConsolesImg, title: "Nintendo Switch", price: "300,00" },
-      { img: ConsolesImg, title: "Promoções", price: "—" },
-      { img: ConsolesImg, title: "Bundles especiais", price: "—" },
+      { img: ConsolesImg, title: 'PlayStation 5', price: '500,00' },
+      { img: ConsolesImg, title: 'Xbox Series X', price: '480,00' },
+      { img: ConsolesImg, title: 'Nintendo Switch', price: '300,00' },
+      { img: ConsolesImg, title: 'Promoções', price: '—' },
+      { img: ConsolesImg, title: 'Bundles especiais', price: '—' }
     ],
     perifericos: [
-      { img: HeadsetImg, title: "Headset Gamer", price: "120,00" },
-      { img: MouseImg, title: "Mouse Pro", price: "90,00", old: "110,00" },
-      { img: HeadsetImg, title: "Teclado RGB", price: "150,00" },
-      { img: MouseImg, title: "Mousepad XL", price: "25,00" },
-      { img: HeadsetImg, title: "Microfone USB", price: "80,00" },
-    ],
+      { img: HeadsetImg, title: 'Headset Gamer', price: '120,00' },
+      { img: MouseImg, title: 'Mouse Pro', price: '90,00', old: '110,00' },
+      { img: HeadsetImg, title: 'Teclado RGB', price: '150,00' },
+      { img: MouseImg, title: 'Mousepad XL', price: '25,00' },
+      { img: HeadsetImg, title: 'Microfone USB', price: '80,00' }
+    ]
   };
 
   const hero = {
@@ -111,10 +154,10 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
   };
 
   const viewAll = {
-    laptops: "/laptops",
-    desktops: "/desktops",
-    consoles: "/consoles",
-    perifericos: "/perifericos",
+    laptops: '/laptops',
+    desktops: '/desktops',
+    consoles: '/consoles',
+    perifericos: '/perifericos'
   };
 
   const categoryNames = {
@@ -124,7 +167,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
     perifericos: "Periféricos",
   };
 
-  // Se uma categoria estiver aberta no mobile, mostrar conteúdo da categoria
+
   if (isMobile && openCategory && isOpen) {
     return (
       <>
@@ -145,12 +188,9 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
           <CategoryContent>
             {hero[openCategory] && (
               <CategoryHeroCard>
-                <img src={DesktopFundo} alt="Ver tudo" />
+                <img src={hero[openCategory]} alt="Ver tudo" />
                 {viewAll[openCategory] && (
-                  <CategoryHeroLink
-                    to={viewAll[openCategory]}
-                    onClick={handleClose}
-                  >
+                  <CategoryHeroLink to={viewAll[openCategory]} onClick={handleClose}>
                     Ver tudo
                   </CategoryHeroLink>
                 )}
@@ -159,15 +199,11 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
 
             <CategoryProductsList>
               {(cards[openCategory] || []).map((c, i) => (
-                <CategoryProductCard
-                  key={i}
-                  to={viewAll[openCategory] || "#"}
-                  onClick={handleClose}
-                >
-                  <img src={c.img} alt={c.title || "Produto"} />
+                <CategoryProductCard key={i} to={viewAll[openCategory] || '#'} onClick={handleClose}>
+                  <img src={c.img} alt={c.title || 'Produto'} />
                   <div className="info">
-                    <div className="title">{c.title || "Produto"}</div>
-                    <div className="price">R$ {c.price || "0,00"}</div>
+                    <div className="title">{c.title || 'Produto'}</div>
+                    <div className="price">R$ {c.price || '0,00'}</div>
                     {c.old && <div className="oldPrice">R$ {c.old}</div>}
                   </div>
                 </CategoryProductCard>
@@ -202,14 +238,12 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
               <Link to="/primeira-compra" onClick={handleClose}>
                 Primeira Compra
               </Link>
-              {/* <FiChevronRight size={20} /> */}
             </NavItem>
 
             <NavItem>
               <Link to="/fale-conosco" onClick={handleClose}>
                 Fale Conosco
               </Link>
-              {/* <FiChevronRight size={20} /> */}
             </NavItem>
 
             <hr />
@@ -239,7 +273,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
 
                 <NavItem>
                   <Link
-                    to="/laptops"
+                    to="#"
                     onClick={(e) => {
                       e.preventDefault();
                       onOpenCategory?.("laptops");
@@ -251,7 +285,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
                 </NavItem>
                 <NavItem>
                   <Link
-                    to="/desktops"
+                    to="#"
                     onClick={(e) => {
                       e.preventDefault();
                       onOpenCategory?.("desktops");
@@ -263,7 +297,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
                 </NavItem>
                 <NavItem>
                   <Link
-                    to="/consoles"
+                    to="#"
                     onClick={(e) => {
                       e.preventDefault();
                       onOpenCategory?.("consoles");
@@ -275,7 +309,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
                 </NavItem>
                 <NavItem>
                   <Link
-                    to="/perifericos"
+                    to="#"
                     onClick={(e) => {
                       e.preventDefault();
                       onOpenCategory?.("perifericos");

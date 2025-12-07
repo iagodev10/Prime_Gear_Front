@@ -12,6 +12,7 @@ import Preferencias from "../../components/Conta/Sections/Preferencias"
 import Seguranca from "../../components/Conta/Sections/Seguranca"
 import { ContaContainer, ContaContent, MainContent } from "./style"
 
+
 const UserAccount = () => {
   const navigate = useNavigate()
   const { user, loading } = useAuth()  
