@@ -64,17 +64,17 @@ const Header = () => {
 
   const handleCategoryClick = (e, categoryIdentifier) => {
     e.preventDefault();
-    
+
     console.log('🔗 Header: Navegando para loja com categoria:', categoryIdentifier);
-    
+
     navigate('/loja', {
       state: {
         categoryIdentifier: categoryIdentifier
       },
       replace: false
     });
-    
- 
+
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -108,52 +108,34 @@ const Header = () => {
           <NavLinks>
             <Link
               to="/loja"
-            >
-              Loja{" "}
-            </Link>
-            <Link
-              to="/loja"
               onMouseEnter={() => setOpenCategory("laptops")}
-              onClick={(e) => handleCategoryClick(e, "laptop")}
+              onClick={(e) => handleCategoryClick(e, "laptops")} 
             >
-              Laptops{" "}
-              <FaChevronDown
-                size={14}
-                style={{ marginLeft: 6, alignSelf: "center" }}
-              />
+              Laptops <FaChevronDown size={14} style={{ marginLeft: 6, alignSelf: "center" }} />
             </Link>
+
             <Link
               to="/loja"
               onMouseEnter={() => setOpenCategory("desktops")}
-              onClick={(e) => handleCategoryClick(e, "desktop")}
+              onClick={(e) => handleCategoryClick(e, "desktops")} 
             >
-              Desktops{" "}
-              <FaChevronDown
-                size={14}
-                style={{ marginLeft: 6, alignSelf: "center" }}
-              />
+              Desktops <FaChevronDown size={14} style={{ marginLeft: 6, alignSelf: "center" }} />
             </Link>
+
             <Link
               to="/loja"
               onMouseEnter={() => setOpenCategory("consoles")}
-              onClick={(e) => handleCategoryClick(e, "console")}
+              onClick={(e) => handleCategoryClick(e, "consoles")} 
             >
-              Consoles{" "}
-              <FaChevronDown
-                size={14}
-                style={{ marginLeft: 6, alignSelf: "center" }}
-              />
+              Consoles <FaChevronDown size={14} style={{ marginLeft: 6, alignSelf: "center" }} />
             </Link>
+
             <Link
               to="/loja"
               onMouseEnter={() => setOpenCategory("perifericos")}
-              onClick={(e) => handleCategoryClick(e, "periferico")}
+              onClick={(e) => handleCategoryClick(e, "perifericos")} 
             >
-              Periféricos{" "}
-              <FaChevronDown
-                size={14}
-                style={{ marginLeft: 6, alignSelf: "center" }}
-              />
+              Periféricos <FaChevronDown size={14} style={{ marginLeft: 6, alignSelf: "center" }} />
             </Link>
           </NavLinks>
         </LeftSection>
