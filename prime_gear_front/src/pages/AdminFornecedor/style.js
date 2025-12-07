@@ -12,8 +12,12 @@ export const Container = styled.div`
     box-sizing: border-box;
 
     @media (max-width: 768px) {
-        padding-top: 8vh;
+        padding-top: 10vh;
         padding-bottom: 8vh;
+    }
+    @media (max-width: 480px) {
+        padding-top: 10vh;
+        padding-bottom: 5vh;
     }
 `;
 

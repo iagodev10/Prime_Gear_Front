@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 // O "card" branco, com sombra e borda arredondada
 export const Container = styled.div`
-  background: #f5f5f5;
+  background: #fff;
   border-radius: 18px;
   padding: 20px; 
   text-align: left;

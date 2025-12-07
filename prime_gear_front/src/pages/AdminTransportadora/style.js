@@ -14,11 +14,11 @@ export const Container = styled.div`
     overflow-x: hidden;
 
     @media (max-width: 768px) {
-        padding-top: 6vh;
+        padding-top: 10vh;
         padding-bottom: 6vh;
     }
     @media (max-width: 480px) {
-        padding-top: 7vh;
+        padding-top: 10vh;
     }
 `;
 

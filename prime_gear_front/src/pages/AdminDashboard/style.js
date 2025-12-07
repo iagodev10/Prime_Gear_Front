@@ -15,6 +15,10 @@ export const PageContainer = styled.div`
 
   @media (max-width: 768px) {
     padding: 20px 5%;
+    margin-top: 10vh;
+  }
+  @media (max-width: 480px) {
+    margin-top: 10vh;
   }
 `;
 

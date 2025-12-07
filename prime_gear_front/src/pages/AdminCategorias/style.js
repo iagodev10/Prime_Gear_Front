@@ -12,8 +12,11 @@ export const Container = styled.div`
   padding-top: 8vh;
 
   @media (max-width: 768px) {
-    padding-top: 70px;
+    padding-top: 10vh;
   }
+  @media (max-width: 480px) {
+        padding-top: 10vh;
+    }
 `;
 
 export const Header = styled.div`
