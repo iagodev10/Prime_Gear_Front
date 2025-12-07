@@ -487,13 +487,7 @@ const CheckoutPage = () => {
     }
   };
 
-  const handleGenerateBoleto = () => {
-    if (validateBoletoForm()) {
-      const enderecoCompleto = `${boletoData.rua}, ${boletoData.numero} - ${boletoData.bairro}, ${boletoData.cidade} - ${boletoData.estado}, ${boletoData.cep}`;
-      setBoletoData((prev) => ({ ...prev, enderecoCompleto }));
-      alert("Boleto gerado com sucesso! Você receberá o boleto por e-mail.");
-    }
-  };
+  
 
   const validateForm = () => {
     const newErrors = {};
@@ -572,10 +566,53 @@ const CheckoutPage = () => {
         return;
       }
 
-      if (paymentMethod === "boleto" && !validateBoletoForm()) {
-        alert("Por favor, preencha todos os campos do boleto corretamente");
-        setLoadingPayment(false);
-        return;
+      if (paymentMethod === "boleto") {
+        if (!validateBoletoForm()) {
+          alert("Por favor, preencha todos os campos do boleto corretamente");
+          setLoadingPayment(false);
+          return;
+        }
+  
+   
+        const boletoResponse = await axios.post(
+          'http://localhost:8080/generate-boleto',
+          {
+            nomeCompleto: boletoData.nomeCompleto,
+            cpf: boletoData.cpf,
+            email: boletoData.email,
+            enderecoCompleto: boletoData.enderecoCompleto,
+            cep: boletoData.cep,
+            rua: boletoData.rua,
+            numero: boletoData.numero,
+            bairro: boletoData.bairro,
+            cidade: boletoData.cidade,
+            estado: boletoData.estado,
+            valorTotal: totais.total,
+            subtotal: totais.subtotal,
+            desconto: totais.desconto,
+            itensCarrinho: cartProducts.map(item => ({
+              nome: item.nome || item.nome_produto,
+              nome_produto: item.nome || item.nome_produto,
+              quantidade: item.quantidade,
+              preco_unitario: item.preco_unitario || item.preco,
+              preco: item.preco_unitario || item.preco
+            }))
+          },
+          {
+            withCredentials:true,
+            responseType: 'blob'
+          }
+        );
+  
+    
+        const url = window.URL.createObjectURL(new Blob([boletoResponse.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `boleto-primegear-${Date.now()}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
       }
 
       const enderecoCompleto =
@@ -1998,7 +2035,7 @@ const CheckoutPage = () => {
                             </CardField>
                           </CardRow>
 
-                          <GenerateBoletoButton onClick={handleGenerateBoleto}>
+                          <GenerateBoletoButton >
                             Gerar Boleto
                           </GenerateBoletoButton>
 
