@@ -31,7 +31,6 @@ import {
 } from './style';
 
 import EmailSignUp from '../../components/EmailSignUp';
-import Logo from '../../assets/images/logoligth.png';
 
 import Player from '../../assets/images/player.png';
 import caioImg from '../../assets/images/caio.jpeg';
@@ -39,13 +38,16 @@ import felipeImg from '../../assets/images/felipe.jpeg';
 import iagoImg from '../../assets/images/iago.jpeg';
 import viniciusImg from '../../assets/images/vinicius.jpeg';
 
+// Importe a imagem do homem ou use o caminho correto
+// Se estiver na pasta public, use: /homen.png
+// Se estiver na pasta assets, importe como: import HomemImg from '../../assets/images/homen.png';
+
 const InstitutionalPage = () => {
   return (
     <PageContainer>
       {/* Hero Section */}
       <HeroSection>
         <HeroContainer>
-
           {/* LADO ESQUERDO */}
           <HeroContent>
             <SectionLabel>QUEM SOMOS</SectionLabel>
@@ -57,12 +59,10 @@ const InstitutionalPage = () => {
 
           {/* LADO DIREITO */}
           <HeroImageWrapper>
-            <img src={Player} alt="logo" />
+            <img src={Player} alt="Jogador com controle" />
           </HeroImageWrapper>
-
         </HeroContainer>
       </HeroSection>
-
 
       {/* Nosso Objetivo Section */}
       <ObjectiveSection>
@@ -84,7 +84,6 @@ const InstitutionalPage = () => {
       {/* Mission, Vision, Values Cards */}
       <CardsSection>
         <CardsContainer>
-
           <CardBlock>
             <h3>Missão</h3>
             <p>Capacitar escolhas inteligentes com tecnologia acessível e suporte.</p>
@@ -103,37 +102,46 @@ const InstitutionalPage = () => {
             <h3>Valores</h3>
             <p>Transparência, performance, compromisso e experiência do cliente.</p>
           </CardBlock>
-
         </CardsContainer>
       </CardsSection>
 
-
       {/* Paixão por tecnologia Section */}
       <PassionSection>
+        <PassionHero />
 
-  <PassionHero />
+        <PassionTitle>
+          Paixão por tecnologia, <br />
+          compromisso com você
+        </PassionTitle>
 
-  <PassionTitle>
-    Paixão por tecnologia, <br />
-    compromisso com você
-  </PassionTitle>
+        <PassionContent>
+          <Texto>
+            Na <b>PrimeGear</b>, aproximamos pessoas da tecnologia que transforma
+            o dia a dia, e fazemos isso com compromisso, transparência e paixão
+            pelo que fazemos.
+          </Texto>
 
-  <PassionContent>
-
-    <Texto>
-      Na <b>PrimeGear</b>, aproximamos pessoas da tecnologia que transforma
-      o dia a dia, e fazemos isso com compromisso, transparência e paixão
-      pelo que fazemos.
-    </Texto>
-
-    <ImageWrapper>
-      <img src="/homen.png" alt="Homem sorrindo" />
-    </ImageWrapper>
-
-  </PassionContent>
-
-</PassionSection>
-
+          <ImageWrapper>
+            {/* 
+              IMPORTANTE: Verifique o caminho correto da imagem
+              - Se estiver na pasta public: use "/homen.png" ou "/images/homen.png"
+              - Se estiver na pasta src/assets: importe no topo e use {HomemImg}
+              
+              Exemplo de importação:
+              import HomemImg from '../../assets/images/homen.png';
+              E então use: <img src={HomemImg} alt="Homem sorrindo" />
+            */}
+            <img 
+              src="/homen.png" 
+              alt="Homem sorrindo" 
+              onError={(e) => {
+                console.error('Erro ao carregar imagem:', e);
+                e.target.style.display = 'none';
+              }}
+            />
+          </ImageWrapper>
+        </PassionContent>
+      </PassionSection>
 
       {/* Nossa Equipe Section */}
       <TeamSection>
@@ -141,25 +149,44 @@ const InstitutionalPage = () => {
         <TeamGrid>
           <TeamMember>
             <TeamPhoto>
-              <img src={caioImg} alt="Caio" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img 
+                src={caioImg} 
+                alt="Caio Gabriel" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+              />
             </TeamPhoto>
             <TeamName>Caio Gabriel</TeamName>
           </TeamMember>
+          
           <TeamMember>
             <TeamPhoto>
-              <img src={felipeImg} alt="Felipe" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img 
+                src={felipeImg} 
+                alt="Felipe Peixoto" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+              />
             </TeamPhoto>
             <TeamName>Felipe Peixoto</TeamName>
           </TeamMember>
+          
           <TeamMember>
             <TeamPhoto>
-              <img src={iagoImg} alt="Iago" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img 
+                src={iagoImg} 
+                alt="Iago Borges" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+              />
             </TeamPhoto>
             <TeamName>Iago Borges</TeamName>
           </TeamMember>
+          
           <TeamMember>
             <TeamPhoto>
-              <img src={viniciusImg} alt="Vinicius" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img 
+                src={viniciusImg} 
+                alt="Vinicius Mendes" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+              />
             </TeamPhoto>
             <TeamName>Vinicius Mendes</TeamName>
           </TeamMember>
@@ -167,7 +194,6 @@ const InstitutionalPage = () => {
       </TeamSection>
 
       <EmailSignUp />
-
     </PageContainer>
   );
 };

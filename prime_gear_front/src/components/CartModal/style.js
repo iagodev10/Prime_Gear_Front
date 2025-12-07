@@ -7,8 +7,25 @@ const fadeIn = keyframes`
 `;
 
 const slideDown = keyframes`
-  from { transform: translateY(-20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from { 
+    transform: translateX(-50%) translateY(-30px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+`;
+
+const slideUp = keyframes`
+  from { 
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0);
+    opacity: 1;
+  }
 `;
 
 export const ModalOverlay = styled.div`
@@ -19,25 +36,46 @@ export const ModalOverlay = styled.div`
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 2000;
-  animation: ${fadeIn} 0.3s ease-out;
+  animation: ${fadeIn} 0.2s ease-out;
 `;
 
 export const Container = styled.div`
   position: fixed;
-  top: clamp(60px, 8vh, 100px);
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
+  max-width: 100%;
   background: #2f2f2f;
   border-radius: 0;
-  height: auto;
-  max-height: calc(100vh - clamp(60px, 8vh, 100px) - 16px);
+  min-height: 400px;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  animation: ${slideDown} 0.4s ease-out;
   display: flex;
   flex-direction: column;
   z-index: 2001;
+
+  /* Desktop */
+  @media (min-width: 769px) {
+    top: clamp(60px, 8vh, 100px);
+    max-height: calc(100vh - clamp(60px, 8vh, 100px) - 16px);
+    animation: ${slideDown} 0.3s ease-out;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+    max-height: 85vh;
+    border-radius: 20px 20px 0 0;
+    animation: ${slideUp} 0.3s ease-out;
+  }
+
+  @media (max-width: 480px) {
+    max-height: 90vh;
+  }
 `;
 
 export const Header = styled.div`
@@ -48,9 +86,40 @@ export const Header = styled.div`
   background: #2f2f2f;
   margin-left: 5%;
   margin-right: 5%;
+  flex-shrink: 0;
+  position: relative;
+
+  @media (max-width: 1024px) {
+    padding: 20px 24px;
+    margin-left: 3%;
+    margin-right: 3%;
+  }
 
   @media (max-width: 768px) {
-    padding: 20px 24px;
+    padding: 20px;
+    margin-left: 0;
+    margin-right: 0;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+
+    /* Linha de arraste no topo */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 16px;
+    gap: 12px;
   }
 `;
 
@@ -60,8 +129,18 @@ export const Title = styled.h1`
   color: #fff;
   margin: 0;
 
+  @media (max-width: 1024px) {
+    font-size: 28px;
+  }
+
   @media (max-width: 768px) {
     font-size: 24px;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 22px;
   }
 `;
 
@@ -77,6 +156,7 @@ export const ViewCartButton = styled.button`
   transition: all 0.2s ease;
   text-decoration: none;
   display: inline-block;
+  white-space: nowrap;
 
   &:hover {
     background: #f0f0f0;
@@ -84,8 +164,15 @@ export const ViewCartButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    padding: 8px 16px;
-    font-size: 13px;
+    padding: 12px 24px;
+    font-size: 15px;
+    width: 100%;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px 20px;
+    font-size: 14px;
   }
 `;
 
@@ -97,18 +184,27 @@ export const CloseButton = styled.button`
   align-items: center;
   justify-content: center;
   background: transparent;
+  border: none;
   cursor: pointer;
   color: #fff;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
   }
 
   @media (max-width: 768px) {
+    position: absolute;
+    top: 20px;
+    right: 20px;
     width: 32px;
     height: 32px;
+  }
+
+  @media (max-width: 480px) {
+    top: 16px;
+    right: 16px;
   }
 `;
 
@@ -117,21 +213,44 @@ export const CartContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  overflow: hidden;
+  overflow-y: auto;
   flex: 1;
   margin-left: 5%;
   margin-right: 5%;
   padding-bottom: 24px;
 
+  /* Scrollbar customizada */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+
   @media (max-width: 1024px) {
     padding: 16px 24px;
     padding-bottom: 20px;
+    margin-left: 3%;
+    margin-right: 3%;
   }
 
   @media (max-width: 768px) {
-    padding: 14px 20px;
+    padding: 16px 20px;
     gap: 14px;
-    padding-bottom: 16px;
+    padding-bottom: 20px;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   @media (max-width: 480px) {
@@ -145,7 +264,14 @@ export const CartItemsList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: none;
+
+  @media (max-width: 768px) {
+    gap: 14px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 12px;
+  }
 `;
 
 export const CartItem = styled.div`
@@ -153,6 +279,7 @@ export const CartItem = styled.div`
   gap: 16px;
   align-items: center;
   padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
   &:last-child {
     border-bottom: none;
@@ -163,6 +290,11 @@ export const CartItem = styled.div`
     gap: 12px;
     padding-bottom: 12px;
   }
+
+  @media (max-width: 480px) {
+    gap: 10px;
+    padding-bottom: 10px;
+  }
 `;
 
 export const MoreItemsText = styled.p`
@@ -172,10 +304,16 @@ export const MoreItemsText = styled.p`
   padding-top: 12px;
   padding-bottom: 0;
   font-weight: 400;
+  text-align: center;
 
   @media (max-width: 768px) {
     font-size: 13px;
     padding-top: 10px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    padding-top: 8px;
   }
 `;
 
@@ -197,6 +335,12 @@ export const ItemImage = styled.div`
     width: 70px;
     height: 70px;
   }
+
+  @media (max-width: 480px) {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+  }
 `;
 
 export const ItemInfo = styled.div`
@@ -204,6 +348,11 @@ export const ItemInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
+
+  @media (max-width: 480px) {
+    gap: 6px;
+  }
 `;
 
 export const ItemName = styled.p`
@@ -220,6 +369,12 @@ export const ItemName = styled.p`
 
   @media (max-width: 768px) {
     font-size: 13px;
+    -webkit-line-clamp: 3;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    line-height: 1.3;
   }
 `;
 
@@ -239,15 +394,15 @@ export const ProfileSection = styled.div`
   }
 
   @media (max-width: 768px) {
-    padding-top: 14px;
-    margin-top: 10px;
-    gap: 8px;
+    padding-top: 16px;
+    margin-top: 12px;
+    gap: 10px;
   }
 
   @media (max-width: 480px) {
     padding-top: 12px;
-    margin-top: 8px;
-    gap: 6px;
+    margin-top: 10px;
+    gap: 8px;
   }
 `;
 
@@ -258,6 +413,10 @@ export const ProfileTitle = styled.h2`
   margin: 0;
 
   @media (max-width: 768px) {
+    font-size: 17px;
+  }
+
+  @media (max-width: 480px) {
     font-size: 16px;
   }
 `;
@@ -266,6 +425,10 @@ export const ProfileLinks = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+
+  @media (max-width: 768px) {
+    gap: 2px;
+  }
 `;
 
 export const ProfileLink = styled(RouterLink)`
@@ -277,14 +440,30 @@ export const ProfileLink = styled(RouterLink)`
   text-decoration: none;
   transition: all 0.2s ease;
   cursor: pointer;
+  border-radius: 8px;
 
   &:hover {
     color: rgba(255, 255, 255, 0.8);
     transform: translateX(4px);
   }
 
+  &:active {
+    transform: translateX(2px);
+  }
+
   @media (max-width: 768px) {
-    padding: 6px 0;
+    padding: 10px 8px;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 4px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px 6px;
     gap: 10px;
   }
 `;
@@ -296,10 +475,21 @@ export const ProfileLinkIcon = styled.div`
   align-items: center;
   justify-content: center;
   color: #fff;
+  flex-shrink: 0;
 
   @media (max-width: 768px) {
     width: 36px;
     height: 36px;
+  }
+
+  @media (max-width: 480px) {
+    width: 32px;
+    height: 32px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
   }
 `;
 
@@ -308,6 +498,10 @@ export const ProfileLinkText = styled.span`
   font-weight: 400;
 
   @media (max-width: 768px) {
+    font-size: 15px;
+  }
+
+  @media (max-width: 480px) {
     font-size: 14px;
   }
 `;

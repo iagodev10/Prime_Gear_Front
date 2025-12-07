@@ -25,6 +25,7 @@ import { FiX, FiChevronRight, FiArrowLeft } from "react-icons/fi";
 import BestSeller from "../../assets/images/bestseller.png";
 import LaptopImg from "../../assets/images/laptop.png";
 import DesktopImg from "../../assets/images/desktop.png";
+import DesktopFundo from "../../assets/images/desktop-fundo.png";
 import ConsolesImg from "../../assets/images/consoles.png";
 import HeadsetImg from "../../assets/images/headset.jpeg";
 
@@ -112,21 +113,58 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
 
   const handleBack = () => {
     onOpenCategory?.(null);
-    setProdutos([]);
+  };
+
+  const cards = {
+    laptops: [
+      { img: LaptopImg, title: 'Lenovo IdeaPad Gaming', price: '1.100,00', old: '1.200,00' },
+      { img: UltrabookImg, title: 'MacBook Pro M2', price: '1.800,00' },
+      { img: LaptopImg, title: 'Dell Inspiron', price: '900,00', old: '1.000,00' },
+      { img: UltrabookImg, title: 'Asus Zenbook', price: '1.300,00' },
+      { img: LaptopImg, title: 'HP Pavilion', price: '700,00', old: '850,00' }
+    ],
+    desktops: [
+      { img: DesktopImg, title: 'Desktop Gamer RGB', price: '1.500,00' },
+      { img: DesktopImg, title: 'Workstation Pro', price: '2.000,00', old: '2.200,00' },
+      { img: DesktopImg, title: 'All-in-One', price: '850,00' },
+      { img: DesktopImg, title: 'Mini PC', price: '450,00' },
+      { img: DesktopImg, title: 'Servidor doméstico', price: '600,00' }
+    ],
+    consoles: [
+      { img: ConsolesImg, title: 'PlayStation 5', price: '500,00' },
+      { img: ConsolesImg, title: 'Xbox Series X', price: '480,00' },
+      { img: ConsolesImg, title: 'Nintendo Switch', price: '300,00' },
+      { img: ConsolesImg, title: 'Promoções', price: '—' },
+      { img: ConsolesImg, title: 'Bundles especiais', price: '—' }
+    ],
+    perifericos: [
+      { img: HeadsetImg, title: 'Headset Gamer', price: '120,00' },
+      { img: MouseImg, title: 'Mouse Pro', price: '90,00', old: '110,00' },
+      { img: HeadsetImg, title: 'Teclado RGB', price: '150,00' },
+      { img: MouseImg, title: 'Mousepad XL', price: '25,00' },
+      { img: HeadsetImg, title: 'Microfone USB', price: '80,00' }
+    ]
   };
 
   const hero = {
     laptops: LaptopImg,
     desktops: DesktopImg,
     consoles: ConsolesImg,
-    perifericos: HeadsetImg
+    perifericos: HeadsetImg,
+  };
+
+  const viewAll = {
+    laptops: '/laptops',
+    desktops: '/desktops',
+    consoles: '/consoles',
+    perifericos: '/perifericos'
   };
 
   const categoryNames = {
-    laptops: 'Laptops',
-    desktops: 'Desktops',
-    consoles: 'Consoles',
-    perifericos: 'Periféricos'
+    laptops: "Laptops",
+    desktops: "Desktops",
+    consoles: "Consoles",
+    perifericos: "Periféricos",
   };
 
 
@@ -139,7 +177,9 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
             <BackButton onClick={handleBack}>
               <FiArrowLeft size={20} />
             </BackButton>
-            <CategoryTitle>{categoryNames[openCategory] || 'Categoria'}</CategoryTitle>
+            <CategoryTitle>
+              {categoryNames[openCategory] || "Categoria"}
+            </CategoryTitle>
             <Close onClick={handleClose}>
               <FiX size={24} />
             </Close>
@@ -149,69 +189,25 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
             {hero[openCategory] && (
               <CategoryHeroCard>
                 <img src={hero[openCategory]} alt="Ver tudo" />
-                <CategoryHeroLink 
-                  to="/loja" 
-                  state={{ categoryIdentifier: openCategory }}
-                  onClick={handleClose}
-                >
-                  Ver todos os {categoryNames[openCategory]}
-                </CategoryHeroLink>
+                {viewAll[openCategory] && (
+                  <CategoryHeroLink to={viewAll[openCategory]} onClick={handleClose}>
+                    Ver tudo
+                  </CategoryHeroLink>
+                )}
               </CategoryHeroCard>
             )}
 
             <CategoryProductsList>
-              {loading ? (
-                <div style={{ 
-                  padding: '2rem', 
-                  textAlign: 'center',
-                  color: '#666',
-                  width: '100%'
-                }}>
-                  Carregando produtos...
-                </div>
-              ) : produtos.length === 0 ? (
-                <div style={{ 
-                  padding: '2rem', 
-                  textAlign: 'center',
-                  color: '#666',
-                  width: '100%'
-                }}>
-                  Nenhum produto encontrado
-                </div>
-              ) : (
-                produtos.map((produto) => (
-                  <CategoryProductCard 
-                    key={produto.cod_produto} 
-                    to={`/produto/${produto.cod_produto}`} 
-                    onClick={handleClose}
-                  >
-                    <img 
-                      src={produto.url_img_prod || LaptopImg} 
-                      alt={produto.nome_prod || 'Produto'}
-                      onError={(e) => {
-                        e.target.src = LaptopImg;
-                      }}
-                    />
-                    <div className="info">
-                      <div className="title">
-                        {produto.nome_prod || 'Produto'}
-                      </div>
-                      <div className="price">
-                        R$ {produto.preco_prod?.toFixed(2).replace('.', ',') || '0,00'}
-                      </div>
-                      {produto.avaliacao_prod && (
-                        <div className="rating" style={{ 
-                          fontSize: '0.85rem', 
-                          color: '#fbbf24',
-                          marginTop: '4px'
-                        }}>
-                          ⭐ {produto.avaliacao_prod}/5
-                        </div>
-                      )}
-                    </div>
-                  </CategoryProductCard>
-                ))
-              )}
+              {(cards[openCategory] || []).map((c, i) => (
+                <CategoryProductCard key={i} to={viewAll[openCategory] || '#'} onClick={handleClose}>
+                  <img src={c.img} alt={c.title || 'Produto'} />
+                  <div className="info">
+                    <div className="title">{c.title || 'Produto'}</div>
+                    <div className="price">R$ {c.price || '0,00'}</div>
+                    {c.old && <div className="oldPrice">R$ {c.old}</div>}
+                  </div>
+                </CategoryProductCard>
+              ))}
             </CategoryProductsList>
           </CategoryContent>
         </Sidebar>
@@ -274,7 +270,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
             {isMobile && (
               <>
                 <hr />
-                
+
                 <NavItem>
                   <Link
                     to="#"
