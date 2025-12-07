@@ -1127,7 +1127,7 @@ const CheckoutPage = () => {
                           <PaymentLabel>Cartão de Crédito</PaymentLabel>
                           <PaymentIcons>
                             <div style={{ fontSize: "0.7rem", color: "#666" }}>
-                              Visa, Master, Elo...
+                              Elo, Master, Visa...
                             </div>
                           </PaymentIcons>
                         </div>
