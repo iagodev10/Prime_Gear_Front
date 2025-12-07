@@ -1046,3 +1046,91 @@ export const GenerateBoletoButton = styled.button`
     font-size: 0.95rem;
   }
 `;
+
+export const ShippingSection = styled.div`
+  margin: 24px 0;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+`;
+
+export const ShippingTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const ShippingOptions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const ShippingOption = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: white;
+  border: 2px solid ${props => props.$selected ? '#000' : '#e5e5e5'};
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: ${props => props.$selected ? '#000' : '#999'};
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+export const ShippingInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+`;
+
+export const ShippingIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 20px;
+`;
+
+export const ShippingDetails = styled.div`
+  flex: 1;
+`;
+
+export const ShippingName = styled.div`
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 4px;
+`;
+
+export const ShippingTime = styled.div`
+  font-size: 0.85rem;
+  color: #666;
+`;
+
+export const ShippingPrice = styled.div`
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: ${props => props.$free ? '#00a85a' : '#333'};
+  margin-right: 12px;
+`;
+
+export const ShippingRadio = styled.input`
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+`;

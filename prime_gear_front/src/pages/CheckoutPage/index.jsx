@@ -76,6 +76,18 @@ import {
   BoletoTitle,
   BoletoForm,
   GenerateBoletoButton,
+  ShippingSection,
+  ShippingTitle,
+  ShippingOptions,
+  ShippingOption,
+  ShippingInfo,
+  ShippingIcon,
+  ShippingDetails,
+  ShippingName,
+  ShippingTime,
+  ShippingPrice,
+  ShippingRadio,
+
 } from "./style";
 import ProductImg from "../../assets/images/desktop-ilustration.png";
 import QRCodeImg from "../../assets/images/qrcode.png";
@@ -110,9 +122,13 @@ const CheckoutPage = () => {
   const [loadingPayment, setLoadingPayment] = useState(false);
   const [pixKeyCopied, setPixKeyCopied] = useState(false);
 
-  // Mock PIX key - in production, this would come from backend
+ 
   const pixKey =
     "00020126580014br.gov.bcb.pix0136a7f7e4c9-1234-5678-90ab-cdef12345678520400005303986540510.005802BR5925PRIMEGEAR OFICIAL STORE6009SAO PAULO62070503***6304ABCD";
+
+  const [selectedShipping, setSelectedShipping] = useState(null);
+  const [shippingOptions, setShippingOptions] = useState([]);
+  const [loadingShipping, setLoadingShipping] = useState(true);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -159,6 +175,48 @@ const CheckoutPage = () => {
   });
 
   const [boletoErrors, setBoletoErrors] = useState({});
+
+  useEffect(() => {
+    const fetchTransportadoras = async () => {
+      try {
+        setLoadingShipping(true);
+
+        const response = await axios.get(
+          'http://localhost:8080/get-transportadoras',
+          {
+            withCredentials: true,
+          }
+        );
+
+      
+        const transportadorasFormatadas = response.data.map((transp) => ({
+          id: transp.cod_transportadora,
+          name: transp.nome_transp,
+          time: "Conforme região", 
+          price: transp.preco_base_frete_transp || 0,
+          cnpj: transp.cnpj_transp,
+          telefone: transp.telefone_transp,
+          avaliacao: transp.avaliacao_media_transp,
+          regioes: transp.regioes_atendidas_transp,
+        }));
+
+        setShippingOptions(transportadorasFormatadas);
+
+      
+        if (transportadorasFormatadas.length > 0) {
+          setSelectedShipping(transportadorasFormatadas[0].id);
+        }
+
+        setLoadingShipping(false);
+      } catch (error) {
+        console.error('Erro ao buscar transportadoras:', error);
+        setLoadingShipping(false);
+        alert('Erro ao carregar transportadoras. Tente novamente.');
+      }
+    };
+
+    fetchTransportadoras();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -208,16 +266,14 @@ const CheckoutPage = () => {
         numero: user.numero_user || "",
       });
 
-      // Preencher dados do boleto com dados do usuário
+    
       setBoletoData({
         nomeCompleto: nomeCompleto,
         cpf: formatarCPF(user.cpf_user),
         email: user.email_user || "",
-        enderecoCompleto: `${user.rua_user || ""}, ${user.numero_user || ""}${
-          user.complemento_user ? ", " + user.complemento_user : ""
-        } - ${user.bairro_user || ""}, ${user.cidade_user || ""} - ${
-          user.estado_user || ""
-        }, ${formatarCEP(user.cep_user)}`,
+        enderecoCompleto: `${user.rua_user || ""}, ${user.numero_user || ""}${user.complemento_user ? ", " + user.complemento_user : ""
+          } - ${user.bairro_user || ""}, ${user.cidade_user || ""} - ${user.estado_user || ""
+          }, ${formatarCEP(user.cep_user)}`,
         cep: formatarCEP(user.cep_user),
         rua: user.rua_user || "",
         numero: user.numero_user || "",
@@ -263,11 +319,14 @@ const CheckoutPage = () => {
       0
     );
     const desconto = subtotal * 0.1;
-    const total = subtotal - desconto;
+    const selectedShippingOption = shippingOptions.find(s => s.id === selectedShipping);
+    const freteValor = selectedShippingOption ? selectedShippingOption.price : 0;
+    const total = subtotal - desconto + freteValor;
 
     return {
       subtotal: subtotal.toFixed(2),
       desconto: desconto.toFixed(2),
+      frete: freteValor.toFixed(2),
       total: total.toFixed(2),
       parcela: (subtotal / 4).toFixed(2),
     };
@@ -326,7 +385,7 @@ const CheckoutPage = () => {
     }
   };
 
-  // Credit Card Utility Functions
+
   const cardMasks = {
     cardNumber: (value) => {
       const numbers = value.replace(/\D/g, "");
@@ -369,7 +428,7 @@ const CheckoutPage = () => {
   const handleCardInputChange = (field, value, maskFunction) => {
     let maskedValue = maskFunction ? maskFunction(value) : value;
 
-    // Auto-detect card brand when card number changes
+
     if (field === "cardNumber") {
       const brand = detectCardBrand(maskedValue);
       setCardData((prev) => ({
@@ -381,7 +440,7 @@ const CheckoutPage = () => {
       setCardData((prev) => ({ ...prev, [field]: maskedValue }));
     }
 
-    // Clear error when user starts typing
+
     if (cardErrors[field]) {
       setCardErrors((prev) => ({ ...prev, [field]: "" }));
     }
@@ -467,15 +526,13 @@ const CheckoutPage = () => {
     const maskedValue = maskFunction ? maskFunction(value) : value;
     setBoletoData((prev) => {
       const updated = { ...prev, [field]: maskedValue };
-      // Atualizar endereço completo automaticamente
+    
       if (
         ["rua", "numero", "bairro", "cidade", "estado", "cep"].includes(field)
       ) {
-        updated.enderecoCompleto = `${updated.rua || ""}, ${
-          updated.numero || ""
-        } - ${updated.bairro || ""}, ${updated.cidade || ""} - ${
-          updated.estado || ""
-        }, ${updated.cep || ""}`
+        updated.enderecoCompleto = `${updated.rua || ""}, ${updated.numero || ""
+          } - ${updated.bairro || ""}, ${updated.cidade || ""} - ${updated.estado || ""
+          }, ${updated.cep || ""}`
           .replace(/^,\s*|,\s*$/g, "")
           .replace(/,\s*,/g, ",");
       }
@@ -487,7 +544,7 @@ const CheckoutPage = () => {
     }
   };
 
-  
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -572,8 +629,8 @@ const CheckoutPage = () => {
           setLoadingPayment(false);
           return;
         }
-  
-   
+
+
         const boletoResponse = await axios.post(
           'http://localhost:8080/generate-boleto',
           {
@@ -599,12 +656,12 @@ const CheckoutPage = () => {
             }))
           },
           {
-            withCredentials:true,
+            withCredentials: true,
             responseType: 'blob'
           }
         );
-  
-    
+
+
         const url = window.URL.createObjectURL(new Blob([boletoResponse.data]));
         const link = document.createElement('a');
         link.href = url;
@@ -618,11 +675,9 @@ const CheckoutPage = () => {
       const enderecoCompleto =
         paymentMethod === "boleto"
           ? boletoData.enderecoCompleto
-          : `${formData.street}, ${formData.numero}${
-              formData.complement ? ", " + formData.complement : ""
-            } - ${formData.neighborhood}, ${formData.city} - ${
-              formData.state
-            }, ${formData.cep}`;
+          : `${formData.street}, ${formData.numero}${formData.complement ? ", " + formData.complement : ""
+          } - ${formData.neighborhood}, ${formData.city} - ${formData.state
+          }, ${formData.cep}`;
 
       let paymentData = {};
 
@@ -665,6 +720,8 @@ const CheckoutPage = () => {
         total: parseFloat(totais.total),
         subtotal: parseFloat(totais.subtotal),
         discount: parseFloat(totais.desconto),
+        shippingCost: parseFloat(totais.frete), 
+        shippingMethod: selectedShipping,
         paymentData: paymentData,
       };
 
@@ -764,6 +821,54 @@ const CheckoutPage = () => {
             <Flipper $flipped={currentStep === 2}>
               <Front $flipped={currentStep === 2}>
                 <Card>
+                  <Title>Entrega</Title>
+                  <ShippingSection>
+                    <ShippingTitle>
+                      Escolha a transportadora
+                    </ShippingTitle>
+
+                    {loadingShipping ? (
+                      <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+                        Carregando transportadoras...
+                      </div>
+                    ) : shippingOptions.length === 0 ? (
+                      <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+                        Nenhuma transportadora disponível no momento.
+                      </div>
+                    ) : (
+                      <ShippingOptions>
+                        {shippingOptions.map((option) => (
+                          <ShippingOption
+                            key={option.id}
+                            $selected={selectedShipping === option.id}
+                            onClick={() => setSelectedShipping(option.id)}
+                          >
+                            <ShippingInfo>
+                            
+                              <ShippingDetails>
+                                <ShippingName>{option.name}</ShippingName>
+                                <ShippingTime>{option.time}</ShippingTime>
+                                {option.avaliacao && (
+                                  <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '2px' }}>
+                                    ⭐ {option.avaliacao}
+                                  </div>
+                                )}
+                              </ShippingDetails>
+                            </ShippingInfo>
+                            <ShippingPrice $free={option.price === 0}>
+                              {option.price === 0 ? "Grátis" : `R$ ${option.price.toFixed(2)}`}
+                            </ShippingPrice>
+                            <ShippingRadio
+                              type="radio"
+                              name="shipping"
+                              checked={selectedShipping === option.id}
+                              onChange={() => setSelectedShipping(option.id)}
+                            />
+                          </ShippingOption>
+                        ))}
+                      </ShippingOptions>
+                    )}
+                  </ShippingSection>
                   <Title>Dados pessoais</Title>
 
                   <Section>
@@ -788,7 +893,11 @@ const CheckoutPage = () => {
                         <ErrorMessage>{errors.email}</ErrorMessage>
                       )}
                     </Field>
+
                     <CheckRow>
+
+
+
                       <input type="checkbox" id="news" />
                       <label htmlFor="news">
                         Envie-me e-mails sobre novidades e ofertas. (Opcional)
@@ -2155,7 +2264,11 @@ const CheckoutPage = () => {
                 </DiscountNote>
                 <RowPrice>
                   <PriceText>Frete</PriceText>
-                  <ShippingFree>Grátis</ShippingFree>
+                  {parseFloat(totais.frete) === 0 ? (
+                    <ShippingFree>Grátis</ShippingFree>
+                  ) : (
+                    <PriceText>R$ {totais.frete}</PriceText>
+                  )}
                 </RowPrice>
 
                 <SummaryDivider />
