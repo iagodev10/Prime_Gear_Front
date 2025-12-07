@@ -46,7 +46,7 @@ const HomePage = () => {
         if (response1.data.success) {
           setProdutosSecao1(response1.data.produtos);
           console.log(response1.data.produtos);
-          
+          console.log("ó");
           setNomeSecao1(response1.data.nomeSecao || 'Destaques da Semana');
         }
 

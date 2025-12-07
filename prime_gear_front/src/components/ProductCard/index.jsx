@@ -29,10 +29,13 @@ const ProductCard = ({
     onBuy,
     idProd
 }) => {
+    console.log('idProd');
+    console.log(idProd);
     const navigate = useNavigate();
     const [isAdding, setIsAdding] = useState(false);
     const {user}=useAuth()
     console.log(user);
+
     const handleAddToCart = async (e) => {
         e.stopPropagation(); 
         
@@ -100,9 +103,9 @@ const ProductCard = ({
             <Info>
                 <ProdTitle>{title}</ProdTitle>
 
-                <div className="price-row">
-                    <Price>{price}</Price>
-                    <PriceInfo>{priceInfo}</PriceInfo>
+                <div className="price-row" style={{display:'block'}}>
+                    <Price>{price}</Price><br/ >
+                    <PriceInfo style={{marginTop:'-20px'}}>{priceInfo}</PriceInfo>
                 </div>
 
               
