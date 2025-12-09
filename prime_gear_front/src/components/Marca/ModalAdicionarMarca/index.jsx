@@ -1,6 +1,6 @@
 import React from "react";
 import { FiX } from "react-icons/fi";
-import { ModalOverlay, ModalContent, ModalHeader, Form, SubmitButton } from "./style";
+import { ModalOverlay, ModalContent, ModalHeader, Form, SubmitButton, ErrorText } from "./style";
 import { useState } from "react";
 import axios from 'axios'
 
@@ -12,8 +12,9 @@ const ModalAdicionarMarca = ({ isVisivel, onClose }) => {
     }
   };
 
-  const [nomeMarca, setNomeMarca] = useState()
-  const [imgMarca, setImgMarca] = useState()
+  const [nomeMarca, setNomeMarca] = useState("")
+  const [imgMarca, setImgMarca] = useState(null)
+  const [errors, setErrors] = useState({})
 
   function handleNomeMarca(e) {
     setNomeMarca(e.target.value);
@@ -21,12 +22,17 @@ const ModalAdicionarMarca = ({ isVisivel, onClose }) => {
 
   async function adicionarMarca(e) {
     e.preventDefault()
+    const eState = {}
+    if (!nomeMarca.trim() || nomeMarca.trim().length < 2) eState.nome = 'Informe um nome válido'
+    if (imgMarca && !/^image\//.test(imgMarca.type)) eState.imagem = 'Arquivo deve ser imagem'
+    setErrors(eState)
+    if (Object.keys(eState).length) return
 
     try {
       const formData= new FormData()
 
       formData.append('nome_marca',nomeMarca)
-      formData.append('imagem1',imgMarca)
+      if (imgMarca) formData.append('imagem1',imgMarca)
 
       const response = await axios.post('http://localhost:8080/adicionar-marca',formData)
       onClose();
@@ -50,11 +56,13 @@ const ModalAdicionarMarca = ({ isVisivel, onClose }) => {
             <div>
               <label htmlFor="nome">Nome da Marca</label>
               <input type="text" id="nome" required placeholder="Digite o nome da categoria" onChange={handleNomeMarca} />
+              {errors.nome && <ErrorText>{errors.nome}</ErrorText>}
             </div>
 
             <div>
               <label htmlFor="imagem">Imagem da Marca</label>
               <input type="file" id="imagem" accept="image/*" onChange={(e)=>setImgMarca(e.target.files[0])}/>
+              {errors.imagem && <ErrorText>{errors.imagem}</ErrorText>}
             </div>
 
             <SubmitButton type="submit">Cadastrar Marca</SubmitButton>

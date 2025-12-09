@@ -1,6 +1,6 @@
 import React from "react";
 import { FiX } from "react-icons/fi";
-import { ModalOverlay, ModalContent, ModalHeader, Form, SubmitButton } from "./style";
+import { ModalOverlay, ModalContent, ModalHeader, Form, SubmitButton, ErrorText } from "./style";
 import { useState } from "react";
 import axios from 'axios'
 
@@ -12,8 +12,9 @@ const ModalAdicionarCategoria = ({ isVisivel, onClose }) => {
     }
   };
 
-  const [nomeCategoria, setNomeCategoria] = useState()
-  const [descricaoCategoria, setDescricaoCategoria] = useState()
+  const [nomeCategoria, setNomeCategoria] = useState("")
+  const [descricaoCategoria, setDescricaoCategoria] = useState("")
+  const [errors, setErrors] = useState({})
 
   function handleNomeCategoria(e) {
     setNomeCategoria(e.target.value);
@@ -22,9 +23,17 @@ const ModalAdicionarCategoria = ({ isVisivel, onClose }) => {
   function handleDescricaoCategoria(e) {
     setDescricaoCategoria(e.target.value);
   }
+  const validar = () => {
+    const e = {}
+    if (!nomeCategoria.trim() || nomeCategoria.trim().length < 3) e.nome = 'Informe um nome válido'
+    if (!descricaoCategoria.trim() || descricaoCategoria.trim().length < 10) e.descricao = 'Descrição muito curta'
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
+
   async function adicionarCategoria(e) {
-
-
+    e.preventDefault()
+    if (!validar()) return
     try {
       const categoria = {
           nome_cat:nomeCategoria,
@@ -53,11 +62,13 @@ const ModalAdicionarCategoria = ({ isVisivel, onClose }) => {
             <div>
               <label htmlFor="nome">Nome da Categoria</label>
               <input type="text" id="nome" required placeholder="Digite o nome da categoria" onChange={handleNomeCategoria} />
+              {errors.nome && <ErrorText>{errors.nome}</ErrorText>}
             </div>
 
             <div>
               <label htmlFor="descricao">Descrição da Categoria</label>
               <textarea id="descricao" required rows={3} placeholder="Digite a descrição da categoria" onChange={handleDescricaoCategoria}></textarea>
+              {errors.descricao && <ErrorText>{errors.descricao}</ErrorText>}
             </div>
 
             <SubmitButton type="submit">Cadastrar Categoria</SubmitButton>

@@ -165,3 +165,9 @@ export const SubmitButton = styled.button`
     
     ${shimmer}
 `;
+
+export const ErrorText = styled.span`
+  color: #d32f2f;
+  font-size: 0.85rem;
+  margin-top: 4px;
+`;
