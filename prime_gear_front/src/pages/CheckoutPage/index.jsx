@@ -93,7 +93,7 @@ import ProductImg from "../../assets/images/desktop-ilustration.png";
 import QRCodeImg from "../../assets/images/qrcode.png";
 import Elo from "../../assets/images/pay/elo.svg";
 import MasterCard from "../../assets/images/pay/master.svg";
-import PixIcon from "../../assets/images/pay/pix.svg"; 
+import PixIcon from "../../assets/images/pay/pix.svg";
 import Visa from "../../assets/images/pay/visa.svg";
 import {
   FiCreditCard,
@@ -127,7 +127,7 @@ const CheckoutPage = () => {
   const [shippingOptions, setShippingOptions] = useState([]);
   const [loadingShipping, setLoadingShipping] = useState(false);
 
-  
+
   const [formData, setFormData] = useState({
     email: "",
     firstName: "",
@@ -172,11 +172,11 @@ const CheckoutPage = () => {
   const [cardErrors, setCardErrors] = useState({});
   const [boletoErrors, setBoletoErrors] = useState({});
 
-  
+
   useEffect(() => {
     const fetchTransportadoras = async () => {
       const cleanCep = formData.cep ? formData.cep.replace(/\D/g, '') : '';
-      
+
 
       if (cleanCep.length !== 8) {
         setLoadingShipping(false);
@@ -191,31 +191,31 @@ const CheckoutPage = () => {
       try {
         setLoadingShipping(true);
         console.log('entrou try');
-       
+
         let totalPeso = 0;
-        let totalAltura = 0; 
+        let totalAltura = 0;
         let maxLargura = 0;
         let maxComprimento = 0;
 
         cartProducts.forEach((item) => {
-            const qtd = item.quantidade || 1;
-      
-            const peso = parseFloat(item.peso_produto || item.peso || 0.5); 
-            const alt = parseFloat(item.altura_produto || item.altura || 15);
-            const larg = parseFloat(item.largura_produto || item.largura || 15);
-            const comp = parseFloat(item.comprimento_produto || item.comprimento || 15);
+          const qtd = item.quantidade || 1;
 
-            totalPeso += peso * qtd;
-            totalAltura += alt * qtd; 
-            maxLargura = Math.max(maxLargura, larg);
-            maxComprimento = Math.max(maxComprimento, comp);
+          const peso = parseFloat(item.peso_produto || item.peso || 0.5);
+          const alt = parseFloat(item.altura_produto || item.altura || 15);
+          const larg = parseFloat(item.largura_produto || item.largura || 15);
+          const comp = parseFloat(item.comprimento_produto || item.comprimento || 15);
+
+          totalPeso += peso * qtd;
+          totalAltura += alt * qtd;
+          maxLargura = Math.max(maxLargura, larg);
+          maxComprimento = Math.max(maxComprimento, comp);
         });
-        console.log('cep pra api: '+cleanCep);
+        console.log('cep pra api: ' + cleanCep);
         const response = await axios.post(
           'http://localhost:8080/calculate-shipping',
           {
             cep_cliente: cleanCep,
-            peso_kg: totalPeso > 0 ? totalPeso : 1, 
+            peso_kg: totalPeso > 0 ? totalPeso : 1,
             altura: totalAltura > 0 ? totalAltura : 20,
             largura: maxLargura > 0 ? maxLargura : 20,
             comprimento: maxComprimento > 0 ? maxComprimento : 20
@@ -234,12 +234,12 @@ const CheckoutPage = () => {
           erro: transp.erro
         }));
         console.log(transportadorasFormatadas);
-   
+
         const validOptions = transportadorasFormatadas.filter(t => !t.erro);
-        
+
         setShippingOptions(validOptions);
 
-   
+
         if (validOptions.length > 0) {
           setSelectedShipping(validOptions[0].id);
         }
@@ -252,14 +252,14 @@ const CheckoutPage = () => {
       }
     };
 
-  
+
     const timeoutId = setTimeout(() => {
-        fetchTransportadoras();
+      fetchTransportadoras();
     }, 1000);
 
     return () => clearTimeout(timeoutId);
 
-  }, [formData.cep, cartProducts, loadingCart]); 
+  }, [formData.cep, cartProducts, loadingCart]);
 
 
 
@@ -345,10 +345,10 @@ const CheckoutPage = () => {
       0
     );
     const desconto = subtotal * 0.1;
-    
+
     const selectedShippingOption = shippingOptions.find(s => s.id === selectedShipping);
     const freteValor = selectedShippingOption ? selectedShippingOption.price : 0;
-    
+
     const total = subtotal - desconto + freteValor;
 
     return {
@@ -356,7 +356,7 @@ const CheckoutPage = () => {
       desconto: desconto.toFixed(2),
       frete: freteValor.toFixed(2),
       total: total.toFixed(2),
-      parcela: (total / 4).toFixed(2), 
+      parcela: (total / 4).toFixed(2),
     };
   };
 
@@ -402,7 +402,7 @@ const CheckoutPage = () => {
     }
   };
 
- 
+
   const cardMasks = {
     cardNumber: (v) => v.replace(/\D/g, "").replace(/(\d{4})(?=\d)/g, "$1 ").trim(),
     cardExpiry: (v) => {
@@ -439,25 +439,25 @@ const CheckoutPage = () => {
     if (cardData.cardExpiry.length !== 5) newErrors.cardExpiry = "Validade inválida";
     if (cardData.cardCVV.length < 3) newErrors.cardCVV = "CVV inválido";
     if (!cardData.cardBrand) newErrors.cardBrand = "Selecione a bandeira";
-    
+
     setCardErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validateBoletoForm = () => {
-      const newErrors = {};
+    const newErrors = {};
 
-      if (!boletoData.nomeCompleto) newErrors.nomeCompleto = "Nome obrigatório";
-      if (!validators.cpf(boletoData.cpf)) newErrors.cpf = "CPF inválido";
-      if (!validators.email(boletoData.email)) newErrors.email = "Email inválido";
-      
-      setBoletoErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
+    if (!boletoData.nomeCompleto) newErrors.nomeCompleto = "Nome obrigatório";
+    if (!validators.cpf(boletoData.cpf)) newErrors.cpf = "CPF inválido";
+    if (!validators.email(boletoData.email)) newErrors.email = "Email inválido";
+
+    setBoletoErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
-  
+
   const handleBoletoInputChange = (field, value) => {
-      setBoletoData(prev => ({ ...prev, [field]: value }));
-      if(boletoErrors[field]) setBoletoErrors(prev => ({...prev, [field]: ''}));
+    setBoletoData(prev => ({ ...prev, [field]: value }));
+    if (boletoErrors[field]) setBoletoErrors(prev => ({ ...prev, [field]: '' }));
   };
 
   const validateForm = () => {
@@ -467,21 +467,21 @@ const CheckoutPage = () => {
     if (!formData.lastName) newErrors.lastName = errorMessages.lastName;
     if (!validators.cpf(formData.cpf)) newErrors.cpf = errorMessages.cpf;
     if (!validators.cep(formData.cep)) newErrors.cep = errorMessages.cep;
-  
-    
+
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleContinue = () => {
     if (validateForm()) {
-      if(!selectedShipping) {
-          alert("Por favor, selecione uma opção de frete.");
-          return;
+      if (!selectedShipping) {
+        alert("Por favor, selecione uma opção de frete.");
+        return;
       }
       setCurrentStep(2);
     } else {
-        alert("Preencha todos os campos obrigatórios corretamente.");
+      alert("Preencha todos os campos obrigatórios corretamente.");
     }
   };
 
@@ -499,21 +499,69 @@ const CheckoutPage = () => {
         setLoadingPayment(false);
         return alert("Verifique os dados do cartão");
       }
-      
-      if (paymentMethod === "boleto" && !validateBoletoForm()) {
+
+      if (paymentMethod === "boleto") {
+        if (!validateBoletoForm()) {
+          alert("Por favor, preencha todos os campos do boleto corretamente");
           setLoadingPayment(false);
-          return alert("Verifique os dados do boleto");
+          return;
+        }
+
+        try {
+          const boletoResponse = await axios.post(
+            'http://localhost:8080/generate-boleto',
+            {
+              nomeCompleto: boletoData.nomeCompleto,
+              cpf: boletoData.cpf,
+              email: boletoData.email,
+              enderecoCompleto: boletoData.enderecoCompleto,
+              cep: boletoData.cep,
+              rua: boletoData.rua,
+              numero: boletoData.numero,
+              bairro: boletoData.bairro,
+              cidade: boletoData.cidade,
+              estado: boletoData.estado,
+              valorTotal: totais.total,
+              subtotal: totais.subtotal,
+              desconto: totais.desconto,
+              itensCarrinho: cartProducts.map(item => ({
+                nome: item.nome || item.nome_produto,
+                nome_produto: item.nome || item.nome_produto,
+                quantidade: item.quantidade,
+                preco_unitario: item.preco_unitario || item.preco,
+                preco: item.preco_unitario || item.preco
+              }))
+            },
+            {
+              withCredentials: true,
+              responseType: 'blob'
+            }
+          );
+
+
+          const url = window.URL.createObjectURL(new Blob([boletoResponse.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `boleto-primegear-${Date.now()}.pdf`);
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        } catch (error) {
+          console.log(error);
+        }
+
       }
 
-   
+
       const enderecoFinal = `${formData.street}, ${formData.numero} ${formData.complement || ""} - ${formData.neighborhood}, ${formData.city} - ${formData.state}, ${formData.cep}`;
 
-  
+
       let paymentDetails = {};
       if (paymentMethod === "credit" || paymentMethod === "debit") {
-          paymentDetails = { ...cardData };
+        paymentDetails = { ...cardData };
       } else if (paymentMethod === "pix") {
-          paymentDetails = { pixKey };
+        paymentDetails = { pixKey };
       }
 
       const orderData = {
@@ -526,7 +574,7 @@ const CheckoutPage = () => {
         shippingMethodId: selectedShipping,
         paymentData: paymentDetails,
         itens: cartProducts,
-  
+
       };
 
       const response = await axios.post(
@@ -598,22 +646,22 @@ const CheckoutPage = () => {
         <Grid>
           <FlipContainer>
             <Flipper $flipped={currentStep === 2}>
-              
+
               {/* --- FRENTE: DADOS E FRETE --- */}
               <Front $flipped={currentStep === 2}>
                 <Card>
                   <Title>Entrega</Title>
                   <ShippingSection>
                     <ShippingTitle>Escolha a transportadora</ShippingTitle>
-                    
+
                     {loadingShipping ? (
-                        <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>Calculando frete...</div>
+                      <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>Calculando frete...</div>
                     ) : shippingOptions.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '20px', color: '#666', fontSize: '0.9rem' }}>
-                           {formData.cep && formData.cep.length >= 8 
-                            ? "Nenhuma transportadora disponível para este CEP." 
-                            : "Digite seu CEP abaixo para ver as opções."}
-                        </div>
+                      <div style={{ textAlign: 'center', padding: '20px', color: '#666', fontSize: '0.9rem' }}>
+                        {formData.cep && formData.cep.length >= 8
+                          ? "Nenhuma transportadora disponível para este CEP."
+                          : "Digite seu CEP abaixo para ver as opções."}
+                      </div>
                     ) : (
                       <ShippingOptions>
                         {shippingOptions.map((option) => (
@@ -626,8 +674,8 @@ const CheckoutPage = () => {
                               <ShippingDetails>
                                 <ShippingName>{option.name}</ShippingName>
                                 <ShippingTime>
-                                    {option.distancia ? `${parseFloat(option.distancia).toFixed(1)} km • ` : ""} 
-                                    {option.time}
+                                  {option.distancia ? `${parseFloat(option.distancia).toFixed(1)} km • ` : ""}
+                                  {option.time}
                                 </ShippingTime>
                               </ShippingDetails>
                             </ShippingInfo>
@@ -1922,9 +1970,7 @@ const CheckoutPage = () => {
                             </CardField>
                           </CardRow>
 
-                          <GenerateBoletoButton >
-                            Gerar Boleto
-                          </GenerateBoletoButton>
+
 
                           <SecurityBadge>
                             <FiShield />
@@ -1963,51 +2009,51 @@ const CheckoutPage = () => {
                 {cartProducts.map((produto) => (
                   <BagItem key={produto.id}>
                     <BagImageWrapper>
-                      <BagImage 
-                        src={produto.imagem || ProductImg} 
-                        onError={(e) => e.target.src = ProductImg} 
+                      <BagImage
+                        src={produto.imagem || ProductImg}
+                        onError={(e) => e.target.src = ProductImg}
                       />
                       <BagBadge>{produto.quantidade}</BagBadge>
                     </BagImageWrapper>
-                    <div style={{flex: 1}}>
-                        <BagTitle>{produto.nome || produto.nome_produto}</BagTitle>
-                        <div style={{fontSize: '0.85rem', color: '#666'}}>
-                            R$ {produto.preco_unitario ? produto.preco_unitario.toFixed(2) : "0.00"} x {produto.quantidade}
-                        </div>
+                    <div style={{ flex: 1 }}>
+                      <BagTitle>{produto.nome || produto.nome_produto}</BagTitle>
+                      <div style={{ fontSize: '0.85rem', color: '#666' }}>
+                        R$ {produto.preco_unitario ? produto.preco_unitario.toFixed(2) : "0.00"} x {produto.quantidade}
+                      </div>
                     </div>
-                    <button onClick={() => handleRemoveItem(produto.id)} style={{border:'none', background:'none', cursor:'pointer', color:'#d00'}}>
-                        <FiTrash2 />
+                    <button onClick={() => handleRemoveItem(produto.id)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#d00' }}>
+                      <FiTrash2 />
                     </button>
                   </BagItem>
                 ))}
 
                 <SummaryDivider />
-                
+
                 <RowPrice>
-                    <PriceText>Subtotal</PriceText>
-                    <PriceText>R$ {totais.subtotal}</PriceText>
+                  <PriceText>Subtotal</PriceText>
+                  <PriceText>R$ {totais.subtotal}</PriceText>
                 </RowPrice>
                 <RowPrice>
-                    <PriceText>Descontos</PriceText>
-                    <PriceValue $discount>- R$ {totais.desconto}</PriceValue>
+                  <PriceText>Descontos</PriceText>
+                  <PriceValue $discount>- R$ {totais.desconto}</PriceValue>
                 </RowPrice>
                 <RowPrice>
-                    <PriceText>Frete</PriceText>
-                    {parseFloat(totais.frete) === 0 ? (
-                        <ShippingFree>Grátis</ShippingFree>
-                    ) : (
-                        <PriceText>R$ {totais.frete}</PriceText>
-                    )}
+                  <PriceText>Frete</PriceText>
+                  {parseFloat(totais.frete) === 0 ? (
+                    <ShippingFree>Grátis</ShippingFree>
+                  ) : (
+                    <PriceText>R$ {totais.frete}</PriceText>
+                  )}
                 </RowPrice>
 
                 <SummaryDivider />
 
                 <TotalBlock>
-                    <TotalLabel><span>Total</span></TotalLabel>
-                    <div style={{textAlign: 'right'}}>
-                        <Total>R$ {totais.total}</Total>
-                        <Installments>em até 4x de R$ {totais.parcela} sem juros</Installments>
-                    </div>
+                  <TotalLabel><span>Total</span></TotalLabel>
+                  <div style={{ textAlign: 'right' }}>
+                    <Total>R$ {totais.total}</Total>
+                    <Installments>em até 4x de R$ {totais.parcela} sem juros</Installments>
+                  </div>
                 </TotalBlock>
               </>
             )}
