@@ -197,7 +197,7 @@ export const Input = styled.input`
   border: 1px solid black;
   border-radius: 99px;
   font-size: 1rem;
-  color: #939598;
+  color: #000;
   width: 100%;
   box-sizing: border-box;
 
