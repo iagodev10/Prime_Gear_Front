@@ -44,6 +44,7 @@ const ThankYouPage = () => {
 
   const orderState = location.state?.order;
   console.log(orderState);
+  console.log(orderState);
   const orderData = orderState || {
     cod_pedido: 1,
     itens: [

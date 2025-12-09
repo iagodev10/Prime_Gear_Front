@@ -587,6 +587,14 @@ const CheckoutPage = () => {
       );
 
       if (response.data.success) {
+        const selectedShippingOption = shippingOptions.find(
+          option => option.id === selectedShipping
+        );
+        
+        const prazoEntrega = selectedShippingOption 
+          ? selectedShippingOption.time 
+          : "Não informado";
+  
         const orderDataForThankYou = {
           ...response.data.pedido,
           itens: cartProducts.map((item) => ({
@@ -606,7 +614,9 @@ const CheckoutPage = () => {
               : null,
           subtotal: totais.subtotal,
           desconto: totais.desconto,
-          frete: "0.00",
+          frete: totais.frete,
+          prazo_entrega: prazoEntrega,
+          nome_transportadora: selectedShippingOption ? selectedShippingOption.name : "N/A"
         };
 
         setCartProducts([]);
