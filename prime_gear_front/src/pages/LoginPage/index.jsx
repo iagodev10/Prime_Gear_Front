@@ -116,24 +116,24 @@ const Login = () => {
 
     let maskedValue = value;
 
-    // Apply masks based on field name
-    if (name === "cpf") {
-      maskedValue = masks.cpf(value);
-    } else if (name === "telefone") {
-      maskedValue = masks.phone(value);
-    } else if (name === "cep") {
-      maskedValue = masks.cep(value);
-    }
+        // Apply masks based on field name
+        if (name === 'cpf') {
+            maskedValue = masks.cpf(value);
+        } else if (name === 'telefone') {
+            maskedValue = masks.phone(value);
+        } else if (name === 'cep') {
+            maskedValue = masks.cep(value);
+        }
 
     setFormData((prev) => ({
       ...prev,
       [name]: maskedValue,
     }));
 
-    // Clear error when user types
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+        // Clear error when user types
+        if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: '' }));
+        }
 
     if (name === "pais" && value === "BR") {
       setEstados(estadosBrasileiros);
@@ -144,75 +144,60 @@ const Login = () => {
     const value = formData[field];
     const newErrors = { ...errors };
 
-    switch (field) {
-      case "loginEmail":
-        if (!validators.email(value)) {
-          newErrors[field] = "E-mail inválido";
-        }
-        break;
-      case "loginSenha":
-        if (!validators.required(value)) {
-          newErrors[field] = "Senha é obrigatória";
-        } else if (value.length < 6) {
-          newErrors[field] = "Senha deve ter no mínimo 6 caracteres";
-        }
-        break;
-      case "nome":
-        if (!validators.required(value)) {
-          newErrors[field] = "Nome completo é obrigatório";
-        } else if (value.trim().split(" ").length < 2) {
-          newErrors[field] = "Digite nome e sobrenome";
-        }
-        break;
-      case "email":
-        if (!validators.email(value)) {
-          newErrors[field] = "E-mail inválido";
-        }
-        break;
-      case "cpf":
-        if (!validators.cpf(value)) {
-          newErrors[field] = "CPF inválido";
-        }
-        break;
-      case "telefone":
-        if (!validators.required(value)) {
-          newErrors[field] = "Telefone é obrigatório";
-        } else if (value.replace(/\D/g, "").length < 10) {
-          newErrors[field] = "Telefone incompleto";
-        }
-        break;
-      case "senha":
-        if (!validators.required(value)) {
-          newErrors[field] = "Senha é obrigatória";
-        } else if (value.length < 6) {
-          newErrors[field] = "Senha deve ter no mínimo 6 caracteres";
-        }
-        // Re-validar confirmarSenha se já foi preenchida
-        if (formData.confirmarSenha && value !== formData.confirmarSenha) {
-          newErrors.confirmarSenha = "As senhas não coincidem";
-        } else if (
-          formData.confirmarSenha &&
-          value === formData.confirmarSenha
-        ) {
-          delete newErrors.confirmarSenha;
-        }
-        break;
-      case "confirmarSenha":
-        if (!validators.required(value)) {
-          newErrors[field] = "Confirmação de senha é obrigatória";
-        } else if (value !== formData.senha) {
-          newErrors[field] = "As senhas não coincidem";
-        }
-        break;
-      case "dataNascimento":
-        if (!validators.required(value)) {
-          newErrors[field] = "Data de nascimento é obrigatória";
-        } else {
-          const birthDate = new Date(value);
-          const today = new Date();
-          const age = today.getFullYear() - birthDate.getFullYear();
-          const monthDiff = today.getMonth() - birthDate.getMonth();
-          const dayDiff = today.getDate() - birthDate.getDate();
+        switch (field) {
+            case 'nome':
+                if (!validators.required(value)) {
+                    newErrors[field] = 'Nome completo é obrigatório';
+                } else if (value.trim().split(' ').length < 2) {
+                    newErrors[field] = 'Digite nome e sobrenome';
+                }
+                break;
+            case 'email':
+                if (!validators.email(value)) {
+                    newErrors[field] = 'E-mail inválido';
+                }
+                break;
+            case 'cpf':
+                if (!validators.cpf(value)) {
+                    newErrors[field] = 'CPF inválido';
+                }
+                break;
+            case 'telefone':
+                if (!validators.required(value)) {
+                    newErrors[field] = 'Telefone é obrigatório';
+                } else if (value.replace(/\D/g, '').length < 10) {
+                    newErrors[field] = 'Telefone incompleto';
+                }
+                break;
+            case 'senha':
+                if (!validators.required(value)) {
+                    newErrors[field] = 'Senha é obrigatória';
+                } else if (value.length < 6) {
+                    newErrors[field] = 'Senha deve ter no mínimo 6 caracteres';
+                }
+                // Re-validar confirmarSenha se já foi preenchida
+                if (formData.confirmarSenha && value !== formData.confirmarSenha) {
+                    newErrors.confirmarSenha = 'As senhas não coincidem';
+                } else if (formData.confirmarSenha && value === formData.confirmarSenha) {
+                    delete newErrors.confirmarSenha;
+                }
+                break;
+            case 'confirmarSenha':
+                if (!validators.required(value)) {
+                    newErrors[field] = 'Confirmação de senha é obrigatória';
+                } else if (value !== formData.senha) {
+                    newErrors[field] = 'As senhas não coincidem';
+                }
+                break;
+            case 'dataNascimento':
+                if (!validators.required(value)) {
+                    newErrors[field] = 'Data de nascimento é obrigatória';
+                } else {
+                    const birthDate = new Date(value);
+                    const today = new Date();
+                    const age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    const dayDiff = today.getDate() - birthDate.getDate();
 
           const actualAge =
             monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
@@ -310,18 +295,15 @@ const Login = () => {
       const data = await login(formData.loginEmail, formData.loginSenha);
       console.log("==>Dados retornados:", data);
 
-      if (
-        data.user.perfil === "Administrador" ||
-        data.user.perfil === "Transportadora" ||
-        data.user.perfil === "Funcionário"
-      ) {
-        navigate("/admin");
-      } else {
-        navigate("/user");
-      }
-    } catch (error) {
-      console.error("Erro completo:", error);
-      let errorMessage = "Erro desconhecido";
+            if (data.user.perfil === 'Administrador' || data.user.perfil === 'Transportadora' || data.user.perfil === 'Funcionário') {
+                navigate('/admin');
+            } else {
+                navigate('/user');
+            }
+
+        } catch (error) {
+            console.error('Erro completo:', error);
+            let errorMessage = 'Erro desconhecido';
 
       if (error.response) {
         errorMessage =
