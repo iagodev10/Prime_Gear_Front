@@ -75,9 +75,13 @@ const ModalAdicionarTransportadora = ({ isVisivel, onClose, onAdd }) => {
 
   const validar = () => {
     const e = {};
-    
-   
-    
+    if (!nome.trim()) e.nome = "Informe o nome";
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "E-mail inválido";
+    if (cnpj.replace(/\D/g, '').length !== 14) e.cnpj = "CNPJ inválido";
+    const telDigits = telefone.replace(/\D/g, '');
+    if (telDigits.length < 10 || telDigits.length > 11) e.telefone = "Telefone inválido";
+    if (cep.replace(/\D/g, '').length !== 8) e.cep = "CEP inválido";
+
     if (!precoPorKm || isNaN(parseFloat(precoPorKm)) || parseFloat(precoPorKm) < 0) {
       e.precoPorKm = "Preço por km inválido";
     }
@@ -106,8 +110,7 @@ const ModalAdicionarTransportadora = ({ isVisivel, onClose, onAdd }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
- 
+    if (!validar()) return;
 
     const novaTransportadora = {
       nome_transp: nome.trim(),
