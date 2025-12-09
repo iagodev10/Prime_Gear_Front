@@ -92,8 +92,8 @@ const AdminTransportadora = () => {
               <h3>{transportadora.nome_transp}</h3>
             </Name>
             <TransPrice>
-              <p className="label">Preço Base do Frete</p>
-              <p>R$ {transportadora.preco_base_frete_transp.toFixed(2)}</p>
+              <p className="label">Preço por KM</p>
+              <p>R$ {transportadora.preco_por_km_transp.toFixed(2)}</p>
             </TransPrice>
 
             <Info>
@@ -102,8 +102,8 @@ const AdminTransportadora = () => {
               <p className="label">Contato</p>
               <p>{transportadora.telefone_transp}</p>
               <p style={{ marginBottom: "20px" }}>{transportadora.email_transp}</p>
-              <p className="label">Regiões de Entrega</p>
-              <p>{transportadora.regioes_atendidas_transp}</p>
+              <p className="label">CEP</p>
+              <p>{transportadora.cep_transp}</p>
             </Info>
 
             <Action>

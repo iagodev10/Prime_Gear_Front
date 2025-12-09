@@ -1,201 +1,314 @@
-import React, { useState } from "react";
-import axios from 'axios'
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import { FiX } from "react-icons/fi";
 import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
   Form,
-  SubmitButton, Div, ErrorText
+  SubmitButton,
+  Div,
+  ErrorText
 } from "./style";
 
 const ModalAdicionarTransportadora = ({ isVisivel, onClose, onAdd }) => {
   if (!isVisivel) return null;
+
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
+
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [endereco, setEndereco] = useState("");
+  const [cep, setCep] = useState("");
   const [cnpj, setCnpj] = useState("");
-  const [regioes, setRegioes] = useState("");
-  const [precoFrete, setPrecoFrete] = useState("");
-  const [avaliacao, setAvaliacao] = useState("");
+  const [precoPorKm, setPrecoPorKm] = useState("");
+  const [taxaFixa, setTaxaFixa] = useState("");
+  const [precoPorKg, setPrecoPorKg] = useState("");
+  const [fatorCubagem, setFatorCubagem] = useState("");
+  const [codModalidade, setCodModalidade] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [errors, setErrors] = useState({});
+  const [loadingCEP, setLoadingCEP] = useState(false);
+
+
+
+
+
+  const validarCNPJ = (cnpj) => {
+    const cnpjLimpo = cnpj.replace(/\D/g, '');
+    return cnpjLimpo.length === 14;
+  };
+
+
+  const maskCEP = (value) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{5})(\d)/, '$1-$2')
+      .slice(0, 9);
+  };
+
+
+  const maskCNPJ = (value) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{2})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1/$2')
+      .replace(/(\d{4})(\d)/, '$1-$2')
+      .slice(0, 18);
+  };
+
+
+  const maskTelefone = (value) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{2})(\d)/, '($1) $2')
+      .replace(/(\d{5})(\d)/, '$1-$2')
+      .slice(0, 15);
+  };
 
   const validar = () => {
     const e = {};
-    if (!nome.trim()) e.nome = "Informe o nome";
-    if (!cnpj.match(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)) e.cnpj = "CNPJ inválido";
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "Email inválido";
-    if (!telefone.match(/^\(?\d{2}\)?\s?\d{4,5}-\d{4}$/)) e.telefone = "Telefone inválido";
-    if (!endereco.trim()) e.endereco = "Informe o endereço";
-    if (!regioes.trim()) e.regioes = "Informe as regiões";
-    if (!precoFrete || isNaN(parseFloat(precoFrete))) e.precoFrete = "Preço inválido";
-    if (avaliacao && (isNaN(parseFloat(avaliacao)) || parseFloat(avaliacao) < 0 || parseFloat(avaliacao) > 5)) e.avaliacao = "Avaliação 0-5";
+    
+   
+    
+    if (!precoPorKm || isNaN(parseFloat(precoPorKm)) || parseFloat(precoPorKm) < 0) {
+      e.precoPorKm = "Preço por km inválido";
+    }
+    if (!taxaFixa || isNaN(parseFloat(taxaFixa)) || parseFloat(taxaFixa) < 0) {
+      e.taxaFixa = "Taxa fixa inválida";
+    }
+    if (!precoPorKg || isNaN(parseFloat(precoPorKg)) || parseFloat(precoPorKg) < 0) {
+      e.precoPorKg = "Preço por kg inválido";
+    }
+    if (!fatorCubagem || isNaN(parseFloat(fatorCubagem)) || parseFloat(fatorCubagem) <= 0) {
+      e.fatorCubagem = "Fator de cubagem inválido";
+    }
+    if (!codModalidade || isNaN(parseInt(codModalidade)) || parseInt(codModalidade) <= 0) {
+      e.codModalidade = "Selecione uma modalidade";
+    }
+    if (!latitude || isNaN(parseFloat(latitude))) {
+      e.latitude = "Latitude inválida";
+    }
+    if (!longitude || isNaN(parseFloat(longitude))) {
+      e.longitude = "Longitude inválida";
+    }
+
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+
+ 
+
     const novaTransportadora = {
-      nome_transp: nome,
-      email_transp: email,
-      telefone_transp: telefone,
-      endereco_sede_transp: endereco,
-      cnpj_transp: cnpj,
-      regioes_atendidas_transp: regioes,
-      preco_base_frete_transp: precoFrete,
-      avaliacao_media_transp: avaliacao
-    }
+      nome_transp: nome.trim(),
+      email_transp: email.trim(),
+      telefone_transp: telefone.replace(/\D/g, ''),
+      cep_transp: cep.replace(/\D/g, ''),
+      cnpj_transp: cnpj.replace(/\D/g, ''),
+      preco_por_km_transp: parseFloat(precoPorKm),
+      taxa_fixa: parseFloat(taxaFixa),
+      preco_por_kg: parseFloat(precoPorKg),
+      fator_cubagem: parseFloat(fatorCubagem),
+      latitude_transp: parseFloat(latitude),
+      longitude_transp: parseFloat(longitude),
+      cod_modalidade: parseInt(codModalidade)
+    };
+
+    console.log("Enviando transportadora:", novaTransportadora);
 
     try {
-      const response= await axios.post('http://localhost:8080/create-transportadora',novaTransportadora)
-      console.log("transportadora criada com sucesso");
-
+      const response = await axios.post(
+        'http://localhost:8080/create-transportadora',
+        novaTransportadora,
+        {
+          withCredentials: true
+        }
+      );
+      
+      console.log("Transportadora criada com sucesso:", response.data);
+      alert("Transportadora cadastrada com sucesso!");
+      
+    
+      setNome("");
+      setEmail("");
+      setTelefone("");
+      setCep("");
+      setCnpj("");
+      setPrecoPorKm("");
+      setTaxaFixa("");
+      setPrecoPorKg("");
+      setFatorCubagem("");
+      setLatitude("");
+      setLongitude("");
+      setCodModalidade("");
+      setErrors({});
+      
+      onClose();
+      window.location.reload(); 
     } catch (error) {
-      console.log(error);
+      console.error("Erro ao criar transportadora:", error);
+      alert(error.response?.data?.message || "Erro ao cadastrar transportadora");
     }
   };
 
-
-return (
-  <>
+  return (
     <ModalOverlay onClick={handleOverlayClick}>
       <ModalContent>
         <ModalHeader>
-          <h2>Novo Transportadora</h2>
+          <h2>Nova Transportadora</h2>
           <button onClick={onClose}>
             <FiX size={24} />
           </button>
         </ModalHeader>
 
         <Form onSubmit={handleSubmit}>
+          {/* Nome da Transportadora */}
+          <div>
+            <label htmlFor="nome">Nome da Transportadora *</label>
+            <input
+              type="text"
+              id="nome"
+              placeholder="Digite o nome da transportadora"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+            />
+            {errors.nome && <ErrorText>{errors.nome}</ErrorText>}
+          </div>
+
+          {/* Email */}
+          <div>
+            <label htmlFor="email">Email *</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {errors.email && <ErrorText>{errors.email}</ErrorText>}
+          </div>
+
+          {/* CNPJ e Telefone */}
           <Div className="grid-item">
             <div>
-              <label htmlFor="nome">Nome do Transportadora</label>
-              <input
-                type="text"
-                id="nome"
-                required
-                placeholder="Digite o nome do transportadora"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-              />
-              {errors.nome && <ErrorText>{errors.nome}</ErrorText>}
-            </div>
-
-            <div>
-              <label htmlFor="cnpj">CNPJ</label>
+              <label htmlFor="cnpj">CNPJ *</label>
               <input
                 type="text"
                 id="cnpj"
-                required
                 placeholder="00.000.000/0000-00"
                 value={cnpj}
-                onChange={(e) => setCnpj(e.target.value)}
+                onChange={(e) => setCnpj(maskCNPJ(e.target.value))}
               />
               {errors.cnpj && <ErrorText>{errors.cnpj}</ErrorText>}
             </div>
-          </Div>
-
-          <Div className="grid-item">
             <div>
-              <label htmlFor="telefone">Telefone</label>
+              <label htmlFor="telefone">Telefone *</label>
               <input
                 type="tel"
                 id="telefone"
-                required
                 placeholder="(00) 00000-0000"
                 value={telefone}
-                onChange={(e) => setTelefone(e.target.value)}
+                onChange={(e) => setTelefone(maskTelefone(e.target.value))}
               />
               {errors.telefone && <ErrorText>{errors.telefone}</ErrorText>}
             </div>
-
-            <div>
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                required
-                placeholder="email@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              {errors.email && <ErrorText>{errors.email}</ErrorText>}
-            </div>
           </Div>
 
-     
-            <div>
-            <label htmlFor="endereco">Endereço da Sede</label>
-            <input
-              type="text"
-              id="endereco"
-              required
-              placeholder="Digite o endereço da sede"
-              value={endereco}
-              onChange={(e) => setEndereco(e.target.value)}
-            />
-            {errors.endereco && <ErrorText>{errors.endereco}</ErrorText>}
-          </div>
-         
-          
-
-
+          {/* CEP */}
           <div>
-            <label htmlFor="regioes">Regiões Atendidas</label>
+            <label htmlFor="cep">CEP * {loadingCEP && "(Buscando coordenadas...)"}</label>
             <input
               type="text"
-              id="regioes"
-              required
-              placeholder="Digite as regiões atendidas"
-              value={regioes}
-              onChange={(e) => setRegioes(e.target.value)}
+              id="cep"
+              placeholder="00000-000"
+              value={cep}
+              onChange={(e) => {
+                const cepFormatado = maskCEP(e.target.value);
+                setCep(cepFormatado);
+              }}
             />
-            {errors.regioes && <ErrorText>{errors.regioes}</ErrorText>}
+            {errors.cep && <ErrorText>{errors.cep}</ErrorText>}
           </div>
+
+          {/* Preços e Taxas */}
+          <Div className="grid-item">
+            <div>
+              <label htmlFor="preco_km">Preço por Km (R$) *</label>
+              <input
+                type="number"
+                id="preco_km"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                value={precoPorKm}
+                onChange={(e) => setPrecoPorKm(e.target.value)}
+              />
+              {errors.precoPorKm && <ErrorText>{errors.precoPorKm}</ErrorText>}
+            </div>
+            <div>
+              <label htmlFor="taxa_fixa">Taxa Fixa (R$) *</label>
+              <input
+                type="number"
+                id="taxa_fixa"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                value={taxaFixa}
+                onChange={(e) => setTaxaFixa(e.target.value)}
+              />
+              {errors.taxaFixa && <ErrorText>{errors.taxaFixa}</ErrorText>}
+            </div>
+          </Div>
 
           <Div className="grid-item">
             <div>
-              <label htmlFor="preco_frete">Preço Base do Frete</label>
+              <label htmlFor="preco_kg">Preço por Kg (R$) *</label>
               <input
                 type="number"
-                id="preco_frete"
-                required
-                placeholder="0"
-                value={precoFrete}
-                onChange={(e) => setPrecoFrete(e.target.value)}
-              />
-              {errors.precoFrete && <ErrorText>{errors.precoFrete}</ErrorText>}
-            </div>
-
-            <div>
-              <label htmlFor="avaliacao">Avaliação Média (0-5)</label>
-              <input
-                type="number"
-                id="avaliacao"
-                placeholder="0"
-                value={avaliacao}
-                onChange={(e) => setAvaliacao(e.target.value)}
+                id="preco_kg"
+                placeholder="0.00"
+                step="0.01"
                 min="0"
-                max="5"
+                value={precoPorKg}
+                onChange={(e) => setPrecoPorKg(e.target.value)}
               />
-              {errors.avaliacao && <ErrorText>{errors.avaliacao}</ErrorText>}
+              {errors.precoPorKg && <ErrorText>{errors.precoPorKg}</ErrorText>}
+            </div>
+            <div>
+              <label htmlFor="fator_cubagem">Fator de Cubagem *</label>
+              <input
+                type="number"
+                id="fator_cubagem"
+                placeholder="300"
+                step="1"
+                min="1"
+                value={fatorCubagem}
+                onChange={(e) => setFatorCubagem(e.target.value)}
+              />
+              {errors.fatorCubagem && <ErrorText>{errors.fatorCubagem}</ErrorText>}
+              <small style={{ color: '#666', fontSize: '0.75rem' }}>
+                Fator padrão: 300 (1m³ = 300kg)
+              </small>
             </div>
           </Div>
+
+         
 
           <SubmitButton type="submit">Cadastrar Transportadora</SubmitButton>
         </Form>
       </ModalContent>
     </ModalOverlay>
-  </>
-);
+  );
 };
 
 export default ModalAdicionarTransportadora;

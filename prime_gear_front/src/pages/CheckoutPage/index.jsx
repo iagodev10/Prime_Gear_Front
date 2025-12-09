@@ -81,23 +81,19 @@ import {
   ShippingOptions,
   ShippingOption,
   ShippingInfo,
-  ShippingIcon,
   ShippingDetails,
   ShippingName,
   ShippingTime,
   ShippingPrice,
   ShippingRadio,
-
 } from "./style";
+
+
 import ProductImg from "../../assets/images/desktop-ilustration.png";
 import QRCodeImg from "../../assets/images/qrcode.png";
-import Inter from "../../assets/images/pay/inter.svg";
 import Elo from "../../assets/images/pay/elo.svg";
-import Itau from "../../assets/images/pay/itau.svg";
 import MasterCard from "../../assets/images/pay/master.svg";
-import Mercado from "../../assets/images/pay/mercado.svg";
-import PicPay from "../../assets/images/pay/picpay.svg";
-import Pix from "../../assets/images/pay/pix.svg";
+import PixIcon from "../../assets/images/pay/pix.svg"; 
 import Visa from "../../assets/images/pay/visa.svg";
 import {
   FiCreditCard,
@@ -108,6 +104,8 @@ import {
   FiCheck,
 } from "react-icons/fi";
 import { RiQrCodeLine } from "react-icons/ri";
+
+
 import { masks, validators, errorMessages } from "../../utils/formValidation";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -122,14 +120,14 @@ const CheckoutPage = () => {
   const [loadingPayment, setLoadingPayment] = useState(false);
   const [pixKeyCopied, setPixKeyCopied] = useState(false);
 
- 
   const pixKey =
     "00020126580014br.gov.bcb.pix0136a7f7e4c9-1234-5678-90ab-cdef12345678520400005303986540510.005802BR5925PRIMEGEAR OFICIAL STORE6009SAO PAULO62070503***6304ABCD";
 
   const [selectedShipping, setSelectedShipping] = useState(null);
   const [shippingOptions, setShippingOptions] = useState([]);
-  const [loadingShipping, setLoadingShipping] = useState(true);
+  const [loadingShipping, setLoadingShipping] = useState(false);
 
+  
   const [formData, setFormData] = useState({
     email: "",
     firstName: "",
@@ -157,10 +155,6 @@ const CheckoutPage = () => {
     installments: "1",
   });
 
-  const [cardErrors, setCardErrors] = useState({});
-
-  const [errors, setErrors] = useState({});
-
   const [boletoData, setBoletoData] = useState({
     nomeCompleto: "",
     cpf: "",
@@ -174,49 +168,100 @@ const CheckoutPage = () => {
     estado: "",
   });
 
+  const [errors, setErrors] = useState({});
+  const [cardErrors, setCardErrors] = useState({});
   const [boletoErrors, setBoletoErrors] = useState({});
 
+  
   useEffect(() => {
     const fetchTransportadoras = async () => {
+      const cleanCep = formData.cep ? formData.cep.replace(/\D/g, '') : '';
+      
+
+      if (cleanCep.length !== 8) {
+        setLoadingShipping(false);
+        setShippingOptions([]);
+        return;
+      }
+
+      if (cartProducts.length === 0 && !loadingCart) {
+        return;
+      }
+
       try {
         setLoadingShipping(true);
+        console.log('entrou try');
+       
+        let totalPeso = 0;
+        let totalAltura = 0; 
+        let maxLargura = 0;
+        let maxComprimento = 0;
 
-        const response = await axios.get(
-          'http://localhost:8080/get-transportadoras',
+        cartProducts.forEach((item) => {
+            const qtd = item.quantidade || 1;
+      
+            const peso = parseFloat(item.peso_produto || item.peso || 0.5); 
+            const alt = parseFloat(item.altura_produto || item.altura || 15);
+            const larg = parseFloat(item.largura_produto || item.largura || 15);
+            const comp = parseFloat(item.comprimento_produto || item.comprimento || 15);
+
+            totalPeso += peso * qtd;
+            totalAltura += alt * qtd; 
+            maxLargura = Math.max(maxLargura, larg);
+            maxComprimento = Math.max(maxComprimento, comp);
+        });
+        console.log('cep pra api: '+cleanCep);
+        const response = await axios.post(
+          'http://localhost:8080/calculate-shipping',
+          {
+            cep_cliente: cleanCep,
+            peso_kg: totalPeso > 0 ? totalPeso : 1, 
+            altura: totalAltura > 0 ? totalAltura : 20,
+            largura: maxLargura > 0 ? maxLargura : 20,
+            comprimento: maxComprimento > 0 ? maxComprimento : 20
+          },
           {
             withCredentials: true,
           }
         );
 
-      
         const transportadorasFormatadas = response.data.map((transp) => ({
           id: transp.cod_transportadora,
           name: transp.nome_transp,
-          time: "Conforme região", 
-          price: transp.preco_base_frete_transp || 0,
-          cnpj: transp.cnpj_transp,
-          telefone: transp.telefone_transp,
-          avaliacao: transp.avaliacao_media_transp,
-          regioes: transp.regioes_atendidas_transp,
+          time: transp.prazo_estimado || transp.tempo_estimado || "N/A",
+          price: parseFloat(transp.preco_frete) || 0,
+          distancia: transp.distancia_km,
+          erro: transp.erro
         }));
+        console.log(transportadorasFormatadas);
+   
+        const validOptions = transportadorasFormatadas.filter(t => !t.erro);
+        
+        setShippingOptions(validOptions);
 
-        setShippingOptions(transportadorasFormatadas);
-
-      
-        if (transportadorasFormatadas.length > 0) {
-          setSelectedShipping(transportadorasFormatadas[0].id);
+   
+        if (validOptions.length > 0) {
+          setSelectedShipping(validOptions[0].id);
         }
 
         setLoadingShipping(false);
       } catch (error) {
-        console.error('Erro ao buscar transportadoras:', error);
+        console.error('Erro ao calcular frete:', error);
         setLoadingShipping(false);
-        alert('Erro ao carregar transportadoras. Tente novamente.');
+
       }
     };
 
-    fetchTransportadoras();
-  }, []);
+  
+    const timeoutId = setTimeout(() => {
+        fetchTransportadoras();
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+
+  }, [formData.cep, cartProducts, loadingCart]); 
+
+
 
   useEffect(() => {
     if (user) {
@@ -231,23 +276,9 @@ const CheckoutPage = () => {
         return `${dia}/${mes}/${ano}`;
       };
 
-      const formatarCPF = (cpf) => {
-        if (!cpf) return "";
-        const numeros = cpf.replace(/\D/g, "");
-        return masks.cpf(numeros);
-      };
-
-      const formatarCEP = (cep) => {
-        if (!cep) return "";
-        const numeros = cep.replace(/\D/g, "");
-        return masks.cep(numeros);
-      };
-
-      const formatarTelefone = (tel) => {
-        if (!tel) return "";
-        const numeros = tel.replace(/\D/g, "");
-        return masks.phone(numeros);
-      };
+      const formatarCPF = (cpf) => (cpf ? masks.cpf(cpf.replace(/\D/g, "")) : "");
+      const formatarCEP = (cep) => (cep ? masks.cep(cep.replace(/\D/g, "")) : "");
+      const formatarTelefone = (tel) => (tel ? masks.phone(tel.replace(/\D/g, "")) : "");
 
       setFormData({
         email: user.email_user || "",
@@ -266,14 +297,11 @@ const CheckoutPage = () => {
         numero: user.numero_user || "",
       });
 
-    
       setBoletoData({
         nomeCompleto: nomeCompleto,
         cpf: formatarCPF(user.cpf_user),
         email: user.email_user || "",
-        enderecoCompleto: `${user.rua_user || ""}, ${user.numero_user || ""}${user.complemento_user ? ", " + user.complemento_user : ""
-          } - ${user.bairro_user || ""}, ${user.cidade_user || ""} - ${user.estado_user || ""
-          }, ${formatarCEP(user.cep_user)}`,
+        enderecoCompleto: `${user.rua_user || ""}, ${user.numero_user || ""} - ${user.bairro_user || ""}, ${user.cidade_user || ""} - ${user.estado_user || ""}, ${formatarCEP(user.cep_user)}`,
         cep: formatarCEP(user.cep_user),
         rua: user.rua_user || "",
         numero: user.numero_user || "",
@@ -284,6 +312,7 @@ const CheckoutPage = () => {
     }
   }, [user]);
 
+
   useEffect(() => {
     const fetchCartProducts = async () => {
       if (!user || !user.cod_user) {
@@ -293,18 +322,14 @@ const CheckoutPage = () => {
 
       try {
         setLoadingCart(true);
-
         const response = await axios.get(
           `http://localhost:8080/get-produtos-cart/${user.cod_user}`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
-
         setCartProducts(response.data);
         setLoadingCart(false);
       } catch (error) {
-        console.error("Erro ao buscar produtos do carrinho:", error);
+        console.error("Erro ao buscar carrinho:", error);
         setCartProducts([]);
         setLoadingCart(false);
       }
@@ -313,14 +338,17 @@ const CheckoutPage = () => {
     fetchCartProducts();
   }, [user]);
 
+
   const calcularTotais = () => {
     const subtotal = cartProducts.reduce(
-      (acc, item) => acc + item.preco_total,
+      (acc, item) => acc + (item.preco_total || (item.preco_unitario * item.quantidade)),
       0
     );
     const desconto = subtotal * 0.1;
+    
     const selectedShippingOption = shippingOptions.find(s => s.id === selectedShipping);
     const freteValor = selectedShippingOption ? selectedShippingOption.price : 0;
+    
     const total = subtotal - desconto + freteValor;
 
     return {
@@ -328,48 +356,38 @@ const CheckoutPage = () => {
       desconto: desconto.toFixed(2),
       frete: freteValor.toFixed(2),
       total: total.toFixed(2),
-      parcela: (subtotal / 4).toFixed(2),
+      parcela: (total / 4).toFixed(2), 
     };
   };
 
   const totais = calcularTotais();
 
+
   const handleRemoveItem = async (itemId) => {
     try {
       const token = localStorage.getItem("token");
-
-      if (!window.confirm("Deseja realmente remover este item do carrinho?")) {
-        return;
-      }
+      if (!window.confirm("Remover item do carrinho?")) return;
 
       await axios.delete(`http://localhost:8080/remove-from-cart/${itemId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
 
       setCartProducts((prev) => prev.filter((item) => item.id !== itemId));
-      alert("Item removido com sucesso!");
     } catch (error) {
-      console.error("Erro ao remover item do carrinho:", error);
-      alert("Erro ao remover item. Tente novamente.");
+      console.error("Erro ao remover item:", error);
+      alert("Erro ao remover item.");
     }
   };
 
   const handleInputChange = (field, value, maskFunction) => {
     const maskedValue = maskFunction ? maskFunction(value) : value;
     setFormData((prev) => ({ ...prev, [field]: maskedValue }));
-
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
-    }
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
   const handleBlur = (field, validatorFunction, errorMessage) => {
-    const value = formData[field];
-
-    if (!value || !validatorFunction(value)) {
+    if (!formData[field] || !validatorFunction(formData[field])) {
       setErrors((prev) => ({ ...prev, [field]: errorMessage }));
     }
   };
@@ -380,361 +398,142 @@ const CheckoutPage = () => {
       setPixKeyCopied(true);
       setTimeout(() => setPixKeyCopied(false), 2000);
     } catch (err) {
-      console.error("Erro ao copiar chave PIX:", err);
-      alert("Erro ao copiar chave PIX. Tente copiar manualmente.");
+      alert("Erro ao copiar chave PIX.");
     }
   };
 
-
+ 
   const cardMasks = {
-    cardNumber: (value) => {
-      const numbers = value.replace(/\D/g, "");
-      return numbers.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+    cardNumber: (v) => v.replace(/\D/g, "").replace(/(\d{4})(?=\d)/g, "$1 ").trim(),
+    cardExpiry: (v) => {
+      const n = v.replace(/\D/g, "");
+      return n.length >= 2 ? n.slice(0, 2) + "/" + n.slice(2, 4) : n;
     },
-    cardExpiry: (value) => {
-      const numbers = value.replace(/\D/g, "");
-      if (numbers.length >= 2) {
-        return numbers.slice(0, 2) + "/" + numbers.slice(2, 4);
-      }
-      return numbers;
-    },
-    cardCVV: (value) => {
-      return value.replace(/\D/g, "").slice(0, 4);
-    },
-    cardCPF: (value) => {
-      const numbers = value.replace(/\D/g, "");
-      return numbers
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
-        .slice(0, 14);
-    },
+    cardCVV: (v) => v.replace(/\D/g, "").slice(0, 4),
+    cardCPF: (v) => masks.cpf(v.replace(/\D/g, "")),
   };
 
-  const detectCardBrand = (cardNumber) => {
-    const number = cardNumber.replace(/\s/g, "");
-
-    if (/^4/.test(number)) return "visa";
-    if (/^5[1-5]/.test(number)) return "mastercard";
-    if (/^3[47]/.test(number)) return "amex";
-    if (/^6(?:011|5)/.test(number)) return "discover";
-    if (/^35/.test(number)) return "jcb";
-    if (/^(?:5[0678]|6304|6390|67)/.test(number)) return "elo";
-    if (/^(606282|3841)/.test(number)) return "hipercard";
-
+  const detectCardBrand = (number) => {
+    const n = number.replace(/\s/g, "");
+    if (/^4/.test(n)) return "visa";
+    if (/^5[1-5]/.test(n)) return "mastercard";
+    if (/^(?:5[0678]|6304|6390|67)/.test(n)) return "elo";
     return "";
   };
 
   const handleCardInputChange = (field, value, maskFunction) => {
-    let maskedValue = maskFunction ? maskFunction(value) : value;
-
-
+    const masked = maskFunction ? maskFunction(value) : value;
     if (field === "cardNumber") {
-      const brand = detectCardBrand(maskedValue);
-      setCardData((prev) => ({
-        ...prev,
-        [field]: maskedValue,
-        cardBrand: brand,
-      }));
+      setCardData(prev => ({ ...prev, [field]: masked, cardBrand: detectCardBrand(masked) }));
     } else {
-      setCardData((prev) => ({ ...prev, [field]: maskedValue }));
+      setCardData(prev => ({ ...prev, [field]: masked }));
     }
-
-
-    if (cardErrors[field]) {
-      setCardErrors((prev) => ({ ...prev, [field]: "" }));
-    }
+    if (cardErrors[field]) setCardErrors(prev => ({ ...prev, [field]: "" }));
   };
 
   const validateCardForm = () => {
     const newErrors = {};
-
-    if (!cardData.cardHolderName.trim()) {
-      newErrors.cardHolderName = "Nome do titular é obrigatório";
-    }
-    if (!validators.cpf(cardData.cardHolderCPF)) {
-      newErrors.cardHolderCPF = "CPF inválido";
-    }
-    const cardNumberClean = cardData.cardNumber.replace(/\s/g, "");
-    if (cardNumberClean.length < 13 || cardNumberClean.length > 19) {
-      newErrors.cardNumber = "Número do cartão inválido";
-    }
-    if (!cardData.cardExpiry || cardData.cardExpiry.length !== 5) {
-      newErrors.cardExpiry = "Validade inválida";
-    } else {
-      const [month, year] = cardData.cardExpiry.split("/");
-      const currentYear = new Date().getFullYear() % 100;
-      const currentMonth = new Date().getMonth() + 1;
-      if (parseInt(month) < 1 || parseInt(month) > 12) {
-        newErrors.cardExpiry = "Mês inválido";
-      } else if (
-        parseInt(year) < currentYear ||
-        (parseInt(year) === currentYear && parseInt(month) < currentMonth)
-      ) {
-        newErrors.cardExpiry = "Cartão vencido";
-      }
-    }
-    if (!cardData.cardCVV || cardData.cardCVV.length < 3) {
-      newErrors.cardCVV = "CVV inválido";
-    }
-    if (!cardData.cardBrand) {
-      newErrors.cardBrand = "Selecione a bandeira do cartão";
-    }
-
+    if (!cardData.cardHolderName) newErrors.cardHolderName = "Nome obrigatório";
+    if (!validators.cpf(cardData.cardHolderCPF)) newErrors.cardHolderCPF = "CPF inválido";
+    if (cardData.cardNumber.replace(/\s/g, "").length < 13) newErrors.cardNumber = "Cartão inválido";
+    if (cardData.cardExpiry.length !== 5) newErrors.cardExpiry = "Validade inválida";
+    if (cardData.cardCVV.length < 3) newErrors.cardCVV = "CVV inválido";
+    if (!cardData.cardBrand) newErrors.cardBrand = "Selecione a bandeira";
+    
     setCardErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validateBoletoForm = () => {
-    const newErrors = {};
+      const newErrors = {};
 
-    if (!validators.required(boletoData.nomeCompleto)) {
-      newErrors.nomeCompleto = "Nome completo é obrigatório";
-    }
-    if (!validators.cpf(boletoData.cpf)) {
-      newErrors.cpf = "CPF inválido";
-    }
-    if (!validators.email(boletoData.email)) {
-      newErrors.email = "E-mail inválido";
-    }
-    if (!validators.required(boletoData.cep)) {
-      newErrors.cep = "CEP é obrigatório";
-    } else if (!validators.cep(boletoData.cep)) {
-      newErrors.cep = "CEP inválido";
-    }
-    if (!validators.required(boletoData.rua)) {
-      newErrors.rua = "Rua é obrigatória";
-    }
-    if (!validators.required(boletoData.numero)) {
-      newErrors.numero = "Número é obrigatório";
-    }
-    if (!validators.required(boletoData.bairro)) {
-      newErrors.bairro = "Bairro é obrigatório";
-    }
-    if (!validators.required(boletoData.cidade)) {
-      newErrors.cidade = "Cidade é obrigatória";
-    }
-    if (!validators.required(boletoData.estado)) {
-      newErrors.estado = "Estado é obrigatório";
-    }
-
-    setBoletoErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+      if (!boletoData.nomeCompleto) newErrors.nomeCompleto = "Nome obrigatório";
+      if (!validators.cpf(boletoData.cpf)) newErrors.cpf = "CPF inválido";
+      if (!validators.email(boletoData.email)) newErrors.email = "Email inválido";
+      
+      setBoletoErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
   };
-
-  const handleBoletoInputChange = (field, value, maskFunction) => {
-    const maskedValue = maskFunction ? maskFunction(value) : value;
-    setBoletoData((prev) => {
-      const updated = { ...prev, [field]: maskedValue };
-    
-      if (
-        ["rua", "numero", "bairro", "cidade", "estado", "cep"].includes(field)
-      ) {
-        updated.enderecoCompleto = `${updated.rua || ""}, ${updated.numero || ""
-          } - ${updated.bairro || ""}, ${updated.cidade || ""} - ${updated.estado || ""
-          }, ${updated.cep || ""}`
-          .replace(/^,\s*|,\s*$/g, "")
-          .replace(/,\s*,/g, ",");
-      }
-      return updated;
-    });
-
-    if (boletoErrors[field]) {
-      setBoletoErrors((prev) => ({ ...prev, [field]: "" }));
-    }
+  
+  const handleBoletoInputChange = (field, value) => {
+      setBoletoData(prev => ({ ...prev, [field]: value }));
+      if(boletoErrors[field]) setBoletoErrors(prev => ({...prev, [field]: ''}));
   };
-
-
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!validators.email(formData.email)) {
-      newErrors.email = errorMessages.email;
-    }
-    if (!validators.required(formData.firstName)) {
-      newErrors.firstName = errorMessages.firstName;
-    }
-    if (!validators.required(formData.lastName)) {
-      newErrors.lastName = errorMessages.lastName;
-    }
-    if (!validators.cpf(formData.cpf)) {
-      newErrors.cpf = errorMessages.cpf;
-    }
-    if (!validators.date(formData.birthDate)) {
-      newErrors.birthDate = errorMessages.date;
-    }
-    if (!validators.phone(formData.phone)) {
-      newErrors.phone = errorMessages.phone;
-    }
-    if (!validators.required(formData.country)) {
-      newErrors.country = errorMessages.country;
-    }
-    if (!validators.required(formData.state)) {
-      newErrors.state = errorMessages.state;
-    }
-    if (!validators.required(formData.city)) {
-      newErrors.city = errorMessages.city;
-    }
-    if (!validators.required(formData.street)) {
-      newErrors.street = errorMessages.street;
-    }
-    if (!validators.required(formData.neighborhood)) {
-      newErrors.neighborhood = errorMessages.neighborhood;
-    }
-    if (!validators.cep(formData.cep)) {
-      newErrors.cep = errorMessages.cep;
-    }
-    if (!validators.required(formData.numero)) {
-      newErrors.numero = "Número é obrigatório";
-    }
-
+    if (!validators.email(formData.email)) newErrors.email = errorMessages.email;
+    if (!formData.firstName) newErrors.firstName = errorMessages.firstName;
+    if (!formData.lastName) newErrors.lastName = errorMessages.lastName;
+    if (!validators.cpf(formData.cpf)) newErrors.cpf = errorMessages.cpf;
+    if (!validators.cep(formData.cep)) newErrors.cep = errorMessages.cep;
+  
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleContinue = () => {
     if (validateForm()) {
+      if(!selectedShipping) {
+          alert("Por favor, selecione uma opção de frete.");
+          return;
+      }
       setCurrentStep(2);
+    } else {
+        alert("Preencha todos os campos obrigatórios corretamente.");
     }
   };
 
-  const handleBack = () => {
-    setCurrentStep(1);
-  };
+  const handleBack = () => setCurrentStep(1);
+
 
   const handlePayment = async () => {
     try {
       setLoadingPayment(true);
       const token = localStorage.getItem("token");
 
-      if (cartProducts.length === 0) {
-        alert("Seu carrinho está vazio");
-        setLoadingPayment(false);
-        return;
-      }
+      if (cartProducts.length === 0) return alert("Carrinho vazio");
 
-      if (
-        (paymentMethod === "credit" || paymentMethod === "debit") &&
-        !validateCardForm()
-      ) {
-        alert("Por favor, preencha todos os campos do cartão corretamente");
+      if ((paymentMethod === "credit" || paymentMethod === "debit") && !validateCardForm()) {
         setLoadingPayment(false);
-        return;
+        return alert("Verifique os dados do cartão");
       }
-
-      if (paymentMethod === "boleto") {
-        if (!validateBoletoForm()) {
-          alert("Por favor, preencha todos os campos do boleto corretamente");
+      
+      if (paymentMethod === "boleto" && !validateBoletoForm()) {
           setLoadingPayment(false);
-          return;
-        }
-
-
-        const boletoResponse = await axios.post(
-          'http://localhost:8080/generate-boleto',
-          {
-            nomeCompleto: boletoData.nomeCompleto,
-            cpf: boletoData.cpf,
-            email: boletoData.email,
-            enderecoCompleto: boletoData.enderecoCompleto,
-            cep: boletoData.cep,
-            rua: boletoData.rua,
-            numero: boletoData.numero,
-            bairro: boletoData.bairro,
-            cidade: boletoData.cidade,
-            estado: boletoData.estado,
-            valorTotal: totais.total,
-            subtotal: totais.subtotal,
-            desconto: totais.desconto,
-            itensCarrinho: cartProducts.map(item => ({
-              nome: item.nome || item.nome_produto,
-              nome_produto: item.nome || item.nome_produto,
-              quantidade: item.quantidade,
-              preco_unitario: item.preco_unitario || item.preco,
-              preco: item.preco_unitario || item.preco
-            }))
-          },
-          {
-            withCredentials: true,
-            responseType: 'blob'
-          }
-        );
-
-
-        const url = window.URL.createObjectURL(new Blob([boletoResponse.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `boleto-primegear-${Date.now()}.pdf`);
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
+          return alert("Verifique os dados do boleto");
       }
 
-      const enderecoCompleto =
-        paymentMethod === "boleto"
-          ? boletoData.enderecoCompleto
-          : `${formData.street}, ${formData.numero}${formData.complement ? ", " + formData.complement : ""
-          } - ${formData.neighborhood}, ${formData.city} - ${formData.state
-          }, ${formData.cep}`;
+   
+      const enderecoFinal = `${formData.street}, ${formData.numero} ${formData.complement || ""} - ${formData.neighborhood}, ${formData.city} - ${formData.state}, ${formData.cep}`;
 
-      let paymentData = {};
-
+  
+      let paymentDetails = {};
       if (paymentMethod === "credit" || paymentMethod === "debit") {
-        paymentData = {
-          cardHolderName: cardData.cardHolderName,
-          cardHolderCPF: cardData.cardHolderCPF.replace(/\D/g, ""),
-          cardNumber: cardData.cardNumber.replace(/\s/g, ""),
-          cardExpiry: cardData.cardExpiry,
-          cardCVV: cardData.cardCVV,
-          cardBrand: cardData.cardBrand,
-          installments:
-            paymentMethod === "credit" ? cardData.installments : "1",
-        };
-      } else if (paymentMethod === "boleto") {
-        paymentData = {
-          nomeCompleto: boletoData.nomeCompleto,
-          cpf: boletoData.cpf.replace(/\D/g, ""),
-          email: boletoData.email,
-          enderecoCompleto: boletoData.enderecoCompleto,
-          cep: boletoData.cep.replace(/\D/g, ""),
-          rua: boletoData.rua,
-          numero: boletoData.numero,
-          bairro: boletoData.bairro,
-          cidade: boletoData.cidade,
-          estado: boletoData.estado,
-        };
+          paymentDetails = { ...cardData };
       } else if (paymentMethod === "pix") {
-        paymentData = {
-          pixKey: pixKey,
-          payerEmail: formData.email,
-          payerName: `${formData.firstName} ${formData.lastName}`,
-          payerCPF: formData.cpf.replace(/\D/g, ""),
-        };
+          paymentDetails = { pixKey };
       }
 
       const orderData = {
-        paymentMethod: paymentMethod,
-        shippingAddress: enderecoCompleto,
+        paymentMethod,
+        shippingAddress: enderecoFinal,
         total: parseFloat(totais.total),
         subtotal: parseFloat(totais.subtotal),
         discount: parseFloat(totais.desconto),
-        shippingCost: parseFloat(totais.frete), 
-        shippingMethod: selectedShipping,
-        paymentData: paymentData,
+        shippingCost: parseFloat(totais.frete),
+        shippingMethodId: selectedShipping,
+        paymentData: paymentDetails,
+        itens: cartProducts,
+  
       };
-
-      console.log("Enviando pedido:", orderData);
 
       const response = await axios.post(
         "http://localhost:8080/create-order",
         orderData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+          headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         }
       );
@@ -751,7 +550,7 @@ const CheckoutPage = () => {
             preco: item.preco_unitario || item.preco,
             preco_unitario: item.preco_unitario || item.preco,
           })),
-          endereco_entrega: enderecoCompleto,
+          endereco_entrega: boletoData.enderecoCompleto,
           metodo_pagamento: paymentMethod,
           cartao_final:
             paymentMethod === "credit" || paymentMethod === "debit"
@@ -772,26 +571,10 @@ const CheckoutPage = () => {
           },
         });
       }
+
     } catch (error) {
-      console.error("Erro ao processar pagamento:", error);
-
-      if (error.response) {
-        const errorMessage =
-          error.response.data?.message || "Erro ao processar pagamento";
-        alert(errorMessage);
-
-        if (error.response.status === 401) {
-          alert("Sessão expirada. Por favor, faça login novamente.");
-          navigate("/login");
-        } else if (error.response.status === 404) {
-          alert("Carrinho não encontrado. Adicione produtos ao carrinho.");
-          navigate("/produtos");
-        }
-      } else if (error.request) {
-        alert("Erro de conexão. Verifique sua internet e tente novamente.");
-      } else {
-        alert("Erro inesperado. Tente novamente.");
-      }
+      console.error("Erro pagamento:", error);
+      alert(error.response?.data?.message || "Erro ao processar pedido.");
     } finally {
       setLoadingPayment(false);
     }
@@ -801,11 +584,7 @@ const CheckoutPage = () => {
     <PageContainer>
       <Wrapper>
         <Steps>
-          <StepItem
-            $active={currentStep >= 1}
-            onClick={handleBack}
-            style={{ cursor: "pointer" }}
-          >
+          <StepItem $active={currentStep >= 1} onClick={handleBack} style={{ cursor: "pointer" }}>
             <StepCircle $active={currentStep >= 1}>1</StepCircle>
             <span>Dados pessoais</span>
           </StepItem>
@@ -819,22 +598,22 @@ const CheckoutPage = () => {
         <Grid>
           <FlipContainer>
             <Flipper $flipped={currentStep === 2}>
+              
+              {/* --- FRENTE: DADOS E FRETE --- */}
               <Front $flipped={currentStep === 2}>
                 <Card>
                   <Title>Entrega</Title>
                   <ShippingSection>
-                    <ShippingTitle>
-                      Escolha a transportadora
-                    </ShippingTitle>
-
+                    <ShippingTitle>Escolha a transportadora</ShippingTitle>
+                    
                     {loadingShipping ? (
-                      <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
-                        Carregando transportadoras...
-                      </div>
+                        <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>Calculando frete...</div>
                     ) : shippingOptions.length === 0 ? (
-                      <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
-                        Nenhuma transportadora disponível no momento.
-                      </div>
+                        <div style={{ textAlign: 'center', padding: '20px', color: '#666', fontSize: '0.9rem' }}>
+                           {formData.cep && formData.cep.length >= 8 
+                            ? "Nenhuma transportadora disponível para este CEP." 
+                            : "Digite seu CEP abaixo para ver as opções."}
+                        </div>
                     ) : (
                       <ShippingOptions>
                         {shippingOptions.map((option) => (
@@ -844,15 +623,12 @@ const CheckoutPage = () => {
                             onClick={() => setSelectedShipping(option.id)}
                           >
                             <ShippingInfo>
-                            
                               <ShippingDetails>
                                 <ShippingName>{option.name}</ShippingName>
-                                <ShippingTime>{option.time}</ShippingTime>
-                                {option.avaliacao && (
-                                  <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '2px' }}>
-                                    ⭐ {option.avaliacao}
-                                  </div>
-                                )}
+                                <ShippingTime>
+                                    {option.distancia ? `${parseFloat(option.distancia).toFixed(1)} km • ` : ""} 
+                                    {option.time}
+                                </ShippingTime>
                               </ShippingDetails>
                             </ShippingInfo>
                             <ShippingPrice $free={option.price === 0}>
@@ -862,13 +638,14 @@ const CheckoutPage = () => {
                               type="radio"
                               name="shipping"
                               checked={selectedShipping === option.id}
-                              onChange={() => setSelectedShipping(option.id)}
+                              readOnly
                             />
                           </ShippingOption>
                         ))}
                       </ShippingOptions>
                     )}
                   </ShippingSection>
+
                   <Title>Dados pessoais</Title>
 
                   <Section>
@@ -1259,6 +1036,7 @@ const CheckoutPage = () => {
                 </Card>
               </Front>
 
+              {/* --- VERSO: PAGAMENTO --- */}
               <Back $flipped={currentStep === 2}>
                 <Card>
                   <Title>Forma de pagamento</Title>
@@ -2170,127 +1948,67 @@ const CheckoutPage = () => {
             </Flipper>
           </FlipContainer>
 
+          {/* --- LATERAL: RESUMO DA SACOLA --- */}
           <Card $summary>
             <SummaryHeader>
-              <Title style={{ margin: 0, fontSize: "1.2rem", fontWeight: 500 }}>
-                Sua sacola
-              </Title>
+              <Title style={{ margin: 0, fontSize: "1.2rem" }}>Sua sacola</Title>
             </SummaryHeader>
 
             {loadingCart ? (
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "40px 0",
-                  color: "#666",
-                }}
-              >
-                Carregando produtos...
-              </div>
+              <div style={{ padding: "20px", textAlign: "center" }}>Carregando...</div>
             ) : cartProducts.length === 0 ? (
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "40px 0",
-                  color: "#666",
-                }}
-              >
-                Seu carrinho está vazio
-              </div>
+              <div style={{ padding: "20px", textAlign: "center" }}>Carrinho vazio</div>
             ) : (
               <>
                 {cartProducts.map((produto) => (
                   <BagItem key={produto.id}>
                     <BagImageWrapper>
-                      <BagImage
-                        src={produto.imagem || ProductImg}
-                        alt={produto.nome}
-                        onError={(e) => {
-                          e.target.src = ProductImg;
-                        }}
+                      <BagImage 
+                        src={produto.imagem || ProductImg} 
+                        onError={(e) => e.target.src = ProductImg} 
                       />
                       <BagBadge>{produto.quantidade}</BagBadge>
                     </BagImageWrapper>
-
-                    <div style={{ flex: 1 }}>
-                      <BagTitle>{produto.nome}</BagTitle>
-                      <div
-                        style={{
-                          fontSize: "0.85rem",
-                          color: "#666",
-                          marginTop: "4px",
-                        }}
-                      >
-                        R$ {produto.preco_unitario.toFixed(2)} ×{" "}
-                        {produto.quantidade}
-                      </div>
+                    <div style={{flex: 1}}>
+                        <BagTitle>{produto.nome || produto.nome_produto}</BagTitle>
+                        <div style={{fontSize: '0.85rem', color: '#666'}}>
+                            R$ {produto.preco_unitario ? produto.preco_unitario.toFixed(2) : "0.00"} x {produto.quantidade}
+                        </div>
                     </div>
-
-                    <button
-                      onClick={() => handleRemoveItem(produto.id)}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#dc2626",
-                        cursor: "pointer",
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        transition: "opacity 0.2s",
-                        fontSize: "1.2rem",
-                      }}
-                      onMouseEnter={(e) => (e.target.style.opacity = "0.7")}
-                      onMouseLeave={(e) => (e.target.style.opacity = "1")}
-                      title="Remover item"
-                    >
-                      <FiTrash2 />
+                    <button onClick={() => handleRemoveItem(produto.id)} style={{border:'none', background:'none', cursor:'pointer', color:'#d00'}}>
+                        <FiTrash2 />
                     </button>
                   </BagItem>
                 ))}
 
                 <SummaryDivider />
-
+                
                 <RowPrice>
-                  <PriceText>Subtotal</PriceText>
-                  <PriceText>R$ {totais.subtotal}</PriceText>
+                    <PriceText>Subtotal</PriceText>
+                    <PriceText>R$ {totais.subtotal}</PriceText>
                 </RowPrice>
                 <RowPrice>
-                  <PriceText>Descontos totais</PriceText>
-                  <PriceValue $discount>-R$ {totais.desconto}</PriceValue>
+                    <PriceText>Descontos</PriceText>
+                    <PriceValue $discount>- R$ {totais.desconto}</PriceValue>
                 </RowPrice>
-                <DiscountNote>
-                  Oferta especial PrimeGear -R$ {totais.desconto}
-                </DiscountNote>
                 <RowPrice>
-                  <PriceText>Frete</PriceText>
-                  {parseFloat(totais.frete) === 0 ? (
-                    <ShippingFree>Grátis</ShippingFree>
-                  ) : (
-                    <PriceText>R$ {totais.frete}</PriceText>
-                  )}
+                    <PriceText>Frete</PriceText>
+                    {parseFloat(totais.frete) === 0 ? (
+                        <ShippingFree>Grátis</ShippingFree>
+                    ) : (
+                        <PriceText>R$ {totais.frete}</PriceText>
+                    )}
                 </RowPrice>
 
                 <SummaryDivider />
 
                 <TotalBlock>
-                  <TotalLabel>
-                    <span>Total</span>
-                  </TotalLabel>
-                  <div style={{ textAlign: "right" }}>
-                    <Total>R$ {totais.total}</Total>
-                    <Installments>
-                      R$ {totais.subtotal} em até 4x de R$ {totais.parcela} sem
-                      juros
-                    </Installments>
-                  </div>
+                    <TotalLabel><span>Total</span></TotalLabel>
+                    <div style={{textAlign: 'right'}}>
+                        <Total>R$ {totais.total}</Total>
+                        <Installments>em até 4x de R$ {totais.parcela} sem juros</Installments>
+                    </div>
                 </TotalBlock>
-
-                <SignUpBox>
-                  Cadastre-se na PrimeGear e ganhe 10% de desconto na primeira
-                  compra, além de acesso antecipado às vendas, novidades,
-                  promoções e muito mais.
-                </SignUpBox>
               </>
             )}
           </Card>
