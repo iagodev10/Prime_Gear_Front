@@ -117,7 +117,7 @@ const Login = () => {
 
         let maskedValue = value;
 
-        // Apply masks based on field name
+      
         if (name === 'cpf') {
             maskedValue = masks.cpf(value);
         } else if (name === 'telefone') {
@@ -131,7 +131,7 @@ const Login = () => {
             [name]: maskedValue
         }));
 
-        // Clear error when user types
+       
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
@@ -176,7 +176,7 @@ const Login = () => {
                 } else if (value.length < 6) {
                     newErrors[field] = 'Senha deve ter no mínimo 6 caracteres';
                 }
-                // Re-validar confirmarSenha se já foi preenchida
+              
                 if (formData.confirmarSenha && value !== formData.confirmarSenha) {
                     newErrors.confirmarSenha = 'As senhas não coincidem';
                 } else if (formData.confirmarSenha && value === formData.confirmarSenha) {
@@ -294,8 +294,22 @@ const Login = () => {
             const data = await login(formData.loginEmail, formData.loginSenha);
             console.log('==>Dados retornados:', data);
 
-            if (data.user.perfil === 'Administrador' || data.user.perfil === 'Transportadora' || data.user.perfil === 'Funcionário') {
+            const perfil = data.user.perfil;
+
+            const perfilMap = {
+                'Administrador': 1,
+                'Funcionário': 3,
+                'Transportadora': 4,
+                'Usuário': 2
+            };
+
+            await new Promise(resolve => setTimeout(resolve, 100));
+            const roleId = perfilMap[perfil];
+
+            if (roleId === 1 || roleId === 3) {
                 navigate('/admin');
+            } else if (roleId === 4) {
+                navigate('/transportadora');
             } else {
                 navigate('/user');
             }

@@ -37,9 +37,11 @@ import AdminLogin from './pages/AdminLogin'
 
 import { AuthProvider } from './contexts/AuthContext'
 
+import { useAuth } from './contexts/AuthContext'
 import TranspPedidos from './pages/TranspPedidos'
+import ProtectedRoute from './components/ProtectedRoute'
 
-// App.jsx (somente AppContent ATUALIZADO)
+
 const AppContent = () => {
   const { isLoading, startLoading } = useLoader();
   const location = useLocation();
@@ -66,6 +68,7 @@ const AppContent = () => {
       ) : (
         <AuthProvider>
           <Routes location={location} key={location.pathname}>
+            {/* Rotas Públicas */}
             <Route path="/" element={<PublicLayout />}>
               <Route index element={<HomePage />} />
               <Route path="loja" element={<Store />} />
@@ -75,24 +78,66 @@ const AppContent = () => {
               <Route path="institucional" element={<Institutional />} />
               <Route path="fale-conosco" element={<FaleConosco />} />
               <Route path="primeira-compra" element={<PrimeiraCompra />} />
-              <Route path="checkout" element={<CheckoutPage />} />
-              <Route path="obrigado" element={<ThankYouPage />} />
-              <Route path="user" element={<UserAccount />} />
-              <Route path="transportadora" element={<Transportadora />} />
               <Route path="termos" element={<TermsPage />} />
               <Route path="privacidade" element={<PrivacyPage />} />
+              
+              {/* Rotas que requerem apenas autenticação (qualquer usuário logado) */}
+              <Route 
+                path="checkout" 
+                element={
+                  <ProtectedRoute>
+                    <CheckoutPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="obrigado" 
+                element={
+                  <ProtectedRoute>
+                    <ThankYouPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="user" 
+                element={
+                  <ProtectedRoute>
+                    <UserAccount />
+                  </ProtectedRoute>
+                } 
+              />
             </Route>
 
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* Rotas Administrativas - Requerem role "admin" */}
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute requiredRole={1}>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<AdminDashboard />} />
               <Route path="produtos" element={<AdminProdutos />} />
-              <Route path="pedidos-transportadora" element={<TranspPedidos />} />
               <Route path="categorias" element={<AdminCategorias />} />
               <Route path="marcas" element={<AdminMarcas />} />
               <Route path="fornecedores" element={<AdminFornecedor />} />
               <Route path="pedidos" element={<AdminPedidos />} />
               <Route path="transportadoras" element={<AdminTransportadora />} />
               <Route path="usuarios" element={<AdminUsers />} />
+            </Route>
+
+            {/* Rotas de Transportadora - Requerem role "transportadora" */}
+            <Route 
+              path="/transportadora" 
+              element={
+                <ProtectedRoute requiredRole={4}>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<TranspPedidos />} />
+
             </Route>
           </Routes>
         </AuthProvider>
