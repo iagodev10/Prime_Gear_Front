@@ -70,7 +70,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
     return Object.keys(e).length === 0;
   };
 
-  async function handleAddFornecedor(e) {
+  async function handleAddFornecedor(e){
     e.preventDefault();
     if (!validar()) return;
     const objFornecedor = {
