@@ -8,11 +8,10 @@ import { ModalOverlay, ModalContent, ModalHeader, Form, Divide, ProdDestaque, Sw
 
 const ModalAdicionarProduto = ({ onClose }) => {
 
-
-
   const [produtoDestaque, setProdutoDestaque] = useState(false);
   const [categorias, setCategorias] = useState([])
-  const [marcas,setMarcas]=useState([])
+  const [marcas, setMarcas] = useState([])
+  const [fornecedores, setFornecedores] = useState([])
 
   const [nomeProd, setNomeProd] = useState()
   const [precoProd, setPrecoProd] = useState()
@@ -25,6 +24,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
   const [comprimentoProd, seComprimentoProd] = useState()
   const [imagemProd, setImagemProd] = useState(null)
   const [marcaProd, setMarcaProd] = useState()
+  const [fornecedorProd, setFornecedorProd] = useState()
 
   function setarNomeProd(e) {
     setNomeProd(e.target.value)
@@ -56,6 +56,9 @@ const ModalAdicionarProduto = ({ onClose }) => {
   function setarImagemProd(e) {
     setImagemProd(e.target.files[0])
   }
+  function setarFornecedorProd(e) {
+    setFornecedorProd(e.target.value)
+  }
 
   async function obterCategorias() {
     try {
@@ -65,6 +68,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
       console.log(error);
     }
   }
+
   async function obterMarcas() {
     try {
       const response = await axios.get('http://localhost:8080/get-marcas')
@@ -75,21 +79,41 @@ const ModalAdicionarProduto = ({ onClose }) => {
       console.log(error);
     }
   }
+
+  async function obterFornecedores() {
+    try {
+      const response = await axios.get('http://localhost:8080/fornecedores-adm')
+      setFornecedores(response.data)
+      console.log("fornecedores");
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     obterCategorias()
     obterMarcas()
+    obterFornecedores()
   }, [])
+
   useEffect(() => {
     if (categorias.length > 0 && !categoriaProd) {
       setCategoriaProd(categorias[0].cod_categoria);
     }
   }, [categorias]);
-  
+
   useEffect(() => {
     if (marcas.length > 0 && !marcaProd) {
       setMarcaProd(marcas[0].cod_marca);
     }
   }, [marcas]);
+
+  useEffect(() => {
+    if (fornecedores.length > 0 && !fornecedorProd) {
+      setFornecedorProd(fornecedores[0].cod_fornecedor);
+    }
+  }, [fornecedores]);
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -99,7 +123,6 @@ const ModalAdicionarProduto = ({ onClose }) => {
 
   async function adicionarProduto(e) {
     e.preventDefault();
-
 
     const formData = new FormData()
 
@@ -112,31 +135,32 @@ const ModalAdicionarProduto = ({ onClose }) => {
     formData.append('comprimento_prod', comprimentoProd)
     formData.append('cod_categoria', categoriaProd)
     formData.append('cod_marca', marcaProd)
+    formData.append('cod_fornecedor', fornecedorProd)
     formData.append('peso_prod', pesoProd)
     formData.append('avaliacao_prod', 0)
-    
 
     if (imagemProd) {
       formData.append('imagem1', imagemProd)
     }
+
     console.log("form");
     for (let [key, value] of formData.entries()) {
       console.log(key, value);
-  }
+    }
+
     try {
       const response = await axios.post('http://localhost:8080/adicionar-produto', formData)
+      alert("Produto adicionado com sucesso!")
       onClose()
     } catch (error) {
       console.log(error);
+      alert("Erro ao adicionar produto")
     }
-
-
   }
 
   return (
     <>
       <ModalOverlay onClick={handleOverlayClick}>
-
         <ModalContent>
           <ModalHeader>
             <h2>Novo Produto</h2>
@@ -162,37 +186,45 @@ const ModalAdicionarProduto = ({ onClose }) => {
                 <input type="number" id="quantidade" required placeholder="0" onChange={setarQtdEstoqueProd} />
               </div>
             </Divide>
+
             <Divide>
               <div>
                 <label htmlFor="categoria">Categoria</label>
-                <select id="categoria" onChange={setarCategoriaProd}>
-                  {
-                    categorias.map((cat) => (
-                      <>
-                        <option value={cat.cod_categoria} >{cat.nome_cat}</option>
-                      </>
-                    ))
-                  }
-
-
+                <select id="categoria" onChange={setarCategoriaProd} value={categoriaProd}>
+                  {categorias.map((cat) => (
+                    <option key={cat.cod_categoria} value={cat.cod_categoria}>
+                      {cat.nome_cat}
+                    </option>
+                  ))}
                 </select>
               </div>
+
               <div>
                 <label htmlFor="marca">Marca</label>
-                <select id="marca" onChange={(e)=>setMarcaProd(e.target.value)}>
-                  {
-                    marcas.map((marca) => (
-                      <>
-                        <option value={marca.cod_marca} >{marca.nome_marca}</option>
-                      </>
-                    ))
-                  }
-
-
+                <select id="marca" onChange={(e) => setMarcaProd(e.target.value)} value={marcaProd}>
+                  {marcas.map((marca) => (
+                    <option key={marca.cod_marca} value={marca.cod_marca}>
+                      {marca.nome_marca}
+                    </option>
+                  ))}
                 </select>
               </div>
             </Divide>
 
+            <div>
+              <label htmlFor="fornecedor">Fornecedor</label>
+              <select id="fornecedor" onChange={setarFornecedorProd} value={fornecedorProd}>
+                {fornecedores.length > 0 ? (
+                  fornecedores.map((fornecedor) => (
+                    <option key={fornecedor.cod_fornecedor} value={fornecedor.cod_fornecedor}>
+                      {fornecedor.nome_responsavel_forn || fornecedor.razao_social_fornecedor}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">Carregando fornecedores...</option>
+                )}
+              </select>
+            </div>
 
             <div>
               <label htmlFor="imagem">Imagem do Produto</label>
@@ -209,7 +241,6 @@ const ModalAdicionarProduto = ({ onClose }) => {
             <div>
               <label htmlFor="dimensao">Dimensões e Peso</label>
               <Divide>
-
                 <div className="divs">
                   <label htmlFor="peso">Peso (Kg)</label>
                   <input type="number" placeholder="0" onChange={setarPesoProd} />
@@ -229,24 +260,17 @@ const ModalAdicionarProduto = ({ onClose }) => {
                   <label htmlFor="comprimento">Comprimento (cm)</label>
                   <input type="number" placeholder="0" onChange={setarComprimentoProd} />
                 </div>
-
               </Divide>
             </div>
-
-
 
             <SubmitButton onClick={adicionarProduto}>
               Cadastrar Produto
             </SubmitButton>
-
           </Form>
-
         </ModalContent>
-
       </ModalOverlay>
     </>
   )
-
 }
 
 export default ModalAdicionarProduto;

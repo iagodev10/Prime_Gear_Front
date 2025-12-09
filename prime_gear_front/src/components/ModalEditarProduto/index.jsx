@@ -11,6 +11,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
   const [produtoDestaque, setProdutoDestaque] = useState(false);
   const [categorias, setCategorias] = useState([])
   const [marcas, setMarcas] = useState([])
+  const [fornecedores, setFornecedores] = useState([])
   const [carregando, setCarregando] = useState(true)
 
   const [nomeProd, setNomeProd] = useState("")
@@ -24,6 +25,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
   const [comprimentoProd, setComprimentoProd] = useState("")
   const [imagemProd, setImagemProd] = useState(null)
   const [marcaProd, setMarcaProd] = useState("")
+  const [fornecedorProd, setFornecedorProd] = useState("")
 
   function setarNomeProd(e) {
     setNomeProd(e.target.value)
@@ -55,6 +57,9 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
   function setarImagemProd(e) {
     setImagemProd(e.target.files[0])
   }
+  function setarFornecedorProd(e) {
+    setFornecedorProd(e.target.value)
+  }
 
   async function obterCategorias() {
     try {
@@ -76,6 +81,16 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
     }
   }
 
+  async function obterFornecedores() {
+    try {
+      const response = await axios.get('http://localhost:8080/fornecedores-adm')
+      setFornecedores(response.data)
+      console.log("fornecedores");
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function obterProduto() {
     if (!produtoId) {
@@ -87,7 +102,6 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
       const response = await axios.get(`http://localhost:8080/produto/${produtoId}`)
       const produto = response.data
 
-   
       setNomeProd(produto.nome_prod || "")
       setPrecoProd(produto.preco_prod || "")
       setQtdEstoqueProd(produto.qtd_estoque_prod || "")
@@ -98,6 +112,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
       setLarguraProd(produto.largura_prod || "")
       setComprimentoProd(produto.comprimento_prod || "")
       setMarcaProd(produto.cod_marca || "")
+      setFornecedorProd(produto.cod_fornecedor || "")
 
       setCarregando(false)
     } catch (error) {
@@ -110,6 +125,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
   useEffect(() => {
     obterCategorias()
     obterMarcas()
+    obterFornecedores()
     obterProduto()
   }, [])
 
@@ -125,6 +141,12 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
     }
   }, [marcas]);
 
+  useEffect(() => {
+    if (fornecedores.length > 0 && !fornecedorProd) {
+      setFornecedorProd(fornecedores[0].cod_fornecedor);
+    }
+  }, [fornecedores]);
+
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -132,7 +154,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
   };
 
   async function editarProduto(e) {
-  
+    e.preventDefault();
 
     const formData = new FormData()
 
@@ -145,6 +167,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
     formData.append('comprimento_prod', comprimentoProd)
     formData.append('cod_categoria', categoriaProd)
     formData.append('cod_marca', marcaProd)
+    formData.append('cod_fornecedor', fornecedorProd)
     formData.append('peso_prod', pesoProd)
 
     if (imagemProd) {
@@ -157,7 +180,6 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
     }
 
     try {
-   
       const response = await axios.put(`http://localhost:8080/editar-produto/${produtoId}`, formData)
       alert("Produto atualizado com sucesso!")
       onClose()
@@ -259,6 +281,25 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
                 </select>
               </div>
             </Divide>
+
+            <div>
+              <label htmlFor="fornecedor">Fornecedor</label>
+              <select 
+                id="fornecedor" 
+                value={fornecedorProd}
+                onChange={setarFornecedorProd}
+              >
+                {fornecedores.length > 0 ? (
+                  fornecedores.map((fornecedor) => (
+                    <option key={fornecedor.cod_fornecedor} value={fornecedor.cod_fornecedor}>
+                      {fornecedor.nome_fornecedor || fornecedor.razao_social_fornecedor}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">Carregando fornecedores...</option>
+                )}
+              </select>
+            </div>
 
             <div>
               <label htmlFor="imagem">Imagem do Produto</label>

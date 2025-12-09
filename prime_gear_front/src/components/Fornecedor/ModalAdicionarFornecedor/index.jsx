@@ -36,7 +36,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
   };
 
   async function handleAddFornecedor(e){
-    e.preventDefault();
+   
     if (!validar()) return;
     const objFornecedor={
       cnpj_forn: cnpj,
