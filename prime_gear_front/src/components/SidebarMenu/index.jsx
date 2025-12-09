@@ -25,7 +25,6 @@ import { FiX, FiChevronRight, FiArrowLeft } from "react-icons/fi";
 import BestSeller from "../../assets/images/bestseller.png";
 import LaptopImg from "../../assets/images/laptop.png";
 import DesktopImg from "../../assets/images/desktop.png";
-import DesktopFundo from "../../assets/images/desktop-fundo.png";
 import ConsolesImg from "../../assets/images/consoles.png";
 import HeadsetImg from "../../assets/images/headset.jpeg";
 import UltrabookImg from "../../assets/images/Macbook.png";
@@ -35,7 +34,6 @@ import LaptopImagem from "../../assets/images/laptop-fundo.png";
 import DesktopImagem from "../../assets/images/desktop-fundo.png";
 import ConsoleImagem from "../../assets/images/console-fundo.png";
 import PerifericoImagem from "../../assets/images/periferico-fundo.png";
-
 
 const categoriaMap = {
   laptops: "Laptops",
@@ -70,7 +68,6 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-
   useEffect(() => {
     if (!isMobile || !openCategory || !isOpen) {
       setProdutos([]);
@@ -78,18 +75,18 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
     }
 
     const buscarProdutos = async () => {
-      console.log('ativou');
+      console.log('🔍 Buscando produtos para:', openCategory);
       try {
         setLoading(true);
 
         const categoriaNome = categoriaMap[openCategory];
 
         if (!categoriaNome) {
-          console.error("Categoria não mapeada:", openCategory);
+          console.error("❌ Categoria não mapeada:", openCategory);
           return;
         }
 
-        console.log('Buscando produtos da categoria:', categoriaNome);
+        console.log('📤 Categoria para backend:', categoriaNome);
 
         const response = await axios.post(
           'http://localhost:8080/produtos-filtrados',
@@ -102,13 +99,14 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
           }
         );
 
-        if (response.data.success) {
-          console.log('Produtos encontrados:', response.data.produtos.length);
+        console.log('📥 Resposta:', response.data);
 
-          setProdutos(response.data.produtos.slice(0, 5));
+        if (response.data.success) {
+          console.log('✅ Produtos encontrados:', response.data.produtos.length);
+          setProdutos(response.data.produtos.slice(0, 6));
         }
       } catch (error) {
-        console.error('Erro ao buscar produtos:', error);
+        console.error('❌ Erro ao buscar produtos:', error);
         setProdutos([]);
       } finally {
         setLoading(false);
@@ -122,49 +120,11 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
     onOpenCategory?.(null);
   };
 
-  const cards = {
-    laptops: [
-      { img: LaptopImg, title: 'Lenovo IdeaPad Gaming', price: '1.100,00', old: '1.200,00' },
-      { img: UltrabookImg, title: 'MacBook Pro M2', price: '1.800,00' },
-      { img: LaptopImg, title: 'Dell Inspiron', price: '900,00', old: '1.000,00' },
-      { img: UltrabookImg, title: 'Asus Zenbook', price: '1.300,00' },
-      { img: LaptopImg, title: 'HP Pavilion', price: '700,00', old: '850,00' }
-    ],
-    desktops: [
-      { img: DesktopImg, title: 'Desktop Gamer RGB', price: '1.500,00' },
-      { img: DesktopImg, title: 'Workstation Pro', price: '2.000,00', old: '2.200,00' },
-      { img: DesktopImg, title: 'All-in-One', price: '850,00' },
-      { img: DesktopImg, title: 'Mini PC', price: '450,00' },
-      { img: DesktopImg, title: 'Servidor doméstico', price: '600,00' }
-    ],
-    consoles: [
-      { img: ConsolesImg, title: 'PlayStation 5', price: '500,00' },
-      { img: ConsolesImg, title: 'Xbox Series X', price: '480,00' },
-      { img: ConsolesImg, title: 'Nintendo Switch', price: '300,00' },
-      { img: ConsolesImg, title: 'Promoções', price: '—' },
-      { img: ConsolesImg, title: 'Bundles especiais', price: '—' }
-    ],
-    perifericos: [
-      { img: HeadsetImg, title: 'Headset Gamer', price: '120,00' },
-      { img: MouseImg, title: 'Mouse Pro', price: '90,00', old: '110,00' },
-      { img: HeadsetImg, title: 'Teclado RGB', price: '150,00' },
-      { img: MouseImg, title: 'Mousepad XL', price: '25,00' },
-      { img: HeadsetImg, title: 'Microfone USB', price: '80,00' }
-    ]
-  };
-
   const hero = {
     laptops: LaptopImagem,
     desktops: DesktopImagem,
     consoles: ConsoleImagem,
     perifericos: PerifericoImagem,
-  };
-
-  const viewAll = {
-    laptops: '/laptops',
-    desktops: '/desktops',
-    consoles: '/consoles',
-    perifericos: '/perifericos'
   };
 
   const categoryNames = {
@@ -174,7 +134,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
     perifericos: "Periféricos",
   };
 
-
+  // Renderização do menu de categoria no mobile
   if (isMobile && openCategory && isOpen) {
     return (
       <>
@@ -193,28 +153,68 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
           </SideHeader>
 
           <CategoryContent>
+            {/* Hero Card com imagem de fundo */}
             {hero[openCategory] && (
               <CategoryHeroCard>
                 <img src={hero[openCategory]} alt="Ver tudo" />
-                {viewAll[openCategory] && (
-                  <CategoryHeroLink to={viewAll[openCategory]} onClick={handleClose}>
-                    Ver tudo
-                  </CategoryHeroLink>
-                )}
+                <CategoryHeroLink 
+                  to="/loja"
+                  state={{ categoryIdentifier: openCategory }}
+                  onClick={handleClose}
+                >
+                  Ver todos os {categoryNames[openCategory]}
+                </CategoryHeroLink>
               </CategoryHeroCard>
             )}
 
+            {/* Lista de Produtos */}
             <CategoryProductsList>
-              {(cards[openCategory] || []).map((c, i) => (
-                <CategoryProductCard key={i} to={viewAll[openCategory] || '#'} onClick={handleClose}>
-                  <img src={c.img} alt={c.title || 'Produto'} />
-                  <div className="info">
-                    <div className="title">{c.title || 'Produto'}</div>
-                    <div className="price">R$ {c.price || '0,00'}</div>
-                    {c.old && <div className="oldPrice">R$ {c.old}</div>}
-                  </div>
-                </CategoryProductCard>
-              ))}
+              {loading ? (
+                <div style={{
+                  padding: '40px 20px',
+                  textAlign: 'center',
+                  color: '#666'
+                }}>
+                  Carregando produtos...
+                </div>
+              ) : produtos.length === 0 ? (
+                <div style={{
+                  padding: '40px 20px',
+                  textAlign: 'center',
+                  color: '#666'
+                }}>
+                  Nenhum produto encontrado
+                </div>
+              ) : (
+                produtos.map((produto) => (
+                  <CategoryProductCard 
+                    key={produto.cod_produto}
+                    to={`/produto/${produto.cod_produto}`}
+                    onClick={handleClose}
+                  >
+                    <img 
+                      src={produto.url_img_prod || LaptopImg} 
+                      alt={produto.nome_prod || 'Produto'}
+                      onError={(e) => {
+                        e.target.src = LaptopImg;
+                      }}
+                    />
+                    <div className="info">
+                      <div className="title">
+                        {produto.nome_prod || 'Produto'}
+                      </div>
+                      <div className="price">
+                        R$ {produto.preco_prod?.toFixed(2).replace('.', ',') || '0,00'}
+                      </div>
+                      {produto.preco_antigo && (
+                        <div className="oldPrice">
+                          R$ {produto.preco_antigo.toFixed(2).replace('.', ',')}
+                        </div>
+                      )}
+                    </div>
+                  </CategoryProductCard>
+                ))
+              )}
             </CategoryProductsList>
           </CategoryContent>
         </Sidebar>
@@ -222,6 +222,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
     );
   }
 
+  // Menu principal
   return (
     <>
       <Backdrop $isOpen={isOpen} onClick={handleClose} />
