@@ -28,14 +28,17 @@ import {
 import ProdutosDestaque from "../../components/Admin/ProdutosDestaque"
 import axios from "axios"
 import ModalAdicionarProduto from "../../components/ModalAdicionarProduto"
+import ModalEditarProduto from "../../components/ModalEditarProduto"
 
 const AdminProdutos = () => {
   const location = useLocation()
   const [produtos, setProdutos] = useState([])
   const [activeSection, setActiveSection] = useState("produtos")
-  const [modalVisivel, setModalVisivel] = useState(false)
-  const [nomeSecao1,setNomeSecao1]=useState()
-  const [nomeSecao2,setNomeSecao2]=useState()
+  const [modalAdicionar, setModalAdicionar] = useState(false)
+  const [modalEditar, setModalEditar] = useState(false)
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null)
+  const [nomeSecao1, setNomeSecao1] = useState()
+  const [nomeSecao2, setNomeSecao2] = useState()
 
   async function obterProdutos() {
     try {
@@ -54,7 +57,6 @@ const AdminProdutos = () => {
       console.log(response.data)
       setNomeSecao1(response.data[0].nomeSecaoFlex)
       setNomeSecao2(response.data[1].nomeSecaoFlex)
-    
     } catch (error) {
       console.log(error)
     }
@@ -67,17 +69,39 @@ const AdminProdutos = () => {
 
   useEffect(() => {
     if (location.state && location.state.openAddModal) {
-      setModalVisivel(true)
+      setModalAdicionar(true)
     }
   }, [location.state])
 
   async function deletarProd(id) {
+    if (!window.confirm("Tem certeza que deseja excluir este produto?")) {
+      return
+    }
+
     try {
       await axios.delete("http://localhost:8080/delete-produto/" + id)
       obterProdutos()
+      alert("Produto excluído com sucesso!")
     } catch (error) {
       console.log(error)
+      alert("Erro ao excluir produto")
     }
+  }
+
+  function abrirModalEditar(produtoId) {
+    setProdutoSelecionado(produtoId)
+    setModalEditar(true)
+  }
+
+  function fecharModalEditar() {
+    setModalEditar(false)
+    setProdutoSelecionado(null)
+    obterProdutos() 
+  }
+
+  function fecharModalAdicionar() {
+    setModalAdicionar(false)
+    obterProdutos() 
   }
 
   const sidebarItems = [
@@ -107,7 +131,7 @@ const AdminProdutos = () => {
                   <h1>Gerenciar Produtos</h1>
                   <p>Adicione, edite ou remova produtos do catálogo.</p>
                 </Title>
-                <Button onClick={() => setModalVisivel(true)}>
+                <Button onClick={() => setModalAdicionar(true)}>
                   <FiPlus size={18} />
                   Adicionar Produto
                 </Button>
@@ -119,7 +143,6 @@ const AdminProdutos = () => {
               </Search>
 
               <Content>
-
                 {produtos.map((produto) => (
                   <ProdutoCard key={produto.id_prod}>
                     <ProdImage>
@@ -140,7 +163,7 @@ const AdminProdutos = () => {
                       <p>R$ {produto.preco_prod.toLocaleString("pt-BR")}</p>
                     </ProdPrice>
                     <ProdActions>
-                      <ActionButton>
+                      <ActionButton onClick={() => abrirModalEditar(produto.cod_produto)}>
                         <FiEdit /> Editar
                       </ActionButton>
                       <ActionButton onClick={() => deletarProd(produto.cod_produto)}>
@@ -149,14 +172,30 @@ const AdminProdutos = () => {
                     </ProdActions>
                   </ProdutoCard>
                 ))}
-
               </Content>
             </>
           )}
-           {modalVisivel && (
-                <ModalAdicionarProduto onClose={() => {setModalVisivel(false),obterProdutos()}} />
-            )}
-          {activeSection === "destaques" && <ProdutosDestaque produtos={produtos} nome1={nomeSecao1} nome2={nomeSecao2}/>}
+
+          {/* Modal de Adicionar Produto */}
+          {modalAdicionar && (
+            <ModalAdicionarProduto onClose={fecharModalAdicionar} />
+          )}
+
+          {/* Modal de Editar Produto */}
+          {modalEditar && (
+            <ModalEditarProduto 
+              onClose={fecharModalEditar} 
+              produtoId={produtoSelecionado}
+            />
+          )}
+
+          {activeSection === "destaques" && (
+            <ProdutosDestaque 
+              produtos={produtos} 
+              nome1={nomeSecao1} 
+              nome2={nomeSecao2}
+            />
+          )}
         </MainContent>
       </MainWrapper>
     </Container>
