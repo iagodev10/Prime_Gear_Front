@@ -263,7 +263,7 @@ export const FormLabel = styled.label`
 
 export const FormInput = styled.input`
   padding: 14px 16px;
-  border: 1px solid black;
+  border: 1px solid ${({ $error }) => ($error ? '#e11d48' : 'black')};
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.2s ease;
@@ -277,7 +277,7 @@ export const FormInput = styled.input`
 
 export const FormTextArea = styled.textarea`
   padding: 14px 16px;
-  border: 1px solid black;
+  border: 1px solid ${({ $error }) => ($error ? '#e11d48' : 'black')};
   border-radius: 12px;
   font-size: 1rem;
   min-height: 150px;
@@ -297,6 +297,11 @@ export const FormButton = styled(Button)`
   width: 100%;
   max-width: 300px;
   margin-top: 10px;
+`;
+
+export const ErrorText = styled.span`
+  color: #e11d48;
+  font-size: 0.9rem;
 `;
 
 export const AjudaComprar = styled.div`

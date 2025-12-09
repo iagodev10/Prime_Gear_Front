@@ -85,11 +85,14 @@ export const Input = styled.input`
   width: 100%;
   padding: 14px 18px;
   border-radius: 999px;
-  border: 1px solid #b3b3b3;
+  border: 1px solid ${(props) => (props.$error ? '#e11d48' : '#b3b3b3')};
   outline: none;
   font-size: 1rem;
   color: #111;
   background: #fff;
+  &:focus {
+    border-color: ${(props) => (props.$error ? '#e11d48' : '#000')};
+  }
 `;
 
 export const Submit = styled.button`
@@ -110,4 +113,10 @@ export const HelpLink = styled.button`
   font-weight: 600;
   cursor: pointer;
   align-self: flex-start;
+`;
+
+export const ErrorMessage = styled.span`
+  color: #e11d48;
+  font-size: 0.9rem;
+  margin-top: 4px;
 `;
