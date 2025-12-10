@@ -38,7 +38,7 @@ const Footer = () => {
                     <LeftGroup>
                         <Group>
                             <Title>Sobre a PrimeGear</Title>
-                            <FooterNavLink as={Link} to="/loja">Nossas Lojas</FooterNavLink>
+                            <FooterNavLink as={Link} to="/loja">Loja</FooterNavLink>
                             <FooterNavLink as={Link} to="/institucional">Institucional</FooterNavLink>
                         </Group>
 

@@ -1,10 +1,10 @@
-import styled from 'styled-components';
+import styled from "styled-components"
 
 export const PageContainer = styled.div`
   background-color: #f5f5f5;
   min-height: 100vh;
-  padding: ${props => props.$isMobile ? '100px 20px 40px' : '40px 20px'};
-`;
+  padding: ${(props) => (props.$isMobile ? "100px 20px 40px" : "40px 20px")};
+`
 
 export const ContentWrapper = styled.div`
   max-width: 1400px;
@@ -16,41 +16,42 @@ export const ContentWrapper = styled.div`
   @media (max-width: 900px) {
     flex-direction: column;
   }
-`;
+`
 
 export const FilterSidebar = styled.div`
   width: 280px;
   flex-shrink: 0;
-  position: sticky;
-  top: 20px;
+  position: ${(props) => (props.$isSticky ? "sticky" : "absolute")};
+  top: ${(props) => (props.$isSticky ? "20px" : "auto")};
+  bottom: ${(props) => (props.$isSticky ? "auto" : "0")};
   align-self: flex-start;
-  max-height: ${props => props.$height};
+  max-height: ${(props) => props.$height};
   overflow-y: auto;
 
   @media (max-width: 900px) {
     display: none;
   }
-`;
+`
 
 export const FilterCard = styled.div`
   background-color: white;
   border-radius: 8px;
   padding: 24px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-`;
+`
 
 export const FilterTitle = styled.h2`
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 24px;
   color: #333;
-`;
+`
 
 export const FilterSection = styled.div`
   margin-bottom: 16px;
   border-bottom: 1px solid #e5e5e5;
   padding-bottom: 16px;
-`;
+`
 
 export const FilterButton = styled.button`
   width: 100%;
@@ -64,11 +65,11 @@ export const FilterButton = styled.button`
   font-size: 15px;
   font-weight: 500;
   color: black;
-`;
+`
 
 export const FilterOptions = styled.div`
   padding-top: 12px;
-`;
+`
 
 export const FilterLabel = styled.label`
   display: flex;
@@ -77,18 +78,18 @@ export const FilterLabel = styled.label`
   cursor: pointer;
   font-size: 14px;
   color: black;
-`;
+`
 
 export const FilterCheckbox = styled.input`
   width: 16px;
   height: 16px;
   margin-right: 10px;
   cursor: pointer;
-`;
+`
 
 export const ProductsContainer = styled.div`
   flex: 1;
-`;
+`
 
 export const ProductsGrid = styled.div`
   display: grid;
@@ -104,7 +105,7 @@ export const ProductsGrid = styled.div`
     grid-template-columns: 1fr;
     gap: 16px;
   }
-`;
+`
 
 export const PaginationContainer = styled.div`
   display: flex;
@@ -112,27 +113,27 @@ export const PaginationContainer = styled.div`
   align-items: center;
   gap: 12px;
   margin-top: 40px;
-`;
+`
 
 export const PaginationButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
   border: 1px solid #ddd;
-  background-color: ${props => props.$active ? '#000' : 'white'};
-  color: ${props => props.$active ? 'white' : '#333'};
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  background-color: ${(props) => (props.$active ? "#000" : "white")};
+  color: ${(props) => (props.$active ? "white" : "#333")};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${props => props.disabled ? 0.5 : 1};
-  font-weight: ${props => props.$active ? '600' : '500'};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  font-weight: ${(props) => (props.$active ? "600" : "500")};
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background-color: ${props => props.$active ? '#000' : '#f5f5f5'};
+    background-color: ${(props) => (props.$active ? "#000" : "#f5f5f5")};
   }
-`;
+`
 
 export const FloatingFilterButton = styled.button`
   position: fixed;
@@ -164,7 +165,7 @@ export const FloatingFilterButton = styled.button`
   @media (max-width: 900px) {
     display: flex;
   }
-`;
+`
 
 export const FilterModal = styled.div`
   position: fixed;
@@ -174,14 +175,14 @@ export const FilterModal = styled.div`
   bottom: 0;
   background-color: rgba(0,0,0,0.5);
   z-index: 1000;
-  display: ${props => props.$isOpen ? 'flex' : 'none'};
+  display: ${(props) => (props.$isOpen ? "flex" : "none")};
   align-items: flex-end;
   justify-content: center;
   
   @media (min-width: 901px) {
     display: none;
   }
-`;
+`
 
 export const FilterModalContent = styled.div`
   background-color: white;
@@ -200,7 +201,7 @@ export const FilterModalContent = styled.div`
       transform: translateY(0);
     }
   }
-`;
+`
 
 export const FilterModalHeader = styled.div`
   display: flex;
@@ -209,14 +210,14 @@ export const FilterModalHeader = styled.div`
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid #e5e5e5;
-`;
+`
 
 export const FilterModalTitle = styled.h2`
   font-size: 20px;
   font-weight: 700;
   color: #333;
   margin: 0;
-`;
+`
 
 export const CloseButton = styled.button`
   background: none;
@@ -232,7 +233,7 @@ export const CloseButton = styled.button`
   &:hover {
     color: #000;
   }
-`;
+`
 
 export const ApplyFiltersButton = styled.button`
   width: 100%;
@@ -254,4 +255,4 @@ export const ApplyFiltersButton = styled.button`
   &:active {
     transform: scale(0.98);
   }
-`;
+`
