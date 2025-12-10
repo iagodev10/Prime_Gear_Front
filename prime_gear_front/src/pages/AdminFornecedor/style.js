@@ -113,13 +113,14 @@ export const Search = styled.div`
 export const Content = styled.div`
     width: 90%;
     display: grid;
-    /* Ajuste para telas menores: minmax reduzido para 280px */
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    /* Mantendo a lógica de 4 colunas que você pediu anteriormente */
+    grid-template-columns: repeat(4, 1fr);
     gap: 25px;
 
-    @media (max-width: 768px) {
-        grid-template-columns: 1fr;
-    }
+    /* Responsividade */
+    @media (max-width: 1200px) { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 600px) { grid-template-columns: 1fr; }
 `;
 
 export const Fornecedor = styled.div`
@@ -127,9 +128,16 @@ export const Fornecedor = styled.div`
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     padding: 24px;
+    
+    /* Configuração Flex para alinhar conteúdo */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    
+    /* CORREÇÃO PRINCIPAL 1: O card deve ocupar toda a altura disponível na célula do grid */
+    height: 100%; 
+    box-sizing: border-box; /* Garante que o padding não estoure a altura */
+
     transition: transform 0.2s;
 
     &:hover {
@@ -161,7 +169,7 @@ export const Fornecedor = styled.div`
         color: #333;
         margin-bottom: 5px;
         font-weight: 500;
-        word-break: break-word; /* Evita que emails longos quebrem o layout */
+        word-break: break-word;
     }
 `;
 
@@ -170,7 +178,11 @@ export const Action = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 25px;
+    
+    /* CORREÇÃO PRINCIPAL 2: Empurra os botões para o final do container */
+    margin-top: auto; 
+    padding-top: 25px; /* Adiciona um respiro extra acima dos botões */
+    
     gap: 10px;
 
     @media (max-width: 480px) {
