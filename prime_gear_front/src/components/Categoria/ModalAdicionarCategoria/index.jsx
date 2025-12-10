@@ -26,13 +26,12 @@ const ModalAdicionarCategoria = ({ isVisivel, onClose }) => {
   const validar = () => {
     const e = {}
     if (!nomeCategoria.trim() || nomeCategoria.trim().length < 3) e.nome = 'Informe um nome válido'
-    if (!descricaoCategoria.trim() || descricaoCategoria.trim().length < 10) e.descricao = 'Descrição muito curta'
     setErrors(e)
     return Object.keys(e).length === 0
   }
 
   async function adicionarCategoria(e) {
-    e.preventDefault()
+   
     if (!validar()) return
     try {
       const categoria = {
@@ -41,7 +40,10 @@ const ModalAdicionarCategoria = ({ isVisivel, onClose }) => {
       }
 
       const response = await axios.post('http://localhost:8080/adicionar-categoria',categoria)
-      onClose();
+      
+      if(response.status==200){
+        onClose()
+      }
     } catch (error) {
       console.log(error);
     }

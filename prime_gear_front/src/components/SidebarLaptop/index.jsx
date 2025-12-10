@@ -44,6 +44,7 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
 
 
   useEffect(() => {
+  
     if (isMobile || !category || !isOpen) {
       setProdutos([]);
       return;

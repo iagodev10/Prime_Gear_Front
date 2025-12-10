@@ -40,7 +40,7 @@ const ProductCard = ({
         e.stopPropagation(); 
         
         if (isAdding) return; 
-        
+        if(!user) navigate('/login')
         setIsAdding(true);
         
         try {
@@ -74,7 +74,7 @@ const ProductCard = ({
                 alert('Você precisa estar logado para adicionar itens ao carrinho');
                 navigate('/login');
             } else {
-                alert('Erro ao adicionar produto ao carrinho. Tente novamente.');
+               
             }
         } finally {
             setIsAdding(false);
