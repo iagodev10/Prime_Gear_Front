@@ -3,6 +3,7 @@ import { FiHeart, FiCheckCircle } from "react-icons/fi";
 import axios from "axios";
 
 import laptopvendaImage from '../../assets/images/laptopvenda.png';
+import { createPortal } from 'react-dom';
 
 import {
     Container,
@@ -66,7 +67,8 @@ const messageStyle = {
 const CartToast = ({ isVisible, productTitle }) => {
     if (!isVisible) return null;
 
-    return (
+  
+    return createPortal(
         <div style={toastContainerStyle}>
             <style>
                 {`
@@ -80,16 +82,8 @@ const CartToast = ({ isVisible, productTitle }) => {
                             transform: translateX(0);
                         }
                     }
-                    @keyframes slideOutRight {
-                        from { 
-                            opacity: 1;
-                            transform: translateX(0);
-                        }
-                        to { 
-                            opacity: 0;
-                            transform: translateX(100%);
-                        }
-                    }
+                    /* Removi o slideOutRight pois não estava sendo usado na lógica atual, 
+                       mas se quiser usar, mantenha */
                 `}
             </style>
             <div style={toastStyle}>
@@ -99,7 +93,8 @@ const CartToast = ({ isVisible, productTitle }) => {
                     <div style={messageStyle}>{productTitle}</div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body 
     );
 };
 
