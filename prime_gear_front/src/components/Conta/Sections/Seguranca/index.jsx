@@ -74,7 +74,7 @@ const Seguranca = () => {
 
     try {
       const response = await axios.put(
-        'http://72.62.10.218:8080/change-password',
+        'http://primegear.site:8080/change-password',
         {
           senhaAtual: passwords.current,
           novaSenha: passwords.new

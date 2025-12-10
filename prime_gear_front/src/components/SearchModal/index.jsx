@@ -72,7 +72,7 @@ const SearchModal = ({ isOpen, onClose }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://72.62.10.218:8080/buscar-produtos?termo=${encodeURIComponent(termo)}&limite=6`
+        `http://primegear.site:8080/buscar-produtos?termo=${encodeURIComponent(termo)}&limite=6`
       );
       
       if (response.data.success) {

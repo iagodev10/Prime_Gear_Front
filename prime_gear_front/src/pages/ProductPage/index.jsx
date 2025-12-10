@@ -32,7 +32,7 @@ const ProductPage = () => {
       setLoading(true);
       
 
-      const responseProduto = await axios.get(`http://72.62.10.218:8080/produto/${id}`);
+      const responseProduto = await axios.get(`http://primegear.site:8080/produto/${id}`);
       const produtoData = responseProduto.data;
       setProduto(produtoData);
       setImagemPrincipal(produtoData.url_img_prod);
@@ -40,7 +40,7 @@ const ProductPage = () => {
     
       if (produtoData.cod_categoria) {
         try {
-          const responseCategoria = await axios.get(`http://72.62.10.218:8080/categoria/${produtoData.cod_categoria}`);
+          const responseCategoria = await axios.get(`http://primegear.site:8080/categoria/${produtoData.cod_categoria}`);
           setCategoria(responseCategoria.data);
 
          
@@ -61,7 +61,7 @@ const ProductPage = () => {
     try {
       console.log('Buscando produtos relacionados da categoria:', nomeCategoria);
       
-      const response = await axios.post('http://72.62.10.218:8080/produtos-filtrados', {
+      const response = await axios.post('http://primegear.site:8080/produtos-filtrados', {
         categorias: [nomeCategoria],
         marcas: [],
         avaliacoes: [],

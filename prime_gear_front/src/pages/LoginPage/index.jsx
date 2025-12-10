@@ -361,7 +361,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://72.62.10.218:8080/criar-user-cliente",
+        "http://primegear.site:8080/criar-user-cliente",
         payload
       );
 

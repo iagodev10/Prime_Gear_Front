@@ -53,9 +53,9 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
      
         
         const [resSecao1, resSecao2, resCategorias] = await Promise.all([
-            axios.get('http://72.62.10.218:8080/prods-vinculados/1'),
-            axios.get('http://72.62.10.218:8080/prods-vinculados/2'),
-            axios.get('http://72.62.10.218:8080/get-categorias') 
+            axios.get('http://primegear.site:8080/prods-vinculados/1'),
+            axios.get('http://primegear.site:8080/prods-vinculados/2'),
+            axios.get('http://primegear.site:8080/get-categorias') 
         ])
 
         const produtosSecao1 = resSecao1.data.produtos || []
@@ -126,15 +126,15 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
     }
 
     try {
-      await axios.put('http://72.62.10.218:8080/atualizar-nomes', novosNomes)
+      await axios.put('http://primegear.site:8080/atualizar-nomes', novosNomes)
       
       const produtosIds1 = section1.products.map(p => p.id)
-      await axios.put(`http://72.62.10.218:8080/vincular-secao/${section1.id}`, {
+      await axios.put(`http://primegear.site:8080/vincular-secao/${section1.id}`, {
         produtos: produtosIds1
       })
       
       const produtosIds2 = section2.products.map(p => p.id)
-      await axios.put(`http://72.62.10.218:8080/vincular-secao/${section2.id}`, {
+      await axios.put(`http://primegear.site:8080/vincular-secao/${section2.id}`, {
         produtos: produtosIds2
       })
 

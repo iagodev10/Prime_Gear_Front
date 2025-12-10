@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     try {
         console.log('chamou o get dados');
       const response = await axios.post(
-        'http://72.62.10.218:8080/get-dados-user',
+        'http://primegear.site:8080/get-dados-user',
         null,
         { withCredentials: true }
       )
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await axios.post(
-      'http://72.62.10.218:8080/login',
+      'http://primegear.site:8080/login',
       { email, password },
       { withCredentials: true }
     )
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const logout = async () => {
-    await axios.get('http://72.62.10.218:8080/logout', {
+    await axios.get('http://primegear.site:8080/logout', {
       withCredentials: true
     })
     setUser(null)

@@ -39,7 +39,7 @@ const ModalAdicionarCategoria = ({ isVisivel, onClose }) => {
           descricao_cat:descricaoCategoria
       }
 
-      const response = await axios.post('http://72.62.10.218:8080/adicionar-categoria',categoria)
+      const response = await axios.post('http://primegear.site:8080/adicionar-categoria',categoria)
       
       if(response.status==200){
         onClose()

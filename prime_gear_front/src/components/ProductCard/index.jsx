@@ -137,7 +137,7 @@ const ProductCard = ({
             const priceFloat = parseFloat(price.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
             
             const response = await axios.post(
-                'http://72.62.10.218:8080/add-to-cart/' + user.cod_user,
+                'http://primegear.site:8080/add-to-cart/' + user.cod_user,
                 {
                     cod_produto: idProd,
                     quantidade: 1,

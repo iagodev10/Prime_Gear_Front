@@ -286,7 +286,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, transportadora, id }) =
 
     try {
       const response = await axios.put(
-        `http://72.62.10.218:8080/update-transportadora/${id}`,
+        `http://primegear.site:8080/update-transportadora/${id}`,
         transportadoraAtualizada,
         {
           withCredentials: true

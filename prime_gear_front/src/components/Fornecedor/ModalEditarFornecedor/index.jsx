@@ -41,7 +41,7 @@ const ModalEditarFornecedor = ({ isVisivel, onClose, onSave,onLoad, nome, setNom
 
 
     try {
-        const response = await axios.put('http://72.62.10.218:8080/editar-fornecedor/'+id, objNovasInfos)
+        const response = await axios.put('http://primegear.site:8080/editar-fornecedor/'+id, objNovasInfos)
         window.location.reload()
       
     } catch (error) {

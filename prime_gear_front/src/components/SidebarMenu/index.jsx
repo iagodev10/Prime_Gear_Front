@@ -89,7 +89,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
         console.log('📤 Categoria para backend:', categoriaNome);
 
         const response = await axios.post(
-          'http://72.62.10.218:8080/produtos-filtrados',
+          'http://primegear.site:8080/produtos-filtrados',
           {
             categorias: [categoriaNome],
             marcas: [],

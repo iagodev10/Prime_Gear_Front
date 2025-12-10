@@ -64,7 +64,7 @@ const AdminPedidos = () => {
   const fetchPedidos = async () => {
     try {
       setLoading(true)
-      const response = await axios.get('http://72.62.10.218:8080/admin/pedidos')
+      const response = await axios.get('http://primegear.site:8080/admin/pedidos')
       console.log('Pedidos recebidos:', response.data) 
       setPedidos(response.data)
     } catch (error) {
@@ -77,7 +77,7 @@ const AdminPedidos = () => {
 
   const fetchEstatisticas = async () => {
     try {
-      const response = await axios.get('http://72.62.10.218:8080/admin/pedidos/estatisticas')
+      const response = await axios.get('http://primegear.site:8080/admin/pedidos/estatisticas')
       setEstatisticas(response.data)
     } catch (error) {
       console.error('Erro ao buscar estatísticas:', error)
@@ -100,7 +100,7 @@ const AdminPedidos = () => {
     try {
       console.log('Alterando status do pedido:', id, 'para:', novoStatus) 
       
-      await axios.put(`http://72.62.10.218:8080/admin/pedidos/${id}/status`, {
+      await axios.put(`http://primegear.site:8080/admin/pedidos/${id}/status`, {
         status: novoStatus
       })
       

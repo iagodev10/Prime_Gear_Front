@@ -31,7 +31,7 @@ const AdminTransportadora = () => {
   async function getTransportadoras(){
    
     try {
-        const response = await axios.get('http://72.62.10.218:8080/get-transportadoras')
+        const response = await axios.get('http://primegear.site:8080/get-transportadoras')
         setTransportadoras(response.data)
         console.log(response.data);
     } catch (error) {
@@ -51,7 +51,7 @@ const AdminTransportadora = () => {
 
   async function excluirTransportadora(id) {
     try {
-      const response = await axios.delete(`http://72.62.10.218:8080/delete-transportadora/${id}`);
+      const response = await axios.delete(`http://primegear.site:8080/delete-transportadora/${id}`);
       console.log(response.data);
       window.location.reload()
     } catch (error) {

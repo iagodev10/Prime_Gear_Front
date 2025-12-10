@@ -12,7 +12,7 @@ const AdminCategorias = () => {
 
     async function obterCategorias(){
         try {
-            const response= await axios.get('http://72.62.10.218:8080/get-categorias')
+            const response= await axios.get('http://primegear.site:8080/get-categorias')
             setCategorias(response.data)
         } catch (error) {
             console.log(error);
@@ -22,7 +22,7 @@ const AdminCategorias = () => {
     async function deletarCategoria(idCat){
         console.log("chamou");
         try {
-            const response = await axios.delete('http://72.62.10.218:8080/delete-categoria/'+idCat)
+            const response = await axios.delete('http://primegear.site:8080/delete-categoria/'+idCat)
             console.log("DELETOU");
             window.location.reload()
             setModalExcluirVisivel(false)

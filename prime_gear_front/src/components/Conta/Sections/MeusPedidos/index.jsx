@@ -97,7 +97,7 @@ const PedidoItem = ({ pedido, onExpand }) => {
       setCarregando(true)
       try {
         // Buscar detalhes completos do pedido
-        const response = await axios.get(`http://72.62.10.218:8080/get-order/${pedido.cod_pedido}`, {
+        const response = await axios.get(`http://primegear.site:8080/get-order/${pedido.cod_pedido}`, {
           withCredentials:true
         })
         
@@ -302,7 +302,7 @@ const MeusPedidos = () => {
     try {
       setCarregando(true)
       
-      const response = await axios.get('http://72.62.10.218:8080/get-orders', {
+      const response = await axios.get('http://primegear.site:8080/get-orders', {
         withCredentials:true
       })
 

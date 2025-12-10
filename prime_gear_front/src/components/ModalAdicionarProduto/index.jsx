@@ -62,7 +62,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
 
   async function obterCategorias() {
     try {
-      const response = await axios.get('http://72.62.10.218:8080/get-categorias')
+      const response = await axios.get('http://primegear.site:8080/get-categorias')
       setCategorias(response.data)
     } catch (error) {
       console.log(error);
@@ -71,7 +71,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
 
   async function obterMarcas() {
     try {
-      const response = await axios.get('http://72.62.10.218:8080/get-marcas')
+      const response = await axios.get('http://primegear.site:8080/get-marcas')
       setMarcas(response.data)
       console.log("marcas");
       console.log(response.data);
@@ -82,7 +82,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
 
   async function obterFornecedores() {
     try {
-      const response = await axios.get('http://72.62.10.218:8080/fornecedores-adm')
+      const response = await axios.get('http://primegear.site:8080/fornecedores-adm')
       setFornecedores(response.data)
       console.log("fornecedores");
       console.log(response.data);
@@ -149,7 +149,7 @@ const ModalAdicionarProduto = ({ onClose }) => {
     }
 
     try {
-      const response = await axios.post('http://72.62.10.218:8080/adicionar-produto', formData)
+      const response = await axios.post('http://primegear.site:8080/adicionar-produto', formData)
       window.location.reload()
     } catch (error) {
       console.log(error);

@@ -16,7 +16,7 @@ const ModalEditarCategoria = ({ onClose, onSave, categoriaAtual,id }) => {
 
   async function obterInfosCat(idCat){
     try {
-       const response = await axios.get('http://72.62.10.218:8080/get-cat/'+idCat)
+       const response = await axios.get('http://primegear.site:8080/get-cat/'+idCat)
        setName(response.data.nome_cat)
        setDescricao(response.data.descricao_cat)
 
@@ -46,7 +46,7 @@ const ModalEditarCategoria = ({ onClose, onSave, categoriaAtual,id }) => {
     }
 
     try {
-        const response = await axios.put('http://72.62.10.218:8080/editar-cat/'+id, objCat)
+        const response = await axios.put('http://primegear.site:8080/editar-cat/'+id, objCat)
         window.location.reload()
        
     } catch (error) {

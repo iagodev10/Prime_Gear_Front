@@ -45,7 +45,7 @@ const CartModal = ({ isOpen, onClose }) => {
       setLoading(true);
       setError(null);
       
-      const response = await axios.get(`http://72.62.10.218:8080/get-produtos-cart/${user.cod_user}`, {
+      const response = await axios.get(`http://primegear.site:8080/get-produtos-cart/${user.cod_user}`, {
         withCredentials: true
       });
       

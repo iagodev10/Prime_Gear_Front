@@ -32,7 +32,7 @@ const AdminFornecedor = () => {
 
   async function getFornecedores() {
     try {
-      const response = await axios.get('http://72.62.10.218:8080/fornecedores-adm')
+      const response = await axios.get('http://primegear.site:8080/fornecedores-adm')
       setFornecedor(response.data)
     } catch (error) {
       console.log(error);
@@ -44,7 +44,7 @@ const AdminFornecedor = () => {
   async function deletarFornecedor(idForn) {
     console.log("chamou");
     try {
-      const response = await axios.delete('http://72.62.10.218:8080/delete-fornecedor/' + idForn)
+      const response = await axios.delete('http://primegear.site:8080/delete-fornecedor/' + idForn)
       window.location.reload()
 
     } catch (error) {
@@ -57,7 +57,7 @@ const AdminFornecedor = () => {
     console.log('chamou');
     console.log("ID: "+id);
     try {
-      const response = await axios.get('http://72.62.10.218:8080/get-fornecedor/' + id)
+      const response = await axios.get('http://primegear.site:8080/get-fornecedor/' + id)
       console.log(response.data);
       setNome(response.data.nome_responsavel_forn)
       setEmail(response.data.email_forn)

@@ -174,7 +174,7 @@ const ModalAdicionarTransportadora = ({ isVisivel, onClose, onAdd }) => {
 
     try {
       const response = await axios.post(
-        'http://72.62.10.218:8080/create-transportadora',
+        'http://primegear.site:8080/create-transportadora',
         novaTransportadora,
         {
           withCredentials: true

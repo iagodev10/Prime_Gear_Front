@@ -212,7 +212,7 @@ const CheckoutPage = () => {
         });
         console.log('cep pra api: ' + cleanCep);
         const response = await axios.post(
-          'http://72.62.10.218:8080/calculate-shipping',
+          'http://primegear.site:8080/calculate-shipping',
           {
             cep_cliente: cleanCep,
             peso_kg: totalPeso > 0 ? totalPeso : 1,
@@ -323,7 +323,7 @@ const CheckoutPage = () => {
       try {
         setLoadingCart(true);
         const response = await axios.get(
-          `http://72.62.10.218:8080/get-produtos-cart/${user.cod_user}`,
+          `http://primegear.site:8080/get-produtos-cart/${user.cod_user}`,
           { withCredentials: true }
         );
         setCartProducts(response.data);
@@ -368,7 +368,7 @@ const CheckoutPage = () => {
       const token = localStorage.getItem("token");
       if (!window.confirm("Remover item do carrinho?")) return;
 
-      await axios.delete(`http://72.62.10.218:8080/remove-from-cart/${itemId}`, {
+      await axios.delete(`http://primegear.site:8080/remove-from-cart/${itemId}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
@@ -418,7 +418,7 @@ const CheckoutPage = () => {
 
     try {
       const response = await axios.put(
-        `http://72.62.10.218:8080/update-cart-quantity/${itemId}`,
+        `http://primegear.site:8080/update-cart-quantity/${itemId}`,
         { quantidade: newQuantity },
         {
           withCredentials: true,
@@ -537,7 +537,7 @@ const CheckoutPage = () => {
 
         try {
           const boletoResponse = await axios.post(
-            'http://72.62.10.218:8080/generate-boleto',
+            'http://primegear.site:8080/generate-boleto',
             {
               nomeCompleto: boletoData.nomeCompleto,
               cpf: boletoData.cpf,
@@ -600,7 +600,7 @@ const CheckoutPage = () => {
       };
 
       const response = await axios.post(
-        "http://72.62.10.218:8080/create-order",
+        "http://primegear.site:8080/create-order",
         orderData,
         {
           headers: { Authorization: `Bearer ${token}` },

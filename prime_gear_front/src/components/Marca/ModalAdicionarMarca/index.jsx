@@ -34,7 +34,7 @@ const ModalAdicionarMarca = ({ isVisivel, onClose }) => {
       formData.append('nome_marca',nomeMarca)
       if (imgMarca) formData.append('imagem1',imgMarca)
 
-      const response = await axios.post('http://72.62.10.218:8080/adicionar-marca',formData)
+      const response = await axios.post('http://primegear.site:8080/adicionar-marca',formData)
       window.location.reload()
     } catch (error) {
       console.log(error);
