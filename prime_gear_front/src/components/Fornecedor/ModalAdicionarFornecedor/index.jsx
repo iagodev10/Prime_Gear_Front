@@ -87,8 +87,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
         "http://localhost:8080/adicionar-fornecedor",
         objFornecedor
       );
-      console.log("Forncedor adicionado com sucesso");
-      onClose();
+      window.location.reload()
     } catch (error) {
       alert("Erro ao cadastrar");
       console.log(error);

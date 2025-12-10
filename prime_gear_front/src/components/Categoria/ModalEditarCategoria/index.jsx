@@ -47,8 +47,8 @@ const ModalEditarCategoria = ({ onClose, onSave, categoriaAtual,id }) => {
 
     try {
         const response = await axios.put('http://localhost:8080/editar-cat/'+id, objCat)
-        console.log('deu certo');
-        onClose();
+        window.location.reload()
+       
     } catch (error) {
       console.log(error);
     }

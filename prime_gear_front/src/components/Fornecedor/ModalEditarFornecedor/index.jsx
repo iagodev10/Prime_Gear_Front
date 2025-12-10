@@ -42,7 +42,7 @@ const ModalEditarFornecedor = ({ isVisivel, onClose, onSave,onLoad, nome, setNom
 
     try {
         const response = await axios.put('http://localhost:8080/editar-fornecedor/'+id, objNovasInfos)
-        console.log("Forncedor editado com sucesso");
+        window.location.reload()
       
     } catch (error) {
       alert("Erro ao editar")

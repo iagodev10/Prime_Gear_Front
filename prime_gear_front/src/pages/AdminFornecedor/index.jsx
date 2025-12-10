@@ -45,8 +45,7 @@ const AdminFornecedor = () => {
     console.log("chamou");
     try {
       const response = await axios.delete('http://localhost:8080/delete-fornecedor/' + idForn)
-      console.log("DELETOU");
-      getFornecedores()
+      window.location.reload()
 
     } catch (error) {
       console.log(error);

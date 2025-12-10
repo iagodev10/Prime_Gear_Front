@@ -24,7 +24,7 @@ const AdminCategorias = () => {
         try {
             const response = await axios.delete('http://localhost:8080/delete-categoria/'+idCat)
             console.log("DELETOU");
-            obterCategorias()
+            window.location.reload()
             setModalExcluirVisivel(false)
         } catch (error) {
           console.log(error);

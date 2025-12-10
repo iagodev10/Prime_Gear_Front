@@ -35,7 +35,7 @@ const ModalAdicionarMarca = ({ isVisivel, onClose }) => {
       if (imgMarca) formData.append('imagem1',imgMarca)
 
       const response = await axios.post('http://localhost:8080/adicionar-marca',formData)
-      onClose();
+      window.location.reload()
     } catch (error) {
       console.log(error);
     }

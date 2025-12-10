@@ -10,6 +10,7 @@ import {
   Div,
   ErrorText
 } from "./style";
+import { LuEar } from "react-icons/lu";
 
 const ModalAdicionarTransportadora = ({ isVisivel, onClose, onAdd }) => {
   if (!isVisivel) return null;
@@ -75,41 +76,83 @@ const ModalAdicionarTransportadora = ({ isVisivel, onClose, onAdd }) => {
 
   const validar = () => {
     const e = {};
-    if (!nome.trim()) e.nome = "Informe o nome";
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "E-mail inválido";
-    if (cnpj.replace(/\D/g, '').length !== 14) e.cnpj = "CNPJ inválido";
+    
+    console.log('🔍 Validando campos...', {
+      nome,
+      email,
+      cnpj: cnpj.replace(/\D/g, ''),
+      telefone: telefone.replace(/\D/g, ''),
+      cep: cep.replace(/\D/g, ''),
+      precoPorKm,
+      taxaFixa,
+      precoPorKg,
+      fatorCubagem,
+      codModalidade,
+      latitude,
+      longitude
+    });
+  
+    if (!nome.trim()) {
+      console.log('❌ Nome vazio');
+      e.nome = "Informe o nome";
+    }
+    
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      console.log('❌ Email inválido:', email);
+      e.email = "E-mail inválido";
+    }
+    
+    if (cnpj.replace(/\D/g, '').length !== 14) {
+      console.log('❌ CNPJ inválido. Tamanho:', cnpj.replace(/\D/g, '').length);
+      e.cnpj = "CNPJ inválido";
+    }
+    
     const telDigits = telefone.replace(/\D/g, '');
-    if (telDigits.length < 10 || telDigits.length > 11) e.telefone = "Telefone inválido";
-    if (cep.replace(/\D/g, '').length !== 8) e.cep = "CEP inválido";
-
+    if (telDigits.length < 10 || telDigits.length > 11) {
+      console.log('❌ Telefone inválido. Tamanho:', telDigits.length);
+      e.telefone = "Telefone inválido";
+    }
+    
+    if (cep.replace(/\D/g, '').length !== 8) {
+      console.log('❌ CEP inválido. Tamanho:', cep.replace(/\D/g, '').length);
+      e.cep = "CEP inválido";
+    }
+  
     if (!precoPorKm || isNaN(parseFloat(precoPorKm)) || parseFloat(precoPorKm) < 0) {
+      console.log('❌ Preço por km inválido:', precoPorKm);
       e.precoPorKm = "Preço por km inválido";
     }
+    
     if (!taxaFixa || isNaN(parseFloat(taxaFixa)) || parseFloat(taxaFixa) < 0) {
+      console.log('❌ Taxa fixa inválida:', taxaFixa);
       e.taxaFixa = "Taxa fixa inválida";
     }
+    
     if (!precoPorKg || isNaN(parseFloat(precoPorKg)) || parseFloat(precoPorKg) < 0) {
+      console.log('❌ Preço por kg inválido:', precoPorKg);
       e.precoPorKg = "Preço por kg inválido";
     }
+    
     if (!fatorCubagem || isNaN(parseFloat(fatorCubagem)) || parseFloat(fatorCubagem) <= 0) {
+      console.log('❌ Fator de cubagem inválido:', fatorCubagem);
       e.fatorCubagem = "Fator de cubagem inválido";
     }
-    if (!codModalidade || isNaN(parseInt(codModalidade)) || parseInt(codModalidade) <= 0) {
-      e.codModalidade = "Selecione uma modalidade";
-    }
-    if (!latitude || isNaN(parseFloat(latitude))) {
-      e.latitude = "Latitude inválida";
-    }
-    if (!longitude || isNaN(parseFloat(longitude))) {
-      e.longitude = "Longitude inválida";
-    }
-
+    
+   
+    
+    
+  
     setErrors(e);
-    return Object.keys(e).length === 0;
+    
+    const isValid = Object.keys(e).length === 0;
+    console.log(isValid ? '✅ Validação passou!' : '❌ Validação falhou:', e);
+    
+    return isValid;
   };
+  
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+   e.preventDefault()
     if (!validar()) return;
 
     const novaTransportadora = {
@@ -139,7 +182,7 @@ const ModalAdicionarTransportadora = ({ isVisivel, onClose, onAdd }) => {
       );
       
       console.log("Transportadora criada com sucesso:", response.data);
-      alert("Transportadora cadastrada com sucesso!");
+
       
     
       setNome("");

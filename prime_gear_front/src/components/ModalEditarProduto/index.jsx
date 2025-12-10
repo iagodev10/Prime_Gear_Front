@@ -181,8 +181,8 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
 
     try {
       const response = await axios.put(`http://localhost:8080/editar-produto/${produtoId}`, formData)
-      alert("Produto atualizado com sucesso!")
-      onClose()
+     
+      window.location.reload()
     } catch (error) {
       console.log(error);
       alert("Erro ao atualizar produto")

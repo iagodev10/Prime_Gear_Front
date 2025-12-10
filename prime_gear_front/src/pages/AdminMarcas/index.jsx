@@ -24,7 +24,7 @@ const AdminMarcas = () => {
         try {
             const response = await axios.delete('http://localhost:8080/delete-marca/' + idCat)
             console.log("DELETOU");
-            obtermarcas()
+            window.location.reload()
             setModalExcluirVisivel(false)
         } catch (error) {
             console.log(error);

@@ -53,7 +53,7 @@ const ModalEditarTransportadora = ({ isVisivel, onClose, onSave, transportadora,
         atualizado
       );
 
-      
+      window.location.reload(); 
    
     } catch (error) {
       console.error("Erro ao atualizar transportadora:", error);

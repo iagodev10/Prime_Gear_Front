@@ -53,8 +53,7 @@ const ModalEditarMarca = ({ onClose, onSave, categoriaAtual,id }) => {
 
     try {
         const response = await axios.put('http://localhost:8080/editar-marca/'+id, formData)
-        console.log('deu certo');
-        onClose();
+        window.location.reload()
     } catch (error) {
       console.log(error);
     }
@@ -107,7 +106,7 @@ const ModalEditarMarca = ({ onClose, onSave, categoriaAtual,id }) => {
             </div>
 
             <SubmitButton type="submit" onSubmit={handleSalvar}>
-              Salvar Categoria
+              Salvar Marca
             </SubmitButton>
           </Form>
         </ModalContent>

@@ -60,14 +60,14 @@ const AdminUsers = () => {
         { withCredentials: true }
       );
       
-      // Atualiza o estado local
+     
       setUsuarios(usuarios.map(user => 
         user.cod_user === codUser 
           ? { ...user, tipo_user: novoTipo }
           : user
       ));
       
-      alert('Cargo atualizado com sucesso!');
+      
     } catch (error) {
       console.error('Erro ao atualizar cargo:', error);
       alert('Erro ao atualizar cargo do usuário');
@@ -88,7 +88,7 @@ const AdminUsers = () => {
 
   // Contar por tipo
   const totalAdmins = usuariosFiltrados.filter(u => u.tipo_user === 'Administrador').length;
-  const totalClientes = usuariosFiltrados.filter(u => u.tipo_user === 'Cliente').length;
+  const totalClientes = usuariosFiltrados.filter(u => u.tipo_user === 'Usuário').length;
 
   if (loading) {
     return (
@@ -186,7 +186,7 @@ const AdminUsers = () => {
                     Alterar Cargo:
                   </label>
                   <select
-                    value={usuario.tipo_user || 'Cliente'}
+                    value={usuario.tipo_user || 'Usuário'}
                     onChange={(e) => handleTipoChange(usuario.cod_user, e.target.value)}
                     style={{
                       padding: '8px 12px',
@@ -202,7 +202,7 @@ const AdminUsers = () => {
                     onFocus={(e) => e.target.style.borderColor = '#6A00FF'}
                     onBlur={(e) => e.target.style.borderColor = '#ddd'}
                   >
-                    <option value="Cliente">Cliente</option>
+                    <option value="Usuário">Usuário</option>
                     <option value="Administrador">Administrador</option>
                     <option value="Funcionário">Funcionário</option>
                     <option value="Transportadora">Transportadora</option>

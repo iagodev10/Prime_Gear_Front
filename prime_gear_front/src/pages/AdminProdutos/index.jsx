@@ -80,8 +80,8 @@ const AdminProdutos = () => {
 
     try {
       await axios.delete("http://localhost:8080/delete-produto/" + id)
-      obterProdutos()
-      alert("Produto excluído com sucesso!")
+      window.location.reload()
+      
     } catch (error) {
       console.log(error)
       alert("Erro ao excluir produto")
