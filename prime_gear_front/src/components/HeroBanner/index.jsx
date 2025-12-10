@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -21,8 +21,13 @@ import {
 } from "./style";
 
 const HeroBanner = () => {
-
   const navigate = useNavigate()
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   return (
     <HeroContainer>
@@ -31,7 +36,7 @@ const HeroBanner = () => {
         slidesPerView={1}
         loop={true}
         autoplay={{ delay: 4000 }}
-        navigation
+        navigation={isMobile ? false : true}
         pagination={{ clickable: true }}
       >
         <SwiperSlide>

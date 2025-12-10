@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -48,12 +48,21 @@ const categorias = [
 import { CarouselContainer, SwiperContainer, CategoryCard } from './style';
 
 const CategoryCarousel = () => {
+    const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+    useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
     return (
         <CarouselContainer>
 
             <SwiperContainer>
-                <Swiper modules={[Navigation]}
-                    navigation
+                <Swiper modules={[Navigation, Autoplay]}
+                    navigation={isMobile ? false : true}
+                    loop={isMobile}
+                    autoplay={isMobile ? { delay: 2500, disableOnInteraction: false } : false}
                     spaceBetween={30}
                     breakpoints={{
                         320: { slidesPerView: 2, spaceBetween: 12 },
