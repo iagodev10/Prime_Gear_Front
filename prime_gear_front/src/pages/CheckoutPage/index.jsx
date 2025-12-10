@@ -574,6 +574,7 @@ const CheckoutPage = () => {
         shippingMethodId: selectedShipping,
         paymentData: paymentDetails,
         itens: cartProducts,
+        frete: parseFloat(totais.frete)
 
       };
 
@@ -620,8 +621,6 @@ const CheckoutPage = () => {
         };
 
         setCartProducts([]);
-
-        alert("Pedido realizado com sucesso!");
 
         navigate("/obrigado", {
           state: {
