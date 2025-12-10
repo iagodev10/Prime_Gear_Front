@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import 'swiper/css'
 import 'swiper/css/navigation';
 
@@ -27,6 +27,12 @@ const Marcas = [
 
 const BrandsCarousel = ({marcas}) => {
     const navigate = useNavigate();
+    const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+    useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
 
     const handleBrandClick = (brandName) => {
         console.log('Navegando para loja com marca:', brandName);
@@ -47,8 +53,10 @@ const BrandsCarousel = ({marcas}) => {
 
             <SwiperContainer>
                 <Swiper
-                    modules={[Navigation]}
-                    navigation
+                    modules={[Navigation, Autoplay]}
+                    navigation={isMobile ? false : true}
+                    loop={isMobile}
+                    autoplay={isMobile ? { delay: 2500, disableOnInteraction: false } : false}
                     slidesPerView={5}
                     spaceBetween={30}
                     breakpoints={{
