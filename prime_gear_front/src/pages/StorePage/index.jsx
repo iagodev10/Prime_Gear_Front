@@ -200,7 +200,7 @@ const FilterSection = ({
 );
 
 
-function Store() {
+function StorePage() {
 
     const handleCategoryChange = (category) => {
         const categoryName = category.nome_cat;
@@ -248,7 +248,7 @@ function Store() {
     });
 
   
-
+    const [isFilterSticky, setIsFilterSticky] = useState(true); // Added state
    
     const [sidebarHeight, setSidebarHeight] = useState('auto');
     const [isMobile, setIsMobile] = useState(false);
@@ -261,6 +261,7 @@ function Store() {
     const sidebarRef = useRef(null);
     const paginationRef = useRef(null);
     const containerRef = useRef(null);
+    const productsContainerRef = useRef(null); // Added ref
 
     const itemsPerPage = 6;
 
@@ -300,9 +301,10 @@ function Store() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!productsContainerRef.current || isMobile) return
+      // Changed productsContainerRef.current to containerRef.current as containerRef is used in JSX
+      if (!containerRef.current || isMobile) return
 
-      const productsContainer = productsContainerRef.current
+      const productsContainer = containerRef.current
       const productsRect = productsContainer.getBoundingClientRect()
       const productsBottom = productsRect.bottom
       const windowHeight = window.innerHeight
@@ -878,7 +880,7 @@ useEffect(() => {
                             {/* Erro corrigido: Removidas as chamadas redundantes a <ProductCard /> sem props */}
                             {currentProducts.length > 0 ? (
                                 currentProducts.map((prod) => (
-                                 
+                                  
                                     <ProductCard
                                         key={prod.cod_produto}
                                         cod_produto={prod.cod_produto}
@@ -1144,7 +1146,7 @@ useEffect(() => {
                     margin: '0 auto'
                 }}>
                     {isMobile ? (
-                       
+                        
                         <Swiper
                             modules={[Navigation]}
                             navigation
@@ -1338,4 +1340,4 @@ useEffect(() => {
     )
 }
 
-export default Store
+export default StorePage
