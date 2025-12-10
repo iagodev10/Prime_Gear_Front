@@ -188,7 +188,7 @@ const SidebarLaptop = ({ isOpen, category, onClose }) => {
                     <ProductCard
                       key={produto.cod_produto}
                       as={Link}
-                      to={`/produto/${produto.cod_produto}`}
+                      to={`/detalhe/${produto.cod_produto}`}
                       onClick={onClose}
                     >
                       <img

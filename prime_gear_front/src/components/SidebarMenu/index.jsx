@@ -189,7 +189,7 @@ const SidebarMenu = ({ isOpen, onClose, onOpenCategory, openCategory }) => {
                 produtos.map((produto) => (
                   <CategoryProductCard 
                     key={produto.cod_produto}
-                    to={`/produto/${produto.cod_produto}`}
+                    to={`/detalhe/${produto.cod_produto}`}
                     onClick={handleClose}
                   >
                     <img 
