@@ -1,6 +1,7 @@
 import CategoryNav from "../../components/CategoryNav"
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, ChevronDown, ChevronUp, ShoppingCart, Filter } from 'lucide-react';
+import { Heart, ChevronDown, ChevronUp, ShoppingCart, Filter, ChevronLeft, ChevronRight } from 'lucide-react'; 
+
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -18,6 +19,8 @@ import fone from '../../assets/images/foneJBL.png'
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 
+
+
 const FilterSection = ({
     categorias, toggleCategory, selectedCategories,
     marcas, toggleBrand, selectedBrands,
@@ -25,22 +28,13 @@ const FilterSection = ({
     expandedFilters, toggleFilter, labelStyle, inputStyle, selectedRatings, toggleRating
 }) => (
     <>
+        {/* ... (Conteúdo do FilterSection mantido igual) ... */}
         {/* Categoria */}
         <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
             <button
                 onClick={() => toggleFilter('categoria')}
                 style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '12px 0',
-                    border: 'none',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer',
-                    fontSize: '15px',
-                    fontWeight: '500',
-                    color: 'black'
+                    width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: 'black'
                 }}
             >
                 Categoria
@@ -49,83 +43,34 @@ const FilterSection = ({
             {expandedFilters.categoria && (
                 <div style={{ paddingTop: '12px' }}>
                     {categorias.map(cat => (
-                        <label
-                            key={cat.nome_cat}
-                            style={labelStyle}
-                        >
-                            <input
-                                type="checkbox"
-                                checked={selectedCategories.includes(cat.nome_cat)}
-                                onChange={() => toggleCategory(cat.nome_cat)}
-                                style={inputStyle}
-                            />
+                        <label key={cat.nome_cat} style={labelStyle}>
+                            <input type="checkbox" checked={selectedCategories.includes(cat.nome_cat)} onChange={() => toggleCategory(cat.nome_cat)} style={inputStyle} />
                             {cat.nome_cat}
                         </label>
                     ))}
                 </div>
             )}
         </div>
-
         {/* Marca */}
         <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-            <button
-                onClick={() => toggleFilter('marca')}
-                style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '12px 0',
-                    border: 'none',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer',
-                    fontSize: '15px',
-                    fontWeight: '500',
-                    color: 'black'
-                }}
-            >
+            <button onClick={() => toggleFilter('marca')} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: 'black' }}>
                 Marca
                 {expandedFilters.marca ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
-
             {expandedFilters.marca && (
                 <div style={{ paddingTop: '12px' }}>
                     {marcas.map(marca => (
-                        <label
-                            key={marca.nome_marca}
-                            style={labelStyle}
-                        >
-                            <input
-                                type="checkbox"
-                                checked={selectedBrands.includes(marca.nome_marca)}
-                                onChange={() => toggleBrand(marca.nome_marca)}
-                                style={inputStyle}
-                            />
+                        <label key={marca.nome_marca} style={labelStyle}>
+                            <input type="checkbox" checked={selectedBrands.includes(marca.nome_marca)} onChange={() => toggleBrand(marca.nome_marca)} style={inputStyle} />
                             {marca.nome_marca}
                         </label>
                     ))}
                 </div>
             )}
         </div>
-
         {/* Preço */}
         <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-            <button
-                onClick={() => toggleFilter('preco')}
-                style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '12px 0',
-                    border: 'none',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer',
-                    fontSize: '15px',
-                    fontWeight: '500',
-                    color: 'black'
-                }}
-            >
+            <button onClick={() => toggleFilter('preco')} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: 'black' }}>
                 Preço
                 {expandedFilters.preco ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
@@ -133,37 +78,16 @@ const FilterSection = ({
                 <div style={{ paddingTop: '12px' }}>
                     {priceRanges.map(range => (
                         <label key={range.label} style={labelStyle}>
-                            <input
-                                type="checkbox"
-                                checked={selectedPriceRanges.includes(range.label)}
-                                onChange={() => togglePriceRange(range.label)}
-                                style={inputStyle}
-                            />
+                            <input type="checkbox" checked={selectedPriceRanges.includes(range.label)} onChange={() => togglePriceRange(range.label)} style={inputStyle} />
                             {range.label}
                         </label>
                     ))}
                 </div>
             )}
         </div>
-
-        {/* Avaliações (Deixadas aqui, mas pode ser removida se a lógica não for implementada) */}
+        {/* Avaliações */}
         <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-            <button
-                onClick={() => toggleFilter('avaliacoes')}
-                style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '12px 0',
-                    border: 'none',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer',
-                    fontSize: '15px',
-                    fontWeight: '500',
-                    color: 'black'
-                }}
-            >
+            <button onClick={() => toggleFilter('avaliacoes')} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: 'black' }}>
                 Avaliações
                 {expandedFilters.avaliacoes ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
@@ -171,26 +95,26 @@ const FilterSection = ({
                 <div style={{ paddingTop: '12px' }}>
                     {[5, 4, 3, 2, 1].map(rating => (
                         <label key={rating} style={labelStyle}>
-                            <input
-                                type="checkbox"
-                                style={inputStyle}
-                                checked={selectedRatings.includes(rating)}
-                                onChange={() => toggleRating(rating)}
-                            />
+                            <input type="checkbox" style={inputStyle} checked={selectedRatings.includes(rating)} onChange={() => toggleRating(rating)} />
                             {rating} {rating === 1 ? 'estrela' : 'estrelas'} ou mais
                         </label>
                     ))}
                 </div>
             )}
         </div>
-
-        {/* Outros filtros comentados na versão original (removidos para simplificar o código) */}
     </>
 );
 
 
 function Store() {
-    const navigate=useNavigate()
+    const navigate = useNavigate()
+
+   
+    
+    const swiperPrevRef = useRef(null);
+    const swiperNextRef = useRef(null);
+ 
+    
 
     const handleCategoryChange = (category) => {
         const categoryName = category.nome_cat;
@@ -208,7 +132,7 @@ function Store() {
         setCurrentPage(1);
     };
 
-   
+
     const [selectedRatings, setSelectedRatings] = useState([])
     const location = useLocation();
 
@@ -216,15 +140,15 @@ function Store() {
     const [categorias, setCategorias] = useState([])
     const [marcas, setMarcas] = useState([])
 
-  
+
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedBrands, setSelectedBrands] = useState([]); 
+    const [selectedBrands, setSelectedBrands] = useState([]);
     const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
     const [categoryFromCarousel, setCategoryFromCarousel] = useState(null);
-    const [favorites, setFavorites] = useState([]); 
+    const [favorites, setFavorites] = useState([]);
 
- 
+
     const [expandedFilters, setExpandedFilters] = useState({
         categoria: false,
         marca: false,
@@ -237,9 +161,9 @@ function Store() {
         processador: false
     });
 
-  
 
-   
+
+
     const [sidebarHeight, setSidebarHeight] = useState('auto');
     const [isMobile, setIsMobile] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -254,7 +178,7 @@ function Store() {
 
     const itemsPerPage = 6;
 
-    
+
     const priceRanges = [
         { label: "Até R$ 1.000", min: 0, max: 1000 },
         { label: "R$ 1.000 a R$ 2.500", min: 1000, max: 2500 },
@@ -308,10 +232,10 @@ function Store() {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getMarcas()
         getCats()
-    },[])
+    }, [])
 
     async function obterProdutosFiltrados() {
         try {
@@ -337,7 +261,7 @@ function Store() {
             const filtros = {
                 categorias: categoriasParaFiltrar,
                 marcas: selectedBrands,
-                avaliacoes: selectedRatings,  
+                avaliacoes: selectedRatings,
                 precoMin,
                 precoMax
             };
@@ -352,7 +276,7 @@ function Store() {
         }
     }
 
-  
+
     async function obterTodosProdutos() {
         try {
             const response = await axios.get('http://localhost:8080/produtos-adm')
@@ -370,83 +294,83 @@ function Store() {
         }
     }, [selectedCategories, selectedBrands, selectedPriceRanges, selectedRatings, categoryFromCarousel]); // ✅ ADICIONE selectedRatings
 
-   
 
 
-useEffect(() => {
-    if (categorias.length > 0) {
-     
-        if (location.state?.categoryIdentifier) {
-            const identifier = location.state.categoryIdentifier.toLowerCase();
-            
-            console.log('🔍 Buscando categoria com identificador:', identifier);
-            console.log('📦 Categorias disponíveis:', categorias.map(c => c.nome_cat));
-            
-       
-            const matchedCategory = categorias.find(cat => {
-                const catName = cat.nome_cat.toLowerCase();
-                
-      
-                return catName.includes(identifier) || 
-                       identifier.includes(catName) ||
-                     
-                       (identifier === 'laptop' && (catName.includes('notebook') || catName.includes('laptop'))) ||
-                       (identifier === 'desktop' && (catName.includes('desktop') || catName.includes('pc') || catName.includes('computador'))) ||
-                       (identifier === 'console' && (catName.includes('console') || catName.includes('videogame'))) ||
-                       (identifier === 'periferico' && (catName.includes('periférico') || catName.includes('periferico')));
-            });
-            
-            console.log('✅ Categoria encontrada:', matchedCategory);
-            
-            if (matchedCategory) {
-                setCategoryFromCarousel(matchedCategory);
-                
-                if (!selectedCategories.includes(matchedCategory.nome_cat)) {
-                    setSelectedCategories(prev => [...prev, matchedCategory.nome_cat]);
+
+    useEffect(() => {
+        if (categorias.length > 0) {
+
+            if (location.state?.categoryIdentifier) {
+                const identifier = location.state.categoryIdentifier.toLowerCase();
+
+                console.log('🔍 Buscando categoria com identificador:', identifier);
+                console.log('📦 Categorias disponíveis:', categorias.map(c => c.nome_cat));
+
+
+                const matchedCategory = categorias.find(cat => {
+                    const catName = cat.nome_cat.toLowerCase();
+
+
+                    return catName.includes(identifier) ||
+                        identifier.includes(catName) ||
+
+                        (identifier === 'laptop' && (catName.includes('notebook') || catName.includes('laptop'))) ||
+                        (identifier === 'desktop' && (catName.includes('desktop') || catName.includes('pc') || catName.includes('computador'))) ||
+                        (identifier === 'console' && (catName.includes('console') || catName.includes('videogame'))) ||
+                        (identifier === 'periferico' && (catName.includes('periférico') || catName.includes('periferico')));
+                });
+
+                console.log('✅ Categoria encontrada:', matchedCategory);
+
+                if (matchedCategory) {
+                    setCategoryFromCarousel(matchedCategory);
+
+                    if (!selectedCategories.includes(matchedCategory.nome_cat)) {
+                        setSelectedCategories(prev => [...prev, matchedCategory.nome_cat]);
+                    }
+                } else {
+                    console.warn('⚠️ Nenhuma categoria encontrada para:', identifier);
                 }
-            } else {
-                console.warn('⚠️ Nenhuma categoria encontrada para:', identifier);
+
+
+                window.history.replaceState({}, document.title);
             }
-            
-          
+
+            else if (location.state?.selectedCategory) {
+                const category = location.state.selectedCategory;
+                console.log('📌 Categoria selecionada diretamente:', category);
+
+                setCategoryFromCarousel(category);
+
+                if (!selectedCategories.includes(category.nome_cat)) {
+                    setSelectedCategories(prev => [...prev, category.nome_cat]);
+                }
+
+
+                window.history.replaceState({}, document.title);
+            }
+        }
+    }, [location.state, categorias])
+
+    useEffect(() => {
+        if (marcas.length > 0 && location.state?.selectedBrand) {
+            const brandName = location.state.selectedBrand;
+
+            console.log('Marca selecionada:', brandName);
+            console.log('Marcas disponíveis:', marcas.map(m => m.nome_marca));
+
+            const matchedBrand = marcas.find(m => m.nome_marca === brandName);
+
+            if (matchedBrand && !selectedBrands.includes(brandName)) {
+                setSelectedBrands(prev => [...prev, brandName]);
+                console.log('Marca adicionada aos filtros:', brandName);
+            }
+
             window.history.replaceState({}, document.title);
         }
-    
-        else if (location.state?.selectedCategory) {
-            const category = location.state.selectedCategory;
-            console.log('📌 Categoria selecionada diretamente:', category);
-            
-            setCategoryFromCarousel(category);
-            
-            if (!selectedCategories.includes(category.nome_cat)) {
-                setSelectedCategories(prev => [...prev, category.nome_cat]);
-            }
-            
-        
-            window.history.replaceState({}, document.title);
-        }
-    }
-}, [location.state, categorias])
+    }, [location.state, marcas]);
 
-useEffect(() => {
-    if (marcas.length > 0 && location.state?.selectedBrand) {
-        const brandName = location.state.selectedBrand;
-        
-        console.log('Marca selecionada:', brandName);
-        console.log('Marcas disponíveis:', marcas.map(m => m.nome_marca));
-        
-        const matchedBrand = marcas.find(m => m.nome_marca === brandName);
-        
-        if (matchedBrand && !selectedBrands.includes(brandName)) {
-            setSelectedBrands(prev => [...prev, brandName]);
-            console.log('Marca adicionada aos filtros:', brandName);
-        }
-        
-        window.history.replaceState({}, document.title);
-    }
-}, [location.state, marcas]);
 
- 
     useEffect(() => {
         if (selectedCategories.length > 0 || selectedBrands.length > 0 || selectedPriceRanges.length > 0 || categoryFromCarousel) {
             obterProdutosFiltrados();
@@ -456,7 +380,7 @@ useEffect(() => {
     }, [selectedCategories, selectedBrands, selectedPriceRanges, categoryFromCarousel]);
 
 
-   
+
     const toggleRating = (rating) => {
         setSelectedRatings(prev =>
             prev.includes(rating)
@@ -471,14 +395,14 @@ useEffect(() => {
         return () => window.removeEventListener('resize', onResize);
     }, []);
 
-   
+
 
 
     const handleCategoryFromCarousel = (category) => {
         setCategoryFromCarousel(category);
 
         if (category) {
-        
+
             setSelectedCategories(prev => {
                 const categoryName = category.nome_cat;
                 if (!prev.includes(categoryName)) {
@@ -487,7 +411,7 @@ useEffect(() => {
                 return prev;
             });
         } else {
-          
+
             if (categoryFromCarousel) {
                 setSelectedCategories(prev =>
                     prev.filter(c => c !== categoryFromCarousel.nome_cat)
@@ -510,7 +434,7 @@ useEffect(() => {
                 ? prev.filter(c => c !== categoryName)
                 : [...prev, categoryName];
 
-           
+
             if (categoryFromCarousel && categoryFromCarousel.nome_cat === categoryName && !newCategories.includes(categoryName)) {
                 setCategoryFromCarousel(null);
             }
@@ -519,7 +443,7 @@ useEffect(() => {
         });
     };
 
-  
+
     const toggleBrand = (brandName) => {
         setSelectedBrands(prev =>
             prev.includes(brandName)
@@ -541,15 +465,15 @@ useEffect(() => {
         setSelectedCategories([]);
         setSelectedBrands([]);
         setSelectedPriceRanges([]);
-        setSelectedRatings([]);  
+        setSelectedRatings([]);
         setCategoryFromCarousel(null);
     };
 
- 
+
     const renderPagination = () => {
         const pages = [];
 
-   
+
 
         pages.push(
             <button
@@ -575,7 +499,7 @@ useEffect(() => {
         );
 
         if (totalPages > 0) {
-          
+
             if (currentPage > 2) {
                 pages.push(
                     <button
@@ -602,7 +526,7 @@ useEffect(() => {
                 }
             }
 
-          
+
             for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
                 pages.push(
                     <button
@@ -624,7 +548,7 @@ useEffect(() => {
                 );
             }
 
-         
+
             if (currentPage < totalPages - 1) {
                 if (currentPage < totalPages - 2) {
                     pages.push(
@@ -652,7 +576,7 @@ useEffect(() => {
             }
         }
 
-      
+
         pages.push(
             <button
                 key="next"
@@ -704,26 +628,57 @@ useEffect(() => {
                 .filter-drawer-enter {
                     animation: slideUpFromBottom 0.3s ease-out forwards;
                 }
-                .category-swiper .swiper-button-next,
-                .category-swiper .swiper-button-prev {
-                    color: #000;
-                    background: rgba(255, 255, 255, 0.9);
+                
+                /* Estilos novos para o Carrossel de Categorias */
+                .category-swiper-wrapper {
+                    position: relative;
+                    overflow: visible; /* Permite setas fora */
+                }
+                
+                .category-swiper {
+                    overflow: hidden !important; /* Corta os slides */
+                    position: static; /* Para não atrapalhar os botões absolutos */
+                }
+                
+                /* Botões customizados */
+                .custom-cat-nav-btn {
+                    position: absolute;
+                    top: 40%; /* Ajuste vertical */
+                    transform: translateY(-50%);
                     width: 40px;
                     height: 40px;
-                    border-radius: 50%;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                }
-                .category-swiper .swiper-button-next:after,
-                .category-swiper .swiper-button-prev:after {
-                    font-size: 18px;
-                    font-weight: bold;
-                }
-                .category-swiper .swiper-button-next:hover,
-                .category-swiper .swiper-button-prev:hover {
                     background: #fff;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                    border-radius: 50%;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    z-index: 20;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    border: none;
+                    color: #000;
+                    transition: all 0.3s ease;
                 }
-                // Garante que o indicador da paginação seja branco sobre fundo preto
+                
+                .custom-cat-nav-btn:hover {
+                    background: #f0f0f0;
+                    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+                }
+                
+                .custom-cat-prev {
+                    left: -10px; /* Joga um pouco para fora */
+                }
+                
+                .custom-cat-next {
+                    right: -10px; /* Joga um pouco para fora */
+                }
+                
+                /* Esconde em telas muito pequenas se necessário, ou ajusta o padding */
+                @media (max-width: 360px) {
+                    .custom-cat-prev { left: -5px; }
+                    .custom-cat-next { right: -5px; }
+                }
+
                 .pagination-button-active {
                     background-color: #000 !important; 
                     color: white !important; 
@@ -745,11 +700,11 @@ useEffect(() => {
                             style={{
                                 width: '280px',
                                 flexShrink: 0,
-                              
+
                                 position: 'sticky',
                                 top: '20px',
                                 alignSelf: 'flex-start',
-                                maxHeight: 'calc(100vh - 40px)', 
+                                maxHeight: 'calc(100vh - 40px)',
                                 overflowY: 'auto'
                             }}
                         >
@@ -832,7 +787,7 @@ useEffect(() => {
                             {/* Erro corrigido: Removidas as chamadas redundantes a <ProductCard /> sem props */}
                             {currentProducts.length > 0 ? (
                                 currentProducts.map((prod) => (
-                                 
+
                                     <ProductCard
                                         key={prod.cod_produto}
                                         cod_produto={prod.cod_produto}
@@ -845,7 +800,7 @@ useEffect(() => {
                                     />
                                 ))
                             ) : (
-                               
+
                                 <p style={{ gridColumn: '1 / -1', textAlign: 'center', fontSize: '1.2rem', padding: '40px', backgroundColor: 'white', borderRadius: '8px' }}>
                                     Nenhum produto encontrado com os filtros selecionados.
                                 </p>
@@ -853,7 +808,7 @@ useEffect(() => {
                         </div>
 
                         {/* Paginação */}
-                        {totalPages > 1 && ( 
+                        {totalPages > 1 && (
                             <div
                                 ref={paginationRef}
                                 style={{
@@ -1009,65 +964,83 @@ useEffect(() => {
                     margin: '0 auto'
                 }}>
                     {isMobile ? (
-                       
-                        <Swiper
-                            modules={[Navigation]}
-                            navigation
-                            slidesPerView={1}
-                            spaceBetween={20}
-                            className="category-swiper"
-                            style={{ paddingBottom: '40px' }}
-                        >
-                            {[
-                                { id: 1, name: 'Laptops', image: notebook },
-                                { id: 2, name: 'Fones de Ouvido', image: fone },
-                                { id: 3, name: 'Desktops', image: desktop }
-                            ].map((category) => (
-                                <SwiperSlide key={category.id}>
-                                    <div style={{
-                                        width: "100%",
-                                        background: "#e1e1e1",
-                                        height: "140px",
-                                        borderRadius: "20px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-around",
-                                        padding: "16px 20px",
-                                        flexDirection: "row",
-                                        gap: "16px"
-                                    }}>
-                                        <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "110px", objectFit: "contain", flexShrink: 0 }} />
+                        /* CONTAINER NOVO COM POSITION RELATIVE PARA OS BOTOES */
+                        <div className="category-swiper-wrapper">
+                            
+                            {/* BOTÕES CUSTOMIZADOS FORA DO SWIPER */}
+                            <button ref={swiperPrevRef} className="custom-cat-nav-btn custom-cat-prev">
+                                <ChevronLeft size={24} />
+                            </button>
+                            <button ref={swiperNextRef} className="custom-cat-nav-btn custom-cat-next">
+                                <ChevronRight size={24} />
+                            </button>
+
+                            <Swiper
+                                modules={[Navigation]}
+                                navigation={{
+                                    prevEl: swiperPrevRef.current,
+                                    nextEl: swiperNextRef.current,
+                                }}
+                                onBeforeInit={(swiper) => {
+                                    swiper.params.navigation.prevEl = swiperPrevRef.current;
+                                    swiper.params.navigation.nextEl = swiperNextRef.current;
+                                }}
+                                slidesPerView={1}
+                                spaceBetween={20}
+                                className="category-swiper"
+                                style={{ paddingBottom: '40px' }}
+                            >
+                                {[
+                                    { id: 1, name: 'Laptops', image: notebook },
+                                    { id: 2, name: 'Fones de Ouvido', image: fone },
+                                    { id: 3, name: 'Desktops', image: desktop }
+                                ].map((category) => (
+                                    <SwiperSlide key={category.id}>
                                         <div style={{
+                                            width: "100%",
+                                            background: "#e1e1e1",
+                                            height: "140px",
+                                            borderRadius: "20px",
                                             display: "flex",
                                             alignItems: "center",
-                                            flexDirection: "column",
-                                            gap: "12px",
-                                            flex: 1,
-                                            justifyContent: "center"
+                                            justifyContent: "space-around",
+                                            padding: "16px 20px",
+                                            flexDirection: "row",
+                                            gap: "16px"
                                         }}>
-                                            <p style={{ fontSize: "1.1rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
-                                            <button style={{
-                                                background: "black",
-                                                color: "white",
-                                                padding: "10px 20px",
-                                                borderRadius: "60px",
-                                                textAlign: "center",
-                                                cursor: "pointer",
-                                                border: "none",
-                                                transition: "0.3s",
-                                                fontSize: "0.9rem",
-                                                fontWeight: 500,
-                                                whiteSpace: "nowrap"
+                                            <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "110px", objectFit: "contain", flexShrink: 0 }} />
+                                            <div style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                flexDirection: "column",
+                                                gap: "12px",
+                                                flex: 1,
+                                                justifyContent: "center"
                                             }}>
-                                                Comprar Agora
-                                            </button>
+                                                <p style={{ fontSize: "1.1rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
+                                                <button style={{
+                                                    background: "black",
+                                                    color: "white",
+                                                    padding: "10px 20px",
+                                                    borderRadius: "60px",
+                                                    textAlign: "center",
+                                                    cursor: "pointer",
+                                                    border: "none",
+                                                    transition: "0.3s",
+                                                    fontSize: "0.9rem",
+                                                    fontWeight: 500,
+                                                    whiteSpace: "nowrap"
+                                                }}>
+                                                    Comprar Agora
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div>
                     ) : (
-                    
+
                         <div style={{
                             display: "flex",
                             justifyContent: "space-around",
@@ -1144,7 +1117,7 @@ useEffect(() => {
                         alignItems: "center",
                         flexDirection: isMobile ? "column" : "row",
                         gap: isMobile ? "20px" : "0",
-                        padding: isMobile ? '0' : '20px 0' 
+                        padding: isMobile ? '0' : '20px 0'
                     }}>
                         <div style={{
                             display: "flex",
@@ -1152,7 +1125,7 @@ useEffect(() => {
                             justifyContent: isMobile ? "center" : "space-between",
                             width: isMobile ? "100%" : "56%",
                             flexDirection: isMobile ? "column" : "row",
-                            gap: isMobile ? "15px" : "20px", 
+                            gap: isMobile ? "15px" : "20px",
                             textAlign: isMobile ? "center" : "left"
                         }}>
                             {!isMobile && <img src={Email} alt="Ícone de E-mail" style={{ width: "40px" }} />}
@@ -1165,12 +1138,12 @@ useEffect(() => {
                             background: "#5c595933",
                             width: isMobile ? "100%" : "40%",
                             height: isMobile ? "auto" : "85%",
-                            minHeight: "50px", 
+                            minHeight: "50px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "space-between",
                             borderRadius: "40px",
-                            padding: "4px", 
+                            padding: "4px",
                         }}>
                             <input placeholder="Seu e-mail" type="text" style={{
                                 background: "transparent",
@@ -1179,7 +1152,7 @@ useEffect(() => {
                                 paddingLeft: "25px",
                                 fontSize: isMobile ? "14px" : "16px",
                                 color: "white",
-                                width: "65%", 
+                                width: "65%",
                                 border: "none"
                             }} />
                             <div>
@@ -1192,7 +1165,7 @@ useEffect(() => {
                                     cursor: "pointer",
                                     fontWeight: "600",
                                     whiteSpace: "nowrap"
-                                }} onClick={()=>navigate('/login')}>Increver-se</button>
+                                }} onClick={() => navigate('/login')}>Increver-se</button>
                             </div>
                         </div>
                     </div>
