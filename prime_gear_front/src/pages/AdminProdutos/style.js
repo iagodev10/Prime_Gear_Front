@@ -193,6 +193,7 @@ export const ProdutoCard = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     transition: all 0.3s ease;
     &:hover {
         transform: translateY(-5px);
