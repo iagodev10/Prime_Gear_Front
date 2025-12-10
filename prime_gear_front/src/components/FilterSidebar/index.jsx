@@ -1,9 +1,7 @@
-"use client"
-
-import { useState } from "react"
-import { Plus, Minus } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+import React, { useState } from "react";
+import { Plus, Minus } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export default function FilterSidebar({ filters, setFilters }) {
   const [expandedSections, setExpandedSections] = useState({
@@ -15,24 +13,26 @@ export default function FilterSidebar({ filters, setFilters }) {
     ram: false,
     sistema: false,
     tela: false,
-    processador: false,
-  })
+    processador: false
+  });
 
   const toggleSection = (section) => {
-    setExpandedSections((prev) => ({
+    setExpandedSections(prev => ({
       ...prev,
-      [section]: !prev[section],
-    }))
-  }
+      [section]: !prev[section]
+    }));
+  };
 
-  const brands = ["ACER", "ASUS", "APPLE", "DELL", "HP", "LENOVO", "SAMSUNG"]
+  const brands = ["ACER", "ASUS", "APPLE", "DELL", "HP", "LENOVO", "SAMSUNG"];
 
   const handleBrandToggle = (brand) => {
-    setFilters((prev) => ({
+    setFilters(prev => ({
       ...prev,
-      brands: prev.brands?.includes(brand) ? prev.brands.filter((b) => b !== brand) : [...(prev.brands || []), brand],
-    }))
-  }
+      brands: prev.brands?.includes(brand)
+        ? prev.brands.filter(b => b !== brand)
+        : [...(prev.brands || []), brand]
+    }));
+  };
 
   return (
     <div className="sticky top-5 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden max-h-[calc(100vh-40px)] overflow-y-auto">
@@ -44,7 +44,7 @@ export default function FilterSidebar({ filters, setFilters }) {
         {/* Categoria */}
         <div className="border-b border-gray-200">
           <button
-            onClick={() => toggleSection("categoria")}
+            onClick={() => toggleSection('categoria')}
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
             <span className="font-medium text-gray-900">Categoria</span>
@@ -69,7 +69,7 @@ export default function FilterSidebar({ filters, setFilters }) {
         {/* Marca */}
         <div className="border-b border-gray-200">
           <button
-            onClick={() => toggleSection("marca")}
+            onClick={() => toggleSection('marca')}
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
             <span className="font-medium text-gray-900">Marca</span>
@@ -81,7 +81,7 @@ export default function FilterSidebar({ filters, setFilters }) {
           </button>
           {expandedSections.marca && (
             <div className="px-4 pb-4 space-y-2">
-              {brands.map((brand) => (
+              {brands.map(brand => (
                 <div key={brand} className="flex items-center space-x-2">
                   <Checkbox
                     id={brand}
@@ -100,7 +100,7 @@ export default function FilterSidebar({ filters, setFilters }) {
         {/* Preço */}
         <div className="border-b border-gray-200">
           <button
-            onClick={() => toggleSection("preco")}
+            onClick={() => toggleSection('preco')}
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
             <span className="font-medium text-gray-900">Preço</span>
@@ -115,7 +115,7 @@ export default function FilterSidebar({ filters, setFilters }) {
         {/* Capacidade SSD */}
         <div className="border-b border-gray-200">
           <button
-            onClick={() => toggleSection("ssd")}
+            onClick={() => toggleSection('ssd')}
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
             <span className="font-medium text-gray-900">Capacidade SSD</span>
@@ -130,7 +130,7 @@ export default function FilterSidebar({ filters, setFilters }) {
         {/* Avaliações */}
         <div className="border-b border-gray-200">
           <button
-            onClick={() => toggleSection("avaliacoes")}
+            onClick={() => toggleSection('avaliacoes')}
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
             <span className="font-medium text-gray-900">Avaliações</span>
@@ -145,7 +145,7 @@ export default function FilterSidebar({ filters, setFilters }) {
         {/* Memória RAM */}
         <div className="border-b border-gray-200">
           <button
-            onClick={() => toggleSection("ram")}
+            onClick={() => toggleSection('ram')}
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
             <span className="font-medium text-gray-900">Memória RAM</span>
@@ -160,7 +160,7 @@ export default function FilterSidebar({ filters, setFilters }) {
         {/* Sistema Operacional */}
         <div className="border-b border-gray-200">
           <button
-            onClick={() => toggleSection("sistema")}
+            onClick={() => toggleSection('sistema')}
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
             <span className="font-medium text-gray-900">Sistema Operacional</span>
@@ -175,7 +175,7 @@ export default function FilterSidebar({ filters, setFilters }) {
         {/* Tamanho da Tela */}
         <div className="border-b border-gray-200">
           <button
-            onClick={() => toggleSection("tela")}
+            onClick={() => toggleSection('tela')}
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
             <span className="font-medium text-gray-900">Tamanho da Tela</span>
@@ -190,7 +190,7 @@ export default function FilterSidebar({ filters, setFilters }) {
         {/* Processador */}
         <div>
           <button
-            onClick={() => toggleSection("processador")}
+            onClick={() => toggleSection('processador')}
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
             <span className="font-medium text-gray-900">Processador</span>
@@ -203,5 +203,5 @@ export default function FilterSidebar({ filters, setFilters }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
