@@ -413,6 +413,34 @@ const CheckoutPage = () => {
     cardCPF: (v) => masks.cpf(v.replace(/\D/g, "")),
   };
 
+  const handleUpdateQuantity = async (itemId, newQuantity) => {
+    if (newQuantity < 1) return;
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/update-cart-quantity/${itemId}`,
+        { quantidade: newQuantity },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+     
+        setCartProducts((prev) =>
+          prev.map((item) =>
+            item.id === itemId
+              ? { ...item, quantidade: newQuantity, preco_total: item.preco_unitario * newQuantity }
+              : item
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar quantidade:", error);
+      alert("Erro ao atualizar quantidade.");
+    }
+  };
+
   const detectCardBrand = (number) => {
     const n = number.replace(/\s/g, "");
     if (/^4/.test(n)) return "visa";
@@ -530,7 +558,8 @@ const CheckoutPage = () => {
                 quantidade: item.quantidade,
                 preco_unitario: item.preco_unitario || item.preco,
                 preco: item.preco_unitario || item.preco
-              }))
+              })),
+              frete:totais.frete
             },
             {
               withCredentials: true,
@@ -539,14 +568,6 @@ const CheckoutPage = () => {
           );
 
 
-          const url = window.URL.createObjectURL(new Blob([boletoResponse.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', `boleto-primegear-${Date.now()}.pdf`);
-          document.body.appendChild(link);
-          link.click();
-          link.parentNode.removeChild(link);
-          window.URL.revokeObjectURL(url);
         } catch (error) {
           console.log(error);
         }
@@ -574,6 +595,7 @@ const CheckoutPage = () => {
         shippingMethodId: selectedShipping,
         paymentData: paymentDetails,
         itens: cartProducts,
+        frete: parseFloat(totais.frete)
 
       };
 
@@ -590,11 +612,11 @@ const CheckoutPage = () => {
         const selectedShippingOption = shippingOptions.find(
           option => option.id === selectedShipping
         );
-        
-        const prazoEntrega = selectedShippingOption 
-          ? selectedShippingOption.time 
+
+        const prazoEntrega = selectedShippingOption
+          ? selectedShippingOption.time
           : "Não informado";
-  
+
         const orderDataForThankYou = {
           ...response.data.pedido,
           itens: cartProducts.map((item) => ({
@@ -620,8 +642,6 @@ const CheckoutPage = () => {
         };
 
         setCartProducts([]);
-
-        alert("Pedido realizado com sucesso!");
 
         navigate("/obrigado", {
           state: {
@@ -1277,7 +1297,7 @@ const CheckoutPage = () => {
                               </option>
                               <option value="2">
                                 2x de R${" "}
-                                {(parseFloat(totais.total) / 2).toFixed(2)} sem
+                                {((totais.total) / 2).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} sem
                                 juros
                               </option>
                               <option value="3">
@@ -2023,15 +2043,63 @@ const CheckoutPage = () => {
                         src={produto.imagem || ProductImg}
                         onError={(e) => e.target.src = ProductImg}
                       />
-                      <BagBadge>{produto.quantidade}</BagBadge>
                     </BagImageWrapper>
                     <div style={{ flex: 1 }}>
                       <BagTitle>{produto.nome || produto.nome_produto}</BagTitle>
-                      <div style={{ fontSize: '0.85rem', color: '#666' }}>
-                        R$ {produto.preco_unitario ? produto.preco_unitario.toFixed(2) : "0.00"} x {produto.quantidade}
+                      <div style={{ fontSize: '0.85rem', color: '#666', marginBottom: '8px' }}>
+                        R$ {produto.preco_unitario ? produto.preco_unitario.toFixed(2) : "0.00"}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <button
+                          onClick={() => handleUpdateQuantity(produto.id, produto.quantidade - 1)}
+                          style={{
+                            width: '24px',
+                            height: '24px',
+                            border: '1px solid #ddd',
+                            background: '#fff',
+                            cursor: 'pointer',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '16px'
+                          }}
+                        >
+                          -
+                        </button>
+                        <span style={{ minWidth: '30px', textAlign: 'center', fontWeight: '500' }}>
+                          {produto.quantidade}
+                        </span>
+                        <button
+                          onClick={() => handleUpdateQuantity(produto.id, produto.quantidade + 1)}
+                          style={{
+                            width: '24px',
+                            height: '24px',
+                            border: '1px solid #ddd',
+                            background: '#fff',
+                            cursor: 'pointer',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '16px'
+                          }}
+                        >
+                          +
+                        </button>
                       </div>
                     </div>
-                    <button onClick={() => handleRemoveItem(produto.id)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#d00' }}>
+                    <button
+                      onClick={() => handleRemoveItem(produto.id)}
+                      style={{
+                        border: 'none',
+                        background: 'none',
+                        cursor: 'pointer',
+                        color: '#d00',
+                        fontSize: '18px',
+                        padding: '4px'
+                      }}
+                    >
                       <FiTrash2 />
                     </button>
                   </BagItem>

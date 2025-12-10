@@ -36,38 +36,47 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
     { id: 1, title: nome1 || "Primeira Seção", products: [], expanded: true },
     { id: 2, title: nome2 || "Segunda Seção", products: [], expanded: false },
   ])
+  
+
+  const [categorias, setCategorias] = useState([]) 
+  
   const [modalOpen, setModalOpen] = useState(false)
   const [activeSectionId, setActiveSectionId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    const carregarProdutosVinculados = async () => {
+    const carregarDados = async () => {
       try {
         setLoading(true)
+
+     
         
-        // Carrega produtos da primeira seção
-        const response1 = await axios.get('http://localhost:8080/prods-vinculados/1')
-        const produtosSecao1 = response1.data.produtos || []
+        const [resSecao1, resSecao2, resCategorias] = await Promise.all([
+            axios.get('http://localhost:8080/prods-vinculados/1'),
+            axios.get('http://localhost:8080/prods-vinculados/2'),
+            axios.get('http://localhost:8080/get-categorias') 
+        ])
+
+        const produtosSecao1 = resSecao1.data.produtos || []
+        const produtosSecao2 = resSecao2.data.produtos || []
         
-        // Carrega produtos da segunda seção
-        const response2 = await axios.get('http://localhost:8080/prods-vinculados/2')
-        const produtosSecao2 = response2.data.produtos || []
-        
-        // Atualiza as seções com os produtos carregados
         setSections([
           { id: 1, title: nome1 || "Primeira Seção", products: produtosSecao1, expanded: true },
           { id: 2, title: nome2 || "Segunda Seção", products: produtosSecao2, expanded: false },
         ])
         
+      
+        setCategorias(resCategorias.data || [])
+
         setLoading(false)
       } catch (error) {
-        console.error('Erro ao carregar produtos vinculados:', error)
+        console.error('Erro ao carregar dados:', error)
         setLoading(false)
       }
     }
 
-    carregarProdutosVinculados()
+    carregarDados()
   }, [nome1, nome2])
 
   const toggleSection = (id) => {
@@ -117,16 +126,13 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
     }
 
     try {
-      // Atualiza os nomes das seções
       await axios.put('http://localhost:8080/atualizar-nomes', novosNomes)
       
-      // Vincula produtos da primeira seção
       const produtosIds1 = section1.products.map(p => p.id)
       await axios.put(`http://localhost:8080/vincular-secao/${section1.id}`, {
         produtos: produtosIds1
       })
       
-      // Vincula produtos da segunda seção
       const produtosIds2 = section2.products.map(p => p.id)
       await axios.put(`http://localhost:8080/vincular-secao/${section2.id}`, {
         produtos: produtosIds2
@@ -134,10 +140,6 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
 
       console.log("✅ Alterações salvas com sucesso!")
       
-      // Exibe mensagem de sucesso
-      alert("✅ Alterações salvas com sucesso!")
-      
-      // Recarrega a página após um breve delay
       setTimeout(() => {
         window.location.reload()
       }, 500)
@@ -151,20 +153,15 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
   }
 
   const sectionColors = [
-    { bg: "#dbeafe", number: "#2563eb" },  // Azul mais suave
-    { bg: "#fce7f3", number: "#db2777" },  // Rosa
+    { bg: "#dbeafe", number: "#2563eb" },  
+    { bg: "#fce7f3", number: "#db2777" },  
   ]
 
   if (loading) {
     return (
       <Container>
-        <div style={{ 
-          padding: '40px', 
-          textAlign: 'center', 
-          color: '#666',
-          fontSize: '1.1rem' 
-        }}>
-          Carregando produtos em destaque...
+        <div style={{ padding: '40px', textAlign: 'center', color: '#666' }}>
+          Carregando produtos e categorias...
         </div>
       </Container>
     )
@@ -244,7 +241,7 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
                               {product.name}
                             </ProductName>
                             <ProductPrice>
-                              R$ {product.price.toLocaleString("pt-BR", { 
+                              R$ {product.price?.toLocaleString("pt-BR", { 
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2 
                               })}
@@ -271,6 +268,8 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
         <ModalSelecionarProdutos
           produtos={produtos}
           sectionId={activeSectionId}
+        
+          categorias={categorias} 
           currentSelected={sections.find((s) => s.id === activeSectionId)?.products || []}
           onClose={() => setModalOpen(false)}
           onSelect={handleSelectProducts}

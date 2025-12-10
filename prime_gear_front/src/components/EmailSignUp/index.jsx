@@ -4,8 +4,10 @@ import styled from "styled-components";
 import Wallpaper from "../../assets/images/wallpaper.png";
 
 import {Container, Content, Form} from './style';
+import { useNavigate } from "react-router-dom";
 
 const EmailSignUp = () => {
+    const navigate=useNavigate()
     return (
         <Container>
             <Content>
@@ -16,7 +18,7 @@ const EmailSignUp = () => {
                 </p>
                 <Form>
                     <input type="email" placeholder="Seu e-mail" />
-                    <button>Inscrever-se</button>
+                    <button onClick={()=>navigate('/login')}>Inscrever-se</button>
                 </Form>
             </Content>
         </Container>

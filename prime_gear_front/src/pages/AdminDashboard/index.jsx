@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   FiPackage,
   FiShoppingCart,
@@ -32,33 +33,78 @@ import {
   TableCell,
   StatusBadge,
   Background,
-  ChartArea,
-  Bars,
-  Bar,
-  ChartLegend
 } from './style';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  // Mock de dados para os cards
-  const stats = {
-    totalProdutos: 124,
-    pedidos: 45,
-    usuarios: 89,
-    receitaTotal: 'R$ 12.450,00',
-    pedidosPendentes: 3,
-    produtosSemEstoque: 2,
+  const [recentOrders, setRecentOrders] = useState([]);
+  const [stats, setStats] = useState({
+    receitaTotal: 0,
+    percentualReceita: 0,
+    pedidos: 0,
+    percentualPedidos: 0,
+    usuarios: 0,
+    percentualUsuarios: 0,
+    totalProdutos: 0,
+    percentualProdutos: 0,
+  });
+  const [alertas, setAlertas] = useState({
+    pedidosPendentes: 0,
+    produtosSemEstoque: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        
+    
+        const statsResponse = await axios.get('http://localhost:8080/admin/estatisticas');
+        setStats(statsResponse.data);
+
+   
+        const alertasResponse = await axios.get('http://localhost:8080/admin/alertas');
+        setAlertas(alertasResponse.data);
+
+        const pedidosResponse = await axios.get('http://localhost:8080/admin/pedidos-recentes');
+        setRecentOrders(pedidosResponse.data);
+
+      } catch (error) {
+        console.error('Erro ao buscar dados do dashboard:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+
+  const formatCurrency = (value) => {
+    return value.toLocaleString('pt-BR', { 
+      style: 'currency', 
+      currency: 'BRL' 
+    });
   };
 
-  // Mock de dados para a tabela de pedidos recentes
-  const recentOrders = [
-    { id: '#1023', cliente: 'Ana Silva', data: '23/11/2025', valor: 'R$ 450,00', status: 'Pendente' },
-    { id: '#1022', cliente: 'Carlos Souza', data: '22/11/2025', valor: 'R$ 1.200,00', status: 'Enviado' },
-    { id: '#1021', cliente: 'Mariana Oliveira', data: '21/11/2025', valor: 'R$ 89,90', status: 'Concluído' },
-    { id: '#1020', cliente: 'João Pedro', data: '21/11/2025', valor: 'R$ 2.300,00', status: 'Cancelado' },
-  ];
-
-  // const trendData = [40, 90, 120, 80, 160, 140, 110, 180, 150, 130, 170, 200];
+  if (loading) {
+    return (
+      <PageContainer>
+        <Background />
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh',
+          color: '#666'
+        }}>
+          Carregando dashboard...
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
@@ -68,7 +114,6 @@ const AdminDashboard = () => {
           <h1>Dashboard Administrativo</h1>
           <p>Bem-vindo de volta! Aqui está o resumo da sua loja hoje.</p>
         </div>
-        {/* Data ou Botão de filtro poderia entrar aqui */}
       </DashboardHeader>
 
       {/* Seção de Cards Principais */}
@@ -78,11 +123,11 @@ const AdminDashboard = () => {
             <IconWrapper>
               <FiDollarSign />
             </IconWrapper>
-            <StatPercentage positive>+15%</StatPercentage>
+           
           </div>
           <StatInfo>
             <StatTitle>Receita Total</StatTitle>
-            <StatValue>{stats.receitaTotal}</StatValue>
+            <StatValue>{formatCurrency(stats.receitaTotal)}</StatValue>
           </StatInfo>
         </StatCard>
 
@@ -91,7 +136,7 @@ const AdminDashboard = () => {
             <IconWrapper>
               <FiShoppingCart />
             </IconWrapper>
-            <StatPercentage positive>+8%</StatPercentage>
+          
           </div>
           <StatInfo>
             <StatTitle>Novos Pedidos</StatTitle>
@@ -104,7 +149,7 @@ const AdminDashboard = () => {
             <IconWrapper>
               <FiUsers />
             </IconWrapper>
-            <StatPercentage positive>+23%</StatPercentage>
+           
           </div>
           <StatInfo>
             <StatTitle>Novos Clientes</StatTitle>
@@ -117,7 +162,7 @@ const AdminDashboard = () => {
             <IconWrapper>
               <FiPackage />
             </IconWrapper>
-            <StatPercentage positive>+12%</StatPercentage>
+          
           </div>
           <StatInfo>
             <StatTitle>Total Produtos</StatTitle>
@@ -126,20 +171,7 @@ const AdminDashboard = () => {
         </StatCard>
       </StatsGrid>
 
-      {/* <SectionTitle>Performance (Últimos 12 dias)</SectionTitle>
-      <ChartArea>
-        <Bars>
-          {trendData.map((h, i) => (
-            <Bar key={i} $h={h} />
-          ))}
-        </Bars>
-        <ChartLegend>
-          <span style={{ display: 'inline-flex', width: 14, height: 14, borderRadius: 4, background: 'linear-gradient(180deg, #4d7294 0%, #2a4055 100%)' }} />
-          Receita diária
-        </ChartLegend>
-      </ChartArea> */}
-
-      {/* Seção de Alertas e Pendências (Layout menor) */}
+      {/* Seção de Alertas e Pendências */}
       <SectionTitle>Atenção Necessária</SectionTitle>
       <StatsGrid className="small-grid">
         <StatCard className="alert-card">
@@ -148,7 +180,7 @@ const AdminDashboard = () => {
           </IconWrapper>
           <StatInfo>
             <StatTitle>Pedidos Pendentes</StatTitle>
-            <StatValue>{stats.pedidosPendentes}</StatValue>
+            <StatValue>{alertas.pedidosPendentes}</StatValue>
           </StatInfo>
         </StatCard>
 
@@ -158,12 +190,12 @@ const AdminDashboard = () => {
           </IconWrapper>
           <StatInfo>
             <StatTitle>Estoque Baixo/Zerado</StatTitle>
-            <StatValue>{stats.produtosSemEstoque}</StatValue>
+            <StatValue>{alertas.produtosSemEstoque}</StatValue>
           </StatInfo>
         </StatCard>
       </StatsGrid>
 
-      {/* Ações Rápidas - Intuitividade para o ADM */}
+      {/* Ações Rápidas */}
       <SectionTitle>Ações Rápidas</SectionTitle>
       <QuickActionsGrid>
         <ActionButton onClick={() => navigate('/admin/produtos', { state: { openAddModal: true } })}>
@@ -187,32 +219,37 @@ const AdminDashboard = () => {
       {/* Tabela de Pedidos Recentes */}
       <SectionTitle>Pedidos Recentes</SectionTitle>
       <RecentOrdersContainer>
-        <Table>
-          <thead>
-            <TableHeader>
-              <th>ID</th>
-              <th>Cliente</th>
-              <th>Data</th>
-              <th>Valor</th>
-              <th>Status</th>
-            </TableHeader>
-          </thead>
-          <tbody>
-            {recentOrders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell><strong>{order.id}</strong></TableCell>
-                <TableCell>{order.cliente}</TableCell>
-                <TableCell>{order.data}</TableCell>
-                <TableCell>{order.valor}</TableCell>
-                <TableCell>
-                  <StatusBadge status={order.status}>{order.status}</StatusBadge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </tbody>
-        </Table>
+        {recentOrders.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+            Nenhum pedido encontrado
+          </div>
+        ) : (
+          <Table>
+            <thead>
+              <TableHeader>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Status</th>
+              </TableHeader>
+            </thead>
+            <tbody>
+              {recentOrders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell><strong>{order.id}</strong></TableCell>
+                  <TableCell>{order.cliente}</TableCell>
+                  <TableCell>{order.data}</TableCell>
+                  <TableCell>{order.valor}</TableCell>
+                  <TableCell>
+                    <StatusBadge status={order.status}>{order.status}</StatusBadge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </RecentOrdersContainer>
-
     </PageContainer>
   );
 };
