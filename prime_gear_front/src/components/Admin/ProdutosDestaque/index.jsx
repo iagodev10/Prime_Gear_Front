@@ -46,15 +46,15 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
       try {
         setLoading(true)
         
-        // Carrega produtos da primeira seção
+
         const response1 = await axios.get('http://localhost:8080/prods-vinculados/1')
         const produtosSecao1 = response1.data.produtos || []
         
-        // Carrega produtos da segunda seção
+     
         const response2 = await axios.get('http://localhost:8080/prods-vinculados/2')
         const produtosSecao2 = response2.data.produtos || []
         
-        // Atualiza as seções com os produtos carregados
+    
         setSections([
           { id: 1, title: nome1 || "Primeira Seção", products: produtosSecao1, expanded: true },
           { id: 2, title: nome2 || "Segunda Seção", products: produtosSecao2, expanded: false },
@@ -117,16 +117,16 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
     }
 
     try {
-      // Atualiza os nomes das seções
+
       await axios.put('http://localhost:8080/atualizar-nomes', novosNomes)
       
-      // Vincula produtos da primeira seção
+
       const produtosIds1 = section1.products.map(p => p.id)
       await axios.put(`http://localhost:8080/vincular-secao/${section1.id}`, {
         produtos: produtosIds1
       })
       
-      // Vincula produtos da segunda seção
+    
       const produtosIds2 = section2.products.map(p => p.id)
       await axios.put(`http://localhost:8080/vincular-secao/${section2.id}`, {
         produtos: produtosIds2
@@ -134,10 +134,10 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
 
       console.log("✅ Alterações salvas com sucesso!")
       
-      // Exibe mensagem de sucesso
-      alert("✅ Alterações salvas com sucesso!")
+    
+
       
-      // Recarrega a página após um breve delay
+  
       setTimeout(() => {
         window.location.reload()
       }, 500)
@@ -151,8 +151,8 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
   }
 
   const sectionColors = [
-    { bg: "#dbeafe", number: "#2563eb" },  // Azul mais suave
-    { bg: "#fce7f3", number: "#db2777" },  // Rosa
+    { bg: "#dbeafe", number: "#2563eb" },  
+    { bg: "#fce7f3", number: "#db2777" },  
   ]
 
   if (loading) {
