@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import HeadSetImg from "../../assets/images/headset.jpeg";
-import HeadSetMobileImg from "../../assets/images/headset-mobile.png";
+import HeadSetTabletImg from "../../assets/images/headset-mobile-tablet.png";
+import HeadSetMobileSmallImg from "../../assets/images/resized-headset.png";
 import OmelhorImg from "../../assets/images/omelhor.png";
-import OmelhorMobileImg from "../../assets/images/omelhor-mobile.jpg";
-import OmelhorTabletImg from "../../assets/images/omelhor-mobile-tablet.jpg";
+import OmelhorMobileImg from "../../assets/images/omelhor-mobile.png";
+import OmelhorTabletImg from "../../assets/images/omelhor-mobile-tablet.png";
 
 export const HeroContainer = styled.section`
   width: 100%;
@@ -182,7 +183,7 @@ export const HeadsetSlide = styled.div`
     height: 60vh;
     min-height: 350px;
     background-attachment: scroll;
-    background-image: url(${HeadSetMobileImg});
+    background-image: url(${HeadSetTabletImg});
   }
 
   @media (max-width: 576px) {
@@ -193,6 +194,10 @@ export const HeadsetSlide = styled.div`
   @media (max-width: 480px) {
     height: 50vh;
     min-height: 250px;
+  }
+
+  @media (max-width: 425px) {
+    background-image: url(${HeadSetMobileSmallImg});
   }
 `;
 
@@ -223,14 +228,14 @@ export const OmelhorSlide = styled.div`
   }
 
   @media (max-width: 1024px) and (min-width: 769px) {
-    background-image: url(${OmelhorTabletImg});
+    background-image: url(${OmelhorImg});
   }
 
   @media (max-width: 768px) {
     height: 60vh;
     min-height: 350px;
     background-attachment: scroll;
-    background-image: url(${OmelhorMobileImg});
+    background-image: url(${OmelhorTabletImg});
   }
 
   @media (max-width: 576px) {
@@ -241,6 +246,10 @@ export const OmelhorSlide = styled.div`
   @media (max-width: 480px) {
     height: 50vh;
     min-height: 250px;
+  }
+
+  @media (max-width: 425px) {
+    background-image: url(${OmelhorMobileImg});
   }
 `;
 
@@ -402,24 +411,22 @@ export const FixedButtons = styled.div`
   }
 
   @media (max-width: 768px) {
-    position: relative;
-    bottom: auto;
-    right: auto;
-    margin-top: 20px;
-    margin-bottom: 40px;
-    gap: 25px;
-  }
-
-  @media (max-width: 576px) {
-    margin-top: 15px;
-    margin-bottom: 30px;
+    bottom: 20%;
+    right: 0;
+    left: 0;
+    justify-content: flex-start;
+    padding-left: 40px;
     gap: 20px;
   }
 
-  @media (max-width: 480px) {
-    margin-top: 10px;
-    margin-bottom: 25px;
+  @media (max-width: 576px) {
+    bottom: 22%;
     gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    bottom: 25%;
+    gap: 10px;
   }
 `;
 

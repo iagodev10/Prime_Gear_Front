@@ -6,10 +6,10 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import HeadSet from "../../assets/images/headset.jpeg";
-import HeadSetMobile from "../../assets/images/headset-mobile.png";
+import HeadSetMobile from "../../assets/images/resized-headset.png";
 import Macbook from "../../assets/images/Macbook.png";
 import Omelhor from "../../assets/images/omelhor.png";
-import OmelhorMobile from "../../assets/images/omelhor-mobile.jpg";
+import OmelhorMobile from "../../assets/images/omelhor-mobile.png";
 
 import {
   HeroContainer,
