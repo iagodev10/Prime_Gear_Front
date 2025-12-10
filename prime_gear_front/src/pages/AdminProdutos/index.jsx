@@ -29,6 +29,7 @@ import ProdutosDestaque from "../../components/Admin/ProdutosDestaque"
 import axios from "axios"
 import ModalAdicionarProduto from "../../components/ModalAdicionarProduto"
 import ModalEditarProduto from "../../components/ModalEditarProduto"
+import ModalExcluirProduto from "../../components/ModalExcluirProduto"
 
 const AdminProdutos = () => {
   const location = useLocation()
@@ -39,6 +40,10 @@ const AdminProdutos = () => {
   const [produtoSelecionado, setProdutoSelecionado] = useState(null)
   const [nomeSecao1, setNomeSecao1] = useState()
   const [nomeSecao2, setNomeSecao2] = useState()
+
+  const [modalExcluir, setModalExcluir] = useState(false)
+  const [produtoParaExcluir, setProdutoParaExcluir] = useState(null)
+  const [isDeletando, setIsDeletando] = useState(false)
 
   async function obterProdutos() {
     try {
@@ -73,18 +78,30 @@ const AdminProdutos = () => {
     }
   }, [location.state])
 
-  async function deletarProd(id) {
-    if (!window.confirm("Tem certeza que deseja excluir este produto?")) {
-      return
-    }
+  function abrirModalExcluir(produto) {
+    setProdutoParaExcluir(produto)
+    setModalExcluir(true)
+  }
+
+  function fecharModalExcluir() {
+    setModalExcluir(false)
+    setProdutoParaExcluir(null)
+  }
+
+  async function confirmarExclusao() {
+    if (!produtoParaExcluir) return
+
+    setIsDeletando(true)
 
     try {
-      await axios.delete("http://localhost:8080/delete-produto/" + id)
+      await axios.delete(`http://localhost:8080/delete-produto/${produtoParaExcluir.cod_produto}`)
+
       window.location.reload()
-      
     } catch (error) {
-      console.log(error)
+      console.error("Erro ao excluir produto:", error)
       alert("Erro ao excluir produto")
+    } finally {
+      setIsDeletando(false)
     }
   }
 
@@ -96,12 +113,12 @@ const AdminProdutos = () => {
   function fecharModalEditar() {
     setModalEditar(false)
     setProdutoSelecionado(null)
-    obterProdutos() 
+    obterProdutos()
   }
 
   function fecharModalAdicionar() {
     setModalAdicionar(false)
-    obterProdutos() 
+    obterProdutos()
   }
 
   const sidebarItems = [
@@ -166,7 +183,7 @@ const AdminProdutos = () => {
                       <ActionButton onClick={() => abrirModalEditar(produto.cod_produto)}>
                         <FiEdit /> Editar
                       </ActionButton>
-                      <ActionButton onClick={() => deletarProd(produto.cod_produto)}>
+                      <ActionButton onClick={() => abrirModalExcluir(produto)}>
                         <FiTrash /> Excluir
                       </ActionButton>
                     </ProdActions>
@@ -183,16 +200,26 @@ const AdminProdutos = () => {
 
           {/* Modal de Editar Produto */}
           {modalEditar && (
-            <ModalEditarProduto 
-              onClose={fecharModalEditar} 
+            <ModalEditarProduto
+              onClose={fecharModalEditar}
               produtoId={produtoSelecionado}
             />
           )}
 
+          {modalExcluir && (
+            <ModalExcluirProduto
+              isOpen={modalExcluir}
+              onClose={fecharModalExcluir}
+              onConfirm={confirmarExclusao}
+              produto={produtoParaExcluir}
+              isDeleting={isDeletando}
+            />
+          )}
+
           {activeSection === "destaques" && (
-            <ProdutosDestaque 
-              produtos={produtos} 
-              nome1={nomeSecao1} 
+            <ProdutosDestaque
+              produtos={produtos}
+              nome1={nomeSecao1}
               nome2={nomeSecao2}
             />
           )}
