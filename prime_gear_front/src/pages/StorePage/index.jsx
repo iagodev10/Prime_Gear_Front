@@ -16,7 +16,7 @@ import desktop from '../../assets/images/desktopPC.png'
 import fone from '../../assets/images/foneJBL.png'
 
 import axios from 'axios'
-
+import { useNavigate } from "react-router-dom";
 
 const FilterSection = ({
     categorias, toggleCategory, selectedCategories,
@@ -190,6 +190,7 @@ const FilterSection = ({
 
 
 function Store() {
+    const navigate=useNavigate()
 
     const handleCategoryChange = (category) => {
         const categoryName = category.nome_cat;
@@ -1191,7 +1192,7 @@ useEffect(() => {
                                     cursor: "pointer",
                                     fontWeight: "600",
                                     whiteSpace: "nowrap"
-                                }}>Increver-se</button>
+                                }} onClick={()=>navigate('/login')}>Increver-se</button>
                             </div>
                         </div>
                     </div>
