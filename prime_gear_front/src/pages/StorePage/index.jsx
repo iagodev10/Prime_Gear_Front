@@ -8,9 +8,8 @@ import "swiper/css/navigation";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-import ProductCard from "../../components/ProductCard"
-import EmailSignUp from "../../components/EmailSignUp"
-import Email from "../../assets/images/e-mail.svg"
+import ProductCard from "../../components/ProductCard";
+import Email from "../../assets/images/e-mail.svg";
 
 import notebook from "../../assets/images/laptop-comprar.png";
 import desktop from "../../assets/images/desktopPC.png";
@@ -201,7 +200,7 @@ function StorePage() {
   const swiperNextRef = useRef(null);
   const sidebarRef = useRef(null);
   const containerRef = useRef(null);
-
+  const paginationRef = useRef(null);
 
 
   const [produtos, setProdutos] = useState([]);
@@ -222,17 +221,6 @@ function StorePage() {
     preco: false,
     avaliacoes: false,
   });
-
-  const [isMobile, setIsMobile] = useState(false)
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
-
-  const [isFilterSticky, setIsFilterSticky] = useState(true)
-  const [shouldStopSticky, setShouldStopSticky] = useState(false)
-
-  const sidebarRef = useRef(null)
-  const paginationRef = useRef(null)
-  const containerRef = useRef(null)
-  const productsContainerRef = useRef(null)
 
   const itemsPerPage = 6;
 
@@ -271,45 +259,7 @@ function StorePage() {
       behavior: "smooth",
     });
   }, [currentPage]);
-      const productsContainer = productsContainerRef.current
-      const productsRect = productsContainer.getBoundingClientRect()
-      const productsBottom = productsRect.bottom
-      const windowHeight = window.innerHeight
 
-      // Verifica se o final da área de produtos está visível na tela
-      if (productsBottom <= windowHeight) {
-        setShouldStopSticky(true)
-        setIsFilterSticky(false)
-      } else {
-        setShouldStopSticky(false)
-        setIsFilterSticky(true)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    handleScroll() // Chama imediatamente para definir o estado inicial
-
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [isMobile, produtos])
-
-  async function getCats() {
-    try {
-      const response = await axios.get("http://localhost:8080/get-categorias")
-      console.log("alou")
-      setCategorias(response.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async function getMarcas() {
-    try {
-      const response = await axios.get("http://localhost:8080/get-marcas")
-      setMarcas(response.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= 900);
@@ -743,12 +693,10 @@ function StorePage() {
               style={{
                 width: "280px",
                 flexShrink: 0,
-                position: shouldStopSticky ? "absolute" : isFilterSticky ? "sticky" : "absolute",
-                top: shouldStopSticky ? "auto" : isFilterSticky ? "90px" : "auto",
-                bottom: shouldStopSticky ? "0" : "auto",
-                zIndex: 10,
-                alignSelf: "flex-start",
-
+                position: "sticky",
+                top: "20px",
+                maxHeight: "calc(100vh - 40px)",
+                overflowY: "auto",
               }}
             >
               <div style={{ backgroundColor: "white", borderRadius: "8px", padding: "24px", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
@@ -1120,9 +1068,59 @@ function StorePage() {
       </div>
 
       {/* Footer / Newsletter */}
-      <EmailSignUp />
+      <div style={{ width: "100%", backgroundColor: "black", padding: isMobile ? "40px 20px" : "60px 0", marginTop: "40px" }}>
+        <div
+          style={{
+            maxWidth: "1400px",
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: isMobile ? "30px" : "40px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", color: "white" }}>
+            <img src={Email || "/placeholder.svg"} alt="Email" style={{ width: isMobile ? "60px" : "80px", height: isMobile ? "60px" : "80px" }} />
+            <div>
+              <h3 style={{ margin: 0, fontSize: isMobile ? "1.3rem" : "1.8rem", fontWeight: "600", marginBottom: "8px" }}>Assine nossa Newsletter</h3>
+              <p style={{ margin: 0, fontSize: isMobile ? "0.9rem" : "1rem", color: "#ccc" }}>Fique por dentro das novidades e promoções</p>
+            </div>
+          </div>
 
-    
+          <div style={{ display: "flex", gap: "12px", width: isMobile ? "100%" : "auto", flexDirection: isMobile ? "column" : "row" }}>
+            <input
+              type="email"
+              placeholder="Digite seu e-mail"
+              style={{
+                padding: "14px 20px",
+                borderRadius: "8px",
+                border: "none",
+                fontSize: "1rem",
+                width: isMobile ? "100%" : "300px",
+                outline: "none",
+              }}
+            />
+            <button
+              style={{
+                padding: "14px 32px",
+                borderRadius: "8px",
+                border: "none",
+                background: "white",
+                color: "black",
+                fontSize: "1rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "0.3s",
+                whiteSpace: "nowrap",
+              }}
+              onClick={() => navigate("/login")}
+            >
+              Inscrever-se
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

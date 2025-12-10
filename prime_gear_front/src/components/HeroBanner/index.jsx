@@ -11,6 +11,8 @@ import Macbook from "../../assets/images/Macbook.png";
 import Omelhor from "../../assets/images/omelhor.png";
 import OmelhorMobile from "../../assets/images/omelhor-mobile.png";
 
+import { useNavigate } from "react-router-dom";
+
 import {
   HeroContainer,
   StyledSwiperSlide,
@@ -23,6 +25,9 @@ import {
 } from "./style";
 
 const HeroBanner = () => {
+
+  const navigate=useNavigate()
+
   return (
     <HeroContainer>
       <Swiper
@@ -36,7 +41,7 @@ const HeroBanner = () => {
         <SwiperSlide>
           <HeadsetSlide>
             <SlideContent>
-              <HeroButton href="#">Compre Agora</HeroButton>
+              <HeroButton href="/detalhe/8">Compre Agora</HeroButton>
             </SlideContent>
           </HeadsetSlide>
         </SwiperSlide>
@@ -52,7 +57,7 @@ const HeroBanner = () => {
           >
             <SlideContent style={{ alignItems: "center", margin: "auto", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <ButtonGroup>
-                <HeroButton href="#">Saiba mais</HeroButton>
+                <HeroButton href="#" onClick={()=>navigate('/detalhe/13')} >Saiba mais</HeroButton>
                 <HeroButton
                   href="#"
                   style={{
@@ -61,7 +66,7 @@ const HeroBanner = () => {
                     border: "1px solid #FFFFFF",
                     boxShadow: "none"
                   }}
-                >
+                onClick={()=>navigate('/detalhe/13')} >
                   Ver preços
                 </HeroButton>
               </ButtonGroup>
@@ -86,7 +91,7 @@ const HeroBanner = () => {
 
             {/* BOTÕES FIXOS, SEM DESCONFIGURAR */}
             <FixedButtons>
-              <HeroButton href="#">Confira já</HeroButton>
+              <HeroButton href="#" onClick={()=>navigate('/detalhe/12')}>Confira já</HeroButton>
 
               <HeroButton
                 href="#"
@@ -96,7 +101,7 @@ const HeroBanner = () => {
                   border: "1px solid #e60000",
                   boxShadow: "none",
                 }}
-              >
+                onClick={()=>navigate('/detalhe/13')} >
                 Lançamentos
               </HeroButton>
             </FixedButtons>
