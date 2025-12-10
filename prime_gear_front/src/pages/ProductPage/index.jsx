@@ -13,6 +13,15 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [quantidade, setQuantidade] = useState(1);
   const [imagemPrincipal, setImagemPrincipal] = useState('');
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     buscarProduto();
@@ -149,7 +158,7 @@ const ProductPage = () => {
   }
 
   return (
-    <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '120px 20px 60px' }}>
+    <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: isMobile ? '100px 12px 40px' : '120px 20px 60px' }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         
         {/* Breadcrumb */}
@@ -180,26 +189,26 @@ const ProductPage = () => {
         {/* Container Principal */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: '1fr 1fr', 
-          gap: '60px',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
+          gap: isMobile ? '24px' : '60px',
           backgroundColor: '#fff',
           borderRadius: '12px',
-          padding: '40px',
+          padding: isMobile ? '20px' : '40px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          marginBottom: '40px'
+          marginBottom: isMobile ? '24px' : '40px'
         }}>
           
           {/* Coluna Esquerda - Imagens */}
           <div>
             <div style={{
               width: '100%',
-              height: '500px',
+              height: isMobile ? '320px' : '500px',
               backgroundColor: '#f9f9f9',
               borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: '20px',
+              marginBottom: isMobile ? '16px' : '20px',
               overflow: 'hidden'
             }}>
               <img 
@@ -237,10 +246,10 @@ const ProductPage = () => {
 
             {/* Título */}
             <h1 style={{ 
-              fontSize: '32px', 
+              fontSize: isMobile ? '24px' : '32px', 
               fontWeight: '700', 
               color: '#1b1b1f',
-              marginBottom: '16px',
+              marginBottom: isMobile ? '12px' : '16px',
               lineHeight: '1.3'
             }}>
               {produto.nome_prod}
@@ -272,16 +281,16 @@ const ProductPage = () => {
 
             {/* Preço */}
             <div style={{ 
-              padding: '24px 0',
+              padding: isMobile ? '16px 0' : '24px 0',
               borderTop: '1px solid #e5e5e5',
               borderBottom: '1px solid #e5e5e5',
-              marginBottom: '32px'
+              marginBottom: isMobile ? '24px' : '32px'
             }}>
               <div style={{ 
-                fontSize: '40px', 
+                fontSize: isMobile ? '32px' : '40px', 
                 fontWeight: '700', 
                 color: '#e4005c',
-                marginBottom: '8px'
+                marginBottom: isMobile ? '6px' : '8px'
               }}>
                 {formatarPreco(produto.preco_prod)}
               </div>
@@ -350,13 +359,13 @@ const ProductPage = () => {
             )}
 
             {/* Botões de Ação */}
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: isMobile ? '24px' : '32px', flexDirection: isMobile ? 'column' : 'row' }}>
               <button
                 onClick={adicionarAoCarrinho}
                 disabled={produto.qtd_estoque_prod === 0}
                 style={{
                   flex: 1,
-                  height: '56px',
+                  height: isMobile ? '52px' : '56px',
                   backgroundColor: produto.qtd_estoque_prod === 0 ? '#ccc' : '#000',
                   color: '#fff',
                   border: 'none',
@@ -386,8 +395,8 @@ const ProductPage = () => {
               </button>
               
               <button style={{
-                width: '56px',
-                height: '56px',
+                width: isMobile ? '100%' : '56px',
+                height: isMobile ? '52px' : '56px',
                 backgroundColor: '#fff',
                 border: '1px solid #ddd',
                 borderRadius: '12px',
@@ -405,7 +414,7 @@ const ProductPage = () => {
             <div style={{ 
               display: 'grid', 
               gap: '16px',
-              padding: '24px',
+              padding: isMobile ? '16px' : '24px',
               backgroundColor: '#f9f9f9',
               borderRadius: '12px'
             }}>
@@ -441,9 +450,9 @@ const ProductPage = () => {
           <div style={{
             backgroundColor: '#fff',
             borderRadius: '12px',
-            padding: '40px',
+            padding: isMobile ? '24px' : '40px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            marginBottom: '40px'
+            marginBottom: isMobile ? '24px' : '40px'
           }}>
             <h2 style={{ 
               fontSize: '24px', 
@@ -468,9 +477,9 @@ const ProductPage = () => {
         <div style={{
           backgroundColor: '#fff',
           borderRadius: '12px',
-          padding: '40px',
+          padding: isMobile ? '24px' : '40px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          marginBottom: '40px'
+          marginBottom: isMobile ? '24px' : '40px'
         }}>
           <h2 style={{ 
             fontSize: '24px', 
@@ -486,9 +495,11 @@ const ProductPage = () => {
               <div style={{ 
                 display: 'flex', 
                 padding: '16px 0',
-                borderBottom: '1px solid #f0f0f0'
+                borderBottom: '1px solid #f0f0f0',
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: isMobile ? '8px' : '0'
               }}>
-                <span style={{ fontWeight: '600', minWidth: '200px', color: '#333' }}>
+                <span style={{ fontWeight: '600', minWidth: isMobile ? 'auto' : '200px', color: '#333' }}>
                   Peso
                 </span>
                 <span style={{ color: '#666' }}>{produto.peso_prod} kg</span>
@@ -499,9 +510,11 @@ const ProductPage = () => {
               <div style={{ 
                 display: 'flex', 
                 padding: '16px 0',
-                borderBottom: '1px solid #f0f0f0'
+                borderBottom: '1px solid #f0f0f0',
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: isMobile ? '8px' : '0'
               }}>
-                <span style={{ fontWeight: '600', minWidth: '200px', color: '#333' }}>
+                <span style={{ fontWeight: '600', minWidth: isMobile ? 'auto' : '200px', color: '#333' }}>
                   Altura
                 </span>
                 <span style={{ color: '#666' }}>{produto.altura_prod} cm</span>
@@ -512,9 +525,11 @@ const ProductPage = () => {
               <div style={{ 
                 display: 'flex', 
                 padding: '16px 0',
-                borderBottom: '1px solid #f0f0f0'
+                borderBottom: '1px solid #f0f0f0',
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: isMobile ? '8px' : '0'
               }}>
-                <span style={{ fontWeight: '600', minWidth: '200px', color: '#333' }}>
+                <span style={{ fontWeight: '600', minWidth: isMobile ? 'auto' : '200px', color: '#333' }}>
                   Largura
                 </span>
                 <span style={{ color: '#666' }}>{produto.largura_prod} cm</span>
@@ -525,9 +540,11 @@ const ProductPage = () => {
               <div style={{ 
                 display: 'flex', 
                 padding: '16px 0',
-                borderBottom: '1px solid #f0f0f0'
+                borderBottom: '1px solid #f0f0f0',
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: isMobile ? '8px' : '0'
               }}>
-                <span style={{ fontWeight: '600', minWidth: '200px', color: '#333' }}>
+                <span style={{ fontWeight: '600', minWidth: isMobile ? 'auto' : '200px', color: '#333' }}>
                   Comprimento
                 </span>
                 <span style={{ color: '#666' }}>{produto.comprimento_prod} cm</span>
