@@ -40,7 +40,7 @@ const AdminLayout = () => {
   const handleLogout = async () => {
     console.log('clicou');
     try {
-      const url = 'http://localhost:8080/logout';
+      const url = 'http://72.62.10.218:8080/logout';
 
       const response = await axios.get(url, {
         withCredentials: true

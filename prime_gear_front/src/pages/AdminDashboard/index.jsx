@@ -61,14 +61,14 @@ const AdminDashboard = () => {
         setLoading(true);
         
     
-        const statsResponse = await axios.get('http://localhost:8080/admin/estatisticas');
+        const statsResponse = await axios.get('http://72.62.10.218:8080/admin/estatisticas');
         setStats(statsResponse.data);
 
    
-        const alertasResponse = await axios.get('http://localhost:8080/admin/alertas');
+        const alertasResponse = await axios.get('http://72.62.10.218:8080/admin/alertas');
         setAlertas(alertasResponse.data);
 
-        const pedidosResponse = await axios.get('http://localhost:8080/admin/pedidos-recentes');
+        const pedidosResponse = await axios.get('http://72.62.10.218:8080/admin/pedidos-recentes');
         setRecentOrders(pedidosResponse.data);
 
       } catch (error) {

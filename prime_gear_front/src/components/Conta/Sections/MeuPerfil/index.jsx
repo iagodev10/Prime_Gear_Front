@@ -71,7 +71,7 @@ const MeuPerfil = ({ user }) => {
 
       
       const userId = user.cod_user || user.id; 
-      await axios.put(`http://localhost:8080/atualizar-usuario/${userId}`, dadosAtualizados)
+      await axios.put(`http://72.62.10.218:8080/atualizar-usuario/${userId}`, dadosAtualizados)
 
       
       window.location.reload()

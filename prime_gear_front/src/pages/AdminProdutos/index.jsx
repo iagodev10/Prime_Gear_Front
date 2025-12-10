@@ -47,7 +47,7 @@ const AdminProdutos = () => {
 
   async function obterProdutos() {
     try {
-      const response = await axios.get("http://localhost:8080/produtos-adm")
+      const response = await axios.get("http://72.62.10.218:8080/produtos-adm")
       console.log(response.data)
       setProdutos(response.data)
     } catch (error) {
@@ -58,7 +58,7 @@ const AdminProdutos = () => {
   async function obterNomesDasSecoes() {
     try {
       console.log("ESSE");
-      const response = await axios.get("http://localhost:8080/get-secoes")
+      const response = await axios.get("http://72.62.10.218:8080/get-secoes")
       console.log(response.data)
       setNomeSecao1(response.data[0].nomeSecaoFlex)
       setNomeSecao2(response.data[1].nomeSecaoFlex)
@@ -94,7 +94,7 @@ const AdminProdutos = () => {
     setIsDeletando(true)
 
     try {
-      await axios.delete(`http://localhost:8080/delete-produto/${produtoParaExcluir.cod_produto}`)
+      await axios.delete(`http://72.62.10.218:8080/delete-produto/${produtoParaExcluir.cod_produto}`)
 
       window.location.reload()
     } catch (error) {

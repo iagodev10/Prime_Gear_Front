@@ -306,7 +306,7 @@ function StorePage() {
 
   async function getCats() {
     try {
-      const response = await axios.get("http://localhost:8080/get-categorias");
+      const response = await axios.get("http://72.62.10.218:8080/get-categorias");
       setCategorias(response.data);
     } catch (error) {
       console.log(error);
@@ -315,7 +315,7 @@ function StorePage() {
 
   async function getMarcas() {
     try {
-      const response = await axios.get("http://localhost:8080/get-marcas");
+      const response = await axios.get("http://72.62.10.218:8080/get-marcas");
       setMarcas(response.data);
     } catch (error) {
       console.log(error);
@@ -351,7 +351,7 @@ function StorePage() {
         precoMax,
       };
 
-      const response = await axios.post("http://localhost:8080/produtos-filtrados", filtros);
+      const response = await axios.post("http://72.62.10.218:8080/produtos-filtrados", filtros);
       setProdutos(response.data.produtos || []);
       setCurrentPage(1);
     } catch (error) {
@@ -361,7 +361,7 @@ function StorePage() {
 
   async function obterTodosProdutos() {
     try {
-      const response = await axios.get("http://localhost:8080/produtos-adm");
+      const response = await axios.get("http://72.62.10.218:8080/produtos-adm");
       setProdutos(response.data);
     } catch (error) {
       console.log(error);

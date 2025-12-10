@@ -63,7 +63,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
 
   async function obterCategorias() {
     try {
-      const response = await axios.get('http://localhost:8080/get-categorias')
+      const response = await axios.get('http://72.62.10.218:8080/get-categorias')
       setCategorias(response.data)
     } catch (error) {
       console.log(error);
@@ -72,7 +72,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
 
   async function obterMarcas() {
     try {
-      const response = await axios.get('http://localhost:8080/get-marcas')
+      const response = await axios.get('http://72.62.10.218:8080/get-marcas')
       setMarcas(response.data)
       console.log("marcas");
       console.log(response.data);
@@ -83,7 +83,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
 
   async function obterFornecedores() {
     try {
-      const response = await axios.get('http://localhost:8080/fornecedores-adm')
+      const response = await axios.get('http://72.62.10.218:8080/fornecedores-adm')
       setFornecedores(response.data)
       console.log("fornecedores");
       console.log(response.data);
@@ -99,7 +99,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/produto/${produtoId}`)
+      const response = await axios.get(`http://72.62.10.218:8080/produto/${produtoId}`)
       const produto = response.data
 
       setNomeProd(produto.nome_prod || "")
@@ -180,7 +180,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
     }
 
     try {
-      const response = await axios.put(`http://localhost:8080/editar-produto/${produtoId}`, formData)
+      const response = await axios.put(`http://72.62.10.218:8080/editar-produto/${produtoId}`, formData)
      
       window.location.reload()
     } catch (error) {

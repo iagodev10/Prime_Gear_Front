@@ -17,7 +17,7 @@ const ModalEditarMarca = ({ onClose, onSave, categoriaAtual,id }) => {
 
   async function obterInfosMarca(idMarca){
     try {
-       const response = await axios.get('http://localhost:8080/get-marca/'+idMarca)
+       const response = await axios.get('http://72.62.10.218:8080/get-marca/'+idMarca)
        setName(response.data.nome_marca)
        setImg(response.data.url_nome_img_marca)
 
@@ -52,7 +52,7 @@ const ModalEditarMarca = ({ onClose, onSave, categoriaAtual,id }) => {
    formData.append("imagem1",imgSalvar)
 
     try {
-        const response = await axios.put('http://localhost:8080/editar-marca/'+id, formData)
+        const response = await axios.put('http://72.62.10.218:8080/editar-marca/'+id, formData)
         window.location.reload()
     } catch (error) {
       console.log(error);

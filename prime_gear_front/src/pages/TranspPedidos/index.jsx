@@ -65,7 +65,7 @@ const TranspPedidos = () => {
   
      
         const transpResponse = await axios.get(
-          `http://localhost:8080/get-dados-transp/${user.email_user}`,
+          `http://72.62.10.218:8080/get-dados-transp/${user.email_user}`,
           { withCredentials: true }
         );
         
@@ -75,7 +75,7 @@ const TranspPedidos = () => {
   
     
         const pedidosResponse = await axios.get(
-          `http://localhost:8080/get-pedidos-transportadora/${transportadoraData.cod_transportadora}`,
+          `http://72.62.10.218:8080/get-pedidos-transportadora/${transportadoraData.cod_transportadora}`,
           { withCredentials: true }
         );
   
@@ -116,7 +116,7 @@ const TranspPedidos = () => {
       const pedido = pedidos.find(p => p.id === id)
       
       const response = await axios.patch(
-        `http://localhost:8080/atualizar-status-pedido/${pedido.codPedido}`,
+        `http://72.62.10.218:8080/atualizar-status-pedido/${pedido.codPedido}`,
         { status: novoStatus },
         {
           headers: {

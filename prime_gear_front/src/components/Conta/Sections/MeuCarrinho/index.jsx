@@ -328,7 +328,7 @@ const MeuCarrinho = () => {
   const carregarCarrinho = async () => {
     try {
       setCarregando(true)
-      const response = await axios.get('http://localhost:8080/get-produtos-cart/'+user.cod_user, {
+      const response = await axios.get('http://72.62.10.218:8080/get-produtos-cart/'+user.cod_user, {
         withCredentials:true
       })
 
@@ -351,7 +351,7 @@ const MeuCarrinho = () => {
   const atualizarQuantidade = async (codItemCar, novaQuantidade) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/update-cart-item/${codItemCar}`,
+        `http://72.62.10.218:8080/update-cart-item/${codItemCar}`,
         { qtd_produto_itemcar: novaQuantidade },
         { withCredentials: true }
       )
@@ -377,7 +377,7 @@ const MeuCarrinho = () => {
 
     try {
       await axios.delete(
-        `http://localhost:8080/remove-from-cart/${itemParaRemover.id}`,
+        `http://72.62.10.218:8080/remove-from-cart/${itemParaRemover.id}`,
         { withCredentials: true }
       )
   

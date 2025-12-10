@@ -39,7 +39,7 @@ const AdminUsers = () => {
 
   const buscarUsuarios = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/get-users', {
+      const response = await axios.get('http://72.62.10.218:8080/get-users', {
         withCredentials: true
       });
       console.log('Usuários:', response.data);
@@ -55,7 +55,7 @@ const AdminUsers = () => {
   const handleTipoChange = async (codUser, novoTipo) => {
     try {
       await axios.put(
-        `http://localhost:8080/update-user-tipo/${codUser}`,
+        `http://72.62.10.218:8080/update-user-tipo/${codUser}`,
         { tipo_user: novoTipo },
         { withCredentials: true }
       );

@@ -84,7 +84,7 @@ const ModalAdicionarFornecedor = ({ isVisivel, onClose }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/adicionar-fornecedor",
+        "http://72.62.10.218:8080/adicionar-fornecedor",
         objFornecedor
       );
       window.location.reload()

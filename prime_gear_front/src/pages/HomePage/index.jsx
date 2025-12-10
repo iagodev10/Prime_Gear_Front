@@ -32,20 +32,20 @@ const HomePage = () => {
       try {
         setLoading(true);
 
-        const responseMarcas = await axios.get('http://localhost:8080/get-marcas');
+        const responseMarcas = await axios.get('http://72.62.10.218:8080/get-marcas');
        
         setMarcas(responseMarcas.data);
         console.log("MARCAS");
         console.log(responseMarcas.data);
      
         
-       const responseCategorias = await axios.get('http://localhost:8080/get-categorias');
+       const responseCategorias = await axios.get('http://72.62.10.218:8080/get-categorias');
        
         setCategorias(responseCategorias.data);
        console.log('ó');
 
        
-        const response1 = await axios.get('http://localhost:8080/get-prods-vinc/1');
+        const response1 = await axios.get('http://72.62.10.218:8080/get-prods-vinc/1');
         if (response1.data.success) {
           setProdutosSecao1(response1.data.produtos);
           console.log(response1.data.produtos);
@@ -53,7 +53,7 @@ const HomePage = () => {
           setNomeSecao1(response1.data.nomeSecao || 'Destaques da Semana');
         }
 
-        const response2 = await axios.get('http://localhost:8080/get-prods-vinc/2');
+        const response2 = await axios.get('http://72.62.10.218:8080/get-prods-vinc/2');
         if (response2.data.success) {
           setProdutosSecao2(response2.data.produtos || []);
           setNomeSecao2(response2.data.nomeSecao || 'Até 50% de desconto');

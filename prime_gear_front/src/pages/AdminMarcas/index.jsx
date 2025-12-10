@@ -12,7 +12,7 @@ const AdminMarcas = () => {
 
     async function obtermarcas() {
         try {
-            const response = await axios.get('http://localhost:8080/get-marcas')
+            const response = await axios.get('http://72.62.10.218:8080/get-marcas')
             setmarcas(response.data)
         } catch (error) {
             console.log(error);
@@ -22,7 +22,7 @@ const AdminMarcas = () => {
     async function deletarCategoria(idCat) {
         console.log("chamou");
         try {
-            const response = await axios.delete('http://localhost:8080/delete-marca/' + idCat)
+            const response = await axios.delete('http://72.62.10.218:8080/delete-marca/' + idCat)
             console.log("DELETOU");
             window.location.reload()
             setModalExcluirVisivel(false)
