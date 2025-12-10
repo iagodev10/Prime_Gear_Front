@@ -292,7 +292,7 @@ const ModalEditarProduto = ({ onClose, produtoId }) => {
                 {fornecedores.length > 0 ? (
                   fornecedores.map((fornecedor) => (
                     <option key={fornecedor.cod_fornecedor} value={fornecedor.cod_fornecedor}>
-                      {fornecedor.nome_fornecedor || fornecedor.razao_social_fornecedor}
+                      {fornecedor.nome_responsavel_forn || fornecedor.razao_social_fornecedor}
                     </option>
                   ))
                 ) : (
