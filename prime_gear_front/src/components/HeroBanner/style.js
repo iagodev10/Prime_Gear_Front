@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import HeadSetImg from "../../assets/images/headset.jpeg";
-import HeadSetTabletImg from "../../assets/images/headset-mobile-tablet.png";
+import HeadSetTabletImg from "../../assets/images/headset-mob.png";
 import HeadSetMobileSmallImg from "../../assets/images/resized-headset.png";
 import OmelhorImg from "../../assets/images/omelhor.png";
 import OmelhorMobileImg from "../../assets/images/omelhor-mobile.png";
