@@ -366,7 +366,7 @@ const Login = () => {
       );
 
       console.log("Resposta do Cadastro:", response.data);
-      alert("Cadastro realizado com sucesso! Faça o login para continuar.");
+     
 
       setFlipped(false);
       setFormData((prev) => ({

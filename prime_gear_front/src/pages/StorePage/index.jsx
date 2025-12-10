@@ -86,22 +86,7 @@ const FilterSection = ({
             )}
         </div>
         {/* Avaliações */}
-        <div style={{ marginBottom: '16px', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' }}>
-            <button onClick={() => toggleFilter('avaliacoes')} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: 'black' }}>
-                Avaliações
-                {expandedFilters.avaliacoes ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-            </button>
-            {expandedFilters.avaliacoes && (
-                <div style={{ paddingTop: '12px' }}>
-                    {[5, 4, 3, 2, 1].map(rating => (
-                        <label key={rating} style={labelStyle}>
-                            <input type="checkbox" style={inputStyle} checked={selectedRatings.includes(rating)} onChange={() => toggleRating(rating)} />
-                            {rating} {rating === 1 ? 'estrela' : 'estrelas'} ou mais
-                        </label>
-                    ))}
-                </div>
-            )}
-        </div>
+      
     </>
 );
 
@@ -113,7 +98,7 @@ function Store() {
     
     const swiperPrevRef = useRef(null);
     const swiperNextRef = useRef(null);
- 
+    
     
 
     const handleCategoryChange = (category) => {
@@ -148,6 +133,12 @@ function Store() {
     const [categoryFromCarousel, setCategoryFromCarousel] = useState(null);
     const [favorites, setFavorites] = useState([]);
 
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' 
+        });
+    }, [currentPage]);
 
     const [expandedFilters, setExpandedFilters] = useState({
         categoria: false,
@@ -1031,7 +1022,7 @@ function Store() {
                                                     fontWeight: 500,
                                                     whiteSpace: "nowrap"
                                                 }}>
-                                                    Comprar Agora
+                                                    Compre Agora
                                                 </button>
                                             </div>
                                         </div>
@@ -1088,7 +1079,7 @@ function Store() {
                                             fontWeight: 500,
                                             whiteSpace: "nowrap"
                                         }}>
-                                            Comprar Agora
+                                            Compre Agora
                                         </button>
                                     </div>
                                 </div>
