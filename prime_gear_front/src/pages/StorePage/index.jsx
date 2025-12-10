@@ -1,21 +1,22 @@
-import CategoryNav from "../../components/CategoryNav"
-import { useState, useEffect, useRef } from "react"
-import { ChevronDown, ChevronUp, Filter } from "lucide-react"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper/modules"
-import "swiper/css"
-import "swiper/css/navigation"
+import CategoryNav from "../../components/CategoryNav";
+import React, { useState, useEffect, useRef } from "react";
+import { ChevronDown, ChevronUp, Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom";
 
-import ProductCard from "../../components/ProductCard"
-import Email from "../../assets/images/e-mail.svg"
+import ProductCard from "../../components/ProductCard";
+import Email from "../../assets/images/e-mail.svg";
 
-import notebook from "../../assets/images/laptop-comprar.png"
-import desktop from "../../assets/images/desktopPC.png"
-import fone from "../../assets/images/foneJBL.png"
+import notebook from "../../assets/images/laptop-comprar.png";
+import desktop from "../../assets/images/desktopPC.png";
+import fone from "../../assets/images/foneJBL.png";
 
-import axios from "axios"
+import axios from "axios";
+
 
 const FilterSection = ({
   categorias,
@@ -36,13 +37,7 @@ const FilterSection = ({
 }) => (
   <>
     {/* Categoria */}
-    <div
-      style={{
-        marginBottom: "16px",
-        borderBottom: "1px solid #e5e5e5",
-        paddingBottom: "16px",
-      }}
-    >
+    <div style={{ marginBottom: "16px", borderBottom: "1px solid #e5e5e5", paddingBottom: "16px" }}>
       <button
         onClick={() => toggleFilter("categoria")}
         style={{
@@ -80,13 +75,7 @@ const FilterSection = ({
     </div>
 
     {/* Marca */}
-    <div
-      style={{
-        marginBottom: "16px",
-        borderBottom: "1px solid #e5e5e5",
-        paddingBottom: "16px",
-      }}
-    >
+    <div style={{ marginBottom: "16px", borderBottom: "1px solid #e5e5e5", paddingBottom: "16px" }}>
       <button
         onClick={() => toggleFilter("marca")}
         style={{
@@ -125,13 +114,7 @@ const FilterSection = ({
     </div>
 
     {/* Preço */}
-    <div
-      style={{
-        marginBottom: "16px",
-        borderBottom: "1px solid #e5e5e5",
-        paddingBottom: "16px",
-      }}
-    >
+    <div style={{ marginBottom: "16px", borderBottom: "1px solid #e5e5e5", paddingBottom: "16px" }}>
       <button
         onClick={() => toggleFilter("preco")}
         style={{
@@ -169,13 +152,7 @@ const FilterSection = ({
     </div>
 
     {/* Avaliações */}
-    <div
-      style={{
-        marginBottom: "16px",
-        borderBottom: "1px solid #e5e5e5",
-        paddingBottom: "16px",
-      }}
-    >
+    <div style={{ marginBottom: "16px", borderBottom: "1px solid #e5e5e5", paddingBottom: "16px" }}>
       <button
         onClick={() => toggleFilter("avaliacoes")}
         style={{
@@ -212,83 +189,49 @@ const FilterSection = ({
       )}
     </div>
   </>
-)
+);
 
 function StorePage() {
-  const handleCategoryChange = (category) => {
-    const categoryName = category.nome_cat
-
-    if (selectedCategories.includes(categoryName)) {
-      setSelectedCategories((prev) => prev.filter((c) => c !== categoryName))
-      if (categoryFromCarousel?.nome_cat === categoryName) {
-        setCategoryFromCarousel(null)
-      }
-    } else {
-      setSelectedCategories((prev) => [...prev, categoryName])
-      setCategoryFromCarousel(category)
-    }
-
-    setCurrentPage(1)
-  }
-
-  const [selectedRatings, setSelectedRatings] = useState([])
-  const location = useLocation()
-
-  const [produtos, setProdutos] = useState([])
-  const [categorias, setCategorias] = useState([])
-  const [marcas, setMarcas] = useState([])
-
-  
-    const [currentPage, setCurrentPage] = useState(1);
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedBrands, setSelectedBrands] = useState([]); 
-    const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
-    const [categoryFromCarousel, setCategoryFromCarousel] = useState(null);
-    const [favorites, setFavorites] = useState([]); 
+  const navigate = useNavigate();
+  const location = useLocation();
 
  
-    const [expandedFilters, setExpandedFilters] = useState({
-        categoria: false,
-        marca: false,
-        preco: false,
-        capacidadeSSD: false,
-        avaliacoes: false,
-        memoriaRAM: false,
-        sistemaOperacional: false,
-        tamanhoTela: false,
-        processador: false
-    });
-
-  
-    const [isFilterSticky, setIsFilterSticky] = useState(true); // Added state
-   
-    const [sidebarHeight, setSidebarHeight] = useState('auto');
-    const [isMobile, setIsMobile] = useState(false);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const swiperPrevRef = useRef(null);
+  const swiperNextRef = useRef(null);
+  const sidebarRef = useRef(null);
+  const containerRef = useRef(null);
 
 
-    const [isStickyFixed, setIsStickyFixed] = useState(false);
-    const [stickyLeft, setStickyLeft] = useState(0);
+  const [produtos, setProdutos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [marcas, setMarcas] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+  const [selectedRatings, setSelectedRatings] = useState([]);
+  const [categoryFromCarousel, setCategoryFromCarousel] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-    const sidebarRef = useRef(null);
-    const paginationRef = useRef(null);
-    const containerRef = useRef(null);
-    const productsContainerRef = useRef(null); // Added ref
+  const [expandedFilters, setExpandedFilters] = useState({
+    categoria: false,
+    marca: false,
+    preco: false,
+    avaliacoes: false,
+  });
 
-    const itemsPerPage = 6;
+  const itemsPerPage = 6;
 
-    
-    const priceRanges = [
-        { label: "Até R$ 1.000", min: 0, max: 1000 },
-        { label: "R$ 1.000 a R$ 2.500", min: 1000, max: 2500 },
-        { label: "R$ 2.500 a R$ 4.000", min: 2500, max: 4000 },
-        { label: "R$ 4.000 a R$ 6.000", min: 4000, max: 6000 },
-        { label: "R$ 6.000 a R$ 8.000", min: 6000, max: 8000 },
-        { label: "R$ 8.000 a R$ 12.000", min: 8000, max: 12000 },
-        { label: "Acima de R$ 12.000", min: 12000, max: Infinity },
-    ];
-
-
+  const priceRanges = [
+    { label: "Até R$ 1.000", min: 0, max: 1000 },
+    { label: "R$ 1.000 a R$ 2.500", min: 1000, max: 2500 },
+    { label: "R$ 2.500 a R$ 4.000", min: 2500, max: 4000 },
+    { label: "R$ 4.000 a R$ 6.000", min: 4000, max: 6000 },
+    { label: "R$ 6.000 a R$ 8.000", min: 6000, max: 8000 },
+    { label: "R$ 8.000 a R$ 12.000", min: 8000, max: 12000 },
+    { label: "Acima de R$ 12.000", min: 12000, max: Infinity },
+  ];
 
   const labelStyle = {
     display: "flex",
@@ -297,113 +240,40 @@ function StorePage() {
     cursor: "pointer",
     fontSize: "14px",
     color: "black",
-  }
+  };
 
   const inputStyle = {
     width: "16px",
     height: "16px",
     marginRight: "10px",
     cursor: "pointer",
-  }
+  };
 
-  const totalPages = Math.ceil(produtos.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentProducts = produtos.slice(startIndex, endIndex)
+
+
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Changed productsContainerRef.current to containerRef.current as containerRef is used in JSX
-      if (!containerRef.current || isMobile) return
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [currentPage]);
 
-      const productsContainer = containerRef.current
-      const productsRect = productsContainer.getBoundingClientRect()
-      const productsBottom = productsRect.bottom
-      const windowHeight = window.innerHeight
-
-      // Se o final da área de produtos está visível na tela, desabilita o sticky
-      if (productsBottom <= windowHeight) {
-        setIsFilterSticky(false)
-      } else {
-        setIsFilterSticky(true)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    handleScroll() // Chama imediatamente para definir o estado inicial
-
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [isMobile, produtos])
-
-  async function getCats() {
-    try {
-      const response = await axios.get("http://localhost:8080/get-categorias")
-      console.log("alou")
-      setCategorias(response.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async function getMarcas() {
-    try {
-      const response = await axios.get("http://localhost:8080/get-marcas")
-      setMarcas(response.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   useEffect(() => {
-    getMarcas()
-    getCats()
-  }, [])
+    const onResize = () => setIsMobile(window.innerWidth <= 900);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
-  async function obterProdutosFiltrados() {
-    try {
-      let precoMin = undefined
-      let precoMax = undefined
+ 
+  
+  useEffect(() => {
+    getMarcas();
+    getCats();
+  }, []);
 
-      if (selectedPriceRanges.length > 0) {
-        const ranges = selectedPriceRanges.map((label) => priceRanges.find((r) => r.label === label)).filter((r) => r)
-
-        if (ranges.length > 0) {
-          precoMin = Math.min(...ranges.map((r) => r.min))
-          precoMax = Math.max(...ranges.map((r) => r.max))
-        }
-      }
-
-      const categoriasParaFiltrar = [...selectedCategories]
-      if (categoryFromCarousel && !categoriasParaFiltrar.includes(categoryFromCarousel.nome_cat)) {
-        categoriasParaFiltrar.push(categoryFromCarousel.nome_cat)
-      }
-
-      const filtros = {
-        categorias: categoriasParaFiltrar,
-        marcas: selectedBrands,
-        avaliacoes: selectedRatings,
-        precoMin,
-        precoMax,
-      }
-
-      console.log("Enviando filtros:", filtros)
-
-      const response = await axios.post("http://localhost:8080/produtos-filtrados", filtros)
-      setProdutos(response.data.produtos || [])
-      setCurrentPage(1)
-    } catch (error) {
-      console.log("Erro ao filtrar produtos:", error)
-    }
-  }
-
-  async function obterTodosProdutos() {
-    try {
-      const response = await axios.get("http://localhost:8080/produtos-adm")
-      setProdutos(response.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   useEffect(() => {
     if (
@@ -413,26 +283,19 @@ function StorePage() {
       selectedRatings.length > 0 ||
       categoryFromCarousel
     ) {
-      obterProdutosFiltrados()
+      obterProdutosFiltrados();
     } else {
-      obterTodosProdutos()
+      obterTodosProdutos();
     }
-  }, [selectedCategories, selectedBrands, selectedPriceRanges, selectedRatings, categoryFromCarousel])
+  }, [selectedCategories, selectedBrands, selectedPriceRanges, selectedRatings, categoryFromCarousel]);
+
 
   useEffect(() => {
     if (categorias.length > 0) {
       if (location.state?.categoryIdentifier) {
-        const identifier = location.state.categoryIdentifier.toLowerCase()
-
-        console.log("🔍 Buscando categoria com identificador:", identifier)
-        console.log(
-          "📦 Categorias disponíveis:",
-          categorias.map((c) => c.nome_cat),
-        )
-
+        const identifier = location.state.categoryIdentifier.toLowerCase();
         const matchedCategory = categorias.find((cat) => {
-          const catName = cat.nome_cat.toLowerCase()
-
+          const catName = cat.nome_cat.toLowerCase();
           return (
             catName.includes(identifier) ||
             identifier.includes(catName) ||
@@ -441,133 +304,176 @@ function StorePage() {
               (catName.includes("desktop") || catName.includes("pc") || catName.includes("computador"))) ||
             (identifier === "console" && (catName.includes("console") || catName.includes("videogame"))) ||
             (identifier === "periferico" && (catName.includes("periférico") || catName.includes("periferico")))
-          )
-        })
-
-        console.log("✅ Categoria encontrada:", matchedCategory)
+          );
+        });
 
         if (matchedCategory) {
-          setCategoryFromCarousel(matchedCategory)
-
+          setCategoryFromCarousel(matchedCategory);
           if (!selectedCategories.includes(matchedCategory.nome_cat)) {
-            setSelectedCategories((prev) => [...prev, matchedCategory.nome_cat])
+            setSelectedCategories((prev) => [...prev, matchedCategory.nome_cat]);
           }
-        } else {
-          console.warn("⚠️ Nenhuma categoria encontrada para:", identifier)
         }
-
-        window.history.replaceState({}, document.title)
+        window.history.replaceState({}, document.title);
       } else if (location.state?.selectedCategory) {
-        const category = location.state.selectedCategory
-        console.log("📌 Categoria selecionada diretamente:", category)
-
-        setCategoryFromCarousel(category)
-
+        const category = location.state.selectedCategory;
+        setCategoryFromCarousel(category);
         if (!selectedCategories.includes(category.nome_cat)) {
-          setSelectedCategories((prev) => [...prev, category.nome_cat])
+          setSelectedCategories((prev) => [...prev, category.nome_cat]);
         }
-
-        window.history.replaceState({}, document.title)
+        window.history.replaceState({}, document.title);
       }
     }
-  }, [location.state, categorias])
+  }, [location.state, categorias]);
 
   useEffect(() => {
     if (marcas.length > 0 && location.state?.selectedBrand) {
-      const brandName = location.state.selectedBrand
-
-      console.log("Marca selecionada:", brandName)
-      console.log(
-        "Marcas disponíveis:",
-        marcas.map((m) => m.nome_marca),
-      )
-
-      const matchedBrand = marcas.find((m) => m.nome_marca === brandName)
-
+      const brandName = location.state.selectedBrand;
+      const matchedBrand = marcas.find((m) => m.nome_marca === brandName);
       if (matchedBrand && !selectedBrands.includes(brandName)) {
-        setSelectedBrands((prev) => [...prev, brandName])
-        console.log("Marca adicionada aos filtros:", brandName)
+        setSelectedBrands((prev) => [...prev, brandName]);
       }
-
-      window.history.replaceState({}, document.title)
+      window.history.replaceState({}, document.title);
     }
-  }, [location.state, marcas])
+  }, [location.state, marcas]);
 
-  const toggleRating = (rating) => {
-    setSelectedRatings((prev) => (prev.includes(rating) ? prev.filter((r) => r !== rating) : [...prev, rating]))
+  
+
+  async function getCats() {
+    try {
+      const response = await axios.get("http://localhost:8080/get-categorias");
+      setCategorias(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth <= 900)
-    onResize()
-    window.addEventListener("resize", onResize)
-    return () => window.removeEventListener("resize", onResize)
-  }, [])
+  async function getMarcas() {
+    try {
+      const response = await axios.get("http://localhost:8080/get-marcas");
+      setMarcas(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  const handleCategoryFromCarousel = (category) => {
-    setCategoryFromCarousel(category)
+  async function obterProdutosFiltrados() {
+    try {
+      let precoMin = undefined;
+      let precoMax = undefined;
 
-    if (category) {
-      setSelectedCategories((prev) => {
-        const categoryName = category.nome_cat
-        if (!prev.includes(categoryName)) {
-          return [...prev, categoryName]
+      if (selectedPriceRanges.length > 0) {
+        const ranges = selectedPriceRanges
+          .map((label) => priceRanges.find((r) => r.label === label))
+          .filter((r) => r);
+
+        if (ranges.length > 0) {
+          precoMin = Math.min(...ranges.map((r) => r.min));
+          precoMax = Math.max(...ranges.map((r) => r.max));
         }
-        return prev
-      })
-    } else {
-      if (categoryFromCarousel) {
-        setSelectedCategories((prev) => prev.filter((c) => c !== categoryFromCarousel.nome_cat))
       }
+
+      const categoriasParaFiltrar = [...selectedCategories];
+      if (categoryFromCarousel && !categoriasParaFiltrar.includes(categoryFromCarousel.nome_cat)) {
+        categoriasParaFiltrar.push(categoryFromCarousel.nome_cat);
+      }
+
+      const filtros = {
+        categorias: categoriasParaFiltrar,
+        marcas: selectedBrands,
+        avaliacoes: selectedRatings,
+        precoMin,
+        precoMax,
+      };
+
+      const response = await axios.post("http://localhost:8080/produtos-filtrados", filtros);
+      setProdutos(response.data.produtos || []);
+      setCurrentPage(1);
+    } catch (error) {
+      console.log("Erro ao filtrar produtos:", error);
     }
   }
+
+  async function obterTodosProdutos() {
+    try {
+      const response = await axios.get("http://localhost:8080/produtos-adm");
+      setProdutos(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleCategoryChange = (category) => {
+    const categoryName = category.nome_cat;
+    if (selectedCategories.includes(categoryName)) {
+      setSelectedCategories((prev) => prev.filter((c) => c !== categoryName));
+      if (categoryFromCarousel?.nome_cat === categoryName) {
+        setCategoryFromCarousel(null);
+      }
+    } else {
+      setSelectedCategories((prev) => [...prev, categoryName]);
+      setCategoryFromCarousel(category);
+    }
+    setCurrentPage(1);
+  };
 
   const toggleFilter = (filterName) => {
     setExpandedFilters((prev) => ({
       ...prev,
       [filterName]: !prev[filterName],
-    }))
-  }
+    }));
+  };
 
   const toggleCategory = (categoryName) => {
     setSelectedCategories((prev) => {
       const newCategories = prev.includes(categoryName)
         ? prev.filter((c) => c !== categoryName)
-        : [...prev, categoryName]
+        : [...prev, categoryName];
 
       if (
         categoryFromCarousel &&
         categoryFromCarousel.nome_cat === categoryName &&
         !newCategories.includes(categoryName)
       ) {
-        setCategoryFromCarousel(null)
+        setCategoryFromCarousel(null);
       }
-
-      return newCategories
-    })
-  }
+      return newCategories;
+    });
+  };
 
   const toggleBrand = (brandName) => {
-    setSelectedBrands((prev) => (prev.includes(brandName) ? prev.filter((b) => b !== brandName) : [...prev, brandName]))
-  }
+    setSelectedBrands((prev) =>
+      prev.includes(brandName) ? prev.filter((b) => b !== brandName) : [...prev, brandName]
+    );
+  };
 
   const togglePriceRange = (rangeLabel) => {
     setSelectedPriceRanges((prev) =>
-      prev.includes(rangeLabel) ? prev.filter((r) => r !== rangeLabel) : [...prev, rangeLabel],
-    )
-  }
+      prev.includes(rangeLabel) ? prev.filter((r) => r !== rangeLabel) : [...prev, rangeLabel]
+    );
+  };
+
+  const toggleRating = (rating) => {
+    setSelectedRatings((prev) =>
+      prev.includes(rating) ? prev.filter((r) => r !== rating) : [...prev, rating]
+    );
+  };
 
   const clearAllFilters = () => {
-    setSelectedCategories([])
-    setSelectedBrands([])
-    setSelectedPriceRanges([])
-    setSelectedRatings([])
-    setCategoryFromCarousel(null)
-  }
+    setSelectedCategories([]);
+    setSelectedBrands([]);
+    setSelectedPriceRanges([]);
+    setSelectedRatings([]);
+    setCategoryFromCarousel(null);
+  };
+
+  // Cálculos de Paginação
+  const totalPages = Math.ceil(produtos.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProducts = produtos.slice(startIndex, endIndex);
 
   const renderPagination = () => {
-    const pages = []
-
+    const pages = [];
     pages.push(
       <button
         key="prev"
@@ -588,8 +494,8 @@ function StorePage() {
         }}
       >
         ←
-      </button>,
-    )
+      </button>
+    );
 
     if (totalPages > 0) {
       if (currentPage > 2) {
@@ -608,15 +514,14 @@ function StorePage() {
             }}
           >
             1
-          </button>,
-        )
-
+          </button>
+        );
         if (currentPage > 3) {
           pages.push(
             <span key="dots1" style={{ padding: "0 8px" }}>
               ...
-            </span>,
-          )
+            </span>
+          );
         }
       }
 
@@ -637,8 +542,8 @@ function StorePage() {
             }}
           >
             {i}
-          </button>,
-        )
+          </button>
+        );
       }
 
       if (currentPage < totalPages - 1) {
@@ -646,10 +551,9 @@ function StorePage() {
           pages.push(
             <span key="dots2" style={{ padding: "0 8px" }}>
               ...
-            </span>,
-          )
+            </span>
+          );
         }
-
         pages.push(
           <button
             key={totalPages}
@@ -665,8 +569,8 @@ function StorePage() {
             }}
           >
             {totalPages}
-          </button>,
-        )
+          </button>
+        );
       }
     }
 
@@ -690,73 +594,85 @@ function StorePage() {
         }}
       >
         →
-      </button>,
-    )
+      </button>
+    );
 
-    return pages
-  }
+    return pages;
+  };
 
   return (
     <>
       <style>{`
-                @keyframes slideUpFromBottom {
-                    from {
-                        transform: translateY(100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateY(0);
-                        opacity: 1;
-                    }
-                }
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                    }
-                    to {
-                        opacity: 1;
-                    }
-                }
-                .filter-drawer-enter {
-                    animation: slideUpFromBottom 0.3s ease-out forwards;
-                }
-                .category-swiper .swiper-button-next,
-                .category-swiper .swiper-button-prev {
-                    color: #000;
-                    background: rgba(255, 255, 255, 0.9);
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                }
-                .category-swiper .swiper-button-next:after,
-                .category-swiper .swiper-button-prev:after {
-                    font-size: 18px;
-                    font-weight: bold;
-                }
-                .category-swiper .swiper-button-next:hover,
-                .category-swiper .swiper-button-prev:hover {
-                    background: #fff;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-                }
-                .pagination-button-active {
-                    background-color: #000 !important; 
-                    color: white !important; 
-                    font-weight: 600 !important;
-                }
-            `}</style>
+        @keyframes slideUpFromBottom {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .filter-drawer-enter {
+            animation: slideUpFromBottom 0.3s ease-out forwards;
+        }
+        
+        /* Estilos do Carrossel de Categorias Mobile */
+        .category-swiper-wrapper {
+            position: relative;
+            overflow: visible; /* Permite setas fora */
+        }
+        
+        .category-swiper {
+            overflow: hidden !important; /* Corta os slides */
+            position: static; /* Para não atrapalhar os botões absolutos */
+        }
+        
+        /* Botões customizados do carrossel */
+        .custom-cat-nav-btn {
+            position: absolute;
+            top: 40%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-cat-nav-btn:hover {
+            background: #f0f0f0;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        .custom-cat-prev { left: -10px; }
+        .custom-cat-next { right: -10px; }
+        
+        @media (max-width: 360px) {
+            .custom-cat-prev { left: -5px; }
+            .custom-cat-next { right: -5px; }
+        }
+
+        .pagination-button-active {
+            background-color: #000 !important; 
+            color: white !important; 
+            font-weight: 600 !important;
+        }
+      `}</style>
+
       <CategoryNav
         categorias={categorias}
         selectedCategories={selectedCategories}
         onCategoryChange={handleCategoryChange}
       />
-      <div
-        style={{
-          backgroundColor: "#f5f5f5",
-          minHeight: "100vh",
-          padding: isMobile ? "100px 10px 100px" : "40px 20px",
-        }}
-      >
+
+      <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh", padding: isMobile ? "100px 10px 100px" : "40px 20px" }}>
         <div
           ref={containerRef}
           style={{
@@ -766,6 +682,7 @@ function StorePage() {
             gap: isMobile ? "20px" : "40px",
             position: "relative",
             flexDirection: isMobile ? "column" : "row",
+            alignItems: "flex-start", 
           }}
         >
           {/* Sidebar de Filtros (desktop) */}
@@ -775,33 +692,16 @@ function StorePage() {
               style={{
                 width: "280px",
                 flexShrink: 0,
-                position: isFilterSticky ? "sticky" : "absolute",
-                top: isFilterSticky ? "90px" : "auto",
-                bottom: isFilterSticky ? "auto" : "0",
-                zIndex: 10,
-                alignSelf: "flex-start",
+              
+                
+                position: "sticky",
+                top: "20px",
+                maxHeight: "calc(100vh - 40px)",
+                overflowY: "auto",
               }}
             >
-              <div
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: "8px",
-                  padding: "24px",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                  maxHeight: "calc(100vh - 140px)",
-                  overflowY: "auto",
-                }}
-              >
-                <h2
-                  style={{
-                    fontSize: "24px",
-                    fontWeight: "700",
-                    marginBottom: "24px",
-                    color: "#333",
-                  }}
-                >
-                  Filtros
-                </h2>
+              <div style={{ backgroundColor: "white", borderRadius: "8px", padding: "24px", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
+                <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "24px", color: "#333" }}>Filtros</h2>
 
                 <FilterSection
                   categorias={categorias}
@@ -840,66 +740,64 @@ function StorePage() {
             </div>
           )}
 
-                    {/* Conteúdo Principal */}
-                    <div style={{ flex: 1 }}>
-                        {/* Botão flutuante de filtros (mobile) */}
-                        {isMobile && (
-                            <button
-                                onClick={() => setIsFilterOpen(true)}
-                                style={{
-                                    position: 'fixed',
-                                    bottom: '24px',
-                                    right: '24px',
-                                    width: '60px',
-                                    height: '60px',
-                                    borderRadius: '50%',
-                                    border: 'none',
-                                    background: '#000',
-                                    color: '#fff',
-                                    fontWeight: 600,
-                                    cursor: 'pointer',
-                                    boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    transition: 'all 0.3s ease',
-                                    zIndex: 998
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                            >
-                                <Filter size={24} />
-                            </button>
-                        )}
-                        {/* Grid de Produtos */}
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-                            gap: isMobile ? '12px' : '24px',
-                            marginBottom: isMobile ? '40px' : '80px'
-                        }}>
-                            {/* Erro corrigido: Removidas as chamadas redundantes a <ProductCard /> sem props */}
-                            {currentProducts.length > 0 ? (
-                                currentProducts.map((prod) => (
-                                  
-                                    <ProductCard
-                                        key={prod.cod_produto}
-                                        cod_produto={prod.cod_produto}
-                                        title={prod.nome_prod}
-                                        priceInfo={`ou 10x de ${(prod.preco_prod / 10).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`}
-                                        price={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
-                                        oldPrice={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
-                                        image={prod.url_img_prod}
-                                        idProd={prod.cod_produto}
-                                    />
-                                ))
-                            ) : (
-                               
-                                <p style={{ gridColumn: '1 / -1', textAlign: 'center', fontSize: '1.2rem', padding: '40px', backgroundColor: 'white', borderRadius: '8px' }}>
-                                    Nenhum produto encontrado com os filtros selecionados.
-                                </p>
-                            )}
-                        </div>
+          {/* Conteúdo Principal */}
+          <div style={{ flex: 1 }}>
+            {/* Botão flutuante de filtros (mobile) */}
+            {isMobile && (
+              <button
+                onClick={() => setIsFilterOpen(true)}
+                style={{
+                  position: "fixed",
+                  bottom: "24px",
+                  right: "24px",
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "50%",
+                  border: "none",
+                  background: "#000",
+                  color: "#fff",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.3s ease",
+                  zIndex: 998,
+                }}
+              >
+                <Filter size={24} />
+              </button>
+            )}
+
+            {/* Grid de Produtos */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
+                gap: isMobile ? "12px" : "24px",
+                marginBottom: isMobile ? "40px" : "80px",
+              }}
+            >
+              {currentProducts.length > 0 ? (
+                currentProducts.map((prod) => (
+                  <ProductCard
+                    key={prod.cod_produto}
+                    cod_produto={prod.cod_produto}
+                    title={prod.nome_prod}
+                    priceInfo={`ou 10x de ${(prod.preco_prod / 10).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}`}
+                    price={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                    oldPrice={prod.preco_prod.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                    image={prod.url_img_prod}
+                    idProd={prod.cod_produto}
+                  />
+                ))
+              ) : (
+                <p style={{ gridColumn: "1 / -1", textAlign: "center", fontSize: "1.2rem", padding: "40px", backgroundColor: "white", borderRadius: "8px" }}>
+                  Nenhum produto encontrado com os filtros selecionados.
+                </p>
+              )}
+            </div>
 
             {/* Paginação */}
             {totalPages > 1 && (
@@ -954,16 +852,7 @@ function StorePage() {
               animation: "slideUpFromBottom 0.3s ease-out",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "16px 20px",
-                borderBottom: "1px solid #eee",
-                background: "#fff",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #eee", background: "#fff" }}>
               <strong style={{ fontSize: "18px", fontWeight: "700" }}>Filtros</strong>
               <span style={{ color: "#666", fontSize: "14px" }}>{produtos.length} Resultados</span>
               <button
@@ -982,91 +871,27 @@ function StorePage() {
                   borderRadius: "50%",
                   transition: "all 0.2s",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#f5f5f5"
-                  e.currentTarget.style.color = "#000"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "transparent"
-                  e.currentTarget.style.color = "#666"
-                }}
               >
                 ×
               </button>
             </div>
 
+            {/* Chips Mobile */}
             {(selectedCategories.length > 0 || selectedBrands.length > 0 || selectedPriceRanges.length > 0) && (
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "8px",
-                  padding: "12px 20px",
-                  borderBottom: "1px solid #eee",
-                }}
-              >
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", padding: "12px 20px", borderBottom: "1px solid #eee" }}>
                 {selectedCategories.map((chip) => (
-                  <button
-                    key={`cat-${chip}`}
-                    onClick={() => toggleCategory(chip)}
-                    style={{
-                      border: "1px solid #000",
-                      borderRadius: "999px",
-                      padding: "6px 12px",
-                      background: "#fff",
-                      cursor: "pointer",
-                      fontSize: "14px",
-                    }}
-                  >
+                  <button key={`cat-${chip}`} onClick={() => toggleCategory(chip)} style={{ border: "1px solid #000", borderRadius: "999px", padding: "6px 12px", background: "#fff", cursor: "pointer", fontSize: "14px" }}>
                     {chip} ×
                   </button>
                 ))}
                 {selectedBrands.map((chip) => (
-                  <button
-                    key={`brand-${chip}`}
-                    onClick={() => toggleBrand(chip)}
-                    style={{
-                      border: "1px solid #000",
-                      borderRadius: "999px",
-                      padding: "6px 12px",
-                      background: "#fff",
-                      cursor: "pointer",
-                      fontSize: "14px",
-                    }}
-                  >
+                  <button key={`brand-${chip}`} onClick={() => toggleBrand(chip)} style={{ border: "1px solid #000", borderRadius: "999px", padding: "6px 12px", background: "#fff", cursor: "pointer", fontSize: "14px" }}>
                     {chip} ×
                   </button>
                 ))}
                 {selectedPriceRanges.map((chip) => (
-                  <button
-                    key={`price-${chip}`}
-                    onClick={() => togglePriceRange(chip)}
-                    style={{
-                      border: "1px solid #000",
-                      borderRadius: "999px",
-                      padding: "6px 12px",
-                      background: "#fff",
-                      cursor: "pointer",
-                      fontSize: "14px",
-                    }}
-                  >
+                  <button key={`price-${chip}`} onClick={() => togglePriceRange(chip)} style={{ border: "1px solid #000", borderRadius: "999px", padding: "6px 12px", background: "#fff", cursor: "pointer", fontSize: "14px" }}>
                     {chip} ×
-                  </button>
-                ))}
-                {selectedRatings.map((chip) => (
-                  <button
-                    key={`rating-${chip}`}
-                    onClick={() => toggleRating(chip)}
-                    style={{
-                      border: "1px solid #000",
-                      borderRadius: "999px",
-                      padding: "6px 12px",
-                      background: "#fff",
-                      cursor: "pointer",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {chip} ★ ×
                   </button>
                 ))}
               </div>
@@ -1091,41 +916,11 @@ function StorePage() {
                 selectedRatings={selectedRatings}
               />
             </div>
-            <div
-              style={{
-                borderTop: "1px solid #eee",
-                padding: "12px 20px",
-                display: "flex",
-                gap: "12px",
-              }}
-            >
-              <button
-                onClick={clearAllFilters}
-                style={{
-                  flex: 1,
-                  borderRadius: "12px",
-                  padding: "12px",
-                  border: "1px solid #ddd",
-                  background: "#fff",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
+            <div style={{ borderTop: "1px solid #eee", padding: "12px 20px", display: "flex", gap: "12px" }}>
+              <button onClick={clearAllFilters} style={{ flex: 1, borderRadius: "12px", padding: "12px", border: "1px solid #ddd", background: "#fff", fontWeight: 600, cursor: "pointer" }}>
                 Limpar
               </button>
-              <button
-                onClick={() => setIsFilterOpen(false)}
-                style={{
-                  flex: 1,
-                  borderRadius: "12px",
-                  padding: "12px",
-                  border: "none",
-                  background: "#000",
-                  color: "#fff",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
+              <button onClick={() => setIsFilterOpen(false)} style={{ flex: 1, borderRadius: "12px", padding: "12px", border: "none", background: "#000", color: "#fff", fontWeight: 700, cursor: "pointer" }}>
                 Aplicar
               </button>
             </div>
@@ -1133,142 +928,148 @@ function StorePage() {
         </>
       )}
 
-            {/* Seção de Cards de Categorias (Mantida) */}
-            <>
-                {/* ... restante do código do carrossel/grid de categorias e do rodapé ... */}
-                <div style={{
-                    width: '100%',
-                    background: '',
-                    minHeight: isMobile ? 'auto' : '25vh',
-                    padding: isMobile ? '40px 20px' : '40px 0',
-                    maxWidth: '1400px',
-                    margin: '0 auto'
-                }}>
-                    {isMobile ? (
-                        
-                        <Swiper
-                            modules={[Navigation]}
-                            navigation
-                            slidesPerView={1}
-                            spaceBetween={20}
-                            className="category-swiper"
-                            style={{ paddingBottom: '40px' }}
-                        >
-                            {[
-                                { id: 1, name: 'Laptops', image: notebook },
-                                { id: 2, name: 'Fones de Ouvido', image: fone },
-                                { id: 3, name: 'Desktops', image: desktop }
-                            ].map((category) => (
-                                <SwiperSlide key={category.id}>
-                                    <div style={{
-                                        width: "100%",
-                                        background: "#e1e1e1",
-                                        height: "140px",
-                                        borderRadius: "20px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-around",
-                                        padding: "16px 20px",
-                                        flexDirection: "row",
-                                        gap: "16px"
-                                    }}>
-                                        <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "110px", objectFit: "contain", flexShrink: 0 }} />
-                                        <div style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            flexDirection: "column",
-                                            gap: "12px",
-                                            flex: 1,
-                                            justifyContent: "center"
-                                        }}>
-                                            <p style={{ fontSize: "1.1rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
-                                            <button style={{
-                                                background: "black",
-                                                color: "white",
-                                                padding: "10px 20px",
-                                                borderRadius: "60px",
-                                                textAlign: "center",
-                                                cursor: "pointer",
-                                                border: "none",
-                                                transition: "0.3s",
-                                                fontSize: "0.9rem",
-                                                fontWeight: 500,
-                                                whiteSpace: "nowrap"
-                                            }}>
-                                                Comprar Agora
-                                            </button>
-                                        </div>
-                                    </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
-                    ) : (
-                    
-                        <div style={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                            alignItems: "center",
-                            gap: "20px",
-                            padding: "0 20px"
-                        }}>
-                            {[
-                                { id: 1, name: 'Laptops', image: notebook },
-                                { id: 2, name: 'Fones de Ouvido', image: fone },
-                                { id: 3, name: 'Desktops', image: desktop }
-                            ].map((category) => (
-                                <div key={category.id} style={{
-                                    width: "23%",
-                                    background: "#e1e1e1",
-                                    height: "160px",
-                                    borderRadius: "20px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-around",
-                                    padding: "20px",
-                                    flexDirection: "row",
-                                    gap: "16px"
-                                }}>
-                                    <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "120px", objectFit: "contain", flexShrink: 0 }} />
-                                    <div style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        flexDirection: "column",
-                                        gap: "12px",
-                                        flex: 1,
-                                        justifyContent: "center"
-                                    }}>
-                                        <p style={{ fontSize: "1.3rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
-                                        <button style={{
-                                            background: "black",
-                                            color: "white",
-                                            padding: "10px 20px",
-                                            borderRadius: "60px",
-                                            textAlign: "center",
-                                            cursor: "pointer",
-                                            border: "none",
-                                            transition: "0.3s",
-                                            fontSize: "0.95rem",
-                                            fontWeight: 500,
-                                            whiteSpace: "nowrap"
-                                        }}>
-                                            Comprar Agora
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-      {/* Footer / Newsletter */}
+      {/* Seção de Carrossel de Categorias */}
       <div
         style={{
           width: "100%",
-          backgroundColor: "black",
-          padding: isMobile ? "40px 20px" : "60px 0",
-          marginTop: "40px",
+          minHeight: isMobile ? "auto" : "25vh",
+          padding: isMobile ? "40px 20px" : "40px 0",
+          maxWidth: "1400px",
+          margin: "0 auto",
         }}
       >
+        {isMobile ? (
+          <div className="category-swiper-wrapper">
+            {/* BOTÕES CUSTOMIZADOS FORA DO SWIPER (MOBILE) */}
+            <button ref={swiperPrevRef} className="custom-cat-nav-btn custom-cat-prev">
+              <ChevronLeft size={24} />
+            </button>
+            <button ref={swiperNextRef} className="custom-cat-nav-btn custom-cat-next">
+              <ChevronRight size={24} />
+            </button>
+
+            <Swiper
+              modules={[Navigation]}
+              navigation={{
+                prevEl: swiperPrevRef.current,
+                nextEl: swiperNextRef.current,
+              }}
+              onBeforeInit={(swiper) => {
+                swiper.params.navigation.prevEl = swiperPrevRef.current;
+                swiper.params.navigation.nextEl = swiperNextRef.current;
+              }}
+              slidesPerView={1}
+              spaceBetween={20}
+              className="category-swiper"
+              style={{ paddingBottom: "40px" }}
+            >
+              {[
+                { id: 1, name: "Laptops", image: notebook },
+                { id: 2, name: "Fones de Ouvido", image: fone },
+                { id: 3, name: "Desktops", image: desktop },
+              ].map((category) => (
+                <SwiperSlide key={category.id}>
+                  <div
+                    style={{
+                      width: "100%",
+                      background: "#e1e1e1",
+                      height: "140px",
+                      borderRadius: "20px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                      padding: "16px 20px",
+                      flexDirection: "row",
+                      gap: "16px",
+                    }}
+                  >
+                    <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "110px", objectFit: "contain", flexShrink: 0 }} />
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        gap: "12px",
+                        flex: 1,
+                        justifyContent: "center",
+                      }}
+                    >
+                      <p style={{ fontSize: "1.1rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
+                      <button
+                        style={{
+                          background: "black",
+                          color: "white",
+                          padding: "10px 20px",
+                          borderRadius: "60px",
+                          textAlign: "center",
+                          cursor: "pointer",
+                          border: "none",
+                          transition: "0.3s",
+                          fontSize: "0.9rem",
+                          fontWeight: 500,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Comprar Agora
+                      </button>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        ) : (
+          /* Versão Desktop do Carrossel/Grid de Categorias */
+          <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", gap: "20px", padding: "0 20px" }}>
+            {[
+              { id: 1, name: "Laptops", image: notebook },
+              { id: 2, name: "Fones de Ouvido", image: fone },
+              { id: 3, name: "Desktops", image: desktop },
+            ].map((category) => (
+              <div
+                key={category.id}
+                style={{
+                  width: "23%",
+                  background: "#e1e1e1",
+                  height: "160px",
+                  borderRadius: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                  padding: "20px",
+                  flexDirection: "row",
+                  gap: "16px",
+                }}
+              >
+                <img src={category.image} alt={category.name} style={{ width: "35%", maxHeight: "120px", objectFit: "contain", flexShrink: 0 }} />
+                <div style={{ display: "flex", alignItems: "center", flexDirection: "column", gap: "12px", flex: 1, justifyContent: "center" }}>
+                  <p style={{ fontSize: "1.3rem", textAlign: "center", margin: 0, fontWeight: 500 }}>{category.name}</p>
+                  <button
+                    style={{
+                      background: "black",
+                      color: "white",
+                      padding: "10px 20px",
+                      borderRadius: "60px",
+                      textAlign: "center",
+                      cursor: "pointer",
+                      border: "none",
+                      transition: "0.3s",
+                      fontSize: "0.95rem",
+                      fontWeight: 500,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Comprar Agora
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Footer / Newsletter */}
+      <div style={{ width: "100%", backgroundColor: "black", padding: isMobile ? "40px 20px" : "60px 0", marginTop: "40px" }}>
         <div
           style={{
             maxWidth: "1400px",
@@ -1280,53 +1081,15 @@ function StorePage() {
             gap: isMobile ? "30px" : "40px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-              color: "white",
-            }}
-          >
-            <img
-              src={Email || "/placeholder.svg"}
-              alt="Email"
-              style={{
-                width: isMobile ? "60px" : "80px",
-                height: isMobile ? "60px" : "80px",
-              }}
-            />
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", color: "white" }}>
+            <img src={Email || "/placeholder.svg"} alt="Email" style={{ width: isMobile ? "60px" : "80px", height: isMobile ? "60px" : "80px" }} />
             <div>
-              <h3
-                style={{
-                  margin: 0,
-                  fontSize: isMobile ? "1.3rem" : "1.8rem",
-                  fontWeight: "600",
-                  marginBottom: "8px",
-                }}
-              >
-                Assine nossa Newsletter
-              </h3>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: isMobile ? "0.9rem" : "1rem",
-                  color: "#ccc",
-                }}
-              >
-                Fique por dentro das novidades e promoções
-              </p>
+              <h3 style={{ margin: 0, fontSize: isMobile ? "1.3rem" : "1.8rem", fontWeight: "600", marginBottom: "8px" }}>Assine nossa Newsletter</h3>
+              <p style={{ margin: 0, fontSize: isMobile ? "0.9rem" : "1rem", color: "#ccc" }}>Fique por dentro das novidades e promoções</p>
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "12px",
-              width: isMobile ? "100%" : "auto",
-              flexDirection: isMobile ? "column" : "row",
-            }}
-          >
+          <div style={{ display: "flex", gap: "12px", width: isMobile ? "100%" : "auto", flexDirection: isMobile ? "column" : "row" }}>
             <input
               type="email"
               placeholder="Digite seu e-mail"
@@ -1352,6 +1115,7 @@ function StorePage() {
                 transition: "0.3s",
                 whiteSpace: "nowrap",
               }}
+              onClick={() => navigate("/login")}
             >
               Inscrever-se
             </button>
@@ -1359,7 +1123,7 @@ function StorePage() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default StorePage
+export default StorePage;
