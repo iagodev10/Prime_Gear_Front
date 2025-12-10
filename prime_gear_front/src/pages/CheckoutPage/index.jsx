@@ -558,7 +558,8 @@ const CheckoutPage = () => {
                 quantidade: item.quantidade,
                 preco_unitario: item.preco_unitario || item.preco,
                 preco: item.preco_unitario || item.preco
-              }))
+              })),
+              frete:totais.frete
             },
             {
               withCredentials: true,
@@ -567,14 +568,6 @@ const CheckoutPage = () => {
           );
 
 
-          const url = window.URL.createObjectURL(new Blob([boletoResponse.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', `boleto-primegear-${Date.now()}.pdf`);
-          document.body.appendChild(link);
-          link.click();
-          link.parentNode.removeChild(link);
-          window.URL.revokeObjectURL(url);
         } catch (error) {
           console.log(error);
         }
