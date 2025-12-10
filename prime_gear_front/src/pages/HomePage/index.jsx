@@ -14,6 +14,8 @@ import { IdeaButton, IdeaImg, IdeapadText, Ideapad, Descrip, Title, SubTitle } f
 import OutroNivelImersao from '../../assets/images/Outro-Nivel-Imersao.png';
 import Ideapad1 from '../../assets/images/Ideapad1.png';
 
+import { useNavigate } from 'react-router-dom';
+
 const HomePage = () => {
   const [produtosSecao1, setProdutosSecao1] = useState([]);
   const [produtosSecao2, setProdutosSecao2] = useState([]);
@@ -23,6 +25,7 @@ const HomePage = () => {
   const [nomeSecao2, setNomeSecao2] = useState('Carregando...');
   const [loading, setLoading] = useState(true);
  
+  const navigate=useNavigate()
 
   useEffect(() => {
     const carregarDadosSecoes = async () => {
@@ -95,7 +98,7 @@ const HomePage = () => {
         <BannerImg>
           <img src={OutroNivelImersao} alt="Outro Nível de Imersão" />
         </BannerImg>
-        <BannerBuy href="#">Compre Agora</BannerBuy>
+        <BannerBuy href="/detalhe/11">Compre Agora</BannerBuy>
       </BannerPromo>
 
       <Ideapad>
@@ -109,7 +112,7 @@ const HomePage = () => {
           <Descrip>
             O Ideapad 1i foi projetado para aumentar a produtividade e maximizar o prazer durante todo o dia. Apresentando um eficiente processador MediaTek Kompanio 520 e até 15 horas de duração da bateria, garante que você se mantenha produtivo e entretido ao longo do dia.
           </Descrip>
-          <IdeaButton>Compre Agora</IdeaButton>
+          <IdeaButton onClick={()=>navigate('/detalhe/10')}>Compre Agora</IdeaButton>
         </IdeapadText>
       </Ideapad>
 
