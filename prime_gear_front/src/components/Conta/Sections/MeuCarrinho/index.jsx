@@ -648,7 +648,7 @@ const MeuCarrinho = () => {
                 Adicione produtos ao carrinho para continuar comprando
               </p>
               <button 
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.location.href = '/loja'}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
