@@ -104,7 +104,7 @@ const SearchModal = ({ isOpen, onClose }) => {
 
   const handleProductClick = (produto) => {
     onClose();
-
+    vavigate(`/detalhe/${produto.cod_produto}`);
     console.log("Produto clicado:", produto);
   };
 
