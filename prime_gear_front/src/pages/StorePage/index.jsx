@@ -257,9 +257,11 @@ function StorePage() {
 
 
   useEffect(() => {
+    
     if (categorias.length > 0) {
       if (location.state?.categoryIdentifier) {
         const identifier = location.state.categoryIdentifier.toLowerCase();
+        console.log("id: "+identifier);
         const matchedCategory = categorias.find((cat) => {
           const catName = cat.nome_cat.toLowerCase();
           return (
