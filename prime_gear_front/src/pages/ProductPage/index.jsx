@@ -369,7 +369,7 @@ const ProductPage = () => {
                   backgroundColor: produto.qtd_estoque_prod === 0 ? '#ccc' : '#000',
                   color: '#fff',
                   border: 'none',
-                  borderRadius: '12px',
+                  borderRadius: '99px',
                   fontSize: '16px',
                   fontWeight: '600',
                   cursor: produto.qtd_estoque_prod === 0 ? 'not-allowed' : 'pointer',
@@ -393,8 +393,37 @@ const ProductPage = () => {
                 <ShoppingCart size={20} />
                 {produto.qtd_estoque_prod === 0 ? 'Indisponível' : 'Adicionar ao Carrinho'}
               </button>
-              
-             
+
+              <button
+                onClick={() => navigate('/checkout')}
+                style={{
+                  flex: 1,
+                  height: isMobile ? '52px' : '56px',
+                  backgroundColor: '#e4005c',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '99px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#c40050';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#e4005c';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Comprar Agora
+              </button>
+
             </div>
 
             {/* Benefícios */}
