@@ -428,8 +428,10 @@ const Login = () => {
                       <ErrorMessage>{errors.loginSenha}</ErrorMessage>
                     )}
                   </InputGroup>
-
-                  <ForgotPassword href="#">Esqueceu a senha?</ForgotPassword>
+                    {
+                       //<ForgotPassword href="#">Esqueceu a senha?</ForgotPassword>
+                    }
+                 
 
                   <SubmitButton type="submit">Entrar</SubmitButton>
 
