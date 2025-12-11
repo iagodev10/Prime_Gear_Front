@@ -406,7 +406,7 @@ const ProductPage = () => {
                 justifyContent: 'center',
                 transition: 'all 0.2s'
               }}>
-                <Heart size={20} />
+              
               </button>
             </div>
 
