@@ -30,6 +30,22 @@ import {
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+    const handleCategoryClick = (e, categoryIdentifier) => {
+        e.preventDefault();
+    
+        console.log('🔗 Header: Navegando para loja com categoria:', categoryIdentifier);
+    
+        navigate('/loja', {
+          state: {
+            categoryIdentifier: categoryIdentifier
+          },
+          replace: false
+        });
+    
+    
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
     return (
         <FooterContainer>
             <Content>
@@ -52,11 +68,11 @@ const Footer = () => {
                     {/* Colunas da direita */}
                     <Group>
                         <Title>Compre Agora</Title>
-                        <FooterNavLink as={Link} to="/loja">Notebooks</FooterNavLink>
-                        <FooterNavLink as={Link} to="/loja">Desktops</FooterNavLink>
-                        <FooterNavLink as={Link} to="/loja">Monitores</FooterNavLink>
-                        <FooterNavLink as={Link} to="/loja">Consoles</FooterNavLink>
-                        <FooterNavLink as={Link} to="/loja">Teclados</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"notebooks")}>Notebooks</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"desktops")}>Desktops</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"monitores")}>Monitores</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"consoles")}>Consoles</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"teclados")}>Teclados</FooterNavLink>
                         <FooterNavLink as={Link} to="/loja">Todos</FooterNavLink>
                     </Group>
 

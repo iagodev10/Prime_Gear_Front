@@ -79,7 +79,7 @@ const CartModal = ({ isOpen, onClose }) => {
         <Header>
           <Title>Carrinho</Title>
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <ViewCartButton as={Link} to="/perfil" onClick={onClose}>
+            <ViewCartButton as={Link} to="/user" onClick={onClose}>
               Ver carrinho
             </ViewCartButton>
             <CloseButton onClick={onClose}>

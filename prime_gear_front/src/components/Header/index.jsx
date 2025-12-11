@@ -138,8 +138,8 @@ const Header = () => {
 
             <Link
               to="/loja"
-              onMouseEnter={() => setOpenCategory("perifericos")}
-              onClick={(e) => handleCategoryClick(e, "perifericos")} 
+              onMouseEnter={() => setOpenCategory("periféricos")}
+              onClick={(e) => handleCategoryClick(e, "periféricos")} 
             >
               Periféricos <FaChevronDown size={14} style={{ marginLeft: 6, alignSelf: "center" }} />
             </Link>
