@@ -336,8 +336,8 @@ export const Info = styled.div`
 
 export const Content = styled.div`
   width: 90%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 16px;
 
   @media (max-width: 480px) {
