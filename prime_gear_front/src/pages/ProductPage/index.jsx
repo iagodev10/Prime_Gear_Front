@@ -394,20 +394,7 @@ const ProductPage = () => {
                 {produto.qtd_estoque_prod === 0 ? 'Indisponível' : 'Adicionar ao Carrinho'}
               </button>
               
-              <button style={{
-                width: isMobile ? '100%' : '56px',
-                height: isMobile ? '52px' : '56px',
-                backgroundColor: '#fff',
-                border: '1px solid #ddd',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s'
-              }}>
-              
-              </button>
+             
             </div>
 
             {/* Benefícios */}
