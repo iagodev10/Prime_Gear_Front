@@ -68,11 +68,11 @@ const Footer = () => {
                     {/* Colunas da direita */}
                     <Group>
                         <Title>Compre Agora</Title>
-                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"notebooks")}>Notebooks</FooterNavLink>
-                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"desktops")}>Desktops</FooterNavLink>
-                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"monitores")}>Monitores</FooterNavLink>
-                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"consoles")}>Consoles</FooterNavLink>
-                        <FooterNavLink as={Link} to="/loja" onClick={handleCategoryClick(e,"teclados")}>Teclados</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={(e)=>handleCategoryClick(e,"notebooks")}>Notebooks</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={(e)=>handleCategoryClick(e,"desktops")}>Desktops</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={(e)=>handleCategoryClick(e,"monitores")}>Monitores</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={(e)=>handleCategoryClick(e,"consoles")}>Consoles</FooterNavLink>
+                        <FooterNavLink as={Link} to="/loja" onClick={(e)=>handleCategoryClick(e,"teclados")}>Teclados</FooterNavLink>
                         <FooterNavLink as={Link} to="/loja">Todos</FooterNavLink>
                     </Group>
 
