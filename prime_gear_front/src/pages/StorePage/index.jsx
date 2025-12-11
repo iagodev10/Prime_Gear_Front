@@ -271,7 +271,7 @@ function StorePage() {
             (identifier === "desktop" &&
               (catName.includes("desktop") || catName.includes("pc") || catName.includes("computador"))) ||
             (identifier === "console" && (catName.includes("console") || catName.includes("videogame"))) ||
-            (identifier === "periferico" && (catName.includes("periférico") || catName.includes("periferico") || catName.includes("periféricos") || catName.includes("perifericos")))
+            (identifier === "perifericos" && (catName.includes("periférico") || catName.includes("periferico") || catName.includes("periféricos") || catName.includes("perifericos")))
           );
         });
 
