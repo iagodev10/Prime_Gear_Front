@@ -58,8 +58,17 @@ const AdminPedidos = () => {
 
   useEffect(() => {
     fetchPedidos()
-    fetchEstatisticas()
   }, [])
+
+  const calcularEstatisticas = (pedidosArray) => {
+    const stats = {
+      total: pedidosArray.length,
+      entregues: pedidosArray.filter(p => p.status === 'entregue').length,
+      pendentes: pedidosArray.filter(p => p.status === 'pendente').length,
+      enviados: pedidosArray.filter(p => p.status === 'enviado').length
+    }
+    setEstatisticas(stats)
+  }
 
   const fetchPedidos = async () => {
     try {
@@ -67,20 +76,13 @@ const AdminPedidos = () => {
       const response = await axios.get('http://primegear.site:8080/admin/pedidos')
       console.log('Pedidos recebidos:', response.data) 
       setPedidos(response.data)
+      calcularEstatisticas(response.data)
     } catch (error) {
       console.error('Erro ao buscar pedidos:', error)
       setPedidos([])
+      calcularEstatisticas([])
     } finally {
       setLoading(false)
-    }
-  }
-
-  const fetchEstatisticas = async () => {
-    try {
-      const response = await axios.get('http://primegear.site:8080/admin/pedidos/estatisticas')
-      setEstatisticas(response.data)
-    } catch (error) {
-      console.error('Erro ao buscar estatísticas:', error)
     }
   }
 
@@ -108,8 +110,8 @@ const AdminPedidos = () => {
       setPedidos((prev) => prev.map((p) => (p.id === id ? { ...p, status: novoStatus } : p)))
       
      
-      
-      fetchEstatisticas()
+      const pedidosAtualizados = pedidos.map((p) => (p.id === id ? { ...p, status: novoStatus } : p))
+      calcularEstatisticas(pedidosAtualizados)
       
    
       if (selected && selected.id === id) {
