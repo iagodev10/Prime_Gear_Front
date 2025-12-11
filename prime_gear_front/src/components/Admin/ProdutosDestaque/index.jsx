@@ -128,12 +128,11 @@ const ProdutosDestaque = ({ produtos = [], nome1, nome2 }) => {
     try {
       await axios.put('http://primegear.site:8080/atualizar-nomes', novosNomes)
       
-      const produtosIds1 = section1.products.map(p => p.id)
+      const produtosIds1 = section1.products.map(p => p.cod_produto)
       await axios.put(`http://primegear.site:8080/vincular-secao/${section1.id}`, {
         produtos: produtosIds1
       })
-      
-      const produtosIds2 = section2.products.map(p => p.id)
+      const produtosIds2 = section2.products.map(p => p.cod_produto)
       await axios.put(`http://primegear.site:8080/vincular-secao/${section2.id}`, {
         produtos: produtosIds2
       })
